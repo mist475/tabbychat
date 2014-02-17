@@ -9,12 +9,11 @@ import acs.tabbychat.core.ChatChannel;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TabbyChat;
 
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.FontRenderer;
-import net.minecraft.src.Gui;
-import net.minecraft.src.GuiButton;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 
-public class ChatButton extends net.minecraft.src.GuiButton {
+public class ChatButton extends GuiButton {
 	public ChatChannel channel;
 	
 	public ChatButton() {
@@ -26,21 +25,37 @@ public class ChatButton extends net.minecraft.src.GuiButton {
 	}
 	
 	public int width() {
-		return this.width;
+		return this.field_146120_f;
 	}
-	
+
 	public void width(int _w) {
-		this.width = _w;
+		this.field_146120_f = _w;
 	}
-	
+
 	public int height() {
-		return this.height;
+		return this.field_146121_g;
 	}
-	
+
 	public void height(int _h) {
-		this.height = _h;
+		this.field_146121_g = _h;
 	}
-	
+
+    public int x() {
+        return field_146128_h;
+    }
+
+    public void x(int _x) {
+        field_146128_h = _x;
+    }
+
+    public int y() {
+        return field_146129_i;
+    }
+
+    public void y(int _y) {
+        field_146129_i = _y;
+    }
+
 	public void clear() {
 		this.channel = null;
 	}
@@ -57,19 +72,19 @@ public class ChatButton extends net.minecraft.src.GuiButton {
 	}
 	
 	public boolean mousePressed(Minecraft mc, int par2, int par3) {		
-		Rectangle cursor = translateButtonDims(new Rectangle(this.xPosition, this.yPosition, this.width, this.height));		
-		return this.enabled && this.drawButton && par2 >= cursor.x && par3 >= cursor.y && par2 < cursor.x + cursor.width && par3 < cursor.y + cursor.height;
+		Rectangle cursor = translateButtonDims(new Rectangle(this.x(), this.y(), this.width(), this.height()));
+		return this.enabled && this.field_146125_m && par2 >= cursor.x && par3 >= cursor.y && par2 < cursor.x + cursor.width && par3 < cursor.y + cursor.height;
 	}
 	
 	public void drawButton(Minecraft mc, int cursorX, int cursorY) {
-	      if(this.drawButton) {
+	      if(this.field_146125_m) {
 	          FontRenderer fr = mc.fontRenderer;
 	          float _mult = mc.gameSettings.chatOpacity * 0.9F + 0.1F;
 	          int _opacity = (int)((float)255 * _mult);
 	          int textOpacity = (TabbyChat.advancedSettings.textIgnoreOpacity.getValue() ? 255 : _opacity);
 	          
-	          Rectangle cursor = translateButtonDims(new Rectangle(this.xPosition, this.yPosition, this.width, this.height));
 	          
+	          Rectangle cursor = translateButtonDims(new Rectangle(this.x(), this.y(), this.width(), this.height()));
 	          boolean hovered = cursorX >= cursor.x && cursorY >= cursor.y && cursorX < cursor.x + cursor.width && cursorY < cursor.y + cursor.height;
 
 	          int var7 = 0xa0a0a0;
@@ -86,13 +101,13 @@ public class ChatButton extends net.minecraft.src.GuiButton {
 	        	  var7 = 0xff0000;
 	        	  var8 = 0x720000;
 	          }
-	          drawRect(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + this.height, var8 + (_opacity / 2 << 24));
+	          drawRect(this.x(), this.y(), this.x() + this.width(), this.y() + this.height(), var8 + (_opacity / 2 << 24));
 	          GL11.glEnable(GL11.GL_BLEND);
 	          if(hovered && Keyboard.isKeyDown(42)) {
 	        	  String special = (this.channel.getTitle().equalsIgnoreCase("*") ? "\u2398" : "\u26A0");
-	        	  this.drawCenteredString(fr, special, this.xPosition + this.width / 2, this.yPosition + (this.height-8) / 2, var7 + (textOpacity << 24));
+	        	  this.drawCenteredString(fr, special, this.x() + this.width() / 2, this.y() + (this.height()-8) / 2, var7 + (textOpacity << 24));
 	          } else {
-	        	  this.drawCenteredString(fr, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height-8) / 2, var7 + (textOpacity << 24));
+	        	  this.drawCenteredString(fr, this.displayString, this.x() + this.width() / 2, this.y() + (this.height()-8) / 2, var7 + (textOpacity << 24));
 	          }
 	       }		
 	}

@@ -1,23 +1,20 @@
 package acs.tabbychat.core;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatButton;
 
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.ChatLine;
-import net.minecraft.src.Gui;
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.StringUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.util.StringUtils;
 
 public class ChatChannel implements Serializable {
 	protected static int nextID = 3600;
@@ -77,7 +74,7 @@ public class ChatChannel implements Serializable {
 	}
 	
 	public int getButtonEnd() {
-		return this.tab.xPosition + this.tab.width();
+		return this.tab.x() + this.tab.width();
 	}
 	
 	public TCChatLine getChatLine(int index) {
@@ -157,8 +154,8 @@ public class ChatChannel implements Serializable {
 	}
 
 	public void setButtonLoc(int _x, int _y) {
-		this.tab.xPosition = _x;
-		this.tab.yPosition = _y;
+		this.tab.x(_x);
+		this.tab.y(_y);
 	}
 	
 	protected void setChatLogLine(int ind, TCChatLine newLine) {
@@ -189,12 +186,12 @@ public class ChatChannel implements Serializable {
 		Minecraft mc = Minecraft.getMinecraft();
 		GuiNewChatTC gnc = GuiNewChatTC.getInstance();
 		float scaleSetting = gnc.getScaleSetting();
-		int tabY = this.tab.yPosition - gnc.sr.getScaledHeight() - ChatBox.current.y;
+		int tabY = this.tab.y() - gnc.sr.getScaledHeight() - ChatBox.current.y;
 		tabY = ChatBox.anchoredTop ? tabY - ChatBox.getChatHeight() + ChatBox.getUnfocusedHeight(): tabY + ChatBox.getChatHeight() - ChatBox.getUnfocusedHeight() + 1;
 		
-		mc.ingameGUI.getChatGUI().drawRect(this.tab.xPosition, tabY, this.tab.xPosition + this.tab.width(), tabY + this.tab.height(), 0x720000 + (_opacity/2 << 24));
+		mc.ingameGUI.getChatGUI().drawRect(this.tab.x(), tabY, this.tab.x() + this.tab.width(), tabY + this.tab.height(), 0x720000 + (_opacity/2 << 24));
 		GL11.glEnable(GL11.GL_BLEND);
-		mc.ingameGUI.getChatGUI().drawCenteredString(mc.fontRenderer, this.getDisplayTitle(), this.tab.xPosition + this.tab.width()/2, tabY + 4, 16711680 + (_opacity << 24));
+		mc.ingameGUI.getChatGUI().drawCenteredString(mc.fontRenderer, this.getDisplayTitle(), this.tab.x() + this.tab.width()/2, tabY + 4, 16711680 + (_opacity << 24));
 	}
 	
 	protected void importOldChat(ChatChannel oldChan) {
