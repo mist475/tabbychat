@@ -1,43 +1,20 @@
 package acs.tabbychat.gui;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import acs.tabbychat.core.TabbyChat;
+import acs.tabbychat.settings.*;
+import acs.tabbychat.util.TabbyChatUtils;
+import net.minecraft.client.gui.GuiButton;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import acs.tabbychat.core.TabbyChat;
-import acs.tabbychat.settings.ColorCodeEnum;
-import acs.tabbychat.settings.FormatCodeEnum;
-import acs.tabbychat.settings.NotificationSoundEnum;
-import acs.tabbychat.settings.ITCSetting;
-import acs.tabbychat.settings.TCChatFilter;
-import acs.tabbychat.settings.TCSettingBool;
-import acs.tabbychat.settings.TCSettingEnum;
-import acs.tabbychat.settings.TCSettingTextBox;
-import acs.tabbychat.util.TabbyChatUtils;
-
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.ServerData;
-
+		
 public class TCSettingsFilters extends TCSettingsGUI {
 	protected int curFilterId = 0;
-
+		
 	private static final int INVERSE_MATCH_ID = 9301;
 	private static final int CASE_SENSE_ID = 9302;
 	private static final int HIGHLIGHT_BOOL_ID = 9303;
@@ -55,11 +32,11 @@ public class TCSettingsFilters extends TCSettingsGUI {
 	private static final int EXPRESSION_ID = 9315;
 	private static final int ADD_ID = 9316;
 	private static final int DEL_ID = 9317;
-	
+		
 	{
 		this.propertyPrefix = "settings.filters";
 	}
-	
+		
 	public TCSettingBool inverseMatch = new TCSettingBool(false, "inverseMatch", this.propertyPrefix, INVERSE_MATCH_ID);
 	public TCSettingBool caseSensitive = new TCSettingBool(false, "caseSensitive", this.propertyPrefix, CASE_SENSE_ID);
 	public TCSettingBool highlightBool = new TCSettingBool(true, "highlightBool", this.propertyPrefix, HIGHLIGHT_BOOL_ID);
@@ -73,10 +50,10 @@ public class TCSettingsFilters extends TCSettingsGUI {
 	public TCSettingBool sendToAllTabs = new TCSettingBool(false, "sendToAllTabs", this.propertyPrefix, SEND_TO_ALL_TABS_ID);
 	public TCSettingBool removeMatches = new TCSettingBool(false, "removeMatches", this.propertyPrefix, REMOVE_MATCHES_ID);
 	public TCSettingTextBox expressionString = new TCSettingTextBox(".*", "expressionString", this.propertyPrefix, EXPRESSION_ID);
-	
+		
 	public TreeMap<Integer, TCChatFilter> filterMap = new TreeMap();
 	protected TreeMap<Integer, TCChatFilter> tempFilterMap = new TreeMap();
-	
+		
 	public TCSettingsFilters(TabbyChat _tc) {
 		super(_tc);
 		this.name = TabbyChat.translator.getString("settings.filters.name");
@@ -87,7 +64,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 		this.expressionString.setCharLimit(600);
 		this.defineDrawableSettings();
 	}
-	
+		
 	public void actionPerformed(GuiButton button) {
 		this.storeTempFilter();
 		switch (button.id) {
@@ -116,7 +93,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 		}
 		super.actionPerformed(button);
 	}
-	
+		
 	private void clearDisplay() {
 		for(Object drawable : this.buttonList) {
 			if(drawable instanceof ITCSetting) {
@@ -124,7 +101,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 			}
 		}
 	}
-	
+		
 	public void defineDrawableSettings() {
 		this.buttonList.add(this.filterName);
 		this.buttonList.add(this.sendToTabBool);
@@ -135,12 +112,12 @@ public class TCSettingsFilters extends TCSettingsGUI {
 		this.buttonList.add(this.highlightColor);
 		this.buttonList.add(this.highlightFormat);
 		this.buttonList.add(this.audioNotificationBool);
-		this.buttonList.add(this.audioNotificationSound);	
+		this.buttonList.add(this.audioNotificationSound);
 		this.buttonList.add(this.inverseMatch);
 		this.buttonList.add(this.caseSensitive);
-		this.buttonList.add(this.expressionString);		
+		this.buttonList.add(this.expressionString);
 	}
-	
+		
 	private boolean displayCurrentFilter() {
 		if (!this.tempFilterMap.containsKey(this.curFilterId)) {
 			this.clearDisplay();
@@ -182,7 +159,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 			return true;
 		}
 	}
-	
+		
 	private boolean displayPreviousFilter() {
 		Entry<Integer, TCChatFilter> next = this.tempFilterMap.lowerEntry(this.curFilterId);
 		if(next == null) {
@@ -204,7 +181,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 			return true;
 		}
 	}
-
+		
 	public void initDrawableSettings() {
 		int effRight = (this.width + DISPLAY_WIDTH)/2;
 		int col1x = (this.width - DISPLAY_WIDTH)/2 + 55;
@@ -222,8 +199,8 @@ public class TCSettingsFilters extends TCSettingsGUI {
 		this.filterName.setLabelLoc(col1x);
 		this.filterName.setButtonLoc(col1x + 33 + mc.fontRenderer.getStringWidth(this.filterName.description), this.rowY(1));
 		
-		PrefsButton prevButton = new PrefsButton(PREV_ID, this.filterName.xPosition - 23, this.rowY(1), 20, LINE_HEIGHT, "<<");
-		PrefsButton nextButton = new PrefsButton(NEXT_ID, this.filterName.xPosition + 103, this.rowY(1), 20, LINE_HEIGHT, ">>");
+		PrefsButton prevButton = new PrefsButton(PREV_ID, this.filterName.x() - 23, this.rowY(1), 20, LINE_HEIGHT, "<<");
+		PrefsButton nextButton = new PrefsButton(NEXT_ID, this.filterName.x() + 103, this.rowY(1), 20, LINE_HEIGHT, ">>");
 		this.buttonList.add(prevButton);
 		this.buttonList.add(nextButton);
 		
@@ -251,9 +228,9 @@ public class TCSettingsFilters extends TCSettingsGUI {
 		this.highlightColor.setButtonLoc(col1x + 15 + mc.fontRenderer.getStringWidth(this.highlightColor.description), this.rowY(6));
 		this.highlightColor.setLabelLoc(col1x + 10);
 		
-		this.highlightFormat.setButtonDims(60, 11);;
+		this.highlightFormat.setButtonDims(60, 11);
 		this.highlightFormat.setButtonLoc(effRight - 60,  this.rowY(6));
-		this.highlightFormat.setLabelLoc(this.highlightFormat.xPosition - 5 - mc.fontRenderer.getStringWidth(this.highlightFormat.description));
+		this.highlightFormat.setLabelLoc(this.highlightFormat.x() - 5 - mc.fontRenderer.getStringWidth(this.highlightFormat.description));
 		
 		this.audioNotificationBool.setButtonLoc(col1x, this.rowY(7));
 		this.audioNotificationBool.setLabelLoc(col1x + 19);
@@ -261,7 +238,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 		
 		this.audioNotificationSound.setButtonDims(60, 11);
 		this.audioNotificationSound.setButtonLoc(effRight - 60, this.rowY(7));
-		this.audioNotificationSound.setLabelLoc(this.audioNotificationSound.xPosition - 5 - mc.fontRenderer.getStringWidth(this.audioNotificationSound.description));
+		this.audioNotificationSound.setLabelLoc(this.audioNotificationSound.x() - 5 - mc.fontRenderer.getStringWidth(this.audioNotificationSound.description));
 		
 		this.inverseMatch.setButtonLoc(col1x, this.rowY(8));
 		this.inverseMatch.setLabelLoc(col1x + 19);
@@ -273,7 +250,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 		
 		this.expressionString.setLabelLoc(col1x);
 		this.expressionString.setButtonLoc(col1x + 5 + mc.fontRenderer.getStringWidth(this.expressionString.description), this.rowY(9));
-		this.expressionString.setButtonDims(effRight - this.expressionString.xPosition, 11);
+		this.expressionString.setButtonDims(effRight - this.expressionString.x(), 11);
 		this.resetTempVars();
 		this.displayCurrentFilter();
 	}
@@ -281,14 +258,14 @@ public class TCSettingsFilters extends TCSettingsGUI {
 	public Properties loadSettingsFile() {
 		this.filterMap.clear();
 		if(this.settingsFile == null) return null;
-				
+
 		Properties settingsTable = super.loadSettingsFile();
 		
 		int loadId = 1;
 		String loadName = settingsTable.getProperty(loadId + ".filterName");
 		while(loadName != null) {
 			TCChatFilter loaded = new TCChatFilter(loadName);
-			
+
 			loaded.inverseMatch = Boolean.parseBoolean(settingsTable.getProperty(loadId + ".inverseMatch"));
 			loaded.caseSensitive = Boolean.parseBoolean(settingsTable.getProperty(loadId + ".caseSensitive"));
 			loaded.highlightBool = Boolean.parseBoolean(settingsTable.getProperty(loadId + ".highlightBool"));
@@ -300,10 +277,10 @@ public class TCSettingsFilters extends TCSettingsGUI {
 			loaded.sendToTabName = TabbyChatUtils.parseString(settingsTable.getProperty(loadId + ".sendToTabName"));
 			loaded.sendToAllTabs = Boolean.parseBoolean(settingsTable.getProperty(loadId + ".sendToAllTabs"));
 			loaded.removeMatches = Boolean.parseBoolean(settingsTable.getProperty(loadId + ".removeMatches"));
-			
+
 			loaded.compilePattern(TabbyChatUtils.parseString(settingsTable.getProperty(loadId + ".expressionString")));
 			this.filterMap.put(loadId, loaded);
-			
+
 			loadId++;
 			loadName = settingsTable.getProperty(loadId + ".filterName");
 		}
@@ -315,11 +292,11 @@ public class TCSettingsFilters extends TCSettingsGUI {
 	public void mouseClicked(int par1, int par2, int par3) {
 		if (this.audioNotificationSound.hovered(par1, par2)) {
 			this.audioNotificationSound.mouseClicked(par1, par2, par3);
-			mc.sndManager.playSoundFX(((NotificationSoundEnum)audioNotificationSound.getTempValue()).file(), 1.0F, 1.0F);
+            mc.thePlayer.playSound(((NotificationSoundEnum)audioNotificationSound.getTempValue()).file(), 1.0F, 1.0F);
 		} else
 			super.mouseClicked(par1, par2, par3);
 	}
-	
+
 	public void resetTempVars() {
 		this.tempFilterMap.clear();
 		Entry<Integer, TCChatFilter> realFilter = this.filterMap.firstEntry();
@@ -329,7 +306,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 			realFilter = this.filterMap.higherEntry(realFilter.getKey());
 		}
 	}
-	
+
 	public void saveSettingsFile() {
 		Properties settingsTable = new Properties();
 
@@ -349,7 +326,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 			settingsTable.put(saveId + ".audioNotificationSound", saveFilter.getValue().audioNotificationSound.name());
 			settingsTable.put(saveId + ".sendToTabName", saveFilter.getValue().sendToTabName);
 			settingsTable.put(saveId + ".expressionString", saveFilter.getValue().expressionString);
-			
+
 			saveId++;
 			saveFilter = this.filterMap.higherEntry(saveFilter.getKey());
 		}
@@ -379,7 +356,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 		}
 		
 	}
-	
+
 	public void storeTempVars() {
 		this.filterMap.clear();
 		
@@ -389,7 +366,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 			tempFilter = this.tempFilterMap.higherEntry(tempFilter.getKey());
 		}
 	}
-	
+
 	public void updateForServer() {
 		this.settingsFile = new File(TabbyChatUtils.getServerDir(), "filters.cfg");
 	}
