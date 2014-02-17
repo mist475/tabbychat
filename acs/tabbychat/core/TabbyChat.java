@@ -9,55 +9,32 @@ package acs.tabbychat.core;
  * prohibited, and a violation of copyright.
  */
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.Gui;
-import net.minecraft.src.GuiMainMenu;
-import net.minecraft.src.ServerData;
-import net.minecraft.src.StringUtils;
-import acs.tabbychat.gui.ChatBox;
-import acs.tabbychat.gui.ITCSettingsGUI;
-import acs.tabbychat.gui.TCSettingsAdvanced;
-import acs.tabbychat.gui.TCSettingsFilters;
-import acs.tabbychat.gui.TCSettingsGeneral;
-import acs.tabbychat.gui.TCSettingsServer;
-import acs.tabbychat.jazzy.TCSpellCheckListener;
+import acs.tabbychat.gui.*;
 import acs.tabbychat.jazzy.TCSpellCheckManager;
 import acs.tabbychat.lang.TCTranslate;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
 import acs.tabbychat.settings.TCChatFilter;
-import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.threads.BackgroundUpdateCheck;
 import acs.tabbychat.util.TabbyChatUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.util.StringUtils;
+import org.apache.logging.log4j.LogManager;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TabbyChat {
 	public static TabbyChat getInstance() {
@@ -82,7 +59,7 @@ public class TabbyChat {
 	public LinkedHashMap<String, ChatChannel> channelMap = new LinkedHashMap();
 
 	private static File chanDataFile;
-	protected Calendar cal = Calendar.getInstance();	
+	protected Calendar cal = Calendar.getInstance();
 	protected Semaphore serverDataLock = new Semaphore(0, true);
 	private Pattern chatChannelPatternClean = Pattern.compile("^\\[([\\p{L}0-9_]{1,10})\\]");
 	private Pattern chatChannelPatternDirty = Pattern.compile("^\\[([\\p{L}0-9_]{1,10})\\]");
@@ -124,12 +101,12 @@ public class TabbyChat {
 
 	public static void printErr(String err) {
 		System.err.println("[TabbyChat] "+err);
-		mc.getLogAgent().logWarning("[TABBYCHAT] "+err);
+		LogManager.getLogger().warn("[TABBYCHAT] " + err);
 	}
 
 	public static void printException(String err, Exception e) {
 		System.err.println("[TabbyChat] "+err);
-		mc.getLogAgent().logWarningException("[TABBYCHAT] "+err, e);
+		LogManager.getLogger().warn("[TABBYCHAT] " + err, e);
 	}
 
 	public static void printMessageToChat(String msg) {
@@ -246,7 +223,7 @@ public class TabbyChat {
 
 	public void addToChannel(String name, TCChatLine thisChat, boolean visible) {
 		if(serverSettings.ignoredChanList.contains(name)) return;
-		
+
 		ChatChannel theChan = this.channelMap.get(name);
 		if(theChan == null) {
 			if(this.channelMap.size() >= 20) return;
@@ -305,7 +282,7 @@ public class TabbyChat {
 			firstRun = false;
 			return;
 		}
-		
+
 		this.serverDataLock.tryAcquire();
 		this.updateChanDataPath(false);
 		serverSettings.updateForServer();
@@ -414,7 +391,7 @@ public class TabbyChat {
 			frmt = "(?i:"+frmt+")";
 		if (frmt.length() == 0)
 			frmt = "(?i:\u00A7[0-9A-FK-OR])*";
-		
+
 		this.chatChannelPatternDirty = Pattern.compile("^(\u00A7r)?"+frmt+"\\"+delims.open()+"([\\p{L}0-9_\u00A7]+)\\"+delims.close());
 		this.chatChannelPatternClean = Pattern.compile("^"+"\\"+delims.open()+"([\\p{L}0-9_]{1,"+this.advancedSettings.maxLengthChannelName.getValue()+"})\\"+delims.close());
 	}
@@ -430,13 +407,13 @@ public class TabbyChat {
 		// Matches 'From Player' and 'To Player'
 		toMePM.append("|^From ([\\p{L}\\p{N}_]{3,16})[ ]?:");
 		fromMePM.append("|^To ([\\p{L}\\p{N}_]{3,16})[ ]?:");
-		
+
 		// Matches 'Player whispers to you' and 'You whisper to Player'
 		toMePM.append("|^([\\p{L}\\p{N}_]{3,16}) whispers to you:");
 		fromMePM.append("|^You whisper to ([\\p{L}\\p{N}_]{3,16}):");
-		
-		if(mc.thePlayer != null && mc.thePlayer.getEntityName() != null) {
-			String me = mc.thePlayer.getEntityName();
+
+		if(mc.thePlayer != null && mc.thePlayer.getCommandSenderName() != null) {
+			String me = mc.thePlayer.getCommandSenderName();
 
 			// Matches '[Player->Player1]' and '[Player1->Player]'
 			toMePM.append("|^\\[([\\p{L}\\p{N}_]{3,16})[ ]?\\-\\>[ ]?").append(me).append("\\]");
@@ -446,7 +423,7 @@ public class TabbyChat {
 		this.chatPMtoMePattern = Pattern.compile(toMePM.toString());
 		this.chatPMfromMePattern = Pattern.compile(fromMePM.toString());
 	}
-	
+
 	public void pollForUnread(Gui _gui, int _tick) {
 		int _opacity = 0;
 		int tickdiff = 50;
@@ -478,7 +455,7 @@ public class TabbyChat {
 			}
 		}
 	}
-	
+
 	public void processChat(List<TCChatLine> theChat) {
 		if(this.serverDataLock.availablePermits() == 0) {
 			this.serverDataLock.acquireUninterruptibly();
@@ -492,12 +469,12 @@ public class TabbyChat {
 		String channelTab = null;
 		String pmTab = null;
 		toTabs.add("*");
-		
+
 		String raw = TabbyChatUtils.chatLinesToString(theChat);
 		String filtered = this.processChatForFilters(raw, filterTabs);
 		String cleaned = StringUtils.stripControlCodes(raw);
 		if (generalSettings.saveChatLog.getValue()) TabbyChatUtils.logChat(this.getCleanTimeStamp() + cleaned);
-		
+
 		if(filtered != null) {
 			if(serverSettings.autoChannelSearch.getValue()) channelTab = this.processChatForChannels(cleaned, raw);
 			if(channelTab == null) {
@@ -508,13 +485,13 @@ public class TabbyChat {
 			filtered = raw;
 		}
 		resultChatLine = TabbyChatUtils.stringToChatLines(theChat.get(0).getUpdatedCounter(), filtered, theChat.get(0).getChatLineID(), theChat.get(0).statusMsg);
-		this.addOptionalTimeStamp(resultChatLine);		
-		
+		this.addOptionalTimeStamp(resultChatLine);
+
 		HashSet<String> tabSet = new HashSet<String>(toTabs);
 		List<String> activeTabs = this.getActive();
-		
+
 		boolean visible = false;
-		
+
 		if(pmTab != null) {
 			if(!this.channelMap.containsKey(pmTab)) {
 				ChatChannel pm = new ChatChannel(pmTab);
@@ -529,13 +506,13 @@ public class TabbyChat {
 				this.addToChannel(pmTab, resultChatLine, visible);
 			}
 		}
-		
+
 		if(!visible) {
 			Set<String> tabUnion = (Set<String>)tabSet.clone();
 			tabUnion.retainAll(activeTabs);
 			if(tabUnion.size() > 0) visible = true;
 		}
-		
+
 		Iterator<String> tabIter = tabSet.iterator();
 		while(tabIter.hasNext()) {
 			String tab = tabIter.next();
@@ -579,7 +556,7 @@ public class TabbyChat {
 	private String processChatForFilters(String chat, List<String> destinations) {
 		// Flag case where chat matches a 'remove' filter, bypassing any remaining filter processing
 		boolean skip = false;
-		
+
 		// Iterate through defined filters
 		Entry<Integer, TCChatFilter> iFilter = filterSettings.filterMap.firstEntry();
 		while(iFilter != null) {
@@ -609,7 +586,7 @@ public class TabbyChat {
 			}
 			iFilter = filterSettings.filterMap.higherEntry(iFilter.getKey());
 		}
-		
+
 		if(!skip) return chat;
 		else return null;
 	}
@@ -649,7 +626,7 @@ public class TabbyChat {
 	public void removeTab(String _name) {
 		this.channelMap.remove(_name);
 	}
-	
+
 	public void resetDisplayedChat() {
 		gnc.clearChatLines();
 		List<String> actives = this.getActive();
@@ -698,7 +675,7 @@ public class TabbyChat {
 	public void storeChannelData() {
 		if(chanDataFile == null) return;
 		if(!chanDataFile.getParentFile().exists()) chanDataFile.getParentFile().mkdirs();
-		
+
 		FileOutputStream cFileStream = null;
 		BufferedOutputStream cBuffStream = null;
 		ObjectOutputStream cObjStream = null;
@@ -717,15 +694,15 @@ public class TabbyChat {
 			} catch (Exception e) {}
 		}
 	}
-	
+
 	private void updateChanDataPath(boolean make) {
 		String pName = "";
-		if(mc.thePlayer != null && mc.thePlayer.getEntityName() != null) pName = mc.thePlayer.getEntityName();
+		if(mc.thePlayer != null && mc.thePlayer.getCommandSenderName() != null) pName = mc.thePlayer.getCommandSenderName();
 		File parentDir = TabbyChatUtils.getServerDir();
 		if(make && !parentDir.exists()) parentDir.mkdirs();
 		chanDataFile = new File(parentDir, pName + "_chanData.ser");
 	}
-	
+
 	protected void updateDefaults() {
 		if (!TabbyChat.generalSettings.tabbyChatEnable.getValue()) return;
 		List<String> dList = new ArrayList(serverSettings.defaultChanList);
@@ -739,7 +716,7 @@ public class TabbyChat {
 			if (defChan.length() > 0) this.channelMap.put(defChan, new ChatChannel(defChan));
 		}
 	}
-	
+
 	protected void updateFilters() {
 		if (!generalSettings.tabbyChatEnable.getValue()) return;
 		if (filterSettings.filterMap.size() == 0) return;
@@ -750,7 +727,7 @@ public class TabbyChat {
 			newName = iFilter.getValue().sendToTabName;
 			if(iFilter.getValue().sendToTabBool && !iFilter.getValue().sendToAllTabs && !this.channelMap.containsKey(newName) && !newName.startsWith("%")) {
 				this.channelMap.put(newName, new ChatChannel(newName));
-			}			
+			}
 			iFilter = filterSettings.filterMap.higherEntry(iFilter.getKey());
 		}
 	}
