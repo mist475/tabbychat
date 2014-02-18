@@ -15,15 +15,15 @@ import net.minecraft.client.gui.GuiButton;
 
 public class ChatButton extends GuiButton {
 	public ChatChannel channel;
-	
+
 	public ChatButton() {
 		super(9999, 0, 0, 1, 1, "");
 	}
-	
+
 	public ChatButton(int _id, int _x, int _y, int _w, int _h, String _title) {
 		super(_id, _x, _y, _w, _h, _title);
 	}
-	
+
 	public int width() {
 		return this.field_146120_f;
 	}
@@ -59,32 +59,32 @@ public class ChatButton extends GuiButton {
 	public void clear() {
 		this.channel = null;
 	}
-	
+
 	private static Rectangle translateButtonDims(Rectangle unscaled) {
 		float scaleSetting = GuiNewChatTC.getInstance().getScaleSetting();
 		int adjX = Math.round((unscaled.x - ChatBox.current.x) * scaleSetting + ChatBox.current.x);
-		
+
 		int adjY = Math.round((TabbyChat.mc.currentScreen.height - unscaled.y + ChatBox.current.y) * (1.0f - scaleSetting)) + unscaled.y;
-		
+
 		int adjW = Math.round(unscaled.width * scaleSetting);
 		int adjH = Math.round(unscaled.height * scaleSetting);
-		return new Rectangle(adjX, adjY, adjW, adjH);		
+		return new Rectangle(adjX, adjY, adjW, adjH);
 	}
-	
-	public boolean mousePressed(Minecraft mc, int par2, int par3) {		
+
+	public boolean mousePressed(Minecraft mc, int par2, int par3) {
 		Rectangle cursor = translateButtonDims(new Rectangle(this.x(), this.y(), this.width(), this.height()));
 		return this.enabled && this.field_146125_m && par2 >= cursor.x && par3 >= cursor.y && par2 < cursor.x + cursor.width && par3 < cursor.y + cursor.height;
 	}
-	
+
 	public void drawButton(Minecraft mc, int cursorX, int cursorY) {
 	      if(this.field_146125_m) {
 	          FontRenderer fr = mc.fontRenderer;
 	          float _mult = mc.gameSettings.chatOpacity * 0.9F + 0.1F;
 	          int _opacity = (int)((float)255 * _mult);
 	          int textOpacity = (TabbyChat.advancedSettings.textIgnoreOpacity.getValue() ? 255 : _opacity);
-	          
-	          
+
 	          Rectangle cursor = translateButtonDims(new Rectangle(this.x(), this.y(), this.width(), this.height()));
+
 	          boolean hovered = cursorX >= cursor.x && cursorY >= cursor.y && cursorX < cursor.x + cursor.width && cursorY < cursor.y + cursor.height;
 
 	          int var7 = 0xa0a0a0;
@@ -109,6 +109,6 @@ public class ChatButton extends GuiButton {
 	          } else {
 	        	  this.drawCenteredString(fr, this.displayString, this.x() + this.width() / 2, this.y() + (this.height()-8) / 2, var7 + (textOpacity << 24));
 	          }
-	       }		
+	       }
 	}
 }

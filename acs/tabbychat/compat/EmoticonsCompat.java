@@ -1,20 +1,16 @@
 package acs.tabbychat.compat;
 
+import acs.tabbychat.core.GuiChatTC;
+import acs.tabbychat.gui.ChatButton;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
+import org.lwjgl.opengl.GL11;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
-import acs.tabbychat.core.GuiChatTC;
-import acs.tabbychat.core.GuiNewChatTC;
-import acs.tabbychat.core.TabbyChat;
-import acs.tabbychat.gui.ChatButton;
-
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.GuiTextField;
 
 public class EmoticonsCompat {
 	public static Object emoteObject = null;
@@ -25,7 +21,7 @@ public class EmoticonsCompat {
 	private static Method emoteDrawScreen = null;
 	public static int emoteOffsetX = 0;
 	public static boolean present = true;
-	
+
 	public static void load() {
 		if(present) {
 			if(emoteConstructor == null || emoteActionPerformed == null || emoteInitGui == null || emoteDrawScreen == null || emoteButtonClass == null) {
@@ -64,7 +60,7 @@ public class EmoticonsCompat {
 			}
 		}
 	}
-	
+
 	public static void actionPerformed(GuiButton par1, List par2, GuiTextField par3) {
 		if(!present) return;
 		Object[] args = new Object[3];
@@ -77,7 +73,7 @@ public class EmoticonsCompat {
 			present = false;
 		}
 	}
-	
+
 	public static void drawScreen(int par1, int par2, float par3, GuiChatTC par4, List buttonList) {
 		if(!present) return;
 		Object[] args = new Object[4];
@@ -99,7 +95,7 @@ public class EmoticonsCompat {
 			GL11.glPopMatrix();
 		}
 	}
-	
+
 	public static void initGui(List par1) {
 		if(!present) return;
 		Object[] args = new Object[1];

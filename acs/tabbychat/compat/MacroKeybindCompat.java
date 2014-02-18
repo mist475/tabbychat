@@ -7,8 +7,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.GuiScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 
 public class MacroKeybindCompat {
 	private static Object inChatLayout = null;
@@ -28,7 +28,7 @@ public class MacroKeybindCompat {
 	private static Method mousePressed = null;
 	private static Method onControlClicked = null;
 	private static Method displayScreen = null;
-	private static Field menuLocation;	
+	private static Field menuLocation;
 	private static Field dropDownVisible;
 	private static Field clickedControl;
 	private static Field boundingBox;
@@ -71,14 +71,14 @@ public class MacroKeybindCompat {
 					//Class guiMacroBind = Class.forName("net.eq2online.macros.gui.screens.GuiMacroBind");
 					guiCustomGui = Class.forName("net.eq2online.macros.gui.screens.GuiCustomGui");
 					Class localisationProvider = Class.forName("net.eq2online.macros.compatibility.LocalisationProvider");
-					
+
 					// Constructors
 					Constructor mkButtonConstructor = buttonClass.getDeclaredConstructor(new Class[]{Minecraft.class, int.class, int.class, int.class});
 					Constructor guiConstructor = guiCustomGui.getConstructor(new Class[]{designableGuiLayout, GuiScreen.class});
 					createDesignerScreen = guiDesigner.getDeclaredConstructor(new Class[]{String.class, GuiScreen.class, boolean.class});
 					macroEdit = guiMacroEdit.getDeclaredConstructor(new Class[]{int.class, GuiScreen.class});
 					macroDesign = guiDesigner.getDeclaredConstructor(new Class[]{String.class, GuiScreen.class, boolean.class});
-					
+
 					// Methods
 					Method mkgetBoundLayout = layoutManager.getDeclaredMethod("getBoundLayout", new Class[]{String.class, boolean.class});
 					layoutTick = designableGuiLayout.getDeclaredMethod("onTick", (Class[])null);
@@ -94,7 +94,7 @@ public class MacroKeybindCompat {
 					Method getLocalisedString = localisationProvider.getDeclaredMethod("getLocalisedString", new Class[]{String.class});
 					controlClicked.setAccessible(true);
 					onControlClicked.setAccessible(true);
-					
+
 					// Fields
 					Field mkContextMenu = guiCustomGui.getDeclaredField("contextMenu");
 					menuLocation = guiCustomGui.getDeclaredField("contextMenuLocation");
@@ -106,14 +106,14 @@ public class MacroKeybindCompat {
 					clickedControl.setAccessible(true);
 					dropDownVisible.setAccessible(true);
 					boundingBox.setAccessible(true);
-					
+
 					// Objects
 					inChatLayout = mkgetBoundLayout.invoke(null, new Object[]{"inchat", false});
 					btnGui = mkButtonConstructor.newInstance(new Object[]{Minecraft.getMinecraft(), 4, 104, 64});
 					inChatGUI = guiConstructor.newInstance(new Object[]{inChatLayout, null});
 					dropDownMenu = mkContextMenu.get(inChatGUI);
 					dropDownAdd.invoke(dropDownMenu, new Object[]{"design", "\247e" + getLocalisedString.invoke(null, new Object[]{"tooltip.guiedit"}), 26, 16});
-					
+
 				} catch (Exception e) {
 					present = false;
 				}
@@ -128,10 +128,10 @@ public class MacroKeybindCompat {
 			}
 		}
 	}
-	
+
 	public static boolean contextMenuClicked(int par1, int par2, int par3, GuiScreen par4) {
 		if(!present) return false;
-		try {			
+		try {
 			String menuItem = (String)mousePressed.invoke(dropDownMenu, new Object[]{par1, par2});
 			Object control = clickedControl.get(inChatGUI);
 			if(control == null) return false;
@@ -139,29 +139,29 @@ public class MacroKeybindCompat {
 			Method isBindable = controlClass.getMethod("getWidgetIsBindable", (Class[])null);
 			Object oBindable = isBindable.invoke(control, (Object[])null);
 			boolean bindable = ((Boolean)oBindable).booleanValue();
-			
+
 			if(menuItem != null && control != null) {
 				if(menuItem.equals("execute")) {
-					if(bindable) {						
+					if(bindable) {
 						onControlClicked.invoke(inChatGUI, new Object[]{control});
-					}					
+					}
 				} else if(menuItem.equals("edit")) {
 					if(bindable) {
 						Field id = controlClass.getField("id");
 						displayScreen.invoke(null, macroEdit.newInstance(new Object[]{id.get(control), par4}));
-					}					
+					}
 				} else if(menuItem.equals("design")) {
 					displayScreen.invoke(null, macroDesign.newInstance(new Object[]{"inchat", par4, true}));
 				}
 				return true;
 			}
-			return false;			
+			return false;
 		} catch(Exception e) {
 			present = false;
 		}
 		return false;
 	}
-	
+
 	public static boolean controlClicked(int par1, int par2, int par3, GuiScreen par4) {
 		if(!present) return false;
 		boolean clicked = false;
@@ -184,14 +184,14 @@ public class MacroKeybindCompat {
 		}
 		return clicked;
 	}
-	
+
 	public static void drawScreen(int par1, int par2, GuiScreen par3) {
 		if(!present) return;
 		Object[] args = new Object[3];
 		args[0] = new Rectangle(0, 0, par3.width, par3.height - 14);
 		args[1] = par1;
 		args[2] = par2;
-		
+
 		Object[] args2 = new Object[7];
 		args2[0] = Minecraft.getMinecraft();
 		args2[1] = par1;
@@ -200,7 +200,7 @@ public class MacroKeybindCompat {
 		args2[4] = par3.height - 14;
 		args2[5] = 0xff1200;
 		args2[6] = 0x80000000;
-		
+
 		try {
 			layoutTick.invoke(inChatLayout, (Object[])null);
 			draw.invoke(inChatLayout, args);

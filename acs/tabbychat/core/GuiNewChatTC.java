@@ -7,6 +7,7 @@ import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringUtils;
@@ -213,12 +214,12 @@ public class GuiNewChatTC extends GuiNewChat {
 				chatReadLock.lock();
 				try {
 					msgList.add(this.chatLines.get(lineCounter + this.scrollOffset));
-					if(msgList.get(0) != null && msgList.get(0).getChatLineString().startsWith(" ")) {
+					if(msgList.get(0) != null && msgList.get(0).getChatLineString().getFormattedText().startsWith(" ")) {
 						for(int sameMsgCounter = 1; lineCounter + sameMsgCounter + this.scrollOffset < numLinesTotal && lineCounter + sameMsgCounter < maxDisplayedLines; ++sameMsgCounter) {
 							TCChatLine checkLine = this.chatLines.get(lineCounter + sameMsgCounter + this.scrollOffset);
 							if(checkLine.getUpdatedCounter() != msgList.get(0).getUpdatedCounter()) break;
 							msgList.add(checkLine);
-							if(!checkLine.getChatLineString().startsWith(" ")) break;
+							if(!checkLine.getChatLineString().getFormattedText().startsWith(" ")) break;
 						}
 					}
 				} finally {
@@ -249,9 +250,9 @@ public class GuiNewChatTC extends GuiNewChat {
 							String _chat;
 							int idx = ChatBox.anchoredTop && tc.enabled() ? msgList.size() - i - 1 : i;
 							if(tc.enabled() && tc.generalSettings.timeStampEnable.getValue()) {
-								_chat = msgList.get(idx).timeStamp + msgList.get(idx).getChatLineString();
+								_chat = msgList.get(idx).timeStamp + msgList.get(idx).getChatLineString().getFormattedText();
 							} else {
-								_chat = msgList.get(idx).getChatLineString();
+								_chat = msgList.get(idx).getChatLineString().getFormattedText();
 							}
 							if(!this.mc.gameSettings.chatColours)
 								_chat = StringUtils.stripControlCodes(_chat);
@@ -334,7 +335,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			if(!isLineOne) {
 				_line = " " + _line;
 			}
-			multiLineChat.add(new TCChatLine(tick, _line, id));
+			multiLineChat.add(new TCChatLine(tick, new ChatComponentText(_line), id));
 			isLineOne = false;
 		}
 

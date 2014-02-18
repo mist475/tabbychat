@@ -1,12 +1,10 @@
 package acs.tabbychat.liteloader;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.GuiChat;
-import net.minecraft.src.GuiTextField;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiTextField;
 import acs.tabbychat.core.GuiChatTC;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TabbyChat;
@@ -16,7 +14,7 @@ import com.mumfrey.liteloader.core.LiteLoader;
 
 public class LiteModTabbyChat implements InitCompleteListener {
 	private static GuiNewChatTC gnc;
-	
+
 	@Override
 	public String getName() {
 		return "TabbyChat";
@@ -41,13 +39,13 @@ public class LiteModTabbyChat implements InitCompleteListener {
 	@Override
 	public void init(File configPath) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void upgradeSettings(String version, File configPath,
 			File oldConfigPath) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

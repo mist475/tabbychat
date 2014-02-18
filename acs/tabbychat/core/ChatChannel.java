@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import net.minecraft.util.ChatComponentText;
 import org.lwjgl.opengl.GL11;
 
 import acs.tabbychat.gui.ChatBox;
@@ -34,14 +35,14 @@ public class ChatChannel implements Serializable {
 	public boolean hidePrefix = false;
 	private String alias;
 	public String cmdPrefix = "";
-	
+
 	public ChatChannel() {
 		this.chanID = nextID;
 		nextID++;
 		this.chatLog = new ArrayList<TCChatLine>();
 		this.notificationsOn = TabbyChat.generalSettings.unreadFlashing.getValue();
 	}
-	
+
 	public ChatChannel(int _x, int _y, int _w, int _h, String _title) {
 		this();
 		this.tab = new ChatButton(this.chanID, _x, _y, _w, _h, _title);
@@ -50,11 +51,11 @@ public class ChatChannel implements Serializable {
 		this.tab.channel = this;
 		this.tab.width(TabbyChat.mc.fontRenderer.getStringWidth(this.alias + "<>")+8);
 	}
-	
+
 	public ChatChannel(String _title) {
 		this(3, 3, Minecraft.getMinecraft().fontRenderer.getStringWidth("<"+_title+">") + 8, 14, _title);
 	}
-	
+
 	public void addChat(TCChatLine newChat, boolean visible) {
 		this.chatWriteLock.lock();
 		try {
@@ -62,21 +63,21 @@ public class ChatChannel implements Serializable {
 		} finally {
 			this.chatWriteLock.unlock();
 		}
-		if(!this.title.equals("*") && this.notificationsOn && !visible) this.unread = true; 
+		if(!this.title.equals("*") && this.notificationsOn && !visible) this.unread = true;
 	}
-	
+
 	public boolean doesButtonEqual(GuiButton btnObj) {
 		return (this.tab.id == btnObj.id);
 	}
-	
+
 	public String getAlias() {
 		return this.alias;
 	}
-	
+
 	public int getButtonEnd() {
 		return this.tab.x() + this.tab.width();
 	}
-	
+
 	public TCChatLine getChatLine(int index) {
 		TCChatLine retVal = null;
 		this.chatReadLock.lock();
@@ -87,7 +88,7 @@ public class ChatChannel implements Serializable {
 		}
 		return retVal;
 	}
-	
+
 	public List<TCChatLine> getChatLogSublistCopy(int fromInd, int toInd) {
 		List<TCChatLine> retVal = new ArrayList<TCChatLine>(toInd-fromInd);
 		this.chatReadLock.lock();
@@ -100,7 +101,7 @@ public class ChatChannel implements Serializable {
 		}
 		return retVal;
 	}
-	
+
 	public int getChatLogSize() {
 		int mySize = 0;
 		this.chatReadLock.lock();
@@ -115,7 +116,7 @@ public class ChatChannel implements Serializable {
 	public int getID() {
 		return this.chanID;
 	}
-	
+
 	public String getDisplayTitle() {
 		if (this.active)
 			return "[" + this.alias + "]";
@@ -124,21 +125,21 @@ public class ChatChannel implements Serializable {
 		else
 			return this.alias;
 	}
-	
+
 	public String getTitle() {
 		return this.title;
 	}
-	
+
 	public void setButtonObj(ChatButton btnObj) {
 		this.tab = btnObj;
 		this.tab.channel = this;
 	}
-	
+
 	public void setAlias(String _alias) {
 		this.alias = _alias;
 		this.tab.width(TabbyChat.mc.fontRenderer.getStringWidth(_alias+"<>") + 8);
 	}
-	
+
 	public String toString() {
 		return this.getDisplayTitle();
 	}
@@ -157,7 +158,7 @@ public class ChatChannel implements Serializable {
 		this.tab.x(_x);
 		this.tab.y(_y);
 	}
-	
+
 	protected void setChatLogLine(int ind, TCChatLine newLine) {
 		this.chatWriteLock.lock();
 		try {
@@ -167,7 +168,7 @@ public class ChatChannel implements Serializable {
 			this.chatWriteLock.unlock();
 		}
 	}
-	
+
 	public void trimLog() {
 		TabbyChat tc = GuiNewChatTC.getInstance().tc;
 		if(tc == null || tc.serverDataLock.availablePermits() < 1) return;
@@ -188,19 +189,19 @@ public class ChatChannel implements Serializable {
 		float scaleSetting = gnc.getScaleSetting();
 		int tabY = this.tab.y() - gnc.sr.getScaledHeight() - ChatBox.current.y;
 		tabY = ChatBox.anchoredTop ? tabY - ChatBox.getChatHeight() + ChatBox.getUnfocusedHeight(): tabY + ChatBox.getChatHeight() - ChatBox.getUnfocusedHeight() + 1;
-		
+
 		mc.ingameGUI.getChatGUI().drawRect(this.tab.x(), tabY, this.tab.x() + this.tab.width(), tabY + this.tab.height(), 0x720000 + (_opacity/2 << 24));
 		GL11.glEnable(GL11.GL_BLEND);
 		mc.ingameGUI.getChatGUI().drawCenteredString(mc.fontRenderer, this.getDisplayTitle(), this.tab.x() + this.tab.width()/2, tabY + 4, 16711680 + (_opacity << 24));
 	}
-	
+
 	protected void importOldChat(ChatChannel oldChan) {
 		if(oldChan == null || oldChan.chatLog.isEmpty()) return;
 		this.chatWriteLock.lock();
 		try {
 			for(TCChatLine oldChat : oldChan.chatLog) {
 				if(oldChat == null || oldChat.statusMsg) continue;
-				this.chatLog.add(new TCChatLine(-1, StringUtils.stripControlCodes(oldChat.getChatLineString()), 0));
+				this.chatLog.add(new TCChatLine(-1, new ChatComponentText(oldChat.getChatLineString().getUnformattedTextForChat()), 0));
 			}
 		} finally {
 			this.chatWriteLock.unlock();

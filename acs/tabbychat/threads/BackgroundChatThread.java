@@ -1,24 +1,24 @@
 package acs.tabbychat.threads;
 
 import acs.tabbychat.core.TabbyChat;
-import net.minecraft.src.Minecraft;
+import net.minecraft.client.Minecraft;
 
 public class BackgroundChatThread extends Thread {
 	String sendChat = "";
 	String knownPrefix = null;
-	
+
 	public BackgroundChatThread(String _send) {
 		this.sendChat = _send;
 	}
-	
+
 	public BackgroundChatThread(String _send, String _prefix) {
 		this.sendChat = _send;
 		this.knownPrefix = _prefix;
 	}
-	
+
 	public synchronized void run() {
 		Minecraft mc = Minecraft.getMinecraft();
-		mc.ingameGUI.getChatGUI().addToSentMessages(this.sendChat);
+		mc.ingameGUI.getChatGUI().func_146239_a(this.sendChat);
 		String cmdPrefix = "";
 		String[] toSplit;
 		int start;
@@ -28,13 +28,13 @@ public class BackgroundChatThread extends Thread {
 			toSplit = this.sendChat.split(" ");
 			start = 0;
 		} else {
-			toSplit = this.sendChat.split(" ");		
+			toSplit = this.sendChat.split(" ");
 			start = 0;
 			if (toSplit.length > 0 && toSplit[0].startsWith("/")) {
 				if (toSplit[0].startsWith("/msg")) {
 					cmdPrefix = toSplit[0] + " " + toSplit[1] + " ";
 					start = 2;
-				} else if (!toSplit[0].trim().equals("/")) { 
+				} else if (!toSplit[0].trim().equals("/")) {
 					cmdPrefix = toSplit[0] + " ";
 					start = 1;
 				}

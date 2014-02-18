@@ -21,6 +21,7 @@ import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StringUtils;
 import org.apache.logging.log4j.LogManager;
 
@@ -117,8 +118,8 @@ public class TabbyChat {
 		boolean firstLine = true;
 		List<String> split = mc.fontRenderer.listFormattedStringToWidth(msg, ChatBox.getMinChatWidth());
 		for(String splitMsg : split) {
-			if(firstLine) TabbyChat.instance.addToChannel("TabbyChat", new TCChatLine(mc.ingameGUI.getUpdateCounter(), splitMsg, 0, true), false);
-			else TabbyChat.instance.addToChannel("TabbyChat", new TCChatLine(mc.ingameGUI.getUpdateCounter(), " "+splitMsg, 0, true), false);
+			if(firstLine) TabbyChat.instance.addToChannel("TabbyChat", new TCChatLine(mc.ingameGUI.getUpdateCounter(), new ChatComponentText(splitMsg), 0, true), false);
+			else TabbyChat.instance.addToChannel("TabbyChat", new TCChatLine(mc.ingameGUI.getUpdateCounter(), new ChatComponentText(" "+splitMsg), 0, true), false);
 			firstLine = false;
 		}
 	}
@@ -361,7 +362,7 @@ public class TabbyChat {
 				_new.notificationsOn = chan.getValue().notificationsOn;
 				_new.hidePrefix = chan.getValue().hidePrefix;
 				_new.cmdPrefix = chan.getValue().cmdPrefix;
-				this.addToChannel(chan.getKey(), new TCChatLine(-1, "-- chat history from "+(new SimpleDateFormat()).format(chanDataFile.lastModified()), 0, true), true);
+				this.addToChannel(chan.getKey(), new TCChatLine(-1, new ChatComponentText("-- chat history from "+(new SimpleDateFormat()).format(chanDataFile.lastModified())), 0, true), true);
 				_new.importOldChat(chan.getValue());
 				oldIDs++;
 			}
@@ -649,8 +650,8 @@ public class TabbyChat {
 		int _size = lastChat.size();
 		for (int i=0; i<_size; i++) {
 			if(lastChat.get(i).getChatLineString() == null || theChan.getChatLine(i).getChatLineString() == null) continue;
-			newChat = newChat + lastChat.get(i).getChatLineString();
-			oldChat = theChan.getChatLine(i).getChatLineString() + oldChat;
+			newChat = newChat + lastChat.get(i).getChatLineString().getFormattedText();
+			oldChat = theChan.getChatLine(i).getChatLineString().getFormattedText() + oldChat;
 		}
 		if (theChan.hasSpam) {
 			oldChat = oldChat.substring(0, oldChat.length() - 4 - Integer.toString(theChan.spamCount).length());
@@ -663,7 +664,7 @@ public class TabbyChat {
 				line.timeStamp = this.getTimeStamp();
 				theChan.setChatLogLine(i, line);
 			}
-			TCChatLine line = new TCChatLine(lastChat.get(0).getUpdatedCounter(), lastChat.get(lastChat.size()-1).getChatLineString() + " [" + theChan.spamCount + "x]", lastChat.get(0).getChatLineID());
+			TCChatLine line = new TCChatLine(lastChat.get(0).getUpdatedCounter(), lastChat.get(lastChat.size()-1).getChatLineString().createCopy().appendText(" [" + theChan.spamCount + "x]"), lastChat.get(0).getChatLineID());
 			line.timeStamp = this.getTimeStamp();
 			theChan.setChatLogLine(0, line);
 		} else {

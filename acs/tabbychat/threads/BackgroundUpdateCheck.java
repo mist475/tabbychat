@@ -7,13 +7,13 @@ import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TCChatLine;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.util.TabbyChatUtils;
-import net.minecraft.src.Minecraft;
+import net.minecraft.client.Minecraft;
 
 public class BackgroundUpdateCheck extends Thread {
-	
+
 	public BackgroundUpdateCheck() {
 	}
-	
+
 	public void run() {
 		String newest = TabbyChat.getNewestVersion();
 		if(!TabbyChat.generalSettings.tabbyChatEnable.getValue()) return;
@@ -29,5 +29,5 @@ public class BackgroundUpdateCheck extends Thread {
 			updateReport.append("\u00A7r");
 			GuiNewChatTC.getInstance().tc.printMessageToChat(updateReport.toString());
 		}
-	}	
+	}
 }

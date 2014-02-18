@@ -1,11 +1,9 @@
 package acs.tabbychat.gui;
 
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.GuiButton;
-import org.lwjgl.input.Mouse;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.lang.TCTranslate;
@@ -18,10 +16,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -35,17 +30,17 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 	protected int id = 9000;
 	protected static List<TCSettingsGUI> ScreenList = new ArrayList<TCSettingsGUI>();
 	protected File settingsFile;
-	
+
 	private TCSettingsGUI() {
 		mc = Minecraft.getMinecraft();
 		ScreenList.add(this);
 	}
-	
+
 	public TCSettingsGUI(TabbyChat _tc) {
 		this();
 		tc = _tc;
 	}
-	
+
 	public void actionPerformed(GuiButton button) {
 		if (button instanceof ITCSetting && ((ITCSetting)button).getType() != "textbox") {
 			((ITCSetting)button).actionPerformed();
@@ -73,9 +68,9 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		}
 		this.validateButtonStates();
 	}
-	
+
 	public void defineDrawableSettings() {}
-	
+
 	public void drawScreen(int x, int y, float f) {
 		if(TabbyChat.generalSettings.tabbyChatEnable.getValue() && tc.advancedSettings.forceUnicode.getValue()) mc.fontRenderer.setUnicodeFlag(true);
 		int iMargin = (LINE_HEIGHT - mc.fontRenderer.FONT_HEIGHT)/2;
@@ -83,10 +78,10 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		int absLeft = effLeft - MARGIN;
 		int effTop = (this.height - DISPLAY_HEIGHT)/2;
 		int absTop = effTop - MARGIN;
-		
+
 		drawRect(absLeft, absTop, absLeft + DISPLAY_WIDTH + 2*MARGIN, absTop + DISPLAY_HEIGHT + 2*MARGIN, 0x88000000);
 		drawRect(absLeft + 45, absTop, absLeft + 46, absTop + DISPLAY_HEIGHT, 0x66ffffff);
-		
+
 		for (int i = 0; i < ScreenList.size(); i++) {
 			if (ScreenList.get(i) == this) {
 				int curWidth;
@@ -108,7 +103,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		}
 		mc.fontRenderer.setUnicodeFlag(TabbyChat.defaultUnicode);
 	}
-	
+
 	public void handleMouseInput() {
 		super.handleMouseInput();
 		for (int i = 0; i < this.buttonList.size(); i++) {
@@ -120,18 +115,18 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 			}
 		}
 	}
-	
+
 	public void initDrawableSettings() {}
-	
+
 	public void initGui() {
 		Keyboard.enableRepeatEvents(true);
 		this.buttonList.clear();
-		
+
 		int effLeft = (this.width - DISPLAY_WIDTH)/2;
 		int absLeft = effLeft - MARGIN;
 		int effTop = (this.height - DISPLAY_HEIGHT)/2;
 		int absTop = effTop - MARGIN;
-		
+
 		this.lastOpened = 0;
 		int effRight = (this.width + DISPLAY_WIDTH)/2;
 		int bW = 40;
@@ -140,7 +135,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		this.buttonList.add(savePrefs);
 		PrefsButton cancelPrefs = new PrefsButton(CANCELBUTTON, effRight - 2*bW - 2, (this.height + DISPLAY_HEIGHT)/2 - bH, bW, bH, TabbyChat.translator.getString("settings.cancel"));
 		this.buttonList.add(cancelPrefs);
-		
+
 		for (int i = 0; i < ScreenList.size(); i++) {
 			ScreenList.get(i).id = 9000+i;
 			if (ScreenList.get(i) != this) {
@@ -158,7 +153,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 			if(drawable instanceof ITCSetting) ((ITCSetting)drawable).resetDescription();
 		}
 	}
-	
+
 	public void keyTyped(char par1, int par2) {
 		for (int i = 0; i < this.buttonList.size(); i++) {
 			if (ITCSetting.class.isInstance(this.buttonList.get(i))) {
@@ -170,12 +165,12 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		}
 		super.keyTyped(par1, par2);
 	}
-	
+
 	public Properties loadSettingsFile() {
 		Properties settingsTable = new Properties();
 		if(this.settingsFile == null) return settingsTable;
 		if(!this.settingsFile.exists()) return settingsTable;
-		
+
 		FileInputStream fInStream = null;
 		BufferedInputStream bInStream = null;
 		try {
@@ -198,7 +193,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		this.resetTempVars();
 		return settingsTable;
 	}
-	
+
 	public void mouseClicked(int par1, int par2, int par3) {
 		for (int i = 0; i < this.buttonList.size(); i++) {
 			if(this.buttonList.get(i) instanceof ITCSetting) {
@@ -210,7 +205,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		}
 		super.mouseClicked(par1, par2, par3);
 	}
-	
+
 	public void resetTempVars() {
 		for(Object drawable : this.buttonList) {
 			if(drawable instanceof ITCSetting) {
@@ -218,21 +213,21 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 			}
 		}
 	}
-	
+
 	public int rowY(int rowNum) {
 		return (this.height - DISPLAY_HEIGHT)/2 + (rowNum - 1) * (LINE_HEIGHT + MARGIN);
 	}
-	
+
 	public void saveSettingsFile(Properties settingsTable) {
 		if(this.settingsFile == null) return;
 		if(!this.settingsFile.getParentFile().exists()) this.settingsFile.getParentFile().mkdirs();
-		
+
 		for(Object drawable : this.buttonList) {
 			if(drawable instanceof ITCSetting) {
 				((ITCSetting)drawable).saveSelfToProps(settingsTable);
 			}
 		}
-		
+
 		FileOutputStream fOutStream = null;
 		BufferedOutputStream bOutStream = null;
 		try {
@@ -248,11 +243,11 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 			} catch (Exception e) {}
 		}
 	}
-	
+
 	public void saveSettingsFile() {
 		this.saveSettingsFile(new Properties());
 	}
-	
+
 	public void storeTempVars() {
 		for(Object drawable : this.buttonList) {
 			if(drawable instanceof ITCSetting) {
@@ -260,6 +255,6 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 			}
 		}
 	}
-	
+
 	public void validateButtonStates() {}
 }

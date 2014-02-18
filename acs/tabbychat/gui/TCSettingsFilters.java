@@ -398,7 +398,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 					((TCSettingBool)tmp).setTempValue(((TCSettingBool)tmp).getTempValue() && tmp.enabled());
 			}
 		}
-		this.sendToTabName.setEnabled(this.sendToTabBool.getTempValue() && !this.sendToAllTabs.getTempValue());
+		this.sendToTabName.func_146184_c(this.sendToTabBool.getTempValue() && !this.sendToAllTabs.getTempValue());
 	}
 
 }

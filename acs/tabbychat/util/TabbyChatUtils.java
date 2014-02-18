@@ -1,11 +1,9 @@
 package acs.tabbychat.util;
 
-import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.io.File;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -14,9 +12,6 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-
-import com.mumfrey.liteloader.core.LiteLoader;
 
 import acs.tabbychat.core.ChatChannel;
 //import acs.tabbychat.core.FilterTest;
@@ -32,29 +27,30 @@ import acs.tabbychat.settings.NotificationSoundEnum;
 import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.threads.BackgroundChatThread;
 
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.ChatLine;
-import net.minecraft.src.Gui;
-import net.minecraft.src.GuiChat;
-import net.minecraft.src.GuiIngame;
-import net.minecraft.src.GuiNewChat;
-import net.minecraft.src.GuiSleepMP;
-import net.minecraft.src.GuiTextField;
-import net.minecraft.src.ServerData;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ChatLine;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.client.gui.GuiSleepMP;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.util.ChatComponentText;
 
 public class TabbyChatUtils {
-	
+
 	private static Calendar logDay = Calendar.getInstance();
 	private static File logDir = new File(Minecraft.getMinecraft().mcDataDir, "TabbyChatLogs");
 	private static File logFile;
 	private static SimpleDateFormat logNameFormat = new SimpleDateFormat("'TabbyChatLog_'MM-dd-yyyy'.txt'");
 	public static String version = "1.10.00";
-	
+
 	public static void chatGuiTick(Minecraft mc) {
 		if(mc.currentScreen == null) return;
 		if(!(mc.currentScreen instanceof GuiChat)) return;
 		if(mc.currentScreen.getClass() == GuiChatTC.class) return;
-		
+
 		String inputBuffer = "";
 		try {
 			int ind = 0;
@@ -66,14 +62,14 @@ public class TabbyChatUtils {
 						break;
 					}
 					ind++;
-				}				
+				}
 			}
 		} catch (Exception e) {
 			TabbyChat.printException("Unable to display chat interface", e);
 		}
 		mc.displayGuiScreen(new GuiChatTC(inputBuffer));
 	}
-	
+
 	public static String chatLinesToString(List<TCChatLine> lines) {
 		StringBuilder result = new StringBuilder(500);
 		for(TCChatLine line : lines) {
@@ -81,7 +77,7 @@ public class TabbyChatUtils {
 		}
 		return result.toString().trim();
 	}
-	
+
 	public static ServerData getServerData() {
 		Minecraft mc = Minecraft.getMinecraft();
 		ServerData serverData = null;
@@ -98,7 +94,7 @@ public class TabbyChatUtils {
 		}
 		return serverData;
 	}
-	
+
 	public static File getServerDir() {
 		String ip = getServerIp();
 		if (ip.contains(":")) {
@@ -106,8 +102,8 @@ public class TabbyChatUtils {
 		}
 		return new File(ITCSettingsGUI.tabbyChatDir, ip);
 	}
-	
-	public static String getServerIp() {		
+
+	public static String getServerIp() {
 		String ip;
 		if(Minecraft.getMinecraft().isSingleplayer()) {
 			ip = "singleplayer";
@@ -118,7 +114,7 @@ public class TabbyChatUtils {
 		}
 		return ip;
 	}
-	
+
 	public static File getTabbyChatDir() {
 //		if(TabbyChat.liteLoaded) {
 //			return new File(LiteLoader.getGameDirectory(), new StringBuilder().append("config").append(File.separatorChar).append("tabbychat").toString());
@@ -126,7 +122,7 @@ public class TabbyChatUtils {
 			return new File(Minecraft.getMinecraft().mcDataDir, new StringBuilder().append("config").append(File.separatorChar).append("tabbychat").toString());
 //		}
 	}
-	
+
 	public static void hookIntoChat(GuiNewChatTC _gnc) {
 		if(Minecraft.getMinecraft().ingameGUI.getChatGUI().getClass() != GuiNewChatTC.class) {
 			try {
@@ -134,7 +130,7 @@ public class TabbyChatUtils {
 				Field persistantGuiField = IngameGui.getDeclaredFields()[6];
 				persistantGuiField.setAccessible(true);
 				persistantGuiField.set(Minecraft.getMinecraft().ingameGUI, _gnc);
-				
+
 				int tmp = 0;
 				for(Field fields : GuiNewChat.class.getDeclaredFields()) {
 					if(fields.getType() == List.class) {
@@ -155,14 +151,14 @@ public class TabbyChatUtils {
 			}
 		}
 	}
-	
+
 	public static boolean is(Gui _gui, String className) {
 		try {
 			return _gui.getClass().getSimpleName().contains(className);
 		} catch (Throwable e) {}
 		return false;
 	}
-	
+
 	public static String join(String[] arr, String glue) {
 		if (arr.length < 1)
 			return "";
@@ -179,12 +175,12 @@ public class TabbyChatUtils {
 
 	public static void logChat(String theChat) {
 		Calendar tmpcal = Calendar.getInstance();
-	
+
 		if (logFile == null || tmpcal.get(Calendar.DAY_OF_YEAR) != logDay.get(Calendar.DAY_OF_YEAR)) {
 			logDay = tmpcal;
 			logFile = new File(logDir, logNameFormat.format(logDay.getTime()).toString());
 		}
-		
+
 		if (!logFile.exists()) {
 			try {
 				logDir.mkdirs();
@@ -194,7 +190,7 @@ public class TabbyChatUtils {
 				return;
 			}
 		}
-		
+
 		try {
 			FileOutputStream logStream = new FileOutputStream(logFile, true);
 			PrintStream logPrint = new PrintStream(logStream);
@@ -205,13 +201,13 @@ public class TabbyChatUtils {
 			return;
 		}
 	}
-	
+
 	public static Float median(float val1, float val2, float val3) {
 		if(val1 < val2 && val1 < val3) return Math.min(val2, val3);
 		else if(val1 > val2 && val1 > val3) return Math.max(val2, val3);
 		else return val1;
 	}
-	
+
 	public static ColorCodeEnum parseColor(Object _input) {
 		if(_input == null) return null;
 		String input = _input.toString();
@@ -231,7 +227,7 @@ public class TabbyChatUtils {
 			return null;
 		}
 	}
-	
+
 	public static Float parseFloat(Object _input, float min, float max) {
 		if(_input == null) return (Float)_input;
 		String input = _input.toString();
@@ -255,7 +251,7 @@ public class TabbyChatUtils {
 			return null;
 		}
 	}
-	
+
 	public static Integer parseInteger(String _input, int min, int max, int fallback) {
 		Integer result;
 		try {
@@ -267,7 +263,7 @@ public class TabbyChatUtils {
 		}
 		return result;
 	}
-	
+
 	public static int parseInteger(String _input) {
 		NumberFormat formatter = NumberFormat.getInstance();
 		boolean state = formatter.isParseIntegerOnly();
@@ -278,7 +274,7 @@ public class TabbyChatUtils {
 		if(_input.length() == pos.getIndex()) return result;
 		else return -1;
 	}
-	
+
 	public static NotificationSoundEnum parseSound(Object _input) {
 		if(_input == null) return NotificationSoundEnum.ORB;
 		String input = _input.toString();
@@ -288,12 +284,12 @@ public class TabbyChatUtils {
 			return NotificationSoundEnum.ORB;
 		}
 	}
-	
+
 	public static String parseString(Object _input) {
 		if(_input == null) return " ";
 		else return _input.toString();
 	}
-	
+
 	public static TimeStampEnum parseTimestamp(Object _input) {
 		if(_input == null) return null;
 		String input = _input.toString();
@@ -303,7 +299,7 @@ public class TabbyChatUtils {
 			return null;
 		}
 	}
-	
+
 	public static List<TCChatLine> stringToChatLines(int stamp, String line, int id, boolean status) {
 		//List<String> lineSplit = Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(line, stringWidth);
 		List<String> lineSplit = Arrays.asList(line.split("\n"));
@@ -311,9 +307,9 @@ public class TabbyChatUtils {
 		boolean first = true;
 		for(String split : lineSplit) {
 			if(first) {
-				result.add(new TCChatLine(stamp, split, id, status));
+				result.add(new TCChatLine(stamp, new ChatComponentText(split), id, status));
 				first = false;
-			} else result.add(new TCChatLine(stamp, " "+split, id, status));
+			} else result.add(new TCChatLine(stamp, new ChatComponentText(" "+split), id, status));
 		}
 		return result;
 	}
@@ -327,7 +323,7 @@ public class TabbyChatUtils {
 			_right = _tmp;
 		}
 		if(_right >= currentMap.size()) return currentMap;
-		
+
 		// Convert map to array for access by index
 		String[] arrayCopy = new String[currentMap.size()];
 		arrayCopy = currentMap.keySet().toArray(arrayCopy);
@@ -352,7 +348,7 @@ public class TabbyChatUtils {
 			ChatChannel active = TabbyChat.getInstance().channelMap.get(actives.get(0));
 			String tabPrefix = active.cmdPrefix;
 			boolean hiddenPrefix = active.hidePrefix;
-			
+
 			if(tabPrefix != null && tabPrefix.length() > 0) {
 				if(!hiddenPrefix) sendProc = new BackgroundChatThread(toSend, tabPrefix);
 				else if(!toSend.startsWith("/")) sendProc = new BackgroundChatThread(tabPrefix + " " + toSend, tabPrefix);
@@ -362,6 +358,6 @@ public class TabbyChatUtils {
 		}
 		sendProc.start();
 	}
-	
+
 	private TabbyChatUtils() {}
 }
