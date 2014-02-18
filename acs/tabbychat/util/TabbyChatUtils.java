@@ -44,7 +44,9 @@ public class TabbyChatUtils {
 	private static File logDir = new File(Minecraft.getMinecraft().mcDataDir, "TabbyChatLogs");
 	private static File logFile;
 	private static SimpleDateFormat logNameFormat = new SimpleDateFormat("'TabbyChatLog_'MM-dd-yyyy'.txt'");
-	public static String version = "1.10.00";
+	public final static String version = "1.11.00";
+	public final static String name = "TabbyChat";
+	public final static String modid = "tabbychat";
 
 	public static void chatGuiTick(Minecraft mc) {
 		if(mc.currentScreen == null) return;
