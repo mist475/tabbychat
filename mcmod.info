@@ -2,7 +2,7 @@
 {
 	"modid": "tabbychat",
 	"name": "TabbyChat",
-	"description": "Tabular chat mod for Minecraft",
+	"description": "SMP Chat Overhaul",
 	"version": "1.11.0",
 	"mcversion": "1.7.2",
 	"authors": ["RocketMan10404"]
