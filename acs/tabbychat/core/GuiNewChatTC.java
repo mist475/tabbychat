@@ -1,29 +1,24 @@
 package acs.tabbychat.core;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.*;
-import org.apache.logging.log4j.LogManager;
-import org.lwjgl.opengl.GL11;
-
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatScrollBar;
 import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.ChatLine;
-import net.minecraft.client.gui.GuiDisconnected;
-import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class GuiNewChatTC extends GuiNewChat {
 	public final Minecraft mc;
@@ -41,13 +36,13 @@ public class GuiNewChatTC extends GuiNewChat {
 	protected boolean saveNeeded = true;
 	private static GuiNewChatTC instance = null;
 	public static TabbyChat tc;
-	
+
 	private GuiNewChatTC(Minecraft par1Minecraft) {
 		super(par1Minecraft);
 		this.mc = par1Minecraft;
 		this.sr = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
 	}
-	
+
 	public void addChatLines(int _pos, List<TCChatLine> _add) {
 		chatReadLock.lock();
 		try {
@@ -71,13 +66,13 @@ public class GuiNewChatTC extends GuiNewChat {
 			chatReadLock.unlock();
 		}
 	}
-	
+
 	public @Override void /*addToSentMessages*/func_146239_a(String _msg) {
 		if(this.sentMessages.isEmpty() || !(this.sentMessages.get(this.sentMessages.size()-1)).equals(_msg)) {
 			this.sentMessages.add(_msg);
 		}
 	}
-	
+
 //	public @Override void addTranslatedMessage(IChatComponent par1Str, Object ... par2ArrayOfObj) {
 //		this.func_146227_a(StatCollector.translateToLocalFormatted(par1Str, par2ArrayOfObj));
 //	}
@@ -107,7 +102,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		}
 		this.sentMessages.clear();
 	}
-	
+
 	public @Override void /*deleteChatLine*/func_146242_c(int _id) {
 		ChatLine chatLineRemove = null;
 		ChatLine backupLineRemove = null;
@@ -133,9 +128,9 @@ public class GuiNewChatTC extends GuiNewChat {
 		} finally {
 			chatReadLock.unlock();
 		}
-		
+
 		chatWriteLock.lock();
-		try {		
+		try {
 			if(chatLineRemove != null && chatLineRemove.getChatLineID() == _id) {
 				this.chatLines.remove(chatLineRemove);
 			}
@@ -147,7 +142,7 @@ public class GuiNewChatTC extends GuiNewChat {
 
 	public @Override void /*drawChat*/func_146230_a(int currentTick) {
 		if(!tc.liteLoaded && !tc.modLoaded) TabbyChatUtils.chatGuiTick(mc);
-		
+
 		// Save channel data if at main menu or disconnect screen, use flag so it's only saved once
 		if(mc.currentScreen != null) {
 			if(this.mc.currentScreen instanceof GuiDisconnected || this.mc.currentScreen instanceof GuiIngameMenu) {
@@ -161,9 +156,9 @@ public class GuiNewChatTC extends GuiNewChat {
 				this.saveNeeded = true;
 			}
 		}
-		
+
 		this.sr = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
-		
+
 		int lineCounter = 0;
 		int visLineCounter = 0;
 		if(TabbyChat.generalSettings.tabbyChatEnable.getValue() && TabbyChat.advancedSettings.forceUnicode.getValue()) this.mc.fontRenderer.setUnicodeFlag(true);
@@ -174,7 +169,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			int timeStampOffset = 0;;
 			float chatScaling = this.func_146244_h();
 			int fadeTicks = 200;
-			
+
 			int numLinesTotal = 0;
 			chatReadLock.lock();
 			try {
@@ -284,8 +279,8 @@ public class GuiNewChatTC extends GuiNewChat {
 		}
 		this.mc.fontRenderer.setUnicodeFlag(TabbyChat.defaultUnicode);
 	}
-	
-	public @Override IChatComponent func_146236_a(int clickX, int clickY) {
+
+	public @Override IChatComponent /*func_73766_a*/func_146236_a(int clickX, int clickY) {
 		if(!this.func_146241_e()) return null;
 		else {
 			IChatComponent returnMe = null;
@@ -305,13 +300,13 @@ public class GuiNewChatTC extends GuiNewChat {
 					}
 				} finally {
 					chatReadLock.unlock();
-				}				
+				}
 			}
 			return returnMe;
 		}
 	}
 
-	public void func_96129_a(IChatComponent _msg, int id, int tick, boolean backupFlag) {
+	public void func_146237_a(IChatComponent _msg, int id, int tick, boolean backupFlag) {
 		boolean chatOpen = this.func_146241_e();
 		boolean isLineOne = true;
 		boolean optionalDeletion = false;
@@ -342,7 +337,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			multiLineChat.add(new TCChatLine(tick, _line, id));
 			isLineOne = false;
 		}
-		
+
 		// Add chatlines to appropriate lists
 		if(tc.enabled() && !optionalDeletion && !backupFlag) {
 			tc.processChat(multiLineChat);
@@ -359,7 +354,7 @@ public class GuiNewChatTC extends GuiNewChat {
 				chatWriteLock.unlock();
 			}
 		}
-		
+
 		// Trim lists to size as needed
 		if(tc.serverDataLock.availablePermits() < 1) return;
 		int maxChats = tc.enabled() ? Integer.parseInt(TabbyChat.advancedSettings.chatScrollHistory.getValue()) : 100;
@@ -371,7 +366,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			chatReadLock.unlock();
 		}
 		if(numChats <= maxChats) return;
-		
+
 		chatWriteLock.lock();
 		try {
 			while(this.chatLines.size() > maxChats) {
@@ -407,7 +402,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			} finally {
 				chatReadLock.unlock();
 			}
-			if(_cl != null) this.func_96129_a(_cl.func_151461_a(), _cl.getChatLineID(), _cl.getUpdatedCounter(), true);
+			if(_cl != null) this.func_146237_a(_cl.func_151461_a(), _cl.getChatLineID(), _cl.getUpdatedCounter(), true);
 		}
 	}
 
@@ -421,18 +416,18 @@ public class GuiNewChatTC extends GuiNewChat {
 		}
 		return theSize;
 	}
-	
+
 	public @Override boolean /*getChatOpen*/func_146241_e() {
 		return (this.mc.currentScreen instanceof GuiChat || this.mc.currentScreen instanceof GuiChatTC);
 	}
-	
+
 	public int getHeightSetting() {
 		if (tc.enabled()) {
 			return ChatBox.getChatHeight();
 		} else
 			return func_146243_b(this.mc.gameSettings.chatHeightFocused);
 	}
-	
+
 	public static GuiNewChatTC getInstance() {
 		if(instance == null) {
 			instance = new GuiNewChatTC(Minecraft.getMinecraft());
@@ -493,7 +488,7 @@ public class GuiNewChatTC extends GuiNewChat {
 	}
 
 	public @Override void /*printChatMessageWithOptionalDeletion*/func_146234_a(IChatComponent _msg, int flag) {
-		this.func_96129_a(_msg, flag, this.mc.ingameGUI.getUpdateCounter(), false);
+		this.func_146237_a(_msg, flag, this.mc.ingameGUI.getUpdateCounter(), false);
 		LogManager.getLogger().info("[CHAT] " + _msg);
 	}
 
@@ -502,15 +497,15 @@ public class GuiNewChatTC extends GuiNewChat {
 		this.chatScrolled = false;
 	}
 
-	public @Override void func_146229_b(int _lines) {
+	public @Override void /*scroll*/func_146229_b(int _lines) {
 		int maxLineDisplay;
 		if(tc.enabled()) {
 			float scaleFactor = 1.0f;
 			maxLineDisplay = Math.round(ChatBox.getChatHeight() / 9.0f);
 			if(!this.func_146241_e()) maxLineDisplay = Math.round(maxLineDisplay * TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue() / 100.0f);
 		} else
-		
 			maxLineDisplay = this.func_146232_i();
+
 		this.scrollOffset += _lines;
 		int numLines = 0;
 		chatReadLock.lock();
@@ -538,7 +533,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		if(_pos + _add.size() > clsize) {
 			addInstead = true;
 		}
-		
+
 		chatWriteLock.lock();
 		try {
 			int j;
