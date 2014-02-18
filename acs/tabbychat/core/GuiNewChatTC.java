@@ -490,7 +490,7 @@ public class GuiNewChatTC extends GuiNewChat {
 
 	public @Override void /*printChatMessageWithOptionalDeletion*/func_146234_a(IChatComponent _msg, int flag) {
 		this.func_146237_a(_msg, flag, this.mc.ingameGUI.getUpdateCounter(), false);
-		LogManager.getLogger().info("[CHAT] " + _msg);
+		LogManager.getLogger().info("[CHAT] " + _msg.getUnformattedText());
 	}
 
 	public @Override void /*resetfunc_146229_b*/resetScroll() {

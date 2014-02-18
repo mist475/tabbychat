@@ -73,7 +73,7 @@ public class TabbyChatUtils {
 	public static String chatLinesToString(List<TCChatLine> lines) {
 		StringBuilder result = new StringBuilder(500);
 		for(TCChatLine line : lines) {
-			result.append(line.getChatLineString()).append("\n");
+			result.append(line.getChatLineString().getFormattedText()).append("\n");
 		}
 		return result.toString().trim();
 	}

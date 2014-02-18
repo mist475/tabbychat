@@ -650,8 +650,8 @@ public class TabbyChat {
 		int _size = lastChat.size();
 		for (int i=0; i<_size; i++) {
 			if(lastChat.get(i).getChatLineString() == null || theChan.getChatLine(i).getChatLineString() == null) continue;
-			newChat = newChat + lastChat.get(i).getChatLineString().getFormattedText();
-			oldChat = theChan.getChatLine(i).getChatLineString().getFormattedText() + oldChat;
+			newChat = newChat + lastChat.get(i).getChatLineString().getUnformattedText();
+			oldChat = theChan.getChatLine(i).getChatLineString().getUnformattedText() + oldChat;
 		}
 		if (theChan.hasSpam) {
 			oldChat = oldChat.substring(0, oldChat.length() - 4 - Integer.toString(theChan.spamCount).length());
