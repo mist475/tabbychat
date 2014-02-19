@@ -12,12 +12,13 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
-    }
+	}
 }
 
 apply plugin: 'forge'
 
 version = "1.11.0"
+
 group= "asc.tabbychat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TabbyChat"
 
@@ -39,4 +40,7 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+dependencies {
+	compile 'junit:junit:4.8.1'
 }
