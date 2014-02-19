@@ -48,6 +48,14 @@ processResources
         exclude 'mcmod.info'
     }
 }
+sourceSets {
+	main {
+		java {
+			exclude "acs/tabbychat/liteloader/**"
+			exclude "net/minecraft/**"
+		}
+	}
+}
 dependencies {
 	compile 'junit:junit:4.8.1'
 	compile 'net.sf.jazzy:jazzy:0.5.2-rtext-1.4.1-2'
