@@ -140,7 +140,7 @@ public class MacroKeybindCompat {
 			Object oBindable = isBindable.invoke(control, (Object[])null);
 			boolean bindable = ((Boolean)oBindable).booleanValue();
 
-			if(menuItem != null && control != null) {
+			if(menuItem != null) {
 				if(menuItem.equals("execute")) {
 					if(bindable) {
 						onControlClicked.invoke(inChatGUI, new Object[]{control});

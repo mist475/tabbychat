@@ -69,7 +69,7 @@ public class GuiChatTC extends GuiChat {
 
 		if(par1GuiButton instanceof PrefsButton && par1GuiButton.id == 1) this.playerWakeUp();
 
-		if(!ChatButton.class.isInstance(par1GuiButton)) return;
+		if(!(par1GuiButton instanceof ChatButton)) return;
 		ChatButton _button = (ChatButton)par1GuiButton;
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && tc.channelMap.get("*") == _button.channel) {
 			this.mc.displayGuiScreen(TabbyChat.generalSettings);

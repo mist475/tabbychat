@@ -181,9 +181,9 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 			TabbyChat.printException("Error while reading settings from file '"+this.settingsFile+"'", e);
 		} finally {
 			try {
-				bInStream.close();
-				fInStream.close();
-			} catch (Exception e) {}
+                if (bInStream != null) bInStream.close();
+                if (fInStream != null) fInStream.close();
+            } catch (Exception ignored) {}
 		}
 		for(Object drawable : this.buttonList) {
 			if(drawable instanceof ITCSetting) {
@@ -238,9 +238,9 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 			TabbyChat.printException("Error while writing settings to file '"+this.settingsFile+"'", e);
 		} finally {
 			try {
-				bOutStream.close();
-				fOutStream.close();
-			} catch (Exception e) {}
+                if (bOutStream != null) bOutStream.close();
+                if (fOutStream != null) fOutStream.close();
+            } catch (Exception ignored) {}
 		}
 	}
 

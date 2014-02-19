@@ -231,7 +231,7 @@ public class TabbyChatUtils {
 	}
 
 	public static Float parseFloat(Object _input, float min, float max) {
-		if(_input == null) return (Float)_input;
+		if(_input == null) return null;
 		String input = _input.toString();
 		Float result;
 		try {

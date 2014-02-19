@@ -150,8 +150,8 @@ public class TCSpellCheckManager {
 				TabbyChat.printException("Unable to load user dictionary for spell checking", e);
 			} finally {
 				try {
-					in.close();
-				} catch(Exception e) {}
+                    if (in != null) in.close();
+                } catch(Exception ignored) {}
 			}
 		}
 	}
