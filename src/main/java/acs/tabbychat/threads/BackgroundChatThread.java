@@ -18,7 +18,7 @@ public class BackgroundChatThread extends Thread {
 
 	public synchronized void run() {
 		Minecraft mc = Minecraft.getMinecraft();
-		mc.ingameGUI.getChatGUI().func_146239_a(this.sendChat);
+		mc.ingameGUI.getChatGUI().addToSentMessages(this.sendChat);
 		String cmdPrefix = "";
 		String[] toSplit;
 		int start;

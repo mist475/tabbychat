@@ -43,7 +43,7 @@ public class TCSpellCheckManager {
 		List<String> inputCache = new ArrayList<String>();
 		int activeFields = 0;
 		for(GuiTextField field : inputFields) {
-			if(field.func_146176_q()) activeFields++;
+			if(field.getVisible()) activeFields++;
 			inputCache.add(field.getText());
 		}
 		if(activeFields == 0) return;
@@ -176,7 +176,7 @@ public class TCSpellCheckManager {
 		// Clear and re-populate contents of input fields, initiate spell checker
 		String inputCache = "";
 		for(GuiTextField inputField : inputFields) {
-			if(inputField.func_146176_q()) {
+			if(inputField.getVisible()) {
 				inputCache = inputField.getText() + inputCache;
 			}
 		}

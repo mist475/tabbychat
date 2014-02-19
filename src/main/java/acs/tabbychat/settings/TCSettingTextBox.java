@@ -25,7 +25,7 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
 
 	public void disable() {
 		super.disable();
-		this.textBox.func_146184_c(false);
+		this.textBox.setEnabled(false);
 	}
 
 	public void drawButton(Minecraft par1, int cursorX, int cursorY) {
@@ -37,12 +37,12 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
 
 	public void enable() {
 		super.enable();
-		this.textBox.func_146184_c(true);
+		this.textBox.setEnabled(true);
 	}
 
 	public void func_146184_c(boolean val) {
 		this.enabled = val;
-		this.textBox.func_146184_c(val);
+		this.textBox.setEnabled(val);
 	}
 
 	public String getTempValue() {
@@ -64,7 +64,7 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
 	private void reassignField() {
 		String tmp = this.textBox.getText();
 		this.textBox = new GuiTextField(mc.fontRenderer, this.x(), this.y()+1, this.width(), this.height()+1);
-		this.textBox.func_146203_f(this.charLimit);
+		this.textBox.setMaxStringLength(this.charLimit);
 		this.textBox.setText(tmp);
 	}
 
@@ -89,7 +89,7 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
 
 	public void setCharLimit(int newLimit) {
 		this.charLimit = newLimit;
-		this.textBox.func_146203_f(newLimit);
+		this.textBox.setMaxStringLength(newLimit);
 	}
 
 	public void setDefault(Object newDefault) {

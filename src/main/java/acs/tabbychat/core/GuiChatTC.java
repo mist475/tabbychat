@@ -128,23 +128,23 @@ public class GuiChatTC extends GuiChat {
 	public @Override void /*completePlayerName*/func_146404_p_() {
 		String textBuffer;
 		if(this.playerNamesFound) {
-			this.inputField2.func_146175_b(this.inputField2.func_146197_a(-1, this.inputField2.func_146198_h(), false) - this.inputField2.func_146198_h());
+			this.inputField2.getNthWordFromCursor(this.inputField2.func_146197_a(-1, this.inputField2.getCursorPosition(), false) - this.inputField2.getCursorPosition());
 			if(this.playerNameIndex >= this.foundPlayerNames.size()) {
 				this.playerNameIndex = 0;
 			}
 		} else {
-			int prevWordIndex = this.inputField2.func_146197_a(-1, this.inputField2.func_146198_h(), false);
+			int prevWordIndex = this.inputField2.func_146197_a(-1, this.inputField2.getCursorPosition(), false);
 			this.foundPlayerNames.clear();
 			this.playerNameIndex = 0;
 			String nameStart = this.inputField2.getText().substring(prevWordIndex).toLowerCase();
-			textBuffer = this.inputField2.getText().substring(0, this.inputField2.func_146198_h());
+			textBuffer = this.inputField2.getText().substring(0, this.inputField2.getCursorPosition());
 			this.func_73893_a(textBuffer, nameStart);
 			if(this.foundPlayerNames.isEmpty()) {
 				return;
 			}
 
 			this.playerNamesFound = true;
-			this.inputField2.func_146175_b(prevWordIndex - this.inputField2.func_146198_h());
+			this.inputField2.getNthWordFromCursor(prevWordIndex - this.inputField2.getCursorPosition());
 		}
 
 		if(this.foundPlayerNames.size() > 1) {
@@ -157,10 +157,10 @@ public class GuiChatTC extends GuiChat {
 				}
 			}
 
-			this.mc.ingameGUI.getChatGUI().func_146234_a(new ChatComponentText(_sb.toString()), 1);
+			this.mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new ChatComponentText(_sb.toString()), 1);
 		}
 
-		this.inputField2.func_146191_b((String)this.foundPlayerNames.get(this.playerNameIndex++));
+		this.inputField2.setText((String)this.foundPlayerNames.get(this.playerNameIndex++));
 	}
 
 	public @Override void confirmClicked(boolean zeroId, int worldNum) {
@@ -180,14 +180,14 @@ public class GuiChatTC extends GuiChat {
 		// Calculate positions of currently-visible input fields
 		int inputHeight = 0;
 		for(int i=0; i<this.inputList.size(); i++) {
-			if(this.inputList.get(i).func_146176_q()) inputHeight += 12;
+			if(this.inputList.get(i).getVisible()) inputHeight += 12;
 		}
 
 		// Draw text fields and background
 		int bgWidth = (MacroKeybindCompat.present) ? this.width - 24 : this.width - 2;
 		drawRect(2, this.height-2-inputHeight, bgWidth, this.height-2, Integer.MIN_VALUE);
 		for(GuiTextField field : this.inputList) {
-			if(field.func_146176_q()) field.drawTextBox();
+			if(field.getVisible()) field.drawTextBox();
 		}
 
 		// Draw current message length indicator
@@ -299,15 +299,15 @@ public class GuiChatTC extends GuiChat {
 	public int getFocusedFieldInd() {
 		int _s = this.inputList.size();
 		for (int i=0; i<_s; i++) {
-			if (this.inputList.get(i).isFocused() && this.inputList.get(i).func_146176_q())
+			if (this.inputList.get(i).isFocused() && this.inputList.get(i).getVisible())
 				return i;
 		}
 		return 0;
 	}
 
-	public @Override void /*getSentHistory*/func_146402_a(int _dir) {
+	public @Override void /*getSentHistory*/getSentHistory(int _dir) {
 		int loc = this.sentHistoryCursor2 + _dir;
-		int historyLength = this.gnc.func_146238_c().size();
+		int historyLength = this.gnc.getSentMessages().size();
 		loc = Math.max(0, loc);
 		loc = Math.min(historyLength, loc);
 		if(loc == this.sentHistoryCursor2) return;
@@ -316,7 +316,7 @@ public class GuiChatTC extends GuiChat {
 			this.setText(new StringBuilder(""), 1);
 		} else {
 			if(this.sentHistoryCursor2 == historyLength) this.historyBuffer = this.inputField2.getText();
-			StringBuilder _sb = new StringBuilder((String)this.gnc.func_146238_c().get(loc));
+			StringBuilder _sb = new StringBuilder((String)this.gnc.getSentMessages().get(loc));
 			this.setText(_sb, _sb.length());
 			this.sentHistoryCursor2 = loc;
 		}
@@ -350,8 +350,8 @@ public class GuiChatTC extends GuiChat {
 			wheelDelta = Math.max(-1, wheelDelta);
 			if(!isShiftKeyDown()) wheelDelta *= 7;
 
-			if(ChatBox.anchoredTop) this.gnc.func_146229_b(-wheelDelta);
-			else this.gnc.func_146229_b(wheelDelta);
+			if(ChatBox.anchoredTop) this.gnc.scroll(-wheelDelta);
+			else this.gnc.scroll(wheelDelta);
 			if(this.tc.enabled()) this.scrollBar.scrollBarMouseWheel();
 		} else if(this.tc.enabled()) this.scrollBar.handleMouse();
 
@@ -375,26 +375,26 @@ public class GuiChatTC extends GuiChat {
 			this.buttonList.add(this.tc.channelMap.get("*").tab);
 		}
 
-		this.sentHistoryCursor2 = this.gnc.func_146238_c().size();
+		this.sentHistoryCursor2 = this.gnc.getSentMessages().size();
 		int textFieldWidth = (MacroKeybindCompat.present) ? this.width - 26 : this.width - 4;
 		this.inputField2 = new GuiTextField(this.fontRendererObj, 4, this.height - 12, textFieldWidth, 12);
-		this.inputField2.func_146203_f(500);
-		this.inputField2.func_146185_a(false);
+		this.inputField2.setMaxStringLength(500);
+		this.inputField2.setCanLoseFocus(false);
 		this.inputField2.setFocused(true);
 		this.inputField2.setText(this.defaultInputFieldText);
-		this.inputField2.func_146205_d(true);
+		this.inputField2.setFocused(true);
 		this.inputList.add(0, this.inputField2);
 		if(!tc.enabled()) return;
 
 		GuiTextField placeholder;
 		for(int i=1; i<3; i++) {
 			placeholder = new GuiTextField(this.fontRendererObj, 4, this.height - 12*(i+1), textFieldWidth, 12);
-			placeholder.func_146203_f(500);
-			placeholder.func_146185_a(false);
+			placeholder.setMaxStringLength(500);
+			placeholder.setCanLoseFocus(false);
 			placeholder.setFocused(false);
 			placeholder.setText("");
-			placeholder.func_146205_d(true);
-			placeholder.func_146205_d(false);
+			placeholder.setFocused(true);
+			placeholder.setFocused(false);
 			this.inputList.add(i,placeholder);
 		}
 
@@ -426,7 +426,7 @@ public class GuiChatTC extends GuiChat {
 		for (int i=this.inputList.size()-1; i>=0; i--) {
 			msg.append(this.inputList.get(i).getText());
 			if (this.inputList.get(i).isFocused()) {
-				cPos += this.inputList.get(i).func_146198_h();
+				cPos += this.inputList.get(i).getCursorPosition();
 				cFound = true;
 			} else if (!cFound) {
 				cPos += this.inputList.get(i).getText().length();
@@ -467,7 +467,7 @@ public class GuiChatTC extends GuiChat {
 				TabbyChatUtils.writeLargeChat(_msg.toString());
 				for(int i=1; i<this.inputList.size(); i++) {
 					this.inputList.get(i).setText("");
-					this.inputList.get(i).func_146205_d(false);
+					this.inputList.get(i).setFocused(false);
 				}
 			}
 			if(!tc.enabled() || !ChatBox.pinned) this.mc.displayGuiScreen((GuiScreen)null);
@@ -477,47 +477,47 @@ public class GuiChatTC extends GuiChat {
 			break;
 		// UP: if currently in multi-line chat, move into the above textbox.  Otherwise, go back one in the sent history (forced by Ctrl)
 		case Keyboard.KEY_UP:
-			if(GuiScreen.isCtrlKeyDown()) this.func_146402_a(-1);
+			if(GuiScreen.isCtrlKeyDown()) this.getSentHistory(-1);
 			else {
 				int foc = this.getFocusedFieldInd();
-				if(foc+1 < this.inputList.size() && this.inputList.get(foc+1).func_146176_q()) {
-					int gcp = this.inputList.get(foc).func_146198_h();
+				if(foc+1 < this.inputList.size() && this.inputList.get(foc+1).getVisible()) {
+					int gcp = this.inputList.get(foc).getCursorPosition();
 					int lng = this.inputList.get(foc+1).getText().length();
 					int newPos = Math.min(gcp, lng);
 					this.inputList.get(foc).setFocused(false);
 					this.inputList.get(foc+1).setFocused(true);
-					this.inputList.get(foc+1).func_146190_e(newPos);
-				} else this.func_146402_a(-1);
+					this.inputList.get(foc+1).setCursorPosition(newPos);
+				} else this.getSentHistory(-1);
 			}
 			break;
 		// DOWN: if currently in multi-line chat, move into the below textbox.  Otherwise, go forward one in the sent history (force by Ctrl)
 		case Keyboard.KEY_DOWN:
-			if(GuiScreen.isCtrlKeyDown()) this.func_146402_a(1);
+			if(GuiScreen.isCtrlKeyDown()) this.getSentHistory(1);
 			else {
 				int foc = this.getFocusedFieldInd();
-				if(foc-1 >= 0 && this.inputList.get(foc-1).func_146176_q()) {
-					int gcp = this.inputList.get(foc).func_146198_h();
+				if(foc-1 >= 0 && this.inputList.get(foc-1).getVisible()) {
+					int gcp = this.inputList.get(foc).getCursorPosition();
 					int lng = this.inputList.get(foc-1).getText().length();
 					int newPos = Math.min(gcp, lng);
 					this.inputList.get(foc).setFocused(false);
 					this.inputList.get(foc-1).setFocused(true);
-					this.inputList.get(foc-1).func_146190_e(newPos);
-				} else this.func_146402_a(1);
+					this.inputList.get(foc-1).setCursorPosition(newPos);
+				} else this.getSentHistory(1);
 			}
 			break;
 		// PAGE UP: scroll up through chat
 		case Keyboard.KEY_PRIOR:
-			this.gnc.func_146229_b(19);
+			this.gnc.scroll(19);
 			if(this.tc.enabled()) this.scrollBar.scrollBarMouseWheel();
 			break;
 		// PAGE DOWN: scroll down through chat
 		case Keyboard.KEY_NEXT:
-			this.gnc.func_146229_b(-19);
+			this.gnc.scroll(-19);
 			if(this.tc.enabled()) this.scrollBar.scrollBarMouseWheel();
 			break;
 		// BACKSPACE: delete previous character, minding potential contents of other input fields
 		case Keyboard.KEY_BACK:
-			if(this.inputField2.isFocused() && this.inputField2.func_146198_h() > 0) this.inputField2.textboxKeyTyped(_char, _code);
+			if(this.inputField2.isFocused() && this.inputField2.getCursorPosition() > 0) this.inputField2.textboxKeyTyped(_char, _code);
 			else this.removeCharsAtCursor(-1);
 			break;
 		// DELETE: delete next character, minding potential contents of other input fields
@@ -558,7 +558,7 @@ public class GuiChatTC extends GuiChat {
                 ClickEvent clickEvent = ccd.getChatStyle().getChatClickEvent();
                 if (clickEvent != null) {
                     if (isShiftKeyDown()) {
-                        this.field_146415_a.func_146191_b(ccd.getUnformattedTextForChat());
+                        this.inputField.setText(ccd.getUnformattedTextForChat());
                     } else {
                         URI url;
 
@@ -579,7 +579,7 @@ public class GuiChatTC extends GuiChat {
                             url = (new File(clickEvent.getValue())).toURI();
                             this.func_146407_a(url);
                         } else if (clickEvent.getAction() == ClickEvent.Action.SUGGEST_COMMAND) {
-                            this.field_146415_a.setText(clickEvent.getValue());
+                            this.inputField2.setText(clickEvent.getValue());
                         } else if (clickEvent.getAction() == ClickEvent.Action.RUN_COMMAND) {
                             this.func_146403_a(clickEvent.getValue());
                         } else {
@@ -593,7 +593,7 @@ public class GuiChatTC extends GuiChat {
 		}
 
 		for(int i=0; i<this.inputList.size(); i++) {
-			if(_y>=this.height-12*(i+1) && this.inputList.get(i).func_146176_q()) {
+			if(_y>=this.height-12*(i+1) && this.inputList.get(i).getVisible()) {
 				this.inputList.get(i).setFocused(true);
 				for(GuiTextField field : this.inputList) {
 					if(field != this.inputList.get(i)) field.setFocused(false);
@@ -660,7 +660,7 @@ public class GuiChatTC extends GuiChat {
 		for (int i=this.inputList.size()-1; i>=0; i--) {
 			msg.append(this.inputList.get(i).getText());
 			if (this.inputList.get(i).isFocused()) {
-				cPos += this.inputList.get(i).func_146198_h();
+				cPos += this.inputList.get(i).getCursorPosition();
 				cFound = true;
 			} else if (!cFound) {
 				cPos += this.inputList.get(i).getText().length();
@@ -683,10 +683,10 @@ public class GuiChatTC extends GuiChat {
 		for(GuiTextField gtf : this.inputList) {
 			gtf.setText("");
 			gtf.setFocused(false);
-			gtf.func_146205_d(false);
+			gtf.setFocused(false);
 		}
 		this.inputField2.setFocused(true);
-		this.inputField2.func_146205_d(true);
+		this.inputField2.setFocused(true);
 
 		List<String> actives = tc.getActive();
 		if(actives.size() == 1) {
@@ -697,8 +697,8 @@ public class GuiChatTC extends GuiChat {
 				this.inputField2.setText(pre + " ");
 			}
 		}
-		this.inputField2.func_146202_e();
-		this.sentHistoryCursor2 = this.gnc.func_146238_c().size();
+		this.inputField2.setCursorPositionEnd();
+		this.sentHistoryCursor2 = this.gnc.getSentMessages().size();
 	}
 
 	public void setText(StringBuilder txt, int pos) {
@@ -709,30 +709,30 @@ public class GuiChatTC extends GuiChat {
 			this.inputList.get(i).setText(txtList.get(strings-i));
 			if (pos > txtList.get(strings-i).length()) {
 				pos -= txtList.get(strings-i).length();
-				this.inputList.get(i).func_146205_d(true);
+				this.inputList.get(i).setFocused(true);
 				this.inputList.get(i).setFocused(false);
 			} else if (pos >= 0) {
 				this.inputList.get(i).setFocused(true);
-				this.inputList.get(i).func_146205_d(true);
-				this.inputList.get(i).func_146190_e(pos);
+				this.inputList.get(i).setFocused(true);
+				this.inputList.get(i).setCursorPosition(pos);
 				pos = -1;
 			} else {
-				this.inputList.get(i).func_146205_d(true);
+				this.inputList.get(i).setFocused(true);
 				this.inputList.get(i).setFocused(false);
 			}
 		}
 		if (pos > 0) {
-			this.inputField2.func_146202_e();
+			this.inputField2.setCursorPositionEnd();
 		}
 		if (this.inputList.size() > txtList.size()) {
 			for (int j=txtList.size(); j<this.inputList.size(); j++) {
 				this.inputList.get(j).setText("");
 				this.inputList.get(j).setFocused(false);
-				this.inputList.get(j).func_146205_d(false);
+				this.inputList.get(j).setFocused(false);
 			}
 		}
-		if (!this.inputField2.func_146176_q()) {
-			this.inputField2.func_146205_d(true);
+		if (!this.inputField2.getVisible()) {
+			this.inputField2.setFocused(true);
 			this.inputField2.setFocused(true);
 		}
 	}
