@@ -68,7 +68,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		}
 	}
 
-	public @Override void /*addToSentMessages*/func_146239_a(String _msg) {
+	public @Override void /*addToSentMessages*/addToSentMessages(String _msg) {
 		if(this.sentMessages.isEmpty() || !(this.sentMessages.get(this.sentMessages.size()-1)).equals(_msg)) {
 			this.sentMessages.add(_msg);
 		}
@@ -92,7 +92,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		}
 	}
 
-	public @Override void /*clearChatMessages*/func_146231_a() {
+	public @Override void /*clearChatMessages*/clearChatMessages() {
 		if(this.chatLines == null || this.backupLines == null) return;
 		chatWriteLock.lock();
 		try {
@@ -104,7 +104,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		this.sentMessages.clear();
 	}
 
-	public @Override void /*deleteChatLine*/func_146242_c(int _id) {
+	public @Override void /*deleteChatLine*/deleteChatLine(int _id) {
 		ChatLine chatLineRemove = null;
 		ChatLine backupLineRemove = null;
 		chatReadLock.lock();
@@ -141,7 +141,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		}
 	}
 
-	public @Override void /*drawChat*/func_146230_a(int currentTick) {
+	public @Override void /*drawChat*/drawChat(int currentTick) {
 		if(!tc.liteLoaded && !tc.modLoaded) TabbyChatUtils.chatGuiTick(mc);
 
 		// Save channel data if at main menu or disconnect screen, use flag so it's only saved once
@@ -178,7 +178,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			} finally {
 				chatReadLock.unlock();
 			}
-			chatOpen = this.func_146241_e();
+			chatOpen = this.getChatOpen();
 			if(numLinesTotal == 0 && !chatOpen) {
 				this.mc.fontRenderer.setUnicodeFlag(TabbyChat.defaultUnicode);
 				return;
@@ -282,7 +282,7 @@ public class GuiNewChatTC extends GuiNewChat {
 	}
 
 	public @Override IChatComponent /*func_73766_a*/func_146236_a(int clickX, int clickY) {
-		if(!this.func_146241_e()) return null;
+		if(!this.getChatOpen()) return null;
 		else {
 			IChatComponent returnMe = null;
 			Point adjClick = ChatBox.scaleMouseCoords(clickX, clickY);
@@ -308,14 +308,14 @@ public class GuiNewChatTC extends GuiNewChat {
 	}
 
 	public void func_146237_a(IChatComponent _msg, int id, int tick, boolean backupFlag) {
-		boolean chatOpen = this.func_146241_e();
+		boolean chatOpen = this.getChatOpen();
 		boolean isLineOne = true;
 		boolean optionalDeletion = false;
 		List<TCChatLine> multiLineChat = new ArrayList<TCChatLine>();
 		// Delete message if requested
 		if(id != 0) {
 			optionalDeletion = true;
-			this.func_146242_c(id);
+			this.deleteChatLine(id);
 		}
 		// Split message by available chatbox space
 		int maxWidth = MathHelper.floor_float((float)this.func_146228_f() / this.func_146244_h());
@@ -330,7 +330,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			String _line = (String)lineIter.next();
 			if(chatOpen && this.scrollOffset > 0) {
 				this.chatScrolled = true;
-				this.func_146229_b(1);
+				this.scroll(1);
 			}
 			if(!isLineOne) {
 				_line = " " + _line;
@@ -383,7 +383,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		}
 	}
 
-	public @Override void /*func_146245_b*/func_146245_b() {
+	public @Override void /*func_146245_b*/refreshChat() {
 		// Chat settings have changed
 		int backupChats = 0;
 		chatWriteLock.lock();
@@ -418,7 +418,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		return theSize;
 	}
 
-	public @Override boolean /*getChatOpen*/func_146241_e() {
+	public @Override boolean /*getChatOpen*/getChatOpen() {
 		return (this.mc.currentScreen instanceof GuiChat || this.mc.currentScreen instanceof GuiChatTC);
 	}
 
@@ -446,7 +446,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		return Math.round(theSetting * 100.0f) / 100.0f;
 	}
 
-	public @Override List /*getSentMessages*/func_146238_c() {
+	public @Override List /*getSentMessages*/getSentMessages() {
 		return this.sentMessages;
 	}
 
@@ -484,11 +484,11 @@ public class GuiNewChatTC extends GuiNewChat {
 		}
 	}
 
-	public @Override void /*printChatMessage*/func_146227_a(IChatComponent _msg) {
-		this.func_146234_a(_msg, 0);
+	public @Override void /*printChatMessage*/printChatMessage(IChatComponent _msg) {
+		this.printChatMessageWithOptionalDeletion(_msg, 0);
 	}
 
-	public @Override void /*printChatMessageWithOptionalDeletion*/func_146234_a(IChatComponent _msg, int flag) {
+	public @Override void /*printChatMessageWithOptionalDeletion*/printChatMessageWithOptionalDeletion(IChatComponent _msg, int flag) {
 		this.func_146237_a(_msg, flag, this.mc.ingameGUI.getUpdateCounter(), false);
 		LogManager.getLogger().info("[CHAT] " + _msg.getUnformattedText());
 	}
@@ -498,12 +498,12 @@ public class GuiNewChatTC extends GuiNewChat {
 		this.chatScrolled = false;
 	}
 
-	public @Override void /*scroll*/func_146229_b(int _lines) {
+	public @Override void /*scroll*/scroll(int _lines) {
 		int maxLineDisplay;
 		if(tc.enabled()) {
 			float scaleFactor = 1.0f;
 			maxLineDisplay = Math.round(ChatBox.getChatHeight() / 9.0f);
-			if(!this.func_146241_e()) maxLineDisplay = Math.round(maxLineDisplay * TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue() / 100.0f);
+			if(!this.getChatOpen()) maxLineDisplay = Math.round(maxLineDisplay * TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue() / 100.0f);
 		} else
 			maxLineDisplay = this.func_146232_i();
 

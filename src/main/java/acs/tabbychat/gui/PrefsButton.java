@@ -31,35 +31,35 @@ public class PrefsButton extends GuiButton {
 	}
 
     public int width() {
-        return this.field_146120_f;
+        return this.width;
     }
 
     public void width(int _w) {
-        this.field_146120_f = _w;
+        this.width = _w;
     }
 
     public int height() {
-        return this.field_146121_g;
+        return this.height;
     }
 
     public void height(int _h) {
-        this.field_146121_g = _h;
+        this.height = _h;
     }
 
     public int x() {
-        return field_146128_h;
+        return xPosition;
     }
 
     public void x(int _x) {
-        field_146128_h = _x;
+        xPosition = _x;
     }
 
     public int y() {
-        return field_146129_i;
+        return yPosition;
     }
 
     public void y(int _y) {
-        field_146129_i = _y;
+        yPosition = _y;
     }
 
 	protected int adjustWidthForControlCodes() {
@@ -73,7 +73,7 @@ public class PrefsButton extends GuiButton {
 	}
 
 	public void drawButton(Minecraft mc, int cursorX, int cursorY) {
-	      if(this.field_146125_m) {
+	      if(this.visible) {
 	          FontRenderer fr = mc.fontRenderer;
               drawRect(this.x(), this.y(), this.x() + this.width(), this.y() + this.height(), this.bgcolor);
 	          boolean hovered = cursorX >= this.x() && cursorY >= this.y() && cursorX < this.x() + this.width() && cursorY < this.y() + this.height();
