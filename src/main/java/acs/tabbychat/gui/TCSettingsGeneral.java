@@ -107,11 +107,11 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 
 		this.timeStampStyle.setButtonDims(80, 11);
 		this.timeStampStyle.setButtonLoc(effRight - 80, this.rowY(4));
-		this.timeStampStyle.setLabelLoc(this.timeStampStyle.x() - 10 - Minecraft.getMinecraft().fontRenderer.getStringWidth(this.timeStampStyle.description));
+		this.timeStampStyle.setLabelLoc(this.timeStampStyle.x() - 10 - mc.fontRenderer.getStringWidth(this.timeStampStyle.description));
 
 		this.timeStampColor.setButtonDims(80, 11);
 		this.timeStampColor.setButtonLoc(effRight - 80, this.rowY(5));
-		this.timeStampColor.setLabelLoc(this.timeStampColor.x() - 10 - Minecraft.getMinecraft().fontRenderer.getStringWidth(this.timeStampColor.description));
+		this.timeStampColor.setLabelLoc(this.timeStampColor.x() - 10 - mc.fontRenderer.getStringWidth(this.timeStampColor.description));
 
 		this.groupSpam.setButtonLoc(col1x, this.rowY(6));
 		this.groupSpam.setLabelLoc(col1x + 19);

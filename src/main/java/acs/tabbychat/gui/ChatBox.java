@@ -200,7 +200,7 @@ public class ChatBox {
 	}
 
 	public static int getChatWidth() {
-		if(gnc.func_146241_e()) return current.width - ChatScrollBar.barWidth - 2;
+		if(gnc.getChatOpen()) return current.width - ChatScrollBar.barWidth - 2;
 		else return current.width;
 	}
 
@@ -312,7 +312,7 @@ public class ChatBox {
 	}
 
 	public static boolean tabTrayHovered(int mx, int my) {
-		boolean chatOpen = gnc.func_146241_e();
+		boolean chatOpen = gnc.getChatOpen();
 		GuiScreen theScreen = TabbyChat.mc.currentScreen;
 		if(!chatOpen || theScreen == null) return false;
 

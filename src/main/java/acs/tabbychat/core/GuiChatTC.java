@@ -157,7 +157,7 @@ public class GuiChatTC extends GuiChat {
 				}
 			}
 
-			this.mc.ingameGUI.getChatGUI().func_146234_a(new ChatComponentText(_sb.toString()), 1);
+			this.mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new ChatComponentText(_sb.toString()), 1);
 		}
 
 		this.inputField2.setText((String)this.foundPlayerNames.get(this.playerNameIndex++));
@@ -307,7 +307,7 @@ public class GuiChatTC extends GuiChat {
 
 	public @Override void /*getSentHistory*/getSentHistory(int _dir) {
 		int loc = this.sentHistoryCursor2 + _dir;
-		int historyLength = this.gnc.func_146238_c().size();
+		int historyLength = this.gnc.getSentMessages().size();
 		loc = Math.max(0, loc);
 		loc = Math.min(historyLength, loc);
 		if(loc == this.sentHistoryCursor2) return;
@@ -316,7 +316,7 @@ public class GuiChatTC extends GuiChat {
 			this.setText(new StringBuilder(""), 1);
 		} else {
 			if(this.sentHistoryCursor2 == historyLength) this.historyBuffer = this.inputField2.getText();
-			StringBuilder _sb = new StringBuilder((String)this.gnc.func_146238_c().get(loc));
+			StringBuilder _sb = new StringBuilder((String)this.gnc.getSentMessages().get(loc));
 			this.setText(_sb, _sb.length());
 			this.sentHistoryCursor2 = loc;
 		}
@@ -350,8 +350,8 @@ public class GuiChatTC extends GuiChat {
 			wheelDelta = Math.max(-1, wheelDelta);
 			if(!isShiftKeyDown()) wheelDelta *= 7;
 
-			if(ChatBox.anchoredTop) this.gnc.func_146229_b(-wheelDelta);
-			else this.gnc.func_146229_b(wheelDelta);
+			if(ChatBox.anchoredTop) this.gnc.scroll(-wheelDelta);
+			else this.gnc.scroll(wheelDelta);
 			if(this.tc.enabled()) this.scrollBar.scrollBarMouseWheel();
 		} else if(this.tc.enabled()) this.scrollBar.handleMouse();
 
@@ -375,7 +375,7 @@ public class GuiChatTC extends GuiChat {
 			this.buttonList.add(this.tc.channelMap.get("*").tab);
 		}
 
-		this.sentHistoryCursor2 = this.gnc.func_146238_c().size();
+		this.sentHistoryCursor2 = this.gnc.getSentMessages().size();
 		int textFieldWidth = (MacroKeybindCompat.present) ? this.width - 26 : this.width - 4;
 		this.inputField2 = new GuiTextField(this.fontRendererObj, 4, this.height - 12, textFieldWidth, 12);
 		this.inputField2.setMaxStringLength(500);
@@ -507,12 +507,12 @@ public class GuiChatTC extends GuiChat {
 			break;
 		// PAGE UP: scroll up through chat
 		case Keyboard.KEY_PRIOR:
-			this.gnc.func_146229_b(19);
+			this.gnc.scroll(19);
 			if(this.tc.enabled()) this.scrollBar.scrollBarMouseWheel();
 			break;
 		// PAGE DOWN: scroll down through chat
 		case Keyboard.KEY_NEXT:
-			this.gnc.func_146229_b(-19);
+			this.gnc.scroll(-19);
 			if(this.tc.enabled()) this.scrollBar.scrollBarMouseWheel();
 			break;
 		// BACKSPACE: delete previous character, minding potential contents of other input fields
@@ -698,7 +698,7 @@ public class GuiChatTC extends GuiChat {
 			}
 		}
 		this.inputField2.setCursorPositionEnd();
-		this.sentHistoryCursor2 = this.gnc.func_146238_c().size();
+		this.sentHistoryCursor2 = this.gnc.getSentMessages().size();
 	}
 
 	public void setText(StringBuilder txt, int pos) {
