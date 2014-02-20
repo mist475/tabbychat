@@ -382,7 +382,7 @@ public class GuiChatTC extends GuiChat {
 		this.inputField2.setCanLoseFocus(false);
 		this.inputField2.setFocused(true);
 		this.inputField2.setText(this.defaultInputFieldText);
-		this.inputField2.setFocused(true);
+		this.inputField2.setVisible(true);
 		this.inputList.add(0, this.inputField2);
 		if(!tc.enabled()) return;
 
@@ -394,7 +394,7 @@ public class GuiChatTC extends GuiChat {
 			placeholder.setFocused(false);
 			placeholder.setText("");
 			placeholder.setFocused(true);
-			placeholder.setFocused(false);
+			placeholder.setVisible(false);
 			this.inputList.add(i,placeholder);
 		}
 
