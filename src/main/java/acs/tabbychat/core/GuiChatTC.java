@@ -159,8 +159,8 @@ public class GuiChatTC extends GuiChat {
 
 			this.mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new ChatComponentText(_sb.toString()), 1);
 		}
-
-		this.inputField2.setText((String)this.foundPlayerNames.get(this.playerNameIndex++));
+		this.inputField2.deleteWords(-1);
+		this.inputField2.writeText((String)this.foundPlayerNames.get(this.playerNameIndex++));
 	}
 
 	public @Override void confirmClicked(boolean zeroId, int worldNum) {
