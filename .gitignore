@@ -4,3 +4,6 @@ build/
 gradlew.bat
 gradlew
 gradle/
+liteloader/
+!liteloader/build.gradle
+!liteloader/src/main/README.txt
