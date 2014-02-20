@@ -22,7 +22,7 @@ import java.util.Properties;
 
 abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 	protected static TabbyChat tc;
-	protected static Minecraft mc;
+	protected Minecraft mc;
 	protected int lastOpened = 0;
 	protected String name;
 	protected String propertyPrefix;
