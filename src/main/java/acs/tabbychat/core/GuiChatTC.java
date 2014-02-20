@@ -383,6 +383,7 @@ public class GuiChatTC extends GuiChat {
 		this.inputField2.setFocused(true);
 		this.inputField2.setText(this.defaultInputFieldText);
 		this.inputField2.setVisible(true);
+		this.inputField2.setEnableBackgroundDrawing(false);
 		this.inputList.add(0, this.inputField2);
 		if(!tc.enabled()) return;
 
@@ -393,8 +394,8 @@ public class GuiChatTC extends GuiChat {
 			placeholder.setCanLoseFocus(false);
 			placeholder.setFocused(false);
 			placeholder.setText("");
-			placeholder.setFocused(true);
 			placeholder.setVisible(false);
+			placeholder.setEnableBackgroundDrawing(false);
 			this.inputList.add(i,placeholder);
 		}
 
@@ -683,10 +684,10 @@ public class GuiChatTC extends GuiChat {
 		for(GuiTextField gtf : this.inputList) {
 			gtf.setText("");
 			gtf.setFocused(false);
-			gtf.setFocused(false);
+			gtf.setVisible(false);
 		}
 		this.inputField2.setFocused(true);
-		this.inputField2.setFocused(true);
+		this.inputField2.setVisible(true);
 
 		List<String> actives = tc.getActive();
 		if(actives.size() == 1) {
@@ -709,15 +710,15 @@ public class GuiChatTC extends GuiChat {
 			this.inputList.get(i).setText(txtList.get(strings-i));
 			if (pos > txtList.get(strings-i).length()) {
 				pos -= txtList.get(strings-i).length();
-				this.inputList.get(i).setFocused(true);
+				this.inputList.get(i).setVisible(true);
 				this.inputList.get(i).setFocused(false);
 			} else if (pos >= 0) {
 				this.inputList.get(i).setFocused(true);
-				this.inputList.get(i).setFocused(true);
+				this.inputList.get(i).setVisible(true);
 				this.inputList.get(i).setCursorPosition(pos);
 				pos = -1;
 			} else {
-				this.inputList.get(i).setFocused(true);
+				this.inputList.get(i).setVisible(true);
 				this.inputList.get(i).setFocused(false);
 			}
 		}
@@ -728,12 +729,12 @@ public class GuiChatTC extends GuiChat {
 			for (int j=txtList.size(); j<this.inputList.size(); j++) {
 				this.inputList.get(j).setText("");
 				this.inputList.get(j).setFocused(false);
-				this.inputList.get(j).setFocused(false);
+				this.inputList.get(j).setVisible(false);
 			}
 		}
 		if (!this.inputField2.getVisible()) {
 			this.inputField2.setFocused(true);
-			this.inputField2.setFocused(true);
+			this.inputField2.setVisible(true);
 		}
 	}
 
