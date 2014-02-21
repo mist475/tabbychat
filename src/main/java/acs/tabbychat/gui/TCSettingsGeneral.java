@@ -29,6 +29,7 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 	private static final int UNREAD_FLASHING_ID = 9106;
 	private static final int TIMESTAMP_COLOR_ID = 9107;
 	private static final int SPELL_CHECK_ENABLE = 9108;
+	private static final int UPDATE_CHECK_ENABLE = 9109;
 
 	{
 		this.propertyPrefix = "settings.general";
@@ -42,6 +43,7 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 	public TCSettingBool groupSpam = new TCSettingBool(false, "groupSpam", this.propertyPrefix, GROUP_SPAM_ID);
 	public TCSettingBool unreadFlashing = new TCSettingBool(true, "unreadFlashing", this.propertyPrefix, UNREAD_FLASHING_ID);
 	public TCSettingBool spellCheckEnable = new TCSettingBool(true, "spellCheckEnable", this.propertyPrefix, SPELL_CHECK_ENABLE);
+	public TCSettingBool updateCheckEnable = new TCSettingBool(true, "updateCheckEnable", this.propertyPrefix, UPDATE_CHECK_ENABLE);
 
 	public TCSettingsGeneral(TabbyChat _tc) {
 		super(_tc);
@@ -124,6 +126,10 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 		this.spellCheckEnable.setButtonLoc(col1x, this.rowY(8));
 		this.spellCheckEnable.setLabelLoc(col1x + 19);
 		this.spellCheckEnable.buttonColor = buttonColor;
+		
+		this.updateCheckEnable.setButtonLoc(col1x,  this.rowY(9));
+		this.updateCheckEnable.setLabelLoc(col1x + 19);
+		this.updateCheckEnable.buttonColor = buttonColor;
 	}
 
 	public Properties loadSettingsFile() {

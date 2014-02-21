@@ -82,6 +82,7 @@ public class TCLanguageEnglish extends TCLanguage {
 		defaults.setProperty("settings.general.groupspam", "Consolidate spammed chat");
 		defaults.setProperty("settings.general.unreadflashing", "Default unread notification flashing");
 		defaults.setProperty("settings.general.spellcheckenable", "Enable Spell-checking");
+		defaults.setProperty("settings.general.updatecheckenable", "Check for Updates");
 		
 		// ENGLISH STRING FOR SETTINGS - 'SERVER CONFIG'
 		defaults.setProperty("settings.server.name", "Server");
