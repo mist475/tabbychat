@@ -1,14 +1,12 @@
-package acs.tabbychat.liteloader;
+package acs.tabbychat.core;
 
 import java.io.File;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
-import acs.tabbychat.core.GuiChatTC;
-import acs.tabbychat.core.GuiNewChatTC;
-import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.util.TabbyChatUtils;
+
 import com.mumfrey.liteloader.InitCompleteListener;
 import com.mumfrey.liteloader.core.LiteLoader;
 
