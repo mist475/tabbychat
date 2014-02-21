@@ -372,13 +372,14 @@ public class TabbyChatUtils {
 	 * Essentially replaces \\uabcd with \uabcd.
 	 */
 	public static String convertUnicode(String chat){
-		String newChat;
-		try{
-			newChat = StringEscapeUtils.unescapeJava(chat);
-			return newChat;
-		}catch(Exception e){
-			return chat;
+		String newChat = "";
+		for(String s : chat.split("\\+")){
+			if(s.contains("u")){
+				try{ newChat = newChat.concat(StringEscapeUtils.unescapeJava(s)); }
+				catch(IllegalArgumentException e){ newChat = newChat.concat(s); }
+			}else newChat = newChat.concat(s);
 		}
+		return newChat;
 	}
 	private TabbyChatUtils() {}
 }
