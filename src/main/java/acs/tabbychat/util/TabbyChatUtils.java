@@ -13,6 +13,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import acs.tabbychat.core.ChatChannel;
 //import acs.tabbychat.core.FilterTest;
 import acs.tabbychat.core.GuiChatTC;
@@ -20,13 +22,14 @@ import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TCChatLine;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.gui.ITCSettingsGUI;
+import acs.tabbychat.gui.TCSettingsAdvanced;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
 import acs.tabbychat.settings.NotificationSoundEnum;
+import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.threads.BackgroundChatThread;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.Gui;
@@ -350,7 +353,11 @@ public class TabbyChatUtils {
 			ChatChannel active = TabbyChat.getInstance().channelMap.get(actives.get(0));
 			String tabPrefix = active.cmdPrefix;
 			boolean hiddenPrefix = active.hidePrefix;
-
+		
+			if(TabbyChat.advancedSettings.convertUnicodeText.getValue()){
+				toSend = convertUnicode(toSend);
+			}
+			
 			if(tabPrefix != null && tabPrefix.length() > 0) {
 				if(!hiddenPrefix) sendProc = new BackgroundChatThread(toSend, tabPrefix);
 				else if(!toSend.startsWith("/")) sendProc = new BackgroundChatThread(tabPrefix + " " + toSend, tabPrefix);
@@ -360,6 +367,18 @@ public class TabbyChatUtils {
 		}
 		sendProc.start();
 	}
-
+	/**
+	 * Converts strings to unicode.
+	 * Essentially replaces \\uabcd with \uabcd.
+	 */
+	public static String convertUnicode(String chat){
+		String newChat;
+		try{
+			newChat = StringEscapeUtils.unescapeJava(chat);
+			return newChat;
+		}catch(Exception e){
+			return chat;
+		}
+	}
 	private TabbyChatUtils() {}
 }

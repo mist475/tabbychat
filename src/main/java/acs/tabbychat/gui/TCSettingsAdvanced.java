@@ -18,6 +18,7 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
 	private static final int CHAT_FADE_TICKS_ID = 9408;
 	private static final int FORCE_UNICODE_ID = 9409;
 	private static final int TEXT_IGNORE_OPACITY_ID = 9410;
+	private static final int CONVERT_UNICODE_TEXT_ID = 9411;
 
 	{
 		this.propertyPrefix = "settings.advanced";
@@ -30,7 +31,8 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
 	public TCSettingSlider chatFadeTicks = new TCSettingSlider(200.0f, "chatFadeTicks", this.propertyPrefix, CHAT_FADE_TICKS_ID, 10.0f, 2000.0f);
 	public TCSettingBool forceUnicode = new TCSettingBool(false, "forceUnicode", this.propertyPrefix, FORCE_UNICODE_ID);
 	public TCSettingBool textIgnoreOpacity = new TCSettingBool(false, "textignoreopacity", this.propertyPrefix, TEXT_IGNORE_OPACITY_ID);
-
+	public TCSettingBool convertUnicodeText = new TCSettingBool(false, "convertunicodetext", this.propertyPrefix, CONVERT_UNICODE_TEXT_ID);
+	
 	public TCSettingsAdvanced(TabbyChat _tc) {
 		super(_tc);
 		this.name = TabbyChat.translator.getString("settings.advanced.name");
@@ -50,6 +52,7 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
 		this.buttonList.add(this.chatFadeTicks);
 		this.buttonList.add(this.forceUnicode);
 		this.buttonList.add(this.textIgnoreOpacity);
+		this.buttonList.add(this.convertUnicodeText);
 	}
 
 	public void initDrawableSettings() {
@@ -85,6 +88,10 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
 		this.textIgnoreOpacity.setButtonLoc(col1x, this.rowY(7));
 		this.textIgnoreOpacity.setLabelLoc(col1x + 19);
 		this.textIgnoreOpacity.buttonColor = buttonColor;
+		
+		this.convertUnicodeText.setButtonLoc(col1x, this.rowY(8));
+		this.convertUnicodeText.setLabelLoc(col1x + 19);
+		this.convertUnicodeText.buttonColor = buttonColor;
 	}
 
 	public Properties loadSettingsFile() {
