@@ -87,6 +87,7 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 		this.buttonList.add(this.groupSpam);
 		this.buttonList.add(this.unreadFlashing);
 		this.buttonList.add(this.spellCheckEnable);
+		this.buttonList.add(this.updateCheckEnable);
 	}
 
 	public void initDrawableSettings() {
