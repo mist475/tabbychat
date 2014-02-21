@@ -16,11 +16,10 @@ import acs.tabbychat.settings.TCSettingEnum;
 import acs.tabbychat.settings.TCSettingTextBox;
 import acs.tabbychat.util.TabbyChatUtils;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
+import org.apache.commons.lang3.StringUtils;
 
 public class TCSettingsServer extends TCSettingsGUI {
-	private static final int AUTO_CHANNEL_SEARCH_ID = 9201;
+    private static final int AUTO_CHANNEL_SEARCH_ID = 9201;
 	private static final int CHATCHANNEL_DELIMS_ID = 9202;
 	private static final int DELIM_COLOR_BOOL_ID = 9203;
 	private static final int DELIM_COLOR_ENUM_ID = 9204;
@@ -29,12 +28,15 @@ public class TCSettingsServer extends TCSettingsGUI {
 	private static final int DEFAULT_CHANNELS_ID = 9207;
 	private static final int IGNORED_CHANNELS_ID = 9208;
 	private static final int AUTO_PM_SEARCH_ID = 9209;
+    private static final int REGEX_IGNORE_ID = 9210;
 
 	{
 		this.propertyPrefix = "settings.server";
 	}
 
-	public TCSettingBool autoChannelSearch = new TCSettingBool(true, "autoChannelSearch", this.propertyPrefix, AUTO_CHANNEL_SEARCH_ID);
+    public static final Pattern SPLIT_PATTERN = Pattern.compile("[ ]?,[ ]?");
+
+    public TCSettingBool autoChannelSearch = new TCSettingBool(true, "autoChannelSearch", this.propertyPrefix, AUTO_CHANNEL_SEARCH_ID);
 	public TCSettingBool autoPMSearch = new TCSettingBool(true, "autoPMSearch", this.propertyPrefix, AUTO_PM_SEARCH_ID);
 	public TCSettingEnum delimiterChars = new TCSettingEnum(ChannelDelimEnum.BRACKETS, "delimiterChars", this.propertyPrefix, CHATCHANNEL_DELIMS_ID);
 	public TCSettingBool delimColorBool = new TCSettingBool(false, "delimColorBool", this.propertyPrefix, DELIM_COLOR_BOOL_ID, FormatCodeEnum.ITALIC);
@@ -43,9 +45,10 @@ public class TCSettingsServer extends TCSettingsGUI {
 	public TCSettingEnum delimFormatCode = new TCSettingEnum(FormatCodeEnum.DEFAULT, "delimFormatCode", "", DELIM_FORMAT_ENUM_ID);
 	public TCSettingTextBox defaultChannels = new TCSettingTextBox("", "defaultChannels", this.propertyPrefix, DEFAULT_CHANNELS_ID);
 	public TCSettingTextBox ignoredChannels = new TCSettingTextBox("", "ignoredChannels", this.propertyPrefix, IGNORED_CHANNELS_ID);
+    public TCSettingBool regexIgnoreBool = new TCSettingBool(false, "regexIgnoreBool", this.propertyPrefix, REGEX_IGNORE_ID);
 
 	public List<String> defaultChanList = new ArrayList();
-	public List<String> ignoredChanList = new ArrayList();
+    public Pattern ignoredChanPattern = Pattern.compile("a^"); // Initialize with impossible match
 
 	public String serverIP = "";
 
@@ -69,6 +72,7 @@ public class TCSettingsServer extends TCSettingsGUI {
 		this.buttonList.add(this.delimFormatCode);
 		this.buttonList.add(this.defaultChannels);
 		this.buttonList.add(this.ignoredChannels);
+		this.buttonList.add(this.regexIgnoreBool);
 	}
 
 	public void initDrawableSettings() {
@@ -110,22 +114,37 @@ public class TCSettingsServer extends TCSettingsGUI {
 		this.ignoredChannels.setLabelLoc(col1x);
 		this.ignoredChannels.setButtonLoc(col1x + 5 + mc.fontRenderer.getStringWidth(this.ignoredChannels.description), this.rowY(7));
 		this.ignoredChannels.setButtonDims(effRight - this.ignoredChannels.x(), 11);
+
+        this.regexIgnoreBool.setButtonLoc(col1x + 5 + mc.fontRenderer.getStringWidth(this.ignoredChannels.description), this.rowY(8));
+        this.regexIgnoreBool.setLabelLoc(col1x + 5 + mc.fontRenderer.getStringWidth(this.ignoredChannels.description) + 19);
+        this.regexIgnoreBool.buttonColor = buttonColor;
 	}
 
 	public Properties loadSettingsFile() {
 		if(this.settingsFile != null) {
 			super.loadSettingsFile();
-			this.defaultChanList = Arrays.asList(Pattern.compile("[ ]?,[ ]?").split(this.defaultChannels.getValue()));
-			this.ignoredChanList = Arrays.asList(Pattern.compile("[ ]?,[ ]?").split(this.ignoredChannels.getValue()));
+            parseChannelsFromInput();
 		}
 		return null;
 	}
 
-	public void storeTempVars() {
+    public void storeTempVars() {
 		super.storeTempVars();
-		this.defaultChanList = Arrays.asList(Pattern.compile("[ ]?,[ ]?").split(this.defaultChannels.getValue()));
-		this.ignoredChanList = Arrays.asList(Pattern.compile("[ ]?,[ ]?").split(this.ignoredChannels.getValue()));
+        parseChannelsFromInput();
 	}
+
+    private void parseChannelsFromInput() {
+        this.defaultChanList = Arrays.asList(SPLIT_PATTERN.split(this.defaultChannels.getValue()));
+
+        String[] splitChannels = SPLIT_PATTERN.split(this.ignoredChannels.getValue());
+        if(!this.regexIgnoreBool.getValue()) {
+            // Escape
+            for (int i = 0; i < splitChannels.length; i++) {
+                splitChannels[i] = Pattern.quote(splitChannels[i]);
+            }
+        }
+        this.ignoredChanPattern = Pattern.compile("^(" + StringUtils.join(splitChannels, "|") + ")$");
+    }
 
 	public void updateForServer() {
 		this.serverIP = TabbyChatUtils.getServerIp();

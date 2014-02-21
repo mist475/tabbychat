@@ -223,7 +223,7 @@ public class TabbyChat {
 	}
 
 	public void addToChannel(String name, TCChatLine thisChat, boolean visible) {
-		if(serverSettings.ignoredChanList.contains(name)) return;
+        if(serverSettings.ignoredChanPattern.matcher(name).matches()) return;
 
 		ChatChannel theChan = this.channelMap.get(name);
 		if(theChan == null) {

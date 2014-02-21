@@ -92,7 +92,8 @@ public class TCLanguageEnglish extends TCLanguage {
 		defaults.setProperty("settings.server.delimformatbool", "Formatted delimiters");
 		defaults.setProperty("settings.server.defaultchannels", "Default channels");
 		defaults.setProperty("settings.server.ignoredchannels", "Ignored channels");
-		
+		defaults.setProperty("settings.server.regexignorebool", "Use patterns");
+
 		// ENGLISH STRING FOR SETTINGS - 'CUSTOM FILTERS'
 		defaults.setProperty("settings.filters.name", "Filters");
 		defaults.setProperty("settings.filters.inversematch", "Inverse match");
