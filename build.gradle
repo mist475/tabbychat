@@ -41,14 +41,19 @@ processResources
         exclude 'mcmod.info'
     }
 }
+repositories {
+    maven {
+        name = "dykam"
+        url = "http://nexus.dykam.nl/content/groups/public/"
+    }
+}
 dependencies {
+	compile 'com.mumfrey:Liteloader:pb-4'
 	compile 'junit:junit:4.8.1'
 	compile 'net.sf.jazzy:jazzy:0.5.2-rtext-1.4.1-2'
 	compile 'org.lwjgl.lwjgl:lwjgl:2.9.0'
 	compile 'org.apache.logging.log4j:log4j-core:2.0-beta9'
 	compile 'org.apache.logging.log4j:log4j-api:2.0-beta9'
-    // Add compiled Liteloader jar
-	compile files('Liteloader.jar')
 }
 jar {
     from({configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}) {
