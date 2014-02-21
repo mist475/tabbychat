@@ -22,32 +22,32 @@ public class GuiNewChat extends Gui {
 		this.mc = par1Minecraft;
 	}
 
-	public void /*drawChat*/func_146230_a(int par1) {
-		GuiNewChatTC.getInstance().func_146230_a(par1);
+	public void /*drawChat*/drawChat(int par1) {
+		GuiNewChatTC.getInstance().drawChat(par1);
 	}
 
-	public void func_146231_a() {
-		GuiNewChatTC.getInstance().func_146231_a();
+	public void clearChatMessages() {
+		GuiNewChatTC.getInstance().clearChatMessages();
 	}
 
-	public void func_146227_a(IChatComponent par1Str) {
-		this.func_146234_a(par1Str, 0);
+	public void printChatMessage(IChatComponent par1Str) {
+		this.printChatMessageWithOptionalDeletion(par1Str, 0);
 	}
 
-	public void func_146234_a(IChatComponent par1Str, int par2) {
-		this.func_96129_a(par1Str, par2, this.mc.ingameGUI.getUpdateCounter(), false);
+	public void printChatMessageWithOptionalDeletion(IChatComponent par1Str, int par2) {
+		this.func_146237_a(par1Str, par2, this.mc.ingameGUI.getUpdateCounter(), false);
         LogManager.getLogger().info("[CHAT] " + par1Str);
 	}
 
-	public void func_96129_a(IChatComponent par1Str, int par2, int par3, boolean par4) {
+	public void func_146237_a(IChatComponent par1Str, int par2, int par3, boolean par4) {
 		GuiNewChatTC.getInstance().func_146237_a(par1Str, par2, par3, par4);
 	}
 
-   public void func_146245_b() {
-	   GuiNewChatTC.getInstance().func_146245_b();
+   public void refreshChat() {
+	   GuiNewChatTC.getInstance().refreshChat();
    }
 
-   public List func_146238_c() {
+   public List getSentMessages() {
 	   return this.sentMessages;
    }
 
@@ -61,8 +61,8 @@ public class GuiNewChat extends Gui {
 	   GuiNewChatTC.getInstance().resetScroll();
    }
 
-   public void func_146229_b(int par1) {
-	   GuiNewChatTC.getInstance().func_146229_b(par1);
+   public void scroll(int par1) {
+	   GuiNewChatTC.getInstance().scroll(par1);
    }
 
    public IChatComponent func_146236_a(int par1, int par2) {
@@ -73,12 +73,12 @@ public class GuiNewChat extends Gui {
 //	   this.printChatMessage(StringTranslate.getInstance().translateKeyFormat(par1Str, par2ArrayOfObj));
 //   }
 
-   public boolean func_146241_e() {
+   public boolean getChatOpen() {
 	   return this.mc.currentScreen instanceof GuiChat;
    }
 
-   public void func_146242_c(int par1) {
-	   GuiNewChatTC.getInstance().func_146242_c(par1);
+   public void deleteChatLine(int par1) {
+	   GuiNewChatTC.getInstance().deleteChatLine(par1);
    }
 
    public int func_146228_f() {
@@ -86,7 +86,7 @@ public class GuiNewChat extends Gui {
    }
 
    public int func_146246_g() {
-	   return func_146243_b(this.func_146241_e()?this.mc.gameSettings.chatHeightFocused:this.mc.gameSettings.chatHeightUnfocused);
+	   return func_146243_b(this.getChatOpen()?this.mc.gameSettings.chatHeightFocused:this.mc.gameSettings.chatHeightUnfocused);
    }
 
    public float func_146244_h() {
