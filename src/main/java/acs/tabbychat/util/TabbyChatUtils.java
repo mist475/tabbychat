@@ -1,23 +1,29 @@
 package acs.tabbychat.util;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.io.File;
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ArrayList;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ChatComponentText;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import com.mumfrey.liteloader.core.LiteLoader;
-
-import cpw.mods.fml.common.Mod;
 import acs.tabbychat.core.ChatChannel;
 //import acs.tabbychat.core.FilterTest;
 import acs.tabbychat.core.GuiChatTC;
@@ -25,27 +31,17 @@ import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TCChatLine;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.gui.ITCSettingsGUI;
-import acs.tabbychat.gui.TCSettingsAdvanced;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
 import acs.tabbychat.settings.NotificationSoundEnum;
-import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.threads.BackgroundChatThread;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ChatLine;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.client.gui.GuiSleepMP;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.util.ChatComponentText;
+
+import com.mumfrey.liteloader.core.LiteLoader;
 
 public class TabbyChatUtils {
-
+	private static final String WITH_DELIMITER = "((?<=%1$s)|(?=%1$s))";
 	private static Calendar logDay = Calendar.getInstance();
 	private static File logDir = new File(Minecraft.getMinecraft().mcDataDir, "TabbyChatLogs");
 	private static File logFile;
@@ -383,6 +379,34 @@ public class TabbyChatUtils {
 			}else newChat = newChat.concat(s);
 		}
 		return newChat;
+	}
+	/**
+	 * Takes the substring of a paragraph-symbol formatted string
+	 *
+	 * @param formatted  The string with formatting characters.
+	 * @param beginIndex the beginning index, inclusive.
+	 * @param endIndex   the ending index, exclusive.
+	 * @return A formatted substring
+	 */
+	public static String substringWithFormatters(String formatted, int beginIndex, int endIndex) {
+		int length = formatted.length();
+		int unformattedIndex = 0, actualStartIndex = -1, actualEndIndex = -1;
+		for (int i = 0; i < length; i++) {
+			if (actualStartIndex == -1 && unformattedIndex == beginIndex)
+				actualStartIndex = i;
+			if (unformattedIndex == endIndex) {
+				actualEndIndex = i;
+				break;
+			}
+			if (formatted.charAt(i) == '\u00a7') {
+				i++; // Skip next character as well
+				continue;
+			}
+			unformattedIndex++;
+		}
+		if (actualStartIndex == -1 || actualEndIndex == -1)
+			throw new StringIndexOutOfBoundsException();
+		return formatted.substring(actualStartIndex, actualEndIndex);
 	}
 	private TabbyChatUtils() {}
 }
