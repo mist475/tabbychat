@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -49,6 +50,7 @@ public class TabbyChatUtils {
 	public final static String version = "1.11.00";
 	public final static String name = "TabbyChat";
 	public final static String modid = "tabbychat";
+	public static Logger log = Logger.getLogger(name);
 
 	public static void chatGuiTick(Minecraft mc) {
 		if(mc.currentScreen == null) return;

@@ -1,10 +1,14 @@
 package acs.tabbychat.core;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.logging.Logger;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiTextField;
+
+import org.apache.commons.io.FileUtils;
+
 import acs.tabbychat.util.TabbyChatUtils;
 
 import com.mumfrey.liteloader.InitCompleteListener;
@@ -15,7 +19,7 @@ public class LiteModTabbyChat implements InitCompleteListener {
 
 	@Override
 	public String getName() {
-		return "TabbyChat";
+		return TabbyChatUtils.name;
 	}
 
 	@Override
@@ -36,8 +40,21 @@ public class LiteModTabbyChat implements InitCompleteListener {
 
 	@Override
 	public void init(File configPath) {
-		// TODO Auto-generated method stub
-
+		String relativeConfig = "tabbychat";
+		File liteConfigDir = LiteLoader.getCommonConfigFolder().toPath()
+				.resolve(relativeConfig).toFile();
+		File mcConfigDir = Minecraft.getMinecraft().mcDataDir.toPath()
+				.resolve("config").resolve(relativeConfig).toFile();
+		
+		// If forge configs exist and liteloader configs don't, copy over.
+		if (!liteConfigDir.exists() && mcConfigDir.exists()) {
+			try {
+				FileUtils.copyDirectory(mcConfigDir, liteConfigDir);
+				TabbyChatUtils.log.info("Old configs found! Converting.");
+			} catch (IOException e) {
+				TabbyChatUtils.log.warning("Old configs found, but unable to convert.\n" + e);
+			}
+		}
 	}
 
 	@Override
