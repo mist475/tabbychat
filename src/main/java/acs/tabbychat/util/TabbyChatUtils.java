@@ -383,6 +383,51 @@ public class TabbyChatUtils {
 		return newChat;
 	}
 	/**
+	 * Splits an IChatComponent up at specified boundaries.
+	 * Flattens the structure using IChatComponent.iterator()
+	 * @param component The component(s) to split
+	 * @param boundaries The boundaries
+	 * @return A list of IChatComponents starting at the boundary indexes
+	 */
+	public static List<IChatComponent> split(IChatComponent component, int... boundaries) {
+		int textIndex = 0, boundaryIndex = 0;
+		List<IChatComponent> result = new ArrayList<IChatComponent>();
+		IChatComponent startOfSection = null;
+		for (Object o : component) {
+			IChatComponent subComponent = (IChatComponent) o;
+			String formatted = subComponent.getUnformattedText();
+			String unformattedText = formatted.replaceAll("\u00a7\\d", "");
+			int length = unformattedText.length();
+			// 3 cases.
+			// boundary start end intersects front component - increment boundaryIndex
+			// boundary start end is in the middle of component - increment boundaryIndex
+			// boundary start end intersects end component
+			while (boundaryIndex <= boundaries.length) {
+				int begin = boundaryIndex == 0 ? 0 : boundaries[boundaryIndex - 1] - textIndex;
+				int end = (boundaryIndex == boundaries.length ? length : boundaries[boundaryIndex] - textIndex);
+				if (begin >= length)
+					break;
+				if (end < 0)
+					break;
+				boolean startOfBound = begin >= 0;
+				begin = Math.max(0, begin);
+				end = Math.min(length, end); // Make inclusive
+				IChatComponent newComponent = new ChatComponentText(substringWithFormatters(formatted, begin, end));
+				// newComponent.setChatStyle(subComponent.getChatStyle());
+				if (startOfBound) {
+					result.add(startOfSection = newComponent);
+					boundaryIndex++;
+				} else {
+					startOfSection.appendSibling(newComponent);
+					break;
+				}
+			}
+			textIndex += length;
+		}
+		return result;
+	}
+
+	/**
 	 * Takes the substring of a paragraph-symbol formatted string
 	 *
 	 * @param formatted  The string with formatting characters.
