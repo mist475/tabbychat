@@ -6,16 +6,23 @@ import net.minecraft.client.Minecraft;
 public class BackgroundChatThread extends Thread {
 	String sendChat = "";
 	String knownPrefix = null;
-
+	/**
+	 * 
+	 * @param _send
+	 */
 	public BackgroundChatThread(String _send) {
 		this.sendChat = _send;
 	}
-
+	/**
+	 * 
+	 * @param _send
+	 * @param _prefix
+	 */
 	public BackgroundChatThread(String _send, String _prefix) {
 		this.sendChat = _send;
 		this.knownPrefix = _prefix;
 	}
-
+	
 	public synchronized void run() {
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.ingameGUI.getChatGUI().addToSentMessages(this.sendChat);

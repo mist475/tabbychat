@@ -46,7 +46,9 @@ public class GuiChatTC extends GuiChat {
     private int spellCheckCounter = 0;
 	public TabbyChat tc;
 	public GuiNewChatTC gnc;
-
+	/**
+	 * 
+	 */
 	public GuiChatTC() {
 		super();
 		this.mc = Minecraft.getMinecraft();
@@ -57,12 +59,17 @@ public class GuiChatTC extends GuiChat {
 		EmoticonsCompat.load();
 		MacroKeybindCompat.load();
 	}
-
+	/**
+	 * 
+	 * @param par1Str
+	 */
 	public GuiChatTC(String par1Str) {
 		this();
 		this.defaultInputFieldText = par1Str;
 	}
-
+	/**
+	 * 
+	 */
 	public void actionPerformed(GuiButton par1GuiButton) {
 		// Attempt Emoticons actionPerformed if present
 		EmoticonsCompat.actionPerformed(par1GuiButton, this.buttonList, this.inputField2);
@@ -105,13 +112,20 @@ public class GuiChatTC extends GuiChat {
 			this.tc.resetDisplayedChat();
 		}
 	}
-
+	/**
+	 * 
+	 * @param brandNewChan
+	 */
 	protected void addChannelLive(ChatChannel brandNewChan) {
 		if(!this.buttonList.contains(brandNewChan.tab)) {
 			this.buttonList.add(brandNewChan.tab);
 		}
 	}
-
+	/**
+	 * Checks for command prefix change
+	 * @param oldChan
+	 * @param newChan
+	 */
 	public void checkCommandPrefixChange(ChatChannel oldChan, ChatChannel newChan) {
 		String oldPrefix = oldChan.cmdPrefix.trim();
 		String currentInput = this.inputField2.getText().trim();
@@ -124,7 +138,9 @@ public class GuiChatTC extends GuiChat {
 		newChan.active = true;
 		newChan.unread = false;
 	}
-
+	/**
+	 * Completes player names
+	 */
 	public @Override void /*completePlayerName*/func_146404_p_() {
 		String textBuffer;
 		if(this.playerNamesFound) {
@@ -162,7 +178,9 @@ public class GuiChatTC extends GuiChat {
 		this.inputField2.deleteWords(-1);
 		this.inputField2.writeText((String)this.foundPlayerNames.get(this.playerNameIndex++));
 	}
-
+	/**
+	 * Confirms click
+	 */
 	public @Override void confirmClicked(boolean zeroId, int worldNum) {
 		if(worldNum == 0) {
 			if(zeroId) this.func_146407_a(this.clickedURI2);
@@ -170,7 +188,12 @@ public class GuiChatTC extends GuiChat {
 			this.mc.displayGuiScreen(this);
 		}
 	}
-
+	/**
+	 * Draws chat on screen
+	 * @param cursorX
+	 * @param cursorY
+	 * @param pointless
+	 */
     public @Override void drawScreen(int cursorX, int cursorY, float pointless) {
 		if (this.tc.enabled() && TabbyChat.advancedSettings.forceUnicode.getValue()) this.fontRendererObj.setUnicodeFlag(true);
 		sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
@@ -245,14 +268,20 @@ public class GuiChatTC extends GuiChat {
 // Attempt Emoticons drawScreen if present
 		EmoticonsCompat.drawScreen(cursorX, cursorY, pointless, this, this.buttonList);
 	}
-
+    /**
+     * 
+     * @param nameStart
+     * @param buffer
+     */
 	public void func_73893_a(String nameStart, String buffer) {
 		if(nameStart.length() >= 1) {
 			this.mc.thePlayer.sendQueue.addToSendQueue(new C14PacketTabComplete(nameStart));
 			this.waitingOnPlayerNames = true;
 		}
 	}
-
+	/**
+	 * 
+	 */
 	public @Override void func_146406_a(String[] par1ArrayOfStr) {
 		if(this.waitingOnPlayerNames) {
 			this.foundPlayerNames.clear();
@@ -273,7 +302,10 @@ public class GuiChatTC extends GuiChat {
 			}
 		}
 	}
-
+	/**
+	 * 
+	 * @param _uri
+	 */
     private void func_146407_a(URI _uri) {
         try {
             Class desktop = Class.forName("java.awt.Desktop");
@@ -283,7 +315,10 @@ public class GuiChatTC extends GuiChat {
             LogManager.getLogger().error("Couldn\'t open link", t);
         }
     }
-
+    /**
+     * 
+     * @return
+     */
 	public int getCurrentSends() {
 		int lng = 0;
 		int _s = this.inputList.size() - 1;
@@ -295,7 +330,10 @@ public class GuiChatTC extends GuiChat {
 		else
 			return (lng + 100 - 1) / 100;
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	public int getFocusedFieldInd() {
 		int _s = this.inputList.size();
 		for (int i=0; i<_s; i++) {
@@ -304,7 +342,9 @@ public class GuiChatTC extends GuiChat {
 		}
 		return 0;
 	}
-
+	/**
+	 * 
+	 */
 	public @Override void /*getSentHistory*/getSentHistory(int _dir) {
 		int loc = this.sentHistoryCursor2 + _dir;
 		int historyLength = this.gnc.getSentMessages().size();
@@ -321,7 +361,9 @@ public class GuiChatTC extends GuiChat {
 			this.sentHistoryCursor2 = loc;
 		}
 	}
-
+	/**
+	 * Handles mouse input
+	 */
 	public @Override void handleMouseInput() {
 		// Allow chatbox dragging
 	    if(ChatBox.resizing) {
@@ -357,7 +399,9 @@ public class GuiChatTC extends GuiChat {
 
 		if(mc.currentScreen.getClass() != GuiChat.class) super.handleMouseInput();
 	}
-
+	/**
+	 * Inits the Gui
+	 */
 	public @Override void initGui() {
 		Keyboard.enableRepeatEvents(true);
 		this.buttonList.clear();
@@ -419,7 +463,10 @@ public class GuiChatTC extends GuiChat {
 		// Initialize Emoticons screen if present
 		EmoticonsCompat.initGui(this.buttonList);
 	}
-
+	/**
+	 * Inserts characters at cursor
+	 * @param _chars
+	 */
 	public void insertCharsAtCursor(String _chars) {
 		StringBuilder msg = new StringBuilder();
 		int cPos = 0;
@@ -438,7 +485,9 @@ public class GuiChatTC extends GuiChat {
 			this.setText(msg, cPos+_chars.length());
 		}
 	}
-
+	/**
+	 * 
+	 */
 	public @Override void keyTyped(char _char, int _code) {
 		this.waitingOnPlayerNames = false;
 
@@ -551,7 +600,9 @@ public class GuiChatTC extends GuiChat {
 			}
 		}
 	}
-
+	/**
+	 * 
+	 */
 	public @Override void mouseClicked(int _x, int _y, int _button) {
 		if(_button == 0 && this.mc.gameSettings.chatLinks) {
             IChatComponent ccd = this.gnc.func_146236_a(Mouse.getX(), Mouse.getY());
@@ -634,7 +685,9 @@ public class GuiChatTC extends GuiChat {
 			}
 		}
 	}
-
+	/**
+	 * 
+	 */
 	public @Override void mouseMovedOrUp(int _x, int _y, int _button)
     {
         if (this.selectedButton2 != null && _button == 0)
@@ -648,12 +701,17 @@ public class GuiChatTC extends GuiChat {
 		ChatBox.dragging = false;
 		ChatBox.resizing = false;
 	}
-
+	/**
+	 * Wakes up the player
+	 */
 	private void playerWakeUp() {
 		NetHandlerPlayClient var1 = this.mc.thePlayer.sendQueue;
 		var1.addToSendQueue(new C0BPacketEntityAction(this.mc.thePlayer, 3));
 	}
-
+	/**
+	 * Removes characters at cursor
+	 * @param _del
+	 */
 	public void removeCharsAtCursor(int _del) {
 		StringBuilder msg = new StringBuilder();
 		int cPos = 0;
@@ -679,7 +737,9 @@ public class GuiChatTC extends GuiChat {
 		} else
 			return;
 	}
-
+	/**
+	 * Resets input fields
+	 */
 	public void resetInputFields() {
 		for(GuiTextField gtf : this.inputList) {
 			gtf.setText("");
@@ -701,7 +761,11 @@ public class GuiChatTC extends GuiChat {
 		this.inputField2.setCursorPositionEnd();
 		this.sentHistoryCursor2 = this.gnc.getSentMessages().size();
 	}
-
+	/**
+	 * 
+	 * @param txt
+	 * @param pos
+	 */
 	public void setText(StringBuilder txt, int pos) {
 		List<String> txtList = this.stringListByWidth(txt, sr.getScaledWidth()-20);
 
@@ -737,7 +801,12 @@ public class GuiChatTC extends GuiChat {
 			this.inputField2.setVisible(true);
 		}
 	}
-
+	/**
+	 * 
+	 * @param _sb
+	 * @param _w
+	 * @return
+	 */
 	public List<String> stringListByWidth(StringBuilder _sb, int _w) {
 		List<String> result = new ArrayList<String>(5);
 		int _len = 0;
@@ -757,7 +826,9 @@ public class GuiChatTC extends GuiChat {
 			result.add(bucket.toString());
 		return result;
 	}
-
+	/**
+	 * 
+	 */
 	public @Override void updateScreen() {
 		this.inputField2.updateCursorCounter();
 	}

@@ -29,7 +29,9 @@ public class ChatBox {
 	public static boolean anchoredTop = false;
 	public static boolean pinned = false;
 	private static GuiNewChatTC gnc = GuiNewChatTC.getInstance();
-
+	/**
+	 * Adds a row to the tab tray
+	 */
 	public static void addRowToTray() {
 		// // Grow virtual screen width/height to counter reduced size due to chat scaling
 		float sf = gnc.getScaleSetting();
@@ -54,7 +56,12 @@ public class ChatBox {
 			current.height += tabHeight;
 		}
 	}
-
+	/**
+	 * Draws the chat box border
+	 * @param overlay
+	 * @param chatOpen
+	 * @param opacity
+	 */
 	public static void drawChatBoxBorder(Gui overlay, boolean chatOpen, int opacity) {
 		int borderColor = 0x000000 + (2*opacity/3 << 24);
 		int trayColor = 0x000000 + (opacity/3 << 24);
@@ -132,7 +139,10 @@ public class ChatBox {
 			}
 		}
 	}
-
+	/**
+	 * Restricts chat to screen boundry
+	 * @param newBounds
+	 */
 	public static void enforceScreenBoundary(Rectangle newBounds) {
 		// Grow virtual screen width/height to counter reduced size due to chat scaling
 		float scaleSetting = gnc.getScaleSetting();
@@ -194,25 +204,41 @@ public class ChatBox {
 			}
 		}
 	}
-
+	/**
+	 * Returns chatbox height
+	 * @return
+	 */
 	public static int getChatHeight() {
 		return current.height - tabTrayHeight - 1;
 	}
-
+	/**
+	 * Returns chabox width
+	 * @return
+	 */
 	public static int getChatWidth() {
 		if(gnc.getChatOpen()) return current.width - ChatScrollBar.barWidth - 2;
 		else return current.width;
 	}
-
+	/**
+	 * Returns the minimum chatbox width
+	 * @return
+	 */
 	public static int getMinChatWidth() {
 		return current.width - ChatScrollBar.barWidth - 2;
 	}
-
+	/**
+	 * Returns the height of the chatbox while unfocused
+	 * @return
+	 */
 	public static int getUnfocusedHeight() {
 		//return (int)(TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue().floatValue() * getChatHeight() / 100.0f);
 		return unfocusedHeight;
 	}
-
+	/**
+	 * Handles mouse dragging
+	 * @param _curX
+	 * @param _curY
+	 */
 	public static void handleMouseDrag(int _curX, int _curY) {
 		if(!dragging) return;
 
@@ -243,7 +269,11 @@ public class ChatBox {
 
 		dragStart = click;
 	}
-
+	/**
+	 * Resize chatbox
+	 * @param _curX
+	 * @param _curY
+	 */
 	public static void handleMouseResize(int _curX, int _curY) {
 		if(!resizing) return;
 
@@ -262,7 +292,10 @@ public class ChatBox {
 		enforceScreenBoundary(desired);
 		dragStart = click;
 	}
-
+	/**
+	 * Returns if the chatbox is pinned
+	 * @return
+	 */
 	public static boolean pinHovered() {
 		// Check for mouse cursor over pin button
 
@@ -276,7 +309,10 @@ public class ChatBox {
 
 		return (cursor.x > rX && cursor.x < rX + 6 && cursor.y > rY && cursor.y < rY + 8);
 	}
-
+	/**
+	 * Resizes the chatbox
+	 * @return
+	 */
 	public static boolean resizeHovered() {
 		// Check for mouse cursor over resize handle
 
@@ -290,27 +326,46 @@ public class ChatBox {
 
 		return (cursor.x > rX && cursor.x < rX + 8 && cursor.y > rY && cursor.y < rY + 8);
 	}
-
+	/**
+	 * Sets chatbox height
+	 * @param height
+	 */
 	public static void setChatSize(int height) {
 		chatHeight = height;
 	}
-
+	/**
+	 * Sets unfocused chatbox height
+	 * @param uHeight
+	 */
 	public static void setUnfocusedHeight(int uHeight) {
 		unfocusedHeight = Math.min(uHeight, (int)(TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue().floatValue() * getChatHeight() / 100.0f));
 	}
-
+	/**
+	 * 
+	 * @param atX
+	 * @param atY
+	 */
 	public static void startDragging(int atX, int atY) {
 		dragging = true;
 		resizing = false;
 		dragStart = scaleMouseCoords(atX, atY, true);
 	}
-
+	/**
+	 * 
+	 * @param atX
+	 * @param atY
+	 */
 	public static void startResizing(int atX, int atY) {
 		dragging = false;
 		resizing = true;
 		dragStart = scaleMouseCoords(atX, atY, true);
 	}
-
+	/**
+	 * 
+	 * @param mx
+	 * @param my
+	 * @return
+	 */
 	public static boolean tabTrayHovered(int mx, int my) {
 		boolean chatOpen = gnc.getChatOpen();
 		GuiScreen theScreen = TabbyChat.mc.currentScreen;
@@ -324,11 +379,22 @@ public class ChatBox {
 			return (click.x > current.x && click.x < current.x + current.width && click.y > current.y + current.height - tabTrayHeight && click.y < current.y + current.height);
 		}
 	}
-
+	/**
+	 * Returns the current mouse coordinates
+	 * @param _x
+	 * @param _y
+	 * @return
+	 */
 	public static Point scaleMouseCoords(int _x, int _y) {
 		return scaleMouseCoords(_x, _y, false);
 	}
-
+	/**
+	 * Returns the scaled mouse coordinates
+	 * @param _x
+	 * @param _y
+	 * @param forGuiScreen
+	 * @return
+	 */
 	public static Point scaleMouseCoords(int _x, int _y, boolean forGuiScreen) {
 		Minecraft mc = Minecraft.getMinecraft();
 		GuiScreen theScreen = mc.currentScreen;
@@ -358,7 +424,10 @@ public class ChatBox {
 		}
 		return new Point(_x, _y);
 	}
-
+	/**
+	 * Updates tabs
+	 * @param chanObjs
+	 */
 	public static void updateTabs(LinkedHashMap<String, ChatChannel> chanObjs) {
 		int tabWidth = 0;
 		int tabX = current.x;

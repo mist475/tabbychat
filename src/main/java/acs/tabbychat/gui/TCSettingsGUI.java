@@ -30,17 +30,24 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 	protected int id = 9000;
 	protected static List<TCSettingsGUI> ScreenList = new ArrayList<TCSettingsGUI>();
 	protected File settingsFile;
-
+	/**
+	 * 
+	 */
 	private TCSettingsGUI() {
 		mc = Minecraft.getMinecraft();
 		ScreenList.add(this);
 	}
-
+	/**
+	 * 
+	 * @param _tc
+	 */
 	public TCSettingsGUI(TabbyChat _tc) {
 		this();
 		tc = _tc;
 	}
-
+	/**
+	 * 
+	 */
 	public void actionPerformed(GuiButton button) {
 		if (button instanceof ITCSetting && ((ITCSetting)button).getType() != "textbox") {
 			((ITCSetting)button).actionPerformed();
@@ -68,7 +75,9 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		}
 		this.validateButtonStates();
 	}
-
+	/**
+	 * Define buttons to draw
+	 */
 	public void defineDrawableSettings() {}
 
 	public void drawScreen(int x, int y, float f) {
@@ -115,7 +124,9 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 			}
 		}
 	}
-
+	/**
+	 * Defines various button properties
+	 */
 	public void initDrawableSettings() {}
 
 	public void initGui() {
@@ -153,7 +164,6 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 			if(drawable instanceof ITCSetting) ((ITCSetting)drawable).resetDescription();
 		}
 	}
-
 	public void keyTyped(char par1, int par2) {
 		for (int i = 0; i < this.buttonList.size(); i++) {
 			if (ITCSetting.class.isInstance(this.buttonList.get(i))) {
@@ -165,7 +175,6 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		}
 		super.keyTyped(par1, par2);
 	}
-
 	public Properties loadSettingsFile() {
 		Properties settingsTable = new Properties();
 		if(this.settingsFile == null) return settingsTable;
@@ -193,7 +202,6 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		this.resetTempVars();
 		return settingsTable;
 	}
-
 	public void mouseClicked(int par1, int par2, int par3) {
 		for (int i = 0; i < this.buttonList.size(); i++) {
 			if(this.buttonList.get(i) instanceof ITCSetting) {
@@ -205,7 +213,9 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		}
 		super.mouseClicked(par1, par2, par3);
 	}
-
+	/**
+	 * Reset temporary Variables
+	 */
 	public void resetTempVars() {
 		for(Object drawable : this.buttonList) {
 			if(drawable instanceof ITCSetting) {
@@ -213,11 +223,12 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 			}
 		}
 	}
-
+	/**
+	 * What row to draw on
+	 */
 	public int rowY(int rowNum) {
 		return (this.height - DISPLAY_HEIGHT)/2 + (rowNum - 1) * (LINE_HEIGHT + MARGIN);
 	}
-
 	public void saveSettingsFile(Properties settingsTable) {
 		if(this.settingsFile == null) return;
 		if(!this.settingsFile.getParentFile().exists()) this.settingsFile.getParentFile().mkdirs();
@@ -243,11 +254,12 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
             } catch (Exception ignored) {}
 		}
 	}
-
 	public void saveSettingsFile() {
 		this.saveSettingsFile(new Properties());
 	}
-
+	/**
+	 * Stores temporary variables
+	 */
 	public void storeTempVars() {
 		for(Object drawable : this.buttonList) {
 			if(drawable instanceof ITCSetting) {

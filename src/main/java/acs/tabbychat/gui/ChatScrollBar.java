@@ -23,7 +23,9 @@ public class ChatScrollBar {
 	protected static int barHeight = 5;
 	protected static int barWidth = 5;
 	private static boolean scrolling = false;
-
+	/**
+	 * 
+	 */
 	public ChatScrollBar() {
 		mc = Minecraft.getMinecraft();
 		if(TabbyChat.generalSettings.timeStampEnable.getValue()) {
@@ -35,7 +37,9 @@ public class ChatScrollBar {
 			mc.fontRenderer.setUnicodeFlag(oldVal);
 		}
 	}
-
+	/**
+	 * 
+	 */
 	public static void handleMouse() {
 		Point cursor = ChatBox.scaleMouseCoords(Mouse.getEventX(), Mouse.getEventY());
 
@@ -55,7 +59,9 @@ public class ChatScrollBar {
 			scrollBarMouseDrag(cursor.y);
 		}
 	}
-
+	/**
+	 * 
+	 */
 	private static void update() {
 		int maxlines = gnc.getHeightSetting() / 9;
 		int clines = Math.min(gnc.GetChatSize(), maxlines);
@@ -79,7 +85,9 @@ public class ChatScrollBar {
 		if(!ChatBox.anchoredTop) scrollBarCenter = Math.round(mouseLoc*barMinY + (1.0f-mouseLoc)*barMaxY);
 		else scrollBarCenter = Math.round(mouseLoc*barMaxY + (1.0f-mouseLoc)*barMinY);
 	}
-
+	/**
+	 * Draws the scroll bar
+	 */
 	public static void drawScrollBar() {
 		update();
 		int minX = barX + 1;
@@ -93,7 +101,9 @@ public class ChatScrollBar {
 			gnc.drawRect(minX + 1, scrollBarCenter - barHeight/2 - 1, minX + barWidth - 1, scrollBarCenter + barHeight/2 + 1, 0xffffff + (currentOpacity / 2 << 24));
 		}
 	}
-
+	/**
+	 * Handles mouse wheel
+	 */
 	public static void scrollBarMouseWheel() {
 		update();
 		int maxlines = gnc.getHeightSetting() / 9;
@@ -106,7 +116,10 @@ public class ChatScrollBar {
 		if(!ChatBox.anchoredTop) scrollBarCenter = Math.round(mouseLoc*barMinY + (1.0f-mouseLoc)*barMaxY);
 		else scrollBarCenter = Math.round(mouseLoc*barMaxY + (1.0f-mouseLoc)*barMinY);
 	}
-
+	/**
+	 * Handles scrolling from dragging the scroll bar
+	 * @param _absY
+	 */
 	public static void scrollBarMouseDrag(int _absY) {
 		int maxlines = gnc.getHeightSetting() / 9;
 		int blines = gnc.GetChatSize();
@@ -139,7 +152,11 @@ public class ChatScrollBar {
 		else scrollBarCenter = Math.round(mouseLoc*(barMaxY-barMinY)+barMinY);
 		lastY = _absY;
 	}
-
+	/**
+	 * 
+	 * @param _x
+	 * @param _y
+	 */
 	public static void setOffset(int _x, int _y) {
 		int maxlines = gnc.getHeightSetting() / 9;
 		int clines = (gnc.GetChatSize() < maxlines) ? gnc.GetChatSize() : maxlines;

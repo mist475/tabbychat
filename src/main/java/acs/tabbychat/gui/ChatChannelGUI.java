@@ -38,7 +38,10 @@ public class ChatChannelGUI extends GuiScreen {
 	private TCSettingBool notificationsOn = new TCSettingBool(false, "notificationsOn", "settings.channel", NOTIFICATIONS_ON_ID);
 	private TCSettingTextBox alias = new TCSettingTextBox("", "alias", "settings.channel", ALIAS_ID);
 	private TCSettingTextBox cmdPrefix = new TCSettingTextBox("", "cmdPrefix", "settings.channel", CMD_PREFIX_ID);
-
+	/**
+	 * 
+	 * @param _c
+	 */
 	public ChatChannelGUI(ChatChannel _c) {
 		this.tc = GuiNewChatTC.getInstance().tc;
 		this.channel = _c;
@@ -51,7 +54,9 @@ public class ChatChannelGUI extends GuiScreen {
 		this.resetTempVars();
 		this.title = _c.getTitle();
 	}
-
+	/**
+	 * 
+	 */
 	public void actionPerformed(GuiButton _button) {
 		switch(_button.id) {
 		case SAVE_ID:
@@ -84,7 +89,7 @@ public class ChatChannelGUI extends GuiScreen {
 			this.hidePrefix.actionPerformed();
 		}
 	}
-
+	
 	public void drawScreen(int _x, int _y, float _f) {
 		int leftX = (this.width - this.displayWidth)/2;
 		int topY = (this.height - this.displayHeight)/2;
@@ -186,7 +191,9 @@ public class ChatChannelGUI extends GuiScreen {
 		}
 		super.mouseClicked(par1, par2, par3);
 	}
-
+	/**
+	 * Resets temporary variables
+	 */
 	public void resetTempVars() {
 		this.hidePrefix.reset();
 		this.notificationsOn.reset();

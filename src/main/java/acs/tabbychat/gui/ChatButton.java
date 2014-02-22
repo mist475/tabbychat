@@ -15,51 +15,87 @@ import net.minecraft.client.gui.GuiButton;
 
 public class ChatButton extends GuiButton {
 	public ChatChannel channel;
-
+	
 	public ChatButton() {
 		super(9999, 0, 0, 1, 1, "");
 	}
-
+	/**
+	 * 
+	 * @param _id
+	 * @param _x
+	 * @param _y
+	 * @param _w
+	 * @param _h
+	 * @param _title
+	 */
 	public ChatButton(int _id, int _x, int _y, int _w, int _h, String _title) {
 		super(_id, _x, _y, _w, _h, _title);
 	}
-
+	/**
+	 * Returns button width
+	 * @return
+	 */
 	public int width() {
 		return this.width;
 	}
-
+	/**
+	 * Sets button width
+	 * @param _w
+	 */
 	public void width(int _w) {
 		this.width = _w;
 	}
-
+	/**
+	 * Returns button height
+	 * @return
+	 */
 	public int height() {
 		return this.height;
 	}
-
+	/**
+	 * Sets button height
+	 * @param _h
+	 */
 	public void height(int _h) {
 		this.height = _h;
 	}
-
+	/**
+	 * Returns X-position of button
+	 * @return
+	 */
     public int x() {
         return xPosition;
     }
-
+    /**
+     * Sets X-position of button
+     * @param _x
+     */
     public void x(int _x) {
         xPosition = _x;
     }
-
+    /**
+     * Returns Y-position of button
+     * @return
+     */
     public int y() {
         return yPosition;
     }
-
+    /**
+     * Sets Y-position of button
+     * @param _y
+     */
     public void y(int _y) {
         yPosition = _y;
     }
-
+    
 	public void clear() {
 		this.channel = null;
 	}
-
+	/**
+	 * 
+	 * @param unscaled
+	 * @return
+	 */
 	private static Rectangle translateButtonDims(Rectangle unscaled) {
 		float scaleSetting = GuiNewChatTC.getInstance().getScaleSetting();
 		int adjX = Math.round((unscaled.x - ChatBox.current.x) * scaleSetting + ChatBox.current.x);
@@ -70,12 +106,12 @@ public class ChatButton extends GuiButton {
 		int adjH = Math.round(unscaled.height * scaleSetting);
 		return new Rectangle(adjX, adjY, adjW, adjH);
 	}
-
+	
 	public boolean mousePressed(Minecraft mc, int par2, int par3) {
 		Rectangle cursor = translateButtonDims(new Rectangle(this.x(), this.y(), this.width(), this.height()));
 		return this.enabled && this.visible && par2 >= cursor.x && par3 >= cursor.y && par2 < cursor.x + cursor.width && par3 < cursor.y + cursor.height;
 	}
-
+	
 	public void drawButton(Minecraft mc, int cursorX, int cursorY) {
 	      if(this.visible) {
 	          FontRenderer fr = mc.fontRenderer;

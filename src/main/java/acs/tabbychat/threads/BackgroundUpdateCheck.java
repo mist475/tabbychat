@@ -10,7 +10,9 @@ import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.Minecraft;
 
 public class BackgroundUpdateCheck extends Thread {
-
+	/**
+	 * Runs update check
+	 */
 	public BackgroundUpdateCheck() {
 	}
 

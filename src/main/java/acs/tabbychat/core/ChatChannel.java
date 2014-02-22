@@ -35,14 +35,23 @@ public class ChatChannel implements Serializable {
 	public boolean hidePrefix = false;
 	private String alias;
 	public String cmdPrefix = "";
-
+	/**
+	 * 
+	 */
 	public ChatChannel() {
 		this.chanID = nextID;
 		nextID++;
 		this.chatLog = new ArrayList<TCChatLine>();
 		this.notificationsOn = TabbyChat.generalSettings.unreadFlashing.getValue();
 	}
-
+	/**
+	 * 
+	 * @param _x
+	 * @param _y
+	 * @param _w
+	 * @param _h
+	 * @param _title
+	 */
 	public ChatChannel(int _x, int _y, int _w, int _h, String _title) {
 		this();
 		this.tab = new ChatButton(this.chanID, _x, _y, _w, _h, _title);
@@ -51,11 +60,18 @@ public class ChatChannel implements Serializable {
 		this.tab.channel = this;
 		this.tab.width(TabbyChat.mc.fontRenderer.getStringWidth(this.alias + "<>")+8);
 	}
-
+	/**
+	 * 
+	 * @param _title
+	 */
 	public ChatChannel(String _title) {
 		this(3, 3, Minecraft.getMinecraft().fontRenderer.getStringWidth("<"+_title+">") + 8, 14, _title);
 	}
-
+	/**
+	 * 
+	 * @param newChat
+	 * @param visible
+	 */
 	public void addChat(TCChatLine newChat, boolean visible) {
 		this.chatWriteLock.lock();
 		try {
@@ -65,19 +81,33 @@ public class ChatChannel implements Serializable {
 		}
 		if(!this.title.equals("*") && this.notificationsOn && !visible) this.unread = true;
 	}
-
+	/**
+	 * 
+	 * @param btnObj
+	 * @return
+	 */
 	public boolean doesButtonEqual(GuiButton btnObj) {
 		return (this.tab.id == btnObj.id);
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	public String getAlias() {
 		return this.alias;
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	public int getButtonEnd() {
 		return this.tab.x() + this.tab.width();
 	}
-
+	/**
+	 * 
+	 * @param index
+	 * @return
+	 */
 	public TCChatLine getChatLine(int index) {
 		TCChatLine retVal = null;
 		this.chatReadLock.lock();
@@ -88,7 +118,12 @@ public class ChatChannel implements Serializable {
 		}
 		return retVal;
 	}
-
+	/**
+	 * 
+	 * @param fromInd
+	 * @param toInd
+	 * @return
+	 */
 	public List<TCChatLine> getChatLogSublistCopy(int fromInd, int toInd) {
 		List<TCChatLine> retVal = new ArrayList<TCChatLine>(toInd-fromInd);
 		this.chatReadLock.lock();
@@ -101,7 +136,10 @@ public class ChatChannel implements Serializable {
 		}
 		return retVal;
 	}
-
+	/**
+	 * Returns the size of the log
+	 * @return
+	 */
 	public int getChatLogSize() {
 		int mySize = 0;
 		this.chatReadLock.lock();
@@ -112,11 +150,17 @@ public class ChatChannel implements Serializable {
 		}
 		return mySize;
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	public int getID() {
 		return this.chanID;
 	}
-
+	/**
+	 * Returns display title
+	 * @return
+	 */
 	public String getDisplayTitle() {
 		if (this.active)
 			return "[" + this.alias + "]";
@@ -125,25 +169,36 @@ public class ChatChannel implements Serializable {
 		else
 			return this.alias;
 	}
-
+	/**
+	 * Returns title
+	 * @return
+	 */
 	public String getTitle() {
 		return this.title;
 	}
-
+	/**
+	 * Sets the button type
+	 * @param btnObj
+	 */
 	public void setButtonObj(ChatButton btnObj) {
 		this.tab = btnObj;
 		this.tab.channel = this;
 	}
-
+	/**
+	 * Sets alias
+	 * @param _alias
+	 */
 	public void setAlias(String _alias) {
 		this.alias = _alias;
 		this.tab.width(TabbyChat.mc.fontRenderer.getStringWidth(_alias+"<>") + 8);
 	}
-
+	
 	public String toString() {
 		return this.getDisplayTitle();
 	}
-
+	/**
+	 * Clears tab
+	 */
 	public void clear() {
 		this.chatWriteLock.lock();
 		try {
@@ -153,12 +208,20 @@ public class ChatChannel implements Serializable {
 		}
 		this.tab = null;
 	}
-
+	/**
+	 * Sets button location
+	 * @param _x
+	 * @param _y
+	 */
 	public void setButtonLoc(int _x, int _y) {
 		this.tab.x(_x);
 		this.tab.y(_y);
 	}
-
+	/**
+	 * Logs to chat
+	 * @param ind
+	 * @param newLine
+	 */
 	protected void setChatLogLine(int ind, TCChatLine newLine) {
 		this.chatWriteLock.lock();
 		try {
@@ -168,7 +231,9 @@ public class ChatChannel implements Serializable {
 			this.chatWriteLock.unlock();
 		}
 	}
-
+	/**
+	 * Trims the log
+	 */
 	public void trimLog() {
 		TabbyChat tc = GuiNewChatTC.getInstance().tc;
 		if(tc == null || tc.serverDataLock.availablePermits() < 1) return;
@@ -182,7 +247,11 @@ public class ChatChannel implements Serializable {
 			this.chatWriteLock.unlock();
 		}
 	}
-
+	/**
+	 * Notify the user of unread chat messages.
+	 * @param _gui
+	 * @param _opacity
+	 */
 	public void unreadNotify(Gui _gui, int _opacity) {
 		Minecraft mc = Minecraft.getMinecraft();
 		GuiNewChatTC gnc = GuiNewChatTC.getInstance();
@@ -194,7 +263,10 @@ public class ChatChannel implements Serializable {
 		GL11.glEnable(GL11.GL_BLEND);
 		mc.ingameGUI.getChatGUI().drawCenteredString(mc.fontRenderer, this.getDisplayTitle(), this.tab.x() + this.tab.width()/2, tabY + 4, 16711680 + (_opacity << 24));
 	}
-
+	/**
+	 * Imports old channels
+	 * @param oldChan
+	 */
 	protected void importOldChat(ChatChannel oldChan) {
 		if(oldChan == null || oldChan.chatLog.isEmpty()) return;
 		this.chatWriteLock.lock();

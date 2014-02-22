@@ -20,7 +20,10 @@ public class TCChatLineFake extends ChatLine {
 		else this.lineString = _string;
 		this.chatLineID = _id;
 	}
-
+	/**
+	 * Returns the chat line as a string
+	 * @return
+	 */
 	public IChatComponent getChatLineString() {
 		return this.lineString;
 	}

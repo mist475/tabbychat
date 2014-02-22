@@ -15,7 +15,9 @@ import com.swabunga.spell.event.StringWordTokenizer;
 
 public class TCSpellCheckListener implements SpellCheckListener {
 	protected SpellChecker spellCheck = null;
-	
+	/**
+	 * 
+	 */
 	public TCSpellCheckListener() {
 		try {
 			InputStream in = TCSpellCheckListener.class.getResourceAsStream("/english.0");
@@ -27,7 +29,10 @@ public class TCSpellCheckListener implements SpellCheckListener {
 		}
 		
 	}
-	
+	/**
+	 * 
+	 * @param dict
+	 */
 	public TCSpellCheckListener(File dict) {
 		try {
 			SpellDictionary dictionary = new SpellDictionaryHashMap(dict);
@@ -37,12 +42,17 @@ public class TCSpellCheckListener implements SpellCheckListener {
 			TabbyChat.printException("Error instantiating spell checker", e);
 		}
 	}
-	
+	/**
+	 * 
+	 */
 	@Override
 	public void spellingError(SpellCheckEvent event) {
 		TabbyChat.spellChecker.handleListenerEvent(event);		
 	}
-	
+	/**
+	 * 
+	 * @param line
+	 */
 	public void checkSpelling(String line) {
 		this.spellCheck.checkSpelling(new StringWordTokenizer(line));
 	}

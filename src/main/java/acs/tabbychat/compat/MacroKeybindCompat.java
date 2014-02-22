@@ -34,7 +34,9 @@ public class MacroKeybindCompat {
 	private static Field boundingBox;
 	public static boolean present = true;
 	private static boolean hovered = false;
-
+	/**
+	 * Called on load
+	 */
 	public static void load() {
 		if(present) {
 			if(inChatLayout == null
@@ -128,7 +130,14 @@ public class MacroKeybindCompat {
 			}
 		}
 	}
-
+	/**
+	 * 
+	 * @param par1
+	 * @param par2
+	 * @param par3
+	 * @param par4
+	 * @return
+	 */
 	public static boolean contextMenuClicked(int par1, int par2, int par3, GuiScreen par4) {
 		if(!present) return false;
 		try {
@@ -161,7 +170,14 @@ public class MacroKeybindCompat {
 		}
 		return false;
 	}
-
+	/**
+	 * 
+	 * @param par1
+	 * @param par2
+	 * @param par3
+	 * @param par4
+	 * @return
+	 */
 	public static boolean controlClicked(int par1, int par2, int par3, GuiScreen par4) {
 		if(!present) return false;
 		boolean clicked = false;
@@ -184,7 +200,12 @@ public class MacroKeybindCompat {
 		}
 		return clicked;
 	}
-
+	/**
+	 * Draws screen
+	 * @param par1
+	 * @param par2
+	 * @param par3
+	 */
 	public static void drawScreen(int par1, int par2, GuiScreen par3) {
 		if(!present) return;
 		Object[] args = new Object[3];

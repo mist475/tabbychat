@@ -21,7 +21,9 @@ public class EmoticonsCompat {
 	private static Method emoteDrawScreen = null;
 	public static int emoteOffsetX = 0;
 	public static boolean present = true;
-
+	/**
+	 * 
+	 */
 	public static void load() {
 		if(present) {
 			if(emoteConstructor == null || emoteActionPerformed == null || emoteInitGui == null || emoteDrawScreen == null || emoteButtonClass == null) {
@@ -60,7 +62,12 @@ public class EmoticonsCompat {
 			}
 		}
 	}
-
+	/**
+	 * 
+	 * @param par1
+	 * @param par2
+	 * @param par3
+	 */
 	public static void actionPerformed(GuiButton par1, List par2, GuiTextField par3) {
 		if(!present) return;
 		Object[] args = new Object[3];
@@ -73,7 +80,14 @@ public class EmoticonsCompat {
 			present = false;
 		}
 	}
-
+	/**
+	 * Draws screen
+	 * @param par1
+	 * @param par2
+	 * @param par3
+	 * @param par4
+	 * @param buttonList
+	 */
 	public static void drawScreen(int par1, int par2, float par3, GuiChatTC par4, List buttonList) {
 		if(!present) return;
 		Object[] args = new Object[4];
@@ -95,7 +109,10 @@ public class EmoticonsCompat {
 			GL11.glPopMatrix();
 		}
 	}
-
+	/**
+	 * Inits the gui
+	 * @param par1
+	 */
 	public static void initGui(List par1) {
 		if(!present) return;
 		Object[] args = new Object[1];

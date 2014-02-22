@@ -73,14 +73,21 @@ public class TabbyChat {
 	private static GuiNewChatTC gnc;
 
 	private static TabbyChat instance = null;
-
+	/**
+	 * 
+	 * @param gncInstance
+	 * @return
+	 */
 	public static TabbyChat getInstance(GuiNewChatTC gncInstance) {
 		if(instance == null) {
 			instance = new TabbyChat(gncInstance);
 		}
 		return instance;
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	public static String getNewestVersion() {
 		String updateURL;
 		if(liteLoaded) {
@@ -99,17 +106,27 @@ public class TabbyChat {
 		}
 		return TabbyChat.version;
 	}
-
+	/**
+	 * Prints errors to the console
+	 * @param err
+	 */
 	public static void printErr(String err) {
 		System.err.println("[TabbyChat] "+err);
 		LogManager.getLogger().warn("[TABBYCHAT] " + err);
 	}
-
+	/**
+	 * 
+	 * @param err
+	 * @param e
+	 */
 	public static void printException(String err, Exception e) {
 		System.err.println("[TabbyChat] "+err);
 		LogManager.getLogger().warn("[TABBYCHAT] " + err, e);
 	}
-
+	/**
+	 * 
+	 * @param msg
+	 */
 	public static void printMessageToChat(String msg) {
 		if(TabbyChat.instance == null) return;
 		if(!TabbyChat.instance.channelMap.containsKey("TabbyChat")) {
@@ -123,7 +140,7 @@ public class TabbyChat {
 			firstLine = false;
 		}
 	}
-
+	
 	private TabbyChat(GuiNewChatTC gncInstance) {
 		mc = Minecraft.getMinecraft();
 		gnc = gncInstance;
@@ -137,7 +154,10 @@ public class TabbyChat {
 		advancedSettings.loadSettingsFile();
 		defaultUnicode = mc.fontRenderer.getUnicodeFlag();
 	}
-
+	/**
+	 * 
+	 * @param ind
+	 */
 	public void activateIndex(int ind) {
 		List actives = this.getActive();
 		if(actives.size() == 1) {
@@ -155,7 +175,9 @@ public class TabbyChat {
 			}
 		}
 	}
-
+	/**
+	 * 
+	 */
 	public void activateNext() {
 		List actives = this.getActive();
 		if(actives.size() == 1) {
@@ -176,7 +198,9 @@ public class TabbyChat {
 			}
 		}
 	}
-
+	/**
+	 * 
+	 */
 	public void activatePrev() {
 		List actives = this.getActive();
 		if(actives.size() == 1) {
@@ -199,13 +223,17 @@ public class TabbyChat {
 			}
 		}
 	}
-
 	private void addOptionalTimeStamp(List<TCChatLine> orig) {
 		for(TCChatLine line : orig) {
 			line.timeStamp = this.getTimeStamp();
 		}
 	}
-
+	/**
+	 * 
+	 * @param _name
+	 * @param thisChat
+	 * @param visible
+	 */
 	public void addToChannel(String _name, List<TCChatLine> thisChat, boolean visible) {
 		ChatChannel theChan = this.channelMap.get(_name);
 		if (theChan != null && generalSettings.groupSpam.getValue()) {
@@ -221,7 +249,12 @@ public class TabbyChat {
 			}
 		}
 	}
-
+	/**
+	 * 
+	 * @param name
+	 * @param thisChat
+	 * @param visible
+	 */
 	public void addToChannel(String name, TCChatLine thisChat, boolean visible) {
         if(serverSettings.ignoredChanPattern.matcher(name).matches()) return;
 
@@ -238,11 +271,17 @@ public class TabbyChat {
 		theChan.addChat(thisChat, visible);
 		theChan.trimLog();
 	}
-
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public boolean channelExists(String name) {
 		return (this.channelMap.get(name) != null);
 	}
-
+	/**
+	 * 
+	 */
 	public void checkServer() {
 		if(!updateChecked) {
 			updateChecked = true;
@@ -260,19 +299,26 @@ public class TabbyChat {
 		}
 		return;
 	}
-
+	/**
+	 * 
+	 * @param name
+	 */
 	public void createNewChannel(String name) {
 		if(this.channelExists(name)) return;
 		if(name == null || name.length() <= 0 || this.channelMap.size() >= 20) return;
 		this.channelMap.put(name, new ChatChannel(name));
 		return;
 	}
-
+	/**
+	 * Disables modded chat.
+	 */
 	public void disable() {
 		this.channelMap.clear();
 		this.channelMap.put("*", new ChatChannel("*"));
 	}
-
+	/**
+	 * Enables modded chat.
+	 */
 	public void enable() {
 		if (!this.channelMap.containsKey("*")) {
 			this.channelMap.put("*", new ChatChannel("*"));
@@ -297,15 +343,23 @@ public class TabbyChat {
 			TabbyChatUtils.logChat("\nBEGIN CHAT LOGGING FOR "+serverSettings.serverIP+" -- "+(new SimpleDateFormat()).format(Calendar.getInstance().getTime()));
 		}
 	}
-
+	/**
+	 * 
+	 * @return true when mod is enabled
+	 */
 	public boolean enabled() {
 		return generalSettings.tabbyChatEnable.getValue();
 	}
-
+	/**
+	 * 
+	 */
 	protected void finalize() {
 		this.storeChannelData();
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	public List<String> getActive() {
 		int n = this.channelMap.size();
 		List<String> actives = new ArrayList<String>(n);
@@ -316,15 +370,23 @@ public class TabbyChat {
 		}
 		return actives;
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	private String getCleanTimeStamp() {
 		return StringUtils.stripControlCodes(this.getTimeStamp());
 	}
-
+	/**
+	 * 
+	 * @return the current time and date
+	 */
 	private String getTimeStamp() {
 		return generalSettings.timeStamp.format(Calendar.getInstance().getTime());
 	}
-
+	/**
+	 * 
+	 */
 	protected void loadChannelData() {
 		LinkedHashMap<String, ChatChannel> importData = null;
 		if(!chanDataFile.exists()) return;
@@ -372,7 +434,9 @@ public class TabbyChat {
 		ChatChannel.nextID = 3600 + oldIDs;
 		this.resetDisplayedChat();
 	}
-
+	/**
+	 * 
+	 */
 	protected void loadPatterns() {
 		ChannelDelimEnum delims = (ChannelDelimEnum)serverSettings.delimiterChars.getValue();
 		String colCode = "";
@@ -396,7 +460,9 @@ public class TabbyChat {
 		this.chatChannelPatternDirty = Pattern.compile("^(\u00A7r)?"+frmt+"\\"+delims.open()+"([\\p{L}0-9_\u00A7]+)\\"+delims.close());
 		this.chatChannelPatternClean = Pattern.compile("^"+"\\"+delims.open()+"([\\p{L}0-9_]{1,"+this.advancedSettings.maxLengthChannelName.getValue()+"})\\"+delims.close());
 	}
-
+	/**
+	 * 
+	 */
 	protected void loadPMPatterns() {
 		StringBuilder toMePM = new StringBuilder();
 		StringBuilder fromMePM = new StringBuilder();
@@ -424,7 +490,11 @@ public class TabbyChat {
 		this.chatPMtoMePattern = Pattern.compile(toMePM.toString());
 		this.chatPMfromMePattern = Pattern.compile(fromMePM.toString());
 	}
-
+	/**
+	 * 
+	 * @param _gui
+	 * @param _tick
+	 */
 	public void pollForUnread(Gui _gui, int _tick) {
 		int _opacity = 0;
 		int tickdiff = 50;
@@ -456,7 +526,10 @@ public class TabbyChat {
 			}
 		}
 	}
-
+	/**
+	 * 
+	 * @param theChat
+	 */
 	public void processChat(List<TCChatLine> theChat) {
 		if(this.serverDataLock.availablePermits() == 0) {
 			this.serverDataLock.acquireUninterruptibly();
@@ -545,7 +618,12 @@ public class TabbyChat {
 			this.lastChatReadLock.unlock();
 		}
 	}
-
+	/**
+	 * 
+	 * @param clean
+	 * @param raw
+	 * @return
+	 */
 	private String processChatForChannels(String clean, String raw) {
 		Matcher findChannelClean = this.chatChannelPatternClean.matcher(clean);
 		Matcher findChannelDirty = this.chatChannelPatternDirty.matcher(raw);
@@ -553,7 +631,12 @@ public class TabbyChat {
 		if (findChannelClean.find() && dirtyCheck) return findChannelClean.group(1);
 		return null;
 	}
-
+	/**
+	 * 
+	 * @param chat
+	 * @param destinations
+	 * @return
+	 */
 	private String processChatForFilters(String chat, List<String> destinations) {
 		// Flag case where chat matches a 'remove' filter, bypassing any remaining filter processing
 		boolean skip = false;
@@ -591,7 +674,11 @@ public class TabbyChat {
 		if(!skip) return chat;
 		else return null;
 	}
-
+	/**
+	 * Processes chat for PMs
+	 * @param chat
+	 * @return
+	 */
 	private String processChatForPMs(String chat) {
 		if(this.chatPMtoMePattern != null) {
 			Matcher findPMtoMe = this.chatPMtoMePattern.matcher(chat);
@@ -610,24 +697,35 @@ public class TabbyChat {
 		}
 		return null;
 	}
-
+	/**
+	 * Reloads server settings
+	 */
 	private void reloadServerData() {
 		serverSettings.loadSettingsFile();
 		filterSettings.loadSettingsFile();
 		this.loadChannelData();
 	}
-
+	/**
+	 * 
+	 * @param withSave
+	 */
 	public void reloadSettingsData(boolean withSave) {
 		this.updateDefaults();
 		this.loadPatterns();
 		this.updateFilters();
 		if(withSave) this.storeChannelData();
 	}
-
+	/**
+	 * Removes tab from chat
+	 * @param _name
+	 * 		tab to remove
+	 */
 	public void removeTab(String _name) {
 		this.channelMap.remove(_name);
 	}
-
+	/**
+	 * 
+	 */
 	public void resetDisplayedChat() {
 		gnc.clearChatLines();
 		List<String> actives = this.getActive();
@@ -638,7 +736,11 @@ public class TabbyChat {
 			gnc.mergeChatLines(this.channelMap.get(actives.get(i)));
 		}
 	}
-
+	/**
+	 * Checks for spam
+	 * @param theChan
+	 * @param lastChat
+	 */
 	private void spamCheck(ChatChannel theChan, List<TCChatLine> lastChat) {
 		String oldChat = "";
 		String newChat = "";
@@ -672,7 +774,9 @@ public class TabbyChat {
 			theChan.spamCount = 1;
 		}
 	}
-
+	/**
+	 * 
+	 */
 	public void storeChannelData() {
 		if(chanDataFile == null) return;
 		if(!chanDataFile.getParentFile().exists()) chanDataFile.getParentFile().mkdirs();
@@ -695,7 +799,10 @@ public class TabbyChat {
 			} catch (Exception e) {}
 		}
 	}
-
+	/**
+	 * 
+	 * @param make
+	 */
 	private void updateChanDataPath(boolean make) {
 		String pName = "";
 		if(mc.thePlayer != null && mc.thePlayer.getCommandSenderName() != null) pName = mc.thePlayer.getCommandSenderName();
@@ -703,7 +810,9 @@ public class TabbyChat {
 		if(make && !parentDir.exists()) parentDir.mkdirs();
 		chanDataFile = new File(parentDir, pName + "_chanData.ser");
 	}
-
+	/**
+	 * Updates general settings
+	 */
 	protected void updateDefaults() {
 		if (!TabbyChat.generalSettings.tabbyChatEnable.getValue()) return;
 		List<String> dList = new ArrayList(serverSettings.defaultChanList);
@@ -717,7 +826,9 @@ public class TabbyChat {
 			if (defChan.length() > 0) this.channelMap.put(defChan, new ChatChannel(defChan));
 		}
 	}
-
+	/**
+	 * Updates filter settings
+	 */
 	protected void updateFilters() {
 		if (!generalSettings.tabbyChatEnable.getValue()) return;
 		if (filterSettings.filterMap.size() == 0) return;

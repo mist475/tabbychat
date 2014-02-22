@@ -29,16 +29,25 @@ public class TCSpellCheckManager {
 	private static final Lock errorReadLock = errorLock.readLock();
 	private static final Lock errorWriteLock = errorLock.writeLock();
 	private static String lastAttemptedLocale;
-
+	/**
+	 * 
+	 */
 	private TCSpellCheckManager() {
 		this.reloadDictionaries();
 	}
-
+	/**
+	 * Add word to ignore list
+	 * @param word
+	 */
 	public void addToIgnoredWords(String word) {
 		if(!listener.spellCheck.isIgnored(word))
 			listener.spellCheck.ignoreAll(word);
 	}
-
+	/**
+	 * 
+	 * @param screen
+	 * @param inputFields
+	 */
 	public void drawErrors(GuiScreen screen, List<GuiTextField> inputFields) {
 		List<String> inputCache = new ArrayList<String>();
 		int activeFields = 0;
@@ -103,7 +112,13 @@ public class TCSpellCheckManager {
 			errorReadLock.unlock();
 		}
 	}
-
+	/**
+	 * Marks word as misspelled
+	 * @param screen
+	 * @param x
+	 * @param y
+	 * @param width
+	 */
 	private void drawUnderline(GuiScreen screen, int x, int y, int width) {
 		int next = x + 1;
 		while(next - x < width) {
@@ -111,14 +126,20 @@ public class TCSpellCheckManager {
 			next+=2;
 		}
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	public static TCSpellCheckManager getInstance() {
 		if(instance == null) {
 			instance = new TCSpellCheckManager();
 		}
 		return  instance;
 	}
-
+	/**
+	 * 
+	 * @param event
+	 */
 	protected void handleListenerEvent(SpellCheckEvent event) {
 		errorWriteLock.lock();
 		try {
@@ -127,7 +148,10 @@ public class TCSpellCheckManager {
 			errorWriteLock.unlock();
 		}
 	}
-
+	/**
+	 * Loads dictionary
+	 * @return
+	 */
 	public boolean loadLocaleDictionary() {
 		File localeDict = new File(ITCSettingsGUI.tabbyChatDir, Minecraft.getMinecraft().gameSettings.language + ".dic");
 		if(localeDict.canRead()) {
@@ -135,7 +159,9 @@ public class TCSpellCheckManager {
 			return true;
 		} else return false;
 	}
-
+	/**
+	 * Load user dictionary
+	 */
 	public void loadUserDictionary() {
 		File userDict = new File(ITCSettingsGUI.tabbyChatDir, "user.dic");
 		BufferedReader in = null;
@@ -155,14 +181,19 @@ public class TCSpellCheckManager {
 			}
 		}
 	}
-
+	/**
+	 * Reloads dictionaries
+	 */
 	public void reloadDictionaries() {
 		if(!this.loadLocaleDictionary())
 			listener = new TCSpellCheckListener();
 		lastAttemptedLocale = Minecraft.getMinecraft().gameSettings.language;
 		this.loadUserDictionary();
 	}
-
+	/**
+	 * 
+	 * @param inputFields
+	 */
 	public void update(List<GuiTextField> inputFields) {
 		if(lastAttemptedLocale != Minecraft.getMinecraft().gameSettings.language)
 			this.reloadDictionaries();

@@ -25,7 +25,10 @@ public class TCTranslate {
 		langSupport.put("fr_FR", TCLanguageFrench.class);
 		langSupport.put("fi_FI", TCLanguageFinnish.class);
 	}
-	
+	/**
+	 * 
+	 * @param _lang
+	 */
 	public TCTranslate(String _lang) {
 		this.dict.clear();
 		provides = _lang;
@@ -48,7 +51,10 @@ public class TCTranslate {
 		}
 		
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	private boolean loadDictionary() {		
 		File languageDir = new File(ITCSettingsGUI.tabbyChatDir, "lang");
 		File languageFile = new File(languageDir, "tabbychat.dictionary."+provides);
@@ -73,11 +79,18 @@ public class TCTranslate {
 		this.dict.putAll((Map)dictTable);
 		return true;
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getCurrentLang() {
 		return provides;
 	}
-	
+	/**
+	 * 
+	 * @param field
+	 * @return
+	 */
 	public String getString(String field) {
 		String translated = this.dict.get(field);
 		if(translated == null) {
