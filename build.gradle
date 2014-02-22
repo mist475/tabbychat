@@ -57,7 +57,31 @@ dependencies {
 	compile 'org.apache.commons:commons-lang3:3.0'
 }
 jar {
-    from({configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}) {
+   from({configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}) {
         include "com/swabunga/spell/**"
     }
+	exclude "net/minecraft/**"
+	exclude "acs/tabbychat/core/LiteModTabbyChat.class"
+	exclude "litemod.json"
+	includeEmptyDirs false
+}
+
+
+task liteLoader(dependsOn: classes, type: Jar)
+liteLoader {
+	extension 'litemod'
+	from({configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}) {
+		include "com/swabunga/spell/**"
+	}from(file("$buildDir/classes/main")){
+		include 'acs/tabbychat/**'
+		exclude 'acs/tabbychat/core/TabbyChatMod.class'
+	}from(file("$buildDir/resources/main")){
+		include 'litemod.json'
+		include 'english.0'
+	}
+	includeEmptyDirs false
+}
+
+artifacts{
+	archives liteLoader
 }
