@@ -58,8 +58,8 @@ dependencies {
 	compile 'commons-io:commons-io:2.4'
 }
 
-//jar { onlyIf { false } }
-def createOutput(taskName, aBaseName, anExtension, includeClasses = [], includeResources = []) {
+//jar { onlyIf { false } } // Don't build default jar.
+def output(taskName, aBaseName, anExtension, includeClasses = [], includeResources = []) {
     theTask = tasks.create(name: taskName, dependsOn: classes, type: Jar) {
         if(aBaseName) baseName aBaseName
         if(anExtension) extension anExtension
@@ -79,17 +79,12 @@ def createOutput(taskName, aBaseName, anExtension, includeClasses = [], includeR
         }
         classifier 'release'
     }
-    reobf {
-        reobf theTask
-    }
+
+    artifacts { archives theTask }
+    reobf { reobf theTask }
+
 }
 
-createOutput('liteloader', 'TabbyChat-Lite', "litemod", ['acs/tabbychat/core/LiteModTabbyChat.class'], ['litemod.json'])
-createOutput('basemod', 'TabbyChat-Basemod', null, ['net/minecraft/**'])
-createOutput('forge', 'TabbyChat-Forge', null, ['acs/tabbychat/core/TabbyChatMod.class'], ['mcmod.info'])
-
-artifacts {
-	archives liteloader
-	archives forge
-	archives basemod
-}
+output('liteloader', 'TabbyChat-Lite', "litemod", ['acs/tabbychat/core/LiteModTabbyChat.class'], ['litemod.json'])
+output('basemod', 'TabbyChat-Basemod', null, ['net/minecraft/**'])
+output('forge', 'TabbyChat-Forge', null, ['acs/tabbychat/core/TabbyChatMod.class'], ['mcmod.info'])
