@@ -57,32 +57,39 @@ dependencies {
 	compile 'org.apache.commons:commons-lang3:3.0'
 	compile 'commons-io:commons-io:2.4'
 }
-jar {
-   from({configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}) {
-        include "com/swabunga/spell/**"
+
+//jar { onlyIf { false } }
+def createOutput(taskName, aBaseName, anExtension, includeClasses = [], includeResources = []) {
+    theTask = tasks.create(name: taskName, dependsOn: classes, type: Jar) {
+        if(aBaseName) baseName aBaseName
+        if(anExtension) extension anExtension
+        from({configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}) {
+            include "com/swabunga/spell/**"
+        }
+        from(file("$buildDir/classes/main")){
+            exclude 'acs/tabbychat/**'
+            if(includeClasses) include includeClasses
+            exclude 'acs/tabbychat/core/LiteModTabbyChat.class'
+            exclude 'acs/tabbychat/core/TabbyChatMod.class'
+            exclude 'net/minecraft/**'
+        }
+        from(file("$buildDir/resources/main")){
+            include 'english.0'
+            if(includeResources) include includeResources
+        }
+        classifier 'release'
     }
-	exclude "net/minecraft/**"
-	exclude "acs/tabbychat/core/LiteModTabbyChat.class"
-	exclude "litemod.json"
-	includeEmptyDirs false
+    reobf {
+        reobf theTask
+    }
 }
 
+createOutput('liteloader', 'TabbyChat-Lite', "litemod", ['acs/tabbychat/core/LiteModTabbyChat.class'], ['litemod.json'])
+createOutput('basemod', 'TabbyChat-Basemod', null, ['net/minecraft/**'])
+createOutput('forge', 'TabbyChat-Forge', null, ['acs/tabbychat/core/TabbyChatMod.class'], ['mcmod.info'])
 
-task liteLoader(dependsOn: classes, type: Jar)
-liteLoader {
-	extension 'litemod'
-	from({configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}) {
-		include "com/swabunga/spell/**"
-	}from(file("$buildDir/classes/main")){
-		include 'acs/tabbychat/**'
-		exclude 'acs/tabbychat/core/TabbyChatMod.class'
-	}from(file("$buildDir/resources/main")){
-		include 'litemod.json'
-		include 'english.0'
-	}
-	includeEmptyDirs false
-}
-
-artifacts{
-	archives liteLoader
+artifacts {
+	archives liteloader
+	archives forge
+	archives basemod
 }
