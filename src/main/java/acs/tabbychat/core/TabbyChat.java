@@ -23,7 +23,9 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StringUtils;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -41,7 +43,7 @@ public class TabbyChat {
 	public static TabbyChat getInstance() {
 		return instance;
 	}
-
+	private static Logger log = TabbyChatUtils.log;
 	private volatile List<TCChatLine> lastChat = new ArrayList();
 	private static boolean firstRun = true;
 	public static boolean liteLoaded = false;
@@ -112,7 +114,7 @@ public class TabbyChat {
 	 */
 	public static void printErr(String err) {
 		System.err.println("[TabbyChat] "+err);
-		LogManager.getLogger().warn("[TABBYCHAT] " + err);
+		log.warn("[TABBYCHAT] " + err);
 	}
 	/**
 	 * 
@@ -121,7 +123,7 @@ public class TabbyChat {
 	 */
 	public static void printException(String err, Exception e) {
 		System.err.println("[TabbyChat] "+err);
-		LogManager.getLogger().warn("[TABBYCHAT] " + err, e);
+		log.warn("[TABBYCHAT] " + err, e);
 	}
 	/**
 	 * 

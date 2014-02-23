@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -24,6 +23,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import acs.tabbychat.core.ChatChannel;
 //import acs.tabbychat.core.FilterTest;
@@ -52,7 +53,7 @@ public class TabbyChatUtils {
 	public final static String version = "1.11.00";
 	public final static String name = "TabbyChat";
 	public final static String modid = "tabbychat";
-	public static Logger log = Logger.getLogger(name);
+	public static Logger log = LogManager.getLogger();
 	/**
 	 * 
 	 * @param mc

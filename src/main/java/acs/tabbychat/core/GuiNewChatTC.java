@@ -1,25 +1,33 @@
 package acs.tabbychat.core;
 
-import acs.tabbychat.gui.ChatBox;
-import acs.tabbychat.gui.ChatScrollBar;
-import acs.tabbychat.settings.TimeStampEnum;
-import acs.tabbychat.util.TabbyChatUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.lwjgl.opengl.GL11;
-
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ChatLine;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiDisconnected;
+import net.minecraft.client.gui.GuiIngameMenu;
+import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.StringUtils;
+
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.GL11;
+
+import acs.tabbychat.gui.ChatBox;
+import acs.tabbychat.gui.ChatScrollBar;
+import acs.tabbychat.settings.TimeStampEnum;
+import acs.tabbychat.util.TabbyChatUtils;
 
 public class GuiNewChatTC extends GuiNewChat {
 	public final Minecraft mc;
@@ -37,6 +45,7 @@ public class GuiNewChatTC extends GuiNewChat {
 	protected boolean saveNeeded = true;
 	private static GuiNewChatTC instance = null;
 	public static TabbyChat tc;
+	public static Logger log = TabbyChatUtils.log;
 	/**
 	 * 
 	 * @param par1Minecraft
@@ -550,7 +559,7 @@ public class GuiNewChatTC extends GuiNewChat {
 	 */
 	public @Override void /*printChatMessageWithOptionalDeletion*/printChatMessageWithOptionalDeletion(IChatComponent _msg, int flag) {
 		this.func_146237_a(_msg, flag, this.mc.ingameGUI.getUpdateCounter(), false);
-        LogManager.getLogger().info("[CHAT] " + _msg.getUnformattedText());
+        log.info("[CHAT] " + _msg.getUnformattedText());
 	}
 	/**
 	 * Resets the scroll position

@@ -6,6 +6,7 @@ import java.io.IOException;
 import net.minecraft.client.Minecraft;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Logger;
 
 import acs.tabbychat.util.TabbyChatUtils;
 
@@ -14,6 +15,7 @@ import com.mumfrey.liteloader.core.LiteLoader;
 
 public class LiteModTabbyChat implements InitCompleteListener {
 	private static GuiNewChatTC gnc;
+	private static Logger log = TabbyChatUtils.log;
 
 	@Override
 	public String getName() {
@@ -48,9 +50,9 @@ public class LiteModTabbyChat implements InitCompleteListener {
 		if (!liteConfigDir.exists() && mcConfigDir.exists()) {
 			try {
 				FileUtils.copyDirectory(mcConfigDir, liteConfigDir);
-				TabbyChatUtils.log.info("Old configs found! Converting.");
+				log.info("Old configs found! Converting.");
 			} catch (IOException e) {
-				TabbyChatUtils.log.warning("Old configs found, but unable to convert.\n" + e);
+				log.warn("Old configs found, but unable to convert.\n" + e);
 			}
 		}
 	}

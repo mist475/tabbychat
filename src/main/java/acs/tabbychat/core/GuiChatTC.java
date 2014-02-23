@@ -1,23 +1,5 @@
 package acs.tabbychat.core;
 
-import acs.tabbychat.compat.EmoticonsCompat;
-import acs.tabbychat.compat.MacroKeybindCompat;
-import acs.tabbychat.gui.*;
-import acs.tabbychat.util.TabbyChatUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.network.play.client.C14PacketTabComplete;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StatCollector;
-import org.apache.logging.log4j.LogManager;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,7 +7,38 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiConfirmOpenLink;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.network.play.client.C0BPacketEntityAction;
+import net.minecraft.network.play.client.C14PacketTabComplete;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StatCollector;
+
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import acs.tabbychat.compat.EmoticonsCompat;
+import acs.tabbychat.compat.MacroKeybindCompat;
+import acs.tabbychat.gui.ChatBox;
+import acs.tabbychat.gui.ChatButton;
+import acs.tabbychat.gui.ChatChannelGUI;
+import acs.tabbychat.gui.ChatScrollBar;
+import acs.tabbychat.gui.PrefsButton;
+import acs.tabbychat.util.TabbyChatUtils;
+
 public class GuiChatTC extends GuiChat {
+	private TabbyChatUtils tcu;
+	private Logger log = tcu.log;
 	public String historyBuffer = "";
 	public String defaultInputFieldText = "";
 	public int sentHistoryCursor2 = -1;
@@ -312,7 +325,7 @@ public class GuiChatTC extends GuiChat {
             Object theDesktop = desktop.getMethod("getDesktop", new Class[0]).invoke((Object) null, new Object[0]);
             desktop.getMethod("browse", new Class[]{URI.class}).invoke(theDesktop, new Object[]{_uri});
         } catch (Throwable t) {
-            LogManager.getLogger().error("Couldn\'t open link", t);
+            log.error("Couldn\'t open link", t);
         }
     }
     /**
@@ -514,7 +527,7 @@ public class GuiChatTC extends GuiChat {
 			StringBuilder _msg = new StringBuilder(1500);
 			for(int i=this.inputList.size()-1; i>=0; i--) _msg.append(this.inputList.get(i).getText());
 			if(_msg.toString().length() > 0) {
-				TabbyChatUtils.writeLargeChat(_msg.toString());
+				tcu.writeLargeChat(_msg.toString());
 				for(int i=1; i<this.inputList.size(); i++) {
 					this.inputList.get(i).setText("");
 					this.inputList.get(i).setFocused(false);
@@ -625,7 +638,7 @@ public class GuiChatTC extends GuiChat {
                                     this.func_146407_a(url);
                                 }
                             } catch (URISyntaxException var7) {
-                                LogManager.getLogger().error("Can\'t open url for " + clickEvent, var7);
+                                log.error("Can\'t open url for " + clickEvent, var7);
                             }
                         } else if (clickEvent.getAction() == ClickEvent.Action.OPEN_FILE) {
                             url = (new File(clickEvent.getValue())).toURI();
@@ -635,7 +648,7 @@ public class GuiChatTC extends GuiChat {
                         } else if (clickEvent.getAction() == ClickEvent.Action.RUN_COMMAND) {
                             this.func_146403_a(clickEvent.getValue());
                         } else {
-                            LogManager.getLogger().error("Don\'t know how to handle " + clickEvent);
+                            log.error("Don\'t know how to handle " + clickEvent);
                         }
                     }
 
