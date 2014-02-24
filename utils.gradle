@@ -18,8 +18,8 @@ class TabbyTask extends DefaultTask {
             classifier 'release'
         }
 
-        project.artifacts { archives theTask }
-        project.reobf { reobf theTask }
+        project.artifacts { archives jarTask }
+        project.reobf { reobf jarTask }
     }
 
     /**
