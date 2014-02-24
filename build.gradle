@@ -58,33 +58,19 @@ dependencies {
 	compile 'commons-io:commons-io:2.4'
 }
 
-//jar { onlyIf { false } } // Don't build default jar.
-def output(taskName, aBaseName, anExtension, includeClasses = [], includeResources = []) {
-    theTask = tasks.create(name: taskName, dependsOn: classes, type: Jar) {
-        if(aBaseName) baseName aBaseName
-        if(anExtension) extension anExtension
-        from({configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}) {
-            include "com/swabunga/spell/**"
-        }
-        from(file("$buildDir/classes/main")){
-            exclude 'acs/tabbychat/**'
-            if(includeClasses) include includeClasses
-            exclude 'acs/tabbychat/core/LiteModTabbyChat.class'
-            exclude 'acs/tabbychat/core/TabbyChatMod.class'
-            exclude 'net/minecraft/**'
-        }
-        from(file("$buildDir/resources/main")){
-            include 'english.0'
-            if(includeResources) include includeResources
-        }
-        classifier 'release'
-    }
-
-    artifacts { archives theTask }
-    reobf { reobf theTask }
-
+apply from: 'utils.gradle'
+task forge(type: TabbyTask) {
+    baseName 'TabbyChat-Forge'
+    includes << 'acs/tabbychat/core/TabbyChatMod.class' << 'mcmod.info'
 }
-
-output('liteloader', 'TabbyChat-Lite', "litemod", ['acs/tabbychat/core/LiteModTabbyChat.class'], ['litemod.json'])
-output('basemod', 'TabbyChat-Basemod', null, ['net/minecraft/**'])
-output('forge', 'TabbyChat-Forge', null, ['acs/tabbychat/core/TabbyChatMod.class'], ['mcmod.info'])
+task basemod(type: TabbyTask) {
+    baseName 'TabbyChat-Basemod'
+    includes << 'net/minecraft/**'
+}
+task liteloader(type: TabbyTask) {
+    baseName 'TabbyChat-Lite'
+    extension 'litemod'
+    includes << 'acs/tabbychat/core/LiteModTabbyChat.class' << 'litemod.json'
+}
+TabbyTask.makeExclusive(forge, basemod, liteloader)
+[forge, basemod, liteloader].each { it.execute() }
