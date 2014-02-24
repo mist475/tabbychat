@@ -9,7 +9,47 @@ package acs.tabbychat.core;
  * prohibited, and a violation of copyright.
  */
 
-import acs.tabbychat.gui.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StringUtils;
+
+import org.apache.logging.log4j.Logger;
+
+import acs.tabbychat.gui.ChatBox;
+import acs.tabbychat.gui.TCSettingsAdvanced;
+import acs.tabbychat.gui.TCSettingsFilters;
+import acs.tabbychat.gui.TCSettingsGeneral;
+import acs.tabbychat.gui.TCSettingsServer;
 import acs.tabbychat.jazzy.TCSpellCheckManager;
 import acs.tabbychat.lang.TCTranslate;
 import acs.tabbychat.settings.ChannelDelimEnum;
@@ -18,26 +58,6 @@ import acs.tabbychat.settings.FormatCodeEnum;
 import acs.tabbychat.settings.TCChatFilter;
 import acs.tabbychat.threads.BackgroundUpdateCheck;
 import acs.tabbychat.util.TabbyChatUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.StringUtils;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TabbyChat {
 	public static TabbyChat getInstance() {
@@ -342,7 +362,7 @@ public class TabbyChat {
 		this.serverDataLock.release();
 
 		if (generalSettings.saveChatLog.getValue() && serverSettings.serverIP != null) {
-			TabbyChatUtils.logChat("\nBEGIN CHAT LOGGING FOR "+serverSettings.serverIP+" -- "+(new SimpleDateFormat()).format(Calendar.getInstance().getTime()));
+			TabbyChatUtils.logChat("\nBEGIN CHAT LOGGING"+" -- "+(new SimpleDateFormat()).format(Calendar.getInstance().getTime()), null);
 		}
 	}
 	/**
@@ -549,7 +569,7 @@ public class TabbyChat {
 		String raw = TabbyChatUtils.chatLinesToString(theChat);
 		String filtered = this.processChatForFilters(raw, filterTabs);
 		String cleaned = StringUtils.stripControlCodes(raw);
-		if (generalSettings.saveChatLog.getValue()) TabbyChatUtils.logChat(this.getCleanTimeStamp() + cleaned);
+		if (generalSettings.saveChatLog.getValue()) TabbyChatUtils.logChat(this.getCleanTimeStamp() + cleaned, null);
 
 		if(filtered != null) {
 			if(serverSettings.autoChannelSearch.getValue()) channelTab = this.processChatForChannels(cleaned, raw);
