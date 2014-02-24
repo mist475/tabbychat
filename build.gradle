@@ -59,18 +59,18 @@ dependencies {
 }
 
 apply from: 'utils.gradle'
-task forge(type: TabbyTask) {
+task tabbyForge(type: TabbyTask) {
     baseName 'TabbyChat-Forge'
     includes << 'acs/tabbychat/core/TabbyChatMod.class' << 'mcmod.info'
 }
-task basemod(type: TabbyTask) {
+task tabbyBasemod(type: TabbyTask) {
     baseName 'TabbyChat-Basemod'
     includes << 'net/minecraft/**'
 }
-task liteloader(type: TabbyTask) {
+task tabbyLiteloader(type: TabbyTask) {
     baseName 'TabbyChat-Lite'
     extension 'litemod'
     includes << 'acs/tabbychat/core/LiteModTabbyChat.class' << 'litemod.json'
 }
-TabbyTask.makeExclusive(forge, basemod, liteloader)
-[forge, basemod, liteloader].each { it.execute() }
+TabbyTask.makeExclusive(tabbyForge, tabbyBasemod, tabbyLiteloader)
+[tabbyForge, tabbyBasemod, tabbyLiteloader].each { it.execute() }
