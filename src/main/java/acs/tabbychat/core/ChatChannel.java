@@ -1,5 +1,6 @@
 package acs.tabbychat.core;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
@@ -7,11 +8,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import net.minecraft.util.ChatComponentText;
+
 import org.lwjgl.opengl.GL11;
 
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatButton;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -35,6 +36,7 @@ public class ChatChannel implements Serializable {
 	public boolean hidePrefix = false;
 	private String alias;
 	public String cmdPrefix = "";
+	private File logFile;
 	/**
 	 * 
 	 */
@@ -61,7 +63,7 @@ public class ChatChannel implements Serializable {
 		this.tab.width(TabbyChat.mc.fontRenderer.getStringWidth(this.alias + "<>")+8);
 	}
 	/**
-	 * 
+	 * Constructor to create new channel with title "_title"
 	 * @param _title
 	 */
 	public ChatChannel(String _title) {
@@ -175,6 +177,20 @@ public class ChatChannel implements Serializable {
 	 */
 	public String getTitle() {
 		return this.title;
+	}
+	/**
+	 * Returns the log file for the channel
+	 * @return
+	 */
+	public File getLogFile(){
+		return this.logFile;
+	}
+	/**
+	 * Sets the log file for the channel.
+	 * @param file
+	 */
+	public void setLogFile(File file){
+		logFile = file;
 	}
 	/**
 	 * Sets the button type

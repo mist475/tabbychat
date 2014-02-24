@@ -19,6 +19,7 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
@@ -47,13 +48,13 @@ public class TabbyChatUtils {
 	private static Calendar logDay = Calendar.getInstance();
 	private static File logDir = new File(Minecraft.getMinecraft().mcDataDir,
 			"TabbyChatLogs");
-	private static File logFile;
 	private static SimpleDateFormat logNameFormat = new SimpleDateFormat(
 			"'TabbyChatLog_'MM-dd-yyyy'.txt'");
 	public final static String version = "1.11.00";
 	public final static String name = "TabbyChat";
 	public final static String modid = "tabbychat";
 	public static Logger log = LogManager.getLogger();
+
 	/**
 	 * 
 	 * @param mc
@@ -84,6 +85,7 @@ public class TabbyChatUtils {
 		}
 		mc.displayGuiScreen(new GuiChatTC(inputBuffer));
 	}
+
 	/**
 	 * 
 	 * @param lines
@@ -97,6 +99,7 @@ public class TabbyChatUtils {
 		}
 		return result.toString().trim();
 	}
+
 	/**
 	 * 
 	 * @return
@@ -118,6 +121,7 @@ public class TabbyChatUtils {
 		}
 		return serverData;
 	}
+
 	/**
 	 * 
 	 * @return
@@ -129,8 +133,10 @@ public class TabbyChatUtils {
 		}
 		return new File(ITCSettingsGUI.tabbyChatDir, ip);
 	}
+
 	/**
 	 * Returns the IP of the current server.
+	 * 
 	 * @return
 	 */
 	public static String getServerIp() {
@@ -144,8 +150,10 @@ public class TabbyChatUtils {
 		}
 		return ip;
 	}
+
 	/**
 	 * Returns the directory the the configs are stored.
+	 * 
 	 * @return
 	 */
 	public static File getTabbyChatDir() {
@@ -159,6 +167,7 @@ public class TabbyChatUtils {
 							.toString());
 		}
 	}
+
 	/**
 	 * 
 	 * @param _gnc
@@ -192,6 +201,7 @@ public class TabbyChatUtils {
 			}
 		}
 	}
+
 	/**
 	 * 
 	 * @param _gui
@@ -205,6 +215,7 @@ public class TabbyChatUtils {
 		}
 		return false;
 	}
+
 	/**
 	 * 
 	 * @param arr
@@ -224,25 +235,42 @@ public class TabbyChatUtils {
 		bucket.append(arr[arr.length - 1]);
 		return bucket.toString();
 	}
+
 	/**
 	 * Logs chat.
+	 * 
 	 * @param theChat
+	 * @param theChannel
 	 */
-	public static void logChat(String theChat) {
+	public static void logChat(String theChat, ChatChannel theChannel) {
 		Calendar tmpcal = Calendar.getInstance();
+		File fileDir;
+		if (theChannel == null) {
+			theChannel = new ChatChannel("all channels");
+		}
+		if (getServerIp() == "singleplayer") {
+			IntegratedServer ms = Minecraft.getMinecraft()
+					.getIntegratedServer();
+			String worldName = ms.getWorldName();
+			fileDir = new File(logDir, "singleplayer" + File.separator
+					+ worldName + File.separator + theChannel.getTitle());
+		} else {
+			fileDir = new File(logDir, getServerIp() + File.separator
+					+ theChannel.getTitle());
+		}
 
-		if (logFile == null
+		if (theChannel.getLogFile() == null
 				|| tmpcal.get(Calendar.DAY_OF_YEAR) != logDay
 						.get(Calendar.DAY_OF_YEAR)) {
 			logDay = tmpcal;
-			logFile = new File(logDir, logNameFormat.format(logDay.getTime())
-					.toString());
+			theChannel.setLogFile(new File(fileDir, logNameFormat.format(logDay
+					.getTime())));
 		}
 
-		if (!logFile.exists()) {
+		if (!theChannel.getLogFile().exists()) {
 			try {
-				logDir.mkdirs();
-				logFile.createNewFile();
+				fileDir.mkdirs();
+				theChannel.getLogFile().createNewFile();
 			} catch (Exception e) {
 				TabbyChat.printErr("Cannot create log file : '"
 						+ e.getLocalizedMessage() + "' : " + e.toString());
@@ -251,7 +279,8 @@ public class TabbyChatUtils {
 		}
 
 		try {
-			FileOutputStream logStream = new FileOutputStream(logFile, true);
+			FileOutputStream logStream = new FileOutputStream(
+					theChannel.getLogFile(), true);
 			PrintStream logPrint = new PrintStream(logStream);
 			logPrint.println(theChat);
 			logPrint.close();
@@ -261,6 +290,7 @@ public class TabbyChatUtils {
 			return;
 		}
 	}
+
 	/**
 	 * 
 	 * @param val1
@@ -276,6 +306,7 @@ public class TabbyChatUtils {
 		else
 			return val1;
 	}
+
 	/**
 	 * 
 	 * @param _input
@@ -291,6 +322,7 @@ public class TabbyChatUtils {
 			return null;
 		}
 	}
+
 	/**
 	 * 
 	 * @param _input
@@ -306,6 +338,7 @@ public class TabbyChatUtils {
 			return null;
 		}
 	}
+
 	/**
 	 * 
 	 * @param _input
@@ -327,6 +360,7 @@ public class TabbyChatUtils {
 		}
 		return result;
 	}
+
 	/**
 	 * 
 	 * @param _input
@@ -342,6 +376,7 @@ public class TabbyChatUtils {
 			return null;
 		}
 	}
+
 	/**
 	 * 
 	 * @param _input
@@ -362,6 +397,7 @@ public class TabbyChatUtils {
 		}
 		return result;
 	}
+
 	/**
 	 * 
 	 * @param _input
@@ -379,6 +415,7 @@ public class TabbyChatUtils {
 		else
 			return -1;
 	}
+
 	/**
 	 * 
 	 * @param _input
@@ -394,6 +431,7 @@ public class TabbyChatUtils {
 			return NotificationSoundEnum.ORB;
 		}
 	}
+
 	/**
 	 * 
 	 * @param _input
@@ -405,6 +443,7 @@ public class TabbyChatUtils {
 		else
 			return _input.toString();
 	}
+
 	/**
 	 * 
 	 * @param _input
@@ -420,6 +459,7 @@ public class TabbyChatUtils {
 			return null;
 		}
 	}
+
 	/**
 	 * 
 	 * @param stamp
@@ -447,6 +487,7 @@ public class TabbyChatUtils {
 		}
 		return result;
 	}
+
 	/**
 	 * 
 	 * @param currentMap
@@ -482,6 +523,7 @@ public class TabbyChatUtils {
 		}
 		return returnMap;
 	}
+
 	/**
 	 * 
 	 * @param toSend
@@ -514,8 +556,10 @@ public class TabbyChatUtils {
 		}
 		sendProc.start();
 	}
+
 	/**
 	 * Converts strings to unicode. Essentially replaces \\uabcd with \uabcd.
+	 * 
 	 * @param chat
 	 * @return
 	 */
