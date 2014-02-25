@@ -47,9 +47,9 @@ public class TabbyChatUtils {
 	private static final String WITH_DELIMITER = "((?<=%1$s)|(?=%1$s))";
 	private static Calendar logDay = Calendar.getInstance();
 	private static File logDir = new File(Minecraft.getMinecraft().mcDataDir,
-			"TabbyChatLogs");
+			"logs"+File.separator+"TabbyChat");
 	private static SimpleDateFormat logNameFormat = new SimpleDateFormat(
-			"'TabbyChatLog_'MM-dd-yyyy'.txt'");
+			"'_'MM-dd-yyyy'.txt'");
 	public final static String version = "1.11.00";
 	public final static String name = "TabbyChat";
 	public final static String modid = "tabbychat";
@@ -245,8 +245,12 @@ public class TabbyChatUtils {
 	public static void logChat(String theChat, ChatChannel theChannel) {
 		Calendar tmpcal = Calendar.getInstance();
 		File fileDir;
-		if (theChannel == null) {
-			theChannel = new ChatChannel("all channels");
+		try{
+			if (theChannel.getTitle().equals(null)) {
+				theChannel = new ChatChannel("default");
+			}
+		}catch(NullPointerException e){
+			theChannel = new ChatChannel("default");
 		}
 		if (getServerIp() == "singleplayer") {
 			IntegratedServer ms = Minecraft.getMinecraft()
@@ -263,7 +267,7 @@ public class TabbyChatUtils {
 				|| tmpcal.get(Calendar.DAY_OF_YEAR) != logDay
 						.get(Calendar.DAY_OF_YEAR)) {
 			logDay = tmpcal;
-			theChannel.setLogFile(new File(fileDir, logNameFormat.format(logDay
+			theChannel.setLogFile(new File(fileDir, theChannel.getTitle()+logNameFormat.format(logDay
 					.getTime())));
 		}
 
