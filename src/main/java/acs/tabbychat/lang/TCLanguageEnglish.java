@@ -76,6 +76,7 @@ public class TCLanguageEnglish extends TCLanguage {
 		defaults.setProperty("settings.general.name", "General");
 		defaults.setProperty("settings.general.tabbychatenable", "TabbyChat Enabled");
 		defaults.setProperty("settings.general.savechatlog", "Log chat to file");
+		defaults.setProperty("settings.general.splitchatlog", "Split log by channel");
 		defaults.setProperty("settings.general.timestampenable", "Timestamp chat");
 		defaults.setProperty("settings.general.timestampstyle", "Timestamp style");
 		defaults.setProperty("settings.general.timestampcolor", "Timestamp color");
