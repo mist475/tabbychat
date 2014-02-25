@@ -30,6 +30,7 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 	private static final int TIMESTAMP_COLOR_ID = 9107;
 	private static final int SPELL_CHECK_ENABLE = 9108;
 	private static final int UPDATE_CHECK_ENABLE = 9109;
+	private static final int SPLIT_CHATLOG = 9110;
 
 	{
 		this.propertyPrefix = "settings.general";
@@ -44,7 +45,8 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 	public TCSettingBool unreadFlashing = new TCSettingBool(true, "unreadFlashing", this.propertyPrefix, UNREAD_FLASHING_ID);
 	public TCSettingBool spellCheckEnable = new TCSettingBool(true, "spellCheckEnable", this.propertyPrefix, SPELL_CHECK_ENABLE);
 	public TCSettingBool updateCheckEnable = new TCSettingBool(true, "updateCheckEnable", this.propertyPrefix, UPDATE_CHECK_ENABLE);
-
+	public TCSettingBool splitChatLog = new TCSettingBool(false, "splitChatLog", this.propertyPrefix, SPLIT_CHATLOG);
+	
 	public TCSettingsGeneral(TabbyChat _tc) {
 		super(_tc);
 		this.name = TabbyChat.translator.getString("settings.general.name");
@@ -88,22 +90,28 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 		this.buttonList.add(this.unreadFlashing);
 		this.buttonList.add(this.spellCheckEnable);
 		this.buttonList.add(this.updateCheckEnable);
+		this.buttonList.add(this.splitChatLog);
 	}
 
 	public void initDrawableSettings() {
 		int effRight = (this.width + DISPLAY_WIDTH)/2;
 		int col1x = (this.width - DISPLAY_WIDTH)/2 + 55;
+		int col2x = this.width/2 + 25;
 
 		int buttonColor = (this.bgcolor & 0x00ffffff) + 0xff000000;
 
 		this.tabbyChatEnable.setButtonLoc(col1x, this.rowY(1));
 		this.tabbyChatEnable.setLabelLoc(col1x + 19);
 		this.tabbyChatEnable.buttonColor = buttonColor;
-
+		
 		this.saveChatLog.setButtonLoc(col1x, this.rowY(2));
 		this.saveChatLog.setLabelLoc(col1x + 19);
 		this.saveChatLog.buttonColor = buttonColor;
 
+		this.splitChatLog.setButtonLoc(col2x, this.rowY(2));
+		this.splitChatLog.setLabelLoc(col2x + 19);
+		this.splitChatLog.buttonColor = buttonColor;
+		
 		this.timeStampEnable.setButtonLoc(col1x,  this.rowY(3));
 		this.timeStampEnable.setLabelLoc(col1x + 19);
 		this.timeStampEnable.buttonColor = buttonColor;

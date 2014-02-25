@@ -670,24 +670,30 @@ public class TabbyChat {
 		String raw = TabbyChatUtils.chatLinesToString(theChat);
 		String filtered = this.processChatForFilters(raw, filterTabs);
 		String cleaned = StringUtils.stripControlCodes(raw);
-		//if (generalSettings.saveChatLog.getValue())
-		//	TabbyChatUtils.logChat(this.getCleanTimeStamp() + cleaned, null);
+		if (generalSettings.saveChatLog.getValue()
+				&& !generalSettings.splitChatLog.getValue())
+			TabbyChatUtils.logChat(this.getCleanTimeStamp() + cleaned, null);
 
 		if (filtered != null) {
 			ChatChannel tab = null;
 			if (serverSettings.autoChannelSearch.getValue())
 				channelTab = this.processChatForChannels(cleaned, raw);
 			if (channelTab == null) {
-				if (serverSettings.autoPMSearch.getValue()){
+				if (serverSettings.autoPMSearch.getValue()) {
 					pmTab = this.processChatForPMs(cleaned);
 					tab = new ChatChannel(pmTab);
-					if(generalSettings.saveChatLog.getValue())
-						TabbyChatUtils.logChat(this.getCleanTimeStamp()+cleaned,tab);
+					if (generalSettings.saveChatLog.getValue()
+							&& generalSettings.splitChatLog.getValue())
+						TabbyChatUtils.logChat(this.getCleanTimeStamp()
+								+ cleaned, tab);
 				}
 			} else {
 				toTabs.add(channelTab);
 				tab = new ChatChannel(channelTab);
-				TabbyChatUtils.logChat(this.getCleanTimeStamp()+cleaned,tab);
+				if (generalSettings.saveChatLog.getValue()
+						&& generalSettings.splitChatLog.getValue())
+					TabbyChatUtils.logChat(this.getCleanTimeStamp() + cleaned,
+							tab);
 			}
 			toTabs.addAll(filterTabs);
 		} else {
