@@ -451,7 +451,7 @@ public class ChatBox {
 				if(!anchoredTop) {
 					for(ChatChannel chan2 : chanObjs.values()) {
 						if(chan2 == chan) break;
-						chan.tab.y(chan2.tab.y() + tabHeight);
+						chan2.tab.y(chan2.tab.y() + tabHeight);
 					}
 				}
 			}
