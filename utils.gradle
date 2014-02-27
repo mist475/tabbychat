@@ -19,7 +19,9 @@ class TabbyTask extends DefaultTask {
         }
 
         project.artifacts { archives jarTask }
-        project.reobf { reobf jarTask }
+        project.reobf { reobf(jarTask) { spec ->
+            spec.classpath = project.sourceSets.main.compileClasspath
+        } }
     }
 
     /**
