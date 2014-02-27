@@ -577,7 +577,7 @@ public class TabbyChatUtils {
 					newChat += s;
 				}
 			} else
-				newChat = newChat.concat(s);
+				newChat += s;
 		}
 		return newChat;
 	}
