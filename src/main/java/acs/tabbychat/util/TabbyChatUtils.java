@@ -569,12 +569,12 @@ public class TabbyChatUtils {
 	 */
 	public static String convertUnicode(String chat) {
 		String newChat = "";
-		for (String s : chat.split("\\+")) {
+		for (String s : chat.split("\\\u0000")) {
 			if (s.contains("u")) {
 				try {
-					newChat = newChat.concat(StringEscapeUtils.unescapeJava(s));
+					newChat += StringEscapeUtils.unescapeJava(s);
 				} catch (IllegalArgumentException e) {
-					newChat = newChat.concat(s);
+					newChat += s;
 				}
 			} else
 				newChat = newChat.concat(s);
