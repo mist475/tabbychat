@@ -56,8 +56,20 @@ dependencies {
 	compile 'org.apache.logging.log4j:log4j-api:2.0-beta9'
 	compile 'commons-io:commons-io:2.4'
 }
-jar {
-   from({configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}) {
-        include "com/swabunga/spell/**"
-    }
+
+apply from: 'utils.gradle'
+task tabbyForge(type: TabbyTask) {
+    baseName 'TabbyChat-Forge'
+    includes << 'acs/tabbychat/core/TabbyChatMod.class' << 'mcmod.info'
 }
+task tabbyBasemod(type: TabbyTask) {
+    baseName 'TabbyChat-Basemod'
+    includes << 'net/minecraft/**'
+}
+task tabbyLiteloader(type: TabbyTask) {
+    baseName 'TabbyChat-Lite'
+    extension 'litemod'
+    includes << 'acs/tabbychat/core/LiteModTabbyChat.class' << 'litemod.json'
+}
+TabbyTask.makeExclusive(tabbyForge, tabbyBasemod, tabbyLiteloader)
+[tabbyForge, tabbyBasemod, tabbyLiteloader].each { it.execute() }
