@@ -1,15 +1,8 @@
 package acs.tabbychat.threads;
 
-import java.util.ArrayList;
-
-import org.apache.logging.log4j.core.helpers.Integers;
-
-import acs.tabbychat.core.ChatChannel;
 import acs.tabbychat.core.GuiNewChatTC;
-import acs.tabbychat.core.TCChatLine;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.util.TabbyChatUtils;
-import net.minecraft.client.Minecraft;
 
 public class BackgroundUpdateCheck extends Thread {
 	/**
