@@ -26,6 +26,8 @@ import org.lwjgl.opengl.GL11;
 
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatScrollBar;
+import acs.tabbychat.gui.TCSettingsGeneral;
+import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.util.TabbyChatUtils;
 
@@ -365,7 +367,14 @@ public class GuiNewChatTC extends GuiNewChat {
 			if(!backupFlag) tc.checkServer();
 			maxWidth = ChatBox.getMinChatWidth();
 		}
-		Iterator lineIter = this.mc.fontRenderer.listFormattedStringToWidth(_msg.getFormattedText(), maxWidth).iterator();
+		int timeWidth = 0;
+		if (tc.generalSettings.timeStampEnable.getValue())
+			timeWidth = mc.fontRenderer
+					.getStringWidth(tc.generalSettings.timeStampStyle
+							.getValue().toString());
+		
+		Iterator lineIter = this.mc.fontRenderer.listFormattedStringToWidth(
+				_msg.getFormattedText(), maxWidth - timeWidth).iterator();
 
 		// Prepare list of chatlines
 		while(lineIter.hasNext()) {
