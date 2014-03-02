@@ -2,6 +2,8 @@ package acs.tabbychat.threads;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.core.helpers.Integers;
+
 import acs.tabbychat.core.ChatChannel;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TCChatLine;
@@ -18,18 +20,48 @@ public class BackgroundUpdateCheck extends Thread {
 
 	public void run() {
 		String newest = TabbyChat.getNewestVersion();
-		if(!TabbyChat.generalSettings.tabbyChatEnable.getValue() || !TabbyChat.generalSettings.updateCheckEnable.getValue()) return;
-		Minecraft mc = Minecraft.getMinecraft();
-		ArrayList<TCChatLine> updateMsg = new ArrayList<TCChatLine>();
-		if (newest != null && !newest.equals(TabbyChatUtils.version)) {
+		String current = TabbyChatUtils.version;
+
+		boolean updateFound = false;
+
+		if (!TabbyChat.generalSettings.tabbyChatEnable.getValue()
+				|| !TabbyChat.generalSettings.updateCheckEnable.getValue()
+				|| newest.equalsIgnoreCase("invalid"))
+			return;
+
+		String[] newVersionString = newest.split("\\.");
+		String[] versionString = current.split("\\.");
+
+		int[] newVersion = { Integer.parseInt(newVersionString[0]),
+				Integer.parseInt(newVersionString[1]),
+				Integer.parseInt(newVersionString[2]) };
+		int[] version = { Integer.parseInt(versionString[0]),
+				Integer.parseInt(versionString[1]),
+				Integer.parseInt(versionString[2]) };
+
+		for (int i = 0; i < version.length; i++) {
+			if (version[i] < newVersion[i]) {
+				updateFound = true;
+			} else if (version[i] > newVersion[i]) {
+				break;
+			}
+
+		}
+
+		if (updateFound) {
+			TabbyChatUtils.log.info("Update Found!");
 			StringBuilder updateReport = new StringBuilder("\u00A77");
-			updateReport.append(TabbyChat.translator.getString("messages.update1"));
-			updateReport.append(TabbyChatUtils.version);
-			updateReport.append(TabbyChat.translator.getString("messages.update2"));
-			updateReport.append(newest+") ");
-			updateReport.append(TabbyChat.translator.getString("messages.update3"));
+			updateReport.append(TabbyChat.translator
+					.getString("messages.update1"));
+			updateReport.append(current);
+			updateReport.append(TabbyChat.translator
+					.getString("messages.update2"));
+			updateReport.append(newest + ") ");
+			updateReport.append(TabbyChat.translator
+					.getString("messages.update3"));
 			updateReport.append("\u00A7r");
-			GuiNewChatTC.getInstance().tc.printMessageToChat(updateReport.toString());
+			GuiNewChatTC.getInstance().tc.printMessageToChat(updateReport
+					.toString());
 		}
 	}
 }
