@@ -87,8 +87,8 @@ public class TCLanguageEnglish extends TCLanguage {
 		
 		// ENGLISH STRING FOR SETTINGS - 'SERVER CONFIG'
 		defaults.setProperty("settings.server.name", "Server");
-		defaults.setProperty("settings.server.autochannelsearch", "Auto-search for new channels");
-		defaults.setProperty("settings.server.autopmsearch", "Auto-search for new PMs");
+		defaults.setProperty("settings.server.autochannelsearch", "Enable channel tabs");
+		defaults.setProperty("settings.server.autopmsearch", "Enable PM tabs");
 		defaults.setProperty("settings.server.delimiterchars", "Chat-channel delimiters");
 		defaults.setProperty("settings.server.delimcolorbool", "Colored delimiters");
 		defaults.setProperty("settings.server.delimformatbool", "Formatted delimiters");
