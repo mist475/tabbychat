@@ -26,8 +26,6 @@ import org.lwjgl.opengl.GL11;
 
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatScrollBar;
-import acs.tabbychat.gui.TCSettingsGeneral;
-import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.util.TabbyChatUtils;
 
