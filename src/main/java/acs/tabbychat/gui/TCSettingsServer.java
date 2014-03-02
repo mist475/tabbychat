@@ -108,12 +108,12 @@ public class TCSettingsServer extends TCSettingsGUI {
 		this.delimFormatCode.setButtonDims(70, 11);
 
 		this.defaultChannels.setLabelLoc(col1x);
-		this.defaultChannels.setButtonLoc(col1x + 5 + mc.fontRenderer.getStringWidth(this.defaultChannels.description), this.rowY(6));
-		this.defaultChannels.setButtonDims(effRight - this.defaultChannels.x(), 11);
+		this.defaultChannels.setButtonLoc(effRight - 149, this.rowY(6));
+		this.defaultChannels.setButtonDims(149, 11);
 
 		this.ignoredChannels.setLabelLoc(col1x);
-		this.ignoredChannels.setButtonLoc(col1x + 5 + mc.fontRenderer.getStringWidth(this.ignoredChannels.description), this.rowY(7));
-		this.ignoredChannels.setButtonDims(effRight - this.ignoredChannels.x(), 11);
+		this.ignoredChannels.setButtonLoc(effRight - 149, this.rowY(7));
+		this.ignoredChannels.setButtonDims(149, 11);
 
         this.regexIgnoreBool.setButtonLoc(col1x + 5 + mc.fontRenderer.getStringWidth(this.ignoredChannels.description), this.rowY(8));
         this.regexIgnoreBool.setLabelLoc(col1x + 5 + mc.fontRenderer.getStringWidth(this.ignoredChannels.description) + 19);
