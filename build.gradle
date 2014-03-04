@@ -66,11 +66,13 @@ task tabbyForge(type: TabbyTask) {
 task tabbyBasemod(type: TabbyTask) {
     baseName 'TabbyChat-Basemod'
     includes << 'net/minecraft/**'
+	srg true
 }
 task tabbyLiteloader(type: TabbyTask) {
     baseName 'TabbyChat-Lite'
     extension 'litemod'
     includes << 'acs/tabbychat/core/LiteModTabbyChat.class' << 'litemod.json'
+	srg true
 }
 TabbyTask.makeExclusive(tabbyForge, tabbyBasemod, tabbyLiteloader)
 [tabbyForge, tabbyBasemod, tabbyLiteloader].each { it.execute() }

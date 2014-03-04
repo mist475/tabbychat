@@ -1,6 +1,7 @@
 class TabbyTask extends DefaultTask {
     String baseName
     String extension = 'jar'
+	boolean srg = false
     def includes = [] as Set
     def excludes = [] as Set
     @TaskAction
@@ -20,6 +21,9 @@ class TabbyTask extends DefaultTask {
 
         project.artifacts { archives jarTask }
         project.reobf { reobf(jarTask) { spec ->
+			if(srg){
+				setSrgMcp() // reobf to notch names (LiteLoader and Base)
+			}
             spec.classpath = project.sourceSets.main.compileClasspath
         } }
     }
