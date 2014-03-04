@@ -17,6 +17,7 @@ class TabbyTask extends DefaultTask {
                 exclude self.excludes
             }
             classifier 'release'
+			includeEmptyDirs false
         }
 
         project.artifacts { archives jarTask }
