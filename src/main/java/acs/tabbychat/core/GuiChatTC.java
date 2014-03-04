@@ -34,7 +34,6 @@ import acs.tabbychat.gui.ChatButton;
 import acs.tabbychat.gui.ChatChannelGUI;
 import acs.tabbychat.gui.ChatScrollBar;
 import acs.tabbychat.gui.PrefsButton;
-import acs.tabbychat.jazzy.TCAutoCorrect;
 import acs.tabbychat.util.TabbyChatUtils;
 
 public class GuiChatTC extends GuiChat {
@@ -716,27 +715,6 @@ public class GuiChatTC extends GuiChat {
 			this.inputList.get(this.getFocusedFieldInd()).textboxKeyTyped(
 					_char, _code);
 			break;
-		// SPACE: auto-correct
-		case Keyboard.KEY_SPACE:
-			int wordPos = this.inputField2.getNthWordFromCursor(-1);
-			int cursorPos = this.inputField2.getCursorPosition();
-			String word = this.inputField2.getText()
-					.substring(wordPos, cursorPos).trim();
-			if (!word.isEmpty() && word.length() > 2) {
-				if (!(word.contains(".") || word.contains(",")
-						|| word.contains("/") || word.contains("\\"))) {
-					List similar = TCAutoCorrect.getDictionary(word)
-							.getSimilar();
-					log.info(similar);
-					if (!similar.isEmpty()) {
-						this.inputField2.deleteWords(-1);
-						this.inputField2.writeText(similar.get(0).toString());
-					}
-				}
-			}
-			this.inputField2.writeText(" ");
-			break;
-
 		default:
 			// CTRL + NUM1-9: Make the numbered tab active
 			if (GuiScreen.isCtrlKeyDown()
