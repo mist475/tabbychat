@@ -244,9 +244,7 @@ public class GuiChatTC extends GuiChat {
 	 */
 	public @Override
 	void drawScreen(int cursorX, int cursorY, float pointless) {
-		if (this.tc.enabled()
-				&& TabbyChat.advancedSettings.forceUnicode.getValue())
-			this.fontRendererObj.setUnicodeFlag(true);
+		//if (this.tc.enabled() && TabbyChat.advancedSettings.forceUnicode.getValue()) this.fontRendererObj.setUnicodeFlag(true);
 		sr = new ScaledResolution(mc.gameSettings, mc.displayWidth,
 				mc.displayHeight);
 		this.width = sr.getScaledWidth();
@@ -323,7 +321,7 @@ public class GuiChatTC extends GuiChat {
 		}
 
 		GL11.glPopMatrix();
-		this.fontRendererObj.setUnicodeFlag(TabbyChat.defaultUnicode);
+		//this.fontRendererObj.setUnicodeFlag(TabbyChat.defaultUnicode);
 
 		// Attempt Macro/Keybind drawScreen if present
 		MacroKeybindCompat.drawScreen(cursorX, cursorY, this);

@@ -196,7 +196,7 @@ public class GuiNewChatTC extends GuiNewChat {
 
 		int lineCounter = 0;
 		int visLineCounter = 0;
-		if(TabbyChat.generalSettings.tabbyChatEnable.getValue() && TabbyChat.advancedSettings.forceUnicode.getValue()) this.mc.fontRenderer.setUnicodeFlag(true);
+		//if(TabbyChat.generalSettings.tabbyChatEnable.getValue() && TabbyChat.advancedSettings.forceUnicode.getValue()) this.mc.fontRenderer.setUnicodeFlag(true);
 		if(this.mc.gameSettings.chatVisibility != EntityPlayer.EnumChatVisibility.HIDDEN) {
 			int maxDisplayedLines = 0;
 			boolean chatOpen = false;
@@ -312,7 +312,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			}
 			GL11.glPopMatrix();
 		}
-		this.mc.fontRenderer.setUnicodeFlag(TabbyChat.defaultUnicode);
+		//this.mc.fontRenderer.setUnicodeFlag(TabbyChat.defaultUnicode);
 	}
 	/**
 	 * 

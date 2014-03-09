@@ -95,7 +95,7 @@ public class ChatChannelGUI extends GuiScreen {
 		int topY = (this.height - this.displayHeight)/2;
 		int rightX = leftX + this.displayWidth;
 		int botY = topY + this.displayHeight;
-		if(TabbyChat.generalSettings.tabbyChatEnable.getValue() && TabbyChat.advancedSettings.forceUnicode.getValue()) mc.fontRenderer.setUnicodeFlag(true);
+		//if(TabbyChat.generalSettings.tabbyChatEnable.getValue()/&& TabbyChat.advancedSettings.forceUnicode.getValue()) mc.fontRenderer.setUnicodeFlag(true);
 
 		// Draw main background and title
 		drawRect(leftX, topY, leftX + this.displayWidth, topY + this.displayHeight, 0x88000000);
@@ -111,7 +111,7 @@ public class ChatChannelGUI extends GuiScreen {
 		for (int i = 0; i < this.buttonList.size(); i++) {
 			((GuiButton)this.buttonList.get(i)).drawButton(mc, _x, _y);
 		}
-		mc.fontRenderer.setUnicodeFlag(TabbyChat.defaultUnicode);
+		//mc.fontRenderer.setUnicodeFlag(TabbyChat.defaultUnicode);
 	}
 
 	public void initGui() {
