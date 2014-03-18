@@ -176,7 +176,7 @@ public class GuiChatTC extends GuiChat {
 	void /* completePlayerName */func_146404_p_() {
 		String textBuffer;
 		if (this.playerNamesFound) {
-			this.inputField2.getNthWordFromCursor(this.inputField2
+			this.inputField2.deleteFromCursor(this.inputField2
 					.func_146197_a(-1, this.inputField2.getCursorPosition(),
 							false)
 					- this.inputField2.getCursorPosition());
@@ -198,8 +198,9 @@ public class GuiChatTC extends GuiChat {
 			}
 
 			this.playerNamesFound = true;
-			this.inputField2.getNthWordFromCursor(prevWordIndex
+			this.inputField2.deleteFromCursor(prevWordIndex
 					- this.inputField2.getCursorPosition());
+			
 		}
 
 		if (this.foundPlayerNames.size() > 1) {
@@ -217,7 +218,7 @@ public class GuiChatTC extends GuiChat {
 					.printChatMessageWithOptionalDeletion(
 							new ChatComponentText(_sb.toString()), 1);
 		}
-		this.inputField2.deleteWords(-1);
+
 		this.inputField2.writeText((String) this.foundPlayerNames
 				.get(this.playerNameIndex++));
 	}
