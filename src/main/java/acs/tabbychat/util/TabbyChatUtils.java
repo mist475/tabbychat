@@ -46,8 +46,8 @@ import com.mumfrey.liteloader.core.LiteLoader;
 public class TabbyChatUtils {
 	private static final String WITH_DELIMITER = "((?<=%1$s)|(?=%1$s))";
 	private static Calendar logDay = Calendar.getInstance();
-	private static File logDir = new File(Minecraft.getMinecraft().mcDataDir,
-			"logs"+File.separator+"TabbyChat");
+	private static File logDir = new File(new File(
+			Minecraft.getMinecraft().mcDataDir, "logs"), "TabbyChat");
 	private static SimpleDateFormat logNameFormat = new SimpleDateFormat(
 			"'_'MM-dd-yyyy'.txt'");
 	public final static String version = "1.11.00";
@@ -158,13 +158,10 @@ public class TabbyChatUtils {
 	 */
 	public static File getTabbyChatDir() {
 		if (TabbyChat.liteLoaded) {
-			return new File(LiteLoader.getCommonConfigFolder(),
-					new StringBuilder().append("tabbychat").toString());
+			return new File(LiteLoader.getCommonConfigFolder(), "tabbychat");
 		} else {
-			return new File(Minecraft.getMinecraft().mcDataDir,
-					new StringBuilder().append("config")
-							.append(File.separatorChar).append("tabbychat")
-							.toString());
+			return new File(new File(Minecraft.getMinecraft().mcDataDir,
+					"config"), "tabbychat");
 		}
 	}
 
@@ -245,30 +242,33 @@ public class TabbyChatUtils {
 	public static void logChat(String theChat, ChatChannel theChannel) {
 		Calendar tmpcal = Calendar.getInstance();
 		File fileDir;
-		try{
+		try {
 			if (theChannel.getTitle().equals(null)) {
 				theChannel = new ChatChannel("default");
 			}
-		}catch(NullPointerException e){
+		} catch (NullPointerException e) {
 			theChannel = new ChatChannel("default");
 		}
 		if (getServerIp() == "singleplayer") {
 			IntegratedServer ms = Minecraft.getMinecraft()
 					.getIntegratedServer();
 			String worldName = ms.getWorldName();
-			fileDir = new File(logDir, "singleplayer" + File.separator
-					+ worldName + File.separator + theChannel.getTitle());
+			fileDir = new File(new File(new File(logDir, "singleplayer"),
+					worldName), theChannel.getTitle());
+
 		} else {
-			fileDir = new File(logDir, getServerIp() + File.separator
-					+ theChannel.getTitle());
+			fileDir = new File(new File(logDir, getServerIp()),
+					theChannel.getTitle());
 		}
+		if (!fileDir.exists())
+			fileDir.mkdirs();
 
 		if (theChannel.getLogFile() == null
 				|| tmpcal.get(Calendar.DAY_OF_YEAR) != logDay
 						.get(Calendar.DAY_OF_YEAR)) {
 			logDay = tmpcal;
-			theChannel.setLogFile(new File(fileDir, theChannel.getTitle()+logNameFormat.format(logDay
-					.getTime())));
+			theChannel.setLogFile(new File(fileDir, theChannel.getTitle()
+					+ logNameFormat.format(logDay.getTime())));
 		}
 
 		if (!theChannel.getLogFile().exists()) {
