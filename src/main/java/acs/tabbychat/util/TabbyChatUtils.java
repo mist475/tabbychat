@@ -60,6 +60,13 @@ public class TabbyChatUtils {
 	 * @param mc
 	 */
 	public static void chatGuiTick(Minecraft mc) {
+		// Find Forge. Really should only be ran once on startup.
+		try {
+			Class.forName("net.minecraftforge.common.MinecraftForge");
+			TabbyChat.forgePresent = true;
+		} catch (ClassNotFoundException e) {
+		}
+		
 		if (mc.currentScreen == null)
 			return;
 		if (!(mc.currentScreen instanceof GuiChat))

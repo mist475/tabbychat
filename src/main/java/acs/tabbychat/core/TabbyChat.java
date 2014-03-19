@@ -69,6 +69,7 @@ public class TabbyChat {
 	private static boolean firstRun = true;
 	public static boolean liteLoaded = false;
 	public static boolean modLoaded = false;
+	public static boolean forgePresent = false;
 	private static boolean updateChecked = false;
 	private static String mcversion = (new ServerData("", "")).gameVersion;
 	public static boolean defaultUnicode;
