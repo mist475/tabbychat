@@ -90,7 +90,7 @@ public class BackgroundChatThread extends Thread {
 							ICommandSender.class, String.class);
 					Object instance = clntCmdHndlr.getField("instance").get(
 							null);
-					int value = (int) exeCmd.invoke(instance, mc.thePlayer,
+					int value = (Integer) exeCmd.invoke(instance, mc.thePlayer,
 							message);
 					if (value == 1)
 						return;
