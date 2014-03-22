@@ -38,8 +38,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import com.google.common.collect.Lists;
-
 import acs.tabbychat.compat.EmoticonsCompat;
 import acs.tabbychat.compat.MacroKeybindCompat;
 import acs.tabbychat.gui.ChatBox;
@@ -48,6 +46,8 @@ import acs.tabbychat.gui.ChatChannelGUI;
 import acs.tabbychat.gui.ChatScrollBar;
 import acs.tabbychat.gui.PrefsButton;
 import acs.tabbychat.util.TabbyChatUtils;
+
+import com.google.common.collect.Lists;
 
 public class GuiChatTC extends GuiChat {
 	private TabbyChatUtils tcu;
@@ -801,12 +801,11 @@ public class GuiChatTC extends GuiChat {
 			IChatComponent ccd = this.gnc.func_146236_a(Mouse.getX(),
 					Mouse.getY());
 			if (ccd != null) {
-				log.info(ccd);
 				ClickEvent clickEvent = ccd.getChatStyle().getChatClickEvent();
 				if (clickEvent != null) {
 					if (isShiftKeyDown()) {
-						this.inputField
-								.setText(ccd.getUnformattedTextForChat());
+						this.inputField2
+								.writeText(ccd.getChatStyle().getChatClickEvent().getValue());
 					} else {
 						URI url;
 

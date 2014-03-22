@@ -332,7 +332,7 @@ public class GuiNewChatTC extends GuiNewChat {
 							&& clickYRel < this.mc.fontRenderer.FONT_HEIGHT * displayedLines + displayedLines) {
 						int lineIndex = clickYRel / this.mc.fontRenderer.FONT_HEIGHT + this.scrollOffset;
 						if(lineIndex < displayedLines + this.scrollOffset && this.chatLines.get(lineIndex) != null) {
-							returnMe = this.chatLines.get(lineIndex).func_151461_a();
+							returnMe = this.chatLines.get(lineIndex).getChatLineString();
 						}
 					}
 				} finally {
@@ -350,10 +350,12 @@ public class GuiNewChatTC extends GuiNewChat {
 	 * @param backupFlag
 	 */
 	public void func_146237_a(IChatComponent _msg, int id, int tick, boolean backupFlag) {
+		
 		boolean chatOpen = this.getChatOpen();
 		boolean isLineOne = true;
 		boolean optionalDeletion = false;
 		List<TCChatLine> multiLineChat = new ArrayList<TCChatLine>();
+		
 		// Delete message if requested
 		if(id != 0) {
 			optionalDeletion = true;
@@ -384,7 +386,9 @@ public class GuiNewChatTC extends GuiNewChat {
 			if(!isLineOne) {
 				_line = " " + _line;
 			}
-			multiLineChat.add(new TCChatLine(tick, new ChatComponentText(_line), id));
+			IChatComponent cct = (IChatComponent) new ChatComponentText(_line);
+			cct.setChatStyle(_msg.getChatStyle());
+			multiLineChat.add(new TCChatLine(tick, cct, id));
 			isLineOne = false;
 		}
 

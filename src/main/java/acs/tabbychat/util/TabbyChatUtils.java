@@ -14,14 +14,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.IChatComponent.Serializer;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
@@ -98,6 +101,7 @@ public class TabbyChatUtils {
 	 * @param lines
 	 * @return
 	 */
+	
 	public static String chatLinesToString(List<TCChatLine> lines) {
 		StringBuilder result = new StringBuilder(500);
 		for (TCChatLine line : lines) {
@@ -106,6 +110,7 @@ public class TabbyChatUtils {
 		}
 		return result.toString().trim();
 	}
+	
 
 	/**
 	 * 
@@ -479,6 +484,7 @@ public class TabbyChatUtils {
 	 * @param status
 	 * @return
 	 */
+	
 	public static List<TCChatLine> stringToChatLines(int stamp, String line,
 			int id, boolean status) {
 		// List<String> lineSplit =
@@ -677,5 +683,20 @@ public class TabbyChatUtils {
 	}
 
 	private TabbyChatUtils() {
+	}
+	
+	public static IChatComponent mergeChatComponent(IChatComponent[] icc) {
+		if (icc.length == 0 || icc == null)
+			return null;
+		IChatComponent newChat = null;
+		for (IChatComponent chat : icc) {
+			if (newChat != null)
+				newChat = newChat.appendSibling(chat);
+			else
+				newChat = chat;
+		}
+
+		return newChat;
+
 	}
 }

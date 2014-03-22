@@ -668,6 +668,7 @@ public class TabbyChat {
 		String pmTab = null;
 		toTabs.add("*");
 
+		
 		String raw = TabbyChatUtils.chatLinesToString(theChat);
 		String filtered = this.processChatForFilters(raw, filterTabs);
 		String cleaned = StringUtils.stripControlCodes(raw);
@@ -703,6 +704,8 @@ public class TabbyChat {
 		resultChatLine = TabbyChatUtils.stringToChatLines(theChat.get(0)
 				.getUpdatedCounter(), filtered, theChat.get(0).getChatLineID(),
 				theChat.get(0).statusMsg);
+		
+		resultChatLine = theChat;
 		this.addOptionalTimeStamp(resultChatLine);
 
 		HashSet<String> tabSet = new HashSet<String>(toTabs);
