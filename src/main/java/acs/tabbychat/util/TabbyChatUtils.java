@@ -23,6 +23,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -616,16 +617,27 @@ public class TabbyChatUtils {
 		List<IChatComponent> chatcomponent = new ArrayList();
 		List<IChatComponent> result = new ArrayList();
 		
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			IChatComponent chat = iter.next();
-			
+
 			String s = chat.getUnformattedTextForChat();
 			ChatStyle style = chat.getChatStyle();
+
 			
 			String[] parts = s.split(String.format(WITH_DELIMITER, " "));
-			for(String str : parts){
+			for (String str : parts) {
 				IChatComponent partcomp = new ChatComponentText(str);
-				partcomp.setChatStyle(style); // TODO StackOverflowError!!!!
+				
+				ChatStyle style1 = partcomp.getChatStyle();
+				style1.setColor(style.getColor());
+				style1.setBold(style.getBold());
+				style1.setChatClickEvent(style.getChatClickEvent());
+				style1.setChatHoverEvent(style.getChatHoverEvent());
+				style1.setItalic(style.getItalic());
+				style1.setObfuscated(style.getObfuscated());
+				style1.setStrikethrough(style1.getStrikethrough());
+				style1.setUnderlined(style.getUnderlined());
+
 				chatcomponent.add(partcomp);
 			}
 		}
