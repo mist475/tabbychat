@@ -86,8 +86,14 @@ public class BackgroundChatThread extends Thread {
 				try {
 					Class clntCmdHndlr = Class
 							.forName("net.minecraftforge.client.ClientCommandHandler");
-					Method exeCmd = clntCmdHndlr.getMethod("executeCommand",
-							ICommandSender.class, String.class);
+					Method exeCmd;
+					try {
+						exeCmd = clntCmdHndlr.getMethod("a",
+								ICommandSender.class, String.class);
+					} catch (NoSuchMethodException e) {
+						exeCmd = clntCmdHndlr.getMethod("executeCommand",
+								ICommandSender.class, String.class);
+					}
 					Object instance = clntCmdHndlr.getField("instance").get(
 							null);
 					int value = (Integer) exeCmd.invoke(instance, mc.thePlayer,
