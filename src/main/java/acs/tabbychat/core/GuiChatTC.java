@@ -808,7 +808,7 @@ public class GuiChatTC extends GuiChat {
 								.writeText(ccd.getChatStyle().getChatClickEvent().getValue());
 					} else {
 						URI url;
-
+						log.info(clickEvent.getAction());
 						if (clickEvent.getAction() == ClickEvent.Action.OPEN_URL) {
 							try {
 								url = new URI(clickEvent.getValue());

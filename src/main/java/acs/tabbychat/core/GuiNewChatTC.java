@@ -373,22 +373,20 @@ public class GuiNewChatTC extends GuiNewChat {
 					.getStringWidth(tc.generalSettings.timeStampStyle
 							.getValue().toString());
 		
-		Iterator lineIter = this.mc.fontRenderer.listFormattedStringToWidth(
-				_msg.getFormattedText(), maxWidth - timeWidth).iterator();
-
+		Iterator lineIter = TabbyChatUtils.split(_msg, this.chatWidth).iterator();
+		//log.info(_msg);
+		
 		// Prepare list of chatlines
 		while(lineIter.hasNext()) {
-			String _line = (String)lineIter.next();
+			IChatComponent _line = (IChatComponent) lineIter.next();
 			if(chatOpen && this.scrollOffset > 0) {
 				this.chatScrolled = true;
 				this.scroll(1);
 			}
 			if(!isLineOne) {
-				_line = " " + _line;
+				_line = new ChatComponentText(" ").appendSibling(_line);
 			}
-			IChatComponent cct = (IChatComponent) new ChatComponentText(_line);
-			cct.setChatStyle(_msg.getChatStyle());
-			multiLineChat.add(new TCChatLine(tick, cct, id));
+			multiLineChat.add(new TCChatLine(tick, _line, id));
 			isLineOne = false;
 		}
 

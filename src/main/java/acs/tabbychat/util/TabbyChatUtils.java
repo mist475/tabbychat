@@ -10,23 +10,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.IChatComponent.Serializer;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -57,6 +57,7 @@ public class TabbyChatUtils {
 	public final static String name = "TabbyChat";
 	public final static String modid = "tabbychat";
 	public static Logger log = LogManager.getLogger(name);
+	private static Minecraft mc = Minecraft.getMinecraft();
 
 	/**
 	 * 
@@ -596,57 +597,56 @@ public class TabbyChatUtils {
 	}
 
 	/**
-	 * Splits an IChatComponent up at specified boundaries. Flattens the
-	 * structure using IChatComponent.iterator()
+	 * <p>
+	 * Word Wrap
+	 * </p>
+	 * 
+	 * Splits an IChatComponent by the chat width. It is smart enough to not cut
+	 * off words or create orphans/widows.
 	 * 
 	 * @param component
-	 *            The component(s) to split
-	 * @param boundaries
-	 *            The boundaries
-	 * @return A list of IChatComponents starting at the boundary indexes
+	 *            The chat that will get split.
+	 * @param limit
+	 *            Max length of each item.
+	 * @return
 	 */
-	public static List<IChatComponent> split(IChatComponent component,
-			int... boundaries) {
-		int textIndex = 0, boundaryIndex = 0;
-		List<IChatComponent> result = new ArrayList<IChatComponent>();
-		IChatComponent startOfSection = null;
-		for (Object o : component) {
-			IChatComponent subComponent = (IChatComponent) o;
-			String formatted = subComponent.getUnformattedText();
-			String unformattedText = formatted.replaceAll("\u00a7\\d", "");
-			int length = unformattedText.length();
-			// 3 cases.
-			// boundary start end intersects front component - increment
-			// boundaryIndex
-			// boundary start end is in the middle of component - increment
-			// boundaryIndex
-			// boundary start end intersects end component
-			while (boundaryIndex <= boundaries.length) {
-				int begin = boundaryIndex == 0 ? 0
-						: boundaries[boundaryIndex - 1] - textIndex;
-				int end = (boundaryIndex == boundaries.length ? length
-						: boundaries[boundaryIndex] - textIndex);
-				if (begin >= length)
-					break;
-				if (end < 0)
-					break;
-				boolean startOfBound = begin >= 0;
-				begin = Math.max(0, begin);
-				end = Math.min(length, end); // Make inclusive
-				IChatComponent newComponent = new ChatComponentText(
-						substringWithFormatters(formatted, begin, end));
-				// newComponent.setChatStyle(subComponent.getChatStyle());
-				if (startOfBound) {
-					result.add(startOfSection = newComponent);
-					boundaryIndex++;
-				} else {
-					startOfSection.appendSibling(newComponent);
-					break;
+	public static List<IChatComponent> split(IChatComponent component, int limit) {
+
+		Iterator<IChatComponent> iter = component.iterator();
+		List<IChatComponent> chatcomponent = new ArrayList();
+		List<IChatComponent> result = new ArrayList();
+		
+		while(iter.hasNext()){
+			IChatComponent chat = iter.next();
+			
+			String s = chat.getUnformattedTextForChat();
+			ChatStyle style = chat.getChatStyle();
+			
+			String[] parts = s.split(String.format(WITH_DELIMITER, " "));
+			for(String str : parts){
+				IChatComponent partcomp = new ChatComponentText(str);
+				partcomp.setChatStyle(style); // TODO StackOverflowError!!!!
+				chatcomponent.add(partcomp);
+			}
+		}
+		
+		IChatComponent chatline = null;
+		for (IChatComponent word : chatcomponent) {
+			if (chatline == null)
+				chatline = word;
+			else {
+				if (mc.fontRenderer.getStringWidth(chatline.getFormattedText() + " " + word
+						.getFormattedText()) <= limit)
+					chatline = chatline.appendSibling(word);
+				else {
+					result.add(chatline);
+					chatline = word;
 				}
 			}
-			textIndex += length;
 		}
+		result.add(chatline);		
 		return result;
+
 	}
 
 	/**
