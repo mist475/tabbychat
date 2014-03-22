@@ -53,7 +53,7 @@ public class TabbyChatUtils {
 	public final static String version = "1.11.00";
 	public final static String name = "TabbyChat";
 	public final static String modid = "tabbychat";
-	public static Logger log = LogManager.getLogger();
+	public static Logger log = LogManager.getLogger(name);
 
 	/**
 	 * 
