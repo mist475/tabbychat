@@ -16,9 +16,20 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.client.C14PacketTabComplete;
+import net.minecraft.stats.Achievement;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 
@@ -26,6 +37,8 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import com.google.common.collect.Lists;
 
 import acs.tabbychat.compat.EmoticonsCompat;
 import acs.tabbychat.compat.MacroKeybindCompat;
@@ -302,6 +315,44 @@ public class GuiChatTC extends GuiChat {
 		GL11.glTranslatef(scaleOffsetX, scaleOffsetY, 1.0f);
 		GL11.glScalef(scaleSetting, scaleSetting, 1.0f);
 
+		// Deal with hover events
+		IChatComponent icc = this.mc.ingameGUI.getChatGUI().func_146236_a(cursorX, cursorY);
+		if (icc != null && icc.getChatStyle().getChatHoverEvent() != null){
+			HoverEvent hoverevent = icc.getChatStyle().getChatHoverEvent();
+			if(hoverevent.getAction() == HoverEvent.Action.SHOW_ITEM){
+				ItemStack itemstack = null;
+				try{
+					NBTBase nbtbase = JsonToNBT.func_150315_a(hoverevent.getValue().getUnformattedText());
+					if(nbtbase != null && nbtbase instanceof NBTTagCompound)
+						itemstack = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbtbase);
+				}catch(NBTException e){
+					;
+				}
+				if(itemstack != null)
+					this.renderToolTip(itemstack, cursorX, cursorY);
+				else
+					this.drawCreativeTabHoveringText(EnumChatFormatting.RED + "Invalid Item!", cursorX, cursorY);
+			}else if (hoverevent.getAction() == HoverEvent.Action.SHOW_TEXT)
+				this.drawCreativeTabHoveringText(hoverevent.getValue().getFormattedText(), cursorX, cursorY);
+			else if (hoverevent.getAction() == HoverEvent.Action.SHOW_ACHIEVEMENT){
+				StatBase statbase = StatList.func_151177_a(hoverevent.getValue().getUnformattedText());
+				
+				if(statbase != null){
+					IChatComponent icc1 = statbase.func_150951_e();
+					ChatComponentTranslation cct = new ChatComponentTranslation("stats.tooltip.type." + (statbase.isAchievement() ? "achievement" : "statistics"),  new Object[0]);
+					cct.getChatStyle().setItalic(Boolean.valueOf(true));
+					String s = statbase instanceof Achievement ? ((Achievement)statbase).getDescription() : null;
+					ArrayList arraylist = Lists.newArrayList(new String[] {icc1.getFormattedText(), cct.getFormattedText()});
+					
+					if(s != null)
+						arraylist.addAll(this.fontRendererObj.listFormattedStringToWidth(s, 150));
+					this.func_146283_a(arraylist, cursorX, cursorY);
+				}else
+					this.drawCreativeTabHoveringText(EnumChatFormatting.RED + "Invalid statistic/achievement!", cursorX, cursorY);
+			}
+			GL11.glDisable(GL11.GL_LIGHTING);
+		}
+		
 		// Draw chat tabs
 		GuiButton _button;
 		for (int i = 0; i < this.buttonList.size(); i++) {
@@ -750,6 +801,7 @@ public class GuiChatTC extends GuiChat {
 			IChatComponent ccd = this.gnc.func_146236_a(Mouse.getX(),
 					Mouse.getY());
 			if (ccd != null) {
+				log.info(ccd);
 				ClickEvent clickEvent = ccd.getChatStyle().getChatClickEvent();
 				if (clickEvent != null) {
 					if (isShiftKeyDown()) {
