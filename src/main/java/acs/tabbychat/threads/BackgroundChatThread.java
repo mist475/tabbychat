@@ -88,7 +88,7 @@ public class BackgroundChatThread extends Thread {
 							.forName("net.minecraftforge.client.ClientCommandHandler");
 					Method exeCmd;
 					try {
-						exeCmd = clntCmdHndlr.getMethod("a",
+						exeCmd = clntCmdHndlr.getMethod("func_71556_a",
 								ICommandSender.class, String.class);
 					} catch (NoSuchMethodException e) {
 						exeCmd = clntCmdHndlr.getMethod("executeCommand",
