@@ -647,7 +647,7 @@ public class TabbyChatUtils {
 			if (chatline == null)
 				chatline = word;
 			else {
-				if (mc.fontRenderer.getStringWidth(chatline.getFormattedText() + " " + word
+				if (mc.fontRenderer.getStringWidth(chatline.getFormattedText() + word
 						.getFormattedText()) <= limit)
 					chatline = chatline.appendSibling(word);
 				else {
