@@ -1,8 +1,10 @@
 package acs.tabbychat.core;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -802,14 +804,12 @@ public class GuiChatTC extends GuiChat {
 					Mouse.getY());
 			if (ccd != null) {
 				ClickEvent clickEvent = ccd.getChatStyle().getChatClickEvent();
-				log.info(ccd);
 				if (clickEvent != null) {
 					if (isShiftKeyDown()) {
 						this.inputField2
 								.writeText(ccd.getChatStyle().getChatClickEvent().getValue());
 					} else {
 						URI url;
-						log.info(clickEvent.getAction());
 						if (clickEvent.getAction() == ClickEvent.Action.OPEN_URL) {
 							try {
 								url = new URI(clickEvent.getValue());
@@ -837,8 +837,19 @@ public class GuiChatTC extends GuiChat {
 							log.error("Don\'t know how to handle " + clickEvent);
 						}
 					}
-
-					return;
+				} else {
+					URL url;
+					try{
+						url = new URL(ccd.getUnformattedText());
+						if (this.mc.gameSettings.chatLinksPrompt) {
+							this.clickedURI2 = url.toURI();
+							this.mc.displayGuiScreen(new GuiConfirmOpenLink(
+									this, ccd.getUnformattedText(), 0,
+									false));
+						} else {
+							this.func_146407_a(url.toURI());
+						}
+					}catch(MalformedURLException | URISyntaxException e){}
 				}
 			}
 		}
