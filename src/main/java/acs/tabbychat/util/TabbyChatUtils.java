@@ -623,8 +623,15 @@ public class TabbyChatUtils {
 			String s = chat.getUnformattedTextForChat();
 			ChatStyle style = chat.getChatStyle();
 
+			String[] parts1 = s.split(String.format(WITH_DELIMITER, " "));
 			
-			String[] parts = s.split(String.format(WITH_DELIMITER, " "));
+			// Split long words
+			List<String> parts = new ArrayList();
+			for (String s1 : parts1){
+					parts.addAll(mc.fontRenderer.listFormattedStringToWidth(s1, limit));
+			}
+			
+			
 			for (String str : parts) {
 				IChatComponent partcomp = new ChatComponentText(str);
 				
@@ -647,8 +654,8 @@ public class TabbyChatUtils {
 			if (chatline == null)
 				chatline = word;
 			else {
-				if (mc.fontRenderer.getStringWidth(chatline.getFormattedText() + word
-						.getFormattedText()) <= limit)
+				if (mc.fontRenderer.getStringWidth(chatline.getUnformattedText() + word
+						.getUnformattedText()) <= limit)
 					chatline = chatline.appendSibling(word);
 				else {
 					chatline.getChatStyle().setParentStyle(component.getChatStyle());
