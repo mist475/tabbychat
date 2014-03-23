@@ -30,7 +30,7 @@ processResources
 {
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+        include 'mcmod.info', 'litemod.json'
 
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
@@ -38,7 +38,7 @@ processResources
 
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude 'mcmod.info', 'litemod.json'
     }
 }
 repositories {
@@ -56,6 +56,7 @@ dependencies {
 	compile 'org.apache.logging.log4j:log4j-api:2.0-beta9'
 	compile 'org.apache.commons:commons-lang3:3.0'
 	compile 'commons-io:commons-io:2.4'
+	compile 'com.google.guava:guava:15.0'
 }
 
 apply from: 'utils.gradle'

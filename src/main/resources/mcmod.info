@@ -9,10 +9,9 @@
 - Add timestamps to chat
 - Log chat to file - Hide Spam
 - Customize chatbox size
-- Unread chat notifications
-- Force Unicode chat rendering",
-	"version": "1.11.0",
-	"mcversion": "1.7.2",
+- Unread chat notifications",
+	"version": "${version}",
+	"mcversion": "${mcversion}",
 	"url": "http://www.minecraftforum.net/topic/1540451-",
 	"updateUrl": "",
 	"authorList": ["RocketMan10404"],
