@@ -849,7 +849,9 @@ public class GuiChatTC extends GuiChat {
 						} else {
 							this.func_146407_a(url.toURI());
 						}
-					}catch(MalformedURLException | URISyntaxException e){}
+					}
+					catch(MalformedURLException e){}
+					catch(URISyntaxException e){}
 				}
 			}
 		}
