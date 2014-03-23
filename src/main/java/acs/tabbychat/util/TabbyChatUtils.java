@@ -651,11 +651,13 @@ public class TabbyChatUtils {
 						.getFormattedText()) <= limit)
 					chatline = chatline.appendSibling(word);
 				else {
+					chatline.getChatStyle().setParentStyle(component.getChatStyle());
 					result.add(chatline);
 					chatline = word;
 				}
 			}
 		}
+		chatline.getChatStyle().setParentStyle(component.getChatStyle());
 		result.add(chatline);		
 		return result;
 

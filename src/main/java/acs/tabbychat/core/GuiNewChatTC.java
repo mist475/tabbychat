@@ -17,6 +17,7 @@ import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringUtils;
@@ -332,7 +333,21 @@ public class GuiNewChatTC extends GuiNewChat {
 							&& clickYRel < this.mc.fontRenderer.FONT_HEIGHT * displayedLines + displayedLines) {
 						int lineIndex = clickYRel / this.mc.fontRenderer.FONT_HEIGHT + this.scrollOffset;
 						if(lineIndex < displayedLines + this.scrollOffset && this.chatLines.get(lineIndex) != null) {
-							returnMe = this.chatLines.get(lineIndex).getChatLineString();
+							TCChatLine chatline = this.chatLines.get(lineIndex);
+							
+							clickYRel = 0;
+							
+							Iterator iter = chatline.getChatLineString().iterator();
+							while(iter.hasNext()){
+								returnMe = (IChatComponent) iter.next();
+								if(returnMe instanceof ChatComponentText){
+									clickYRel += this.mc.fontRenderer.getStringWidth(this.func_146235_b(((ChatComponentText)returnMe).getChatComponentText_TextValue()));
+									
+									if(clickYRel > clickXRel)
+										return returnMe;
+								}
+								
+							}
 						}
 					}
 				} finally {
@@ -342,6 +357,12 @@ public class GuiNewChatTC extends GuiNewChat {
 			return returnMe;
 		}
 	}
+	
+	private String func_146235_b(String p_146235_1_)
+    {
+        return Minecraft.getMinecraft().gameSettings.chatColours ? p_146235_1_ : EnumChatFormatting.getTextWithoutFormattingCodes(p_146235_1_);
+    }
+	
 	/**
 	 * 
 	 * @param _msg

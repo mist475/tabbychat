@@ -316,7 +316,7 @@ public class GuiChatTC extends GuiChat {
 		GL11.glScalef(scaleSetting, scaleSetting, 1.0f);
 
 		// Deal with hover events
-		IChatComponent icc = this.mc.ingameGUI.getChatGUI().func_146236_a(cursorX, cursorY);
+		IChatComponent icc = gnc.func_146236_a(Mouse.getX(), Mouse.getY());
 		if (icc != null && icc.getChatStyle().getChatHoverEvent() != null){
 			HoverEvent hoverevent = icc.getChatStyle().getChatHoverEvent();
 			if(hoverevent.getAction() == HoverEvent.Action.SHOW_ITEM){
@@ -802,6 +802,7 @@ public class GuiChatTC extends GuiChat {
 					Mouse.getY());
 			if (ccd != null) {
 				ClickEvent clickEvent = ccd.getChatStyle().getChatClickEvent();
+				log.info(ccd);
 				if (clickEvent != null) {
 					if (isShiftKeyDown()) {
 						this.inputField2
