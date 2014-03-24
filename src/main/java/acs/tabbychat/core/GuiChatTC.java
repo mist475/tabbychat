@@ -106,10 +106,12 @@ public class GuiChatTC extends GuiChat {
 		// Attempt Emoticons actionPerformed if present
 		EmoticonsCompat.actionPerformed(par1GuiButton, this.buttonList,
 				this.inputField2);
-
-		if (par1GuiButton instanceof PrefsButton && par1GuiButton.id == 1)
+		
+		if (par1GuiButton instanceof PrefsButton && par1GuiButton.id == 1){
 			this.playerWakeUp();
-
+			mc.displayGuiScreen((GuiScreen) null);
+		}
+		
 		if (!(par1GuiButton instanceof ChatButton))
 			return;
 		ChatButton _button = (ChatButton) par1GuiButton;
@@ -675,6 +677,8 @@ public class GuiChatTC extends GuiChat {
 			break;
 		// ESCAPE: close the chat interface
 		case Keyboard.KEY_ESCAPE:
+			if(mc.thePlayer.isPlayerSleeping())
+				this.playerWakeUp();
 			this.mc.displayGuiScreen((GuiScreen) null);
 			break;
 		// RETURN: send chat to server
