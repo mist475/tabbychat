@@ -59,7 +59,7 @@ public class TabbyChatUtils {
 	public final static String modid = "tabbychat";
 	public static Logger log = LogManager.getLogger(name);
 	private static Minecraft mc = Minecraft.getMinecraft();
-	private static boolean isStarted = false;
+	public static boolean isStarted = false;
 
 	/**
 	 * Called on startup.
@@ -78,7 +78,7 @@ public class TabbyChatUtils {
 	 * 
 	 * @param mc
 	 */
-	public static void chatGuiTick(Minecraft mc) {
+	public static void chatGuiTick() {
 		if (mc.currentScreen == null)
 			return;
 		if (!(mc.currentScreen instanceof GuiChat))

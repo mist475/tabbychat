@@ -20,8 +20,6 @@ public class GuiNewChat extends Gui {
     private final List field_96134_d = new ArrayList();
 
 	public GuiNewChat(Minecraft par1Minecraft) {
-		if(!TabbyChatUtils.isStarted)
-			TabbyChatUtils.startup();
 		this.mc = par1Minecraft;
 	}
 

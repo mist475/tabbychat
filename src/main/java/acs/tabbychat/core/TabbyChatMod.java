@@ -35,7 +35,7 @@ public class TabbyChatMod{
 	}
 
 	public boolean onTickInGui(Minecraft minecraft) {
-		TabbyChatUtils.chatGuiTick(minecraft);
+		TabbyChatUtils.chatGuiTick();
 		return true;
 	}
 }

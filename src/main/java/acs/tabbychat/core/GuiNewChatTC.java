@@ -177,7 +177,11 @@ public class GuiNewChatTC extends GuiNewChat {
 	 * Draws chat
 	 */
 	public @Override void /*drawChat*/drawChat(int currentTick) {
-		if(!tc.liteLoaded && !tc.modLoaded) TabbyChatUtils.chatGuiTick(mc);
+		if(!tc.liteLoaded && !tc.modLoaded){
+			if(!TabbyChatUtils.isStarted)
+				TabbyChatUtils.startup();
+			TabbyChatUtils.chatGuiTick();
+		}
 
 		// Save channel data if at main menu or disconnect screen, use flag so it's only saved once
 		if(mc.currentScreen != null) {

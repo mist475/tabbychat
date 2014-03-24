@@ -4,16 +4,19 @@ import java.io.File;
 import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 
+import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.util.TabbyChatUtils;
 
 import com.mumfrey.liteloader.InitCompleteListener;
+import com.mumfrey.liteloader.RenderListener;
 import com.mumfrey.liteloader.core.LiteLoader;
 
-public class LiteModTabbyChat implements InitCompleteListener {
+public class LiteModTabbyChat implements RenderListener {
 	private static GuiNewChatTC gnc;
 	private static Logger log = TabbyChatUtils.log;
 
@@ -28,18 +31,9 @@ public class LiteModTabbyChat implements InitCompleteListener {
 	}
 
 	@Override
-	public void onInitCompleted(Minecraft var1, LiteLoader var2) {
-		TabbyChat.liteLoaded = true;
-		gnc = GuiNewChatTC.getInstance();
-	}
-
-	@Override
-	public void onTick(Minecraft var1, float var2, boolean var3, boolean var4) {
-		TabbyChatUtils.chatGuiTick(var1);
-	}
-
-	@Override
 	public void init(File configPath) {
+		TabbyChat.liteLoaded = true;
+		
 		String relativeConfig = "tabbychat";
 		File liteConfigDir = new File(LiteLoader.getCommonConfigFolder(),
 				relativeConfig);
@@ -65,5 +59,30 @@ public class LiteModTabbyChat implements InitCompleteListener {
 			File oldConfigPath) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void onRender() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRenderGui(GuiScreen currentScreen) {
+		// TODO Auto-generated method stub
+
+		TabbyChatUtils.chatGuiTick();
+	}
+
+	@Override
+	public void onRenderWorld() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSetupCameraTransform() {
+		// TODO Auto-generated method stub
+		
 	}
 }
