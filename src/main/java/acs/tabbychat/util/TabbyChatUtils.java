@@ -59,19 +59,26 @@ public class TabbyChatUtils {
 	public final static String modid = "tabbychat";
 	public static Logger log = LogManager.getLogger(name);
 	private static Minecraft mc = Minecraft.getMinecraft();
+	private static boolean isStarted = false;
 
 	/**
-	 * 
-	 * @param mc
+	 * Called on startup.
 	 */
-	public static void chatGuiTick(Minecraft mc) {
-		// Find Forge. Really should only be ran once on startup.
+	public static void startup(){
+		// Find Forge.
 		try {
 			Class.forName("net.minecraftforge.common.MinecraftForge");
 			TabbyChat.forgePresent = true;
 		} catch (ClassNotFoundException e) {
 		}
-		
+		isStarted = true;
+	}
+	
+	/**
+	 * 
+	 * @param mc
+	 */
+	public static void chatGuiTick(Minecraft mc) {
 		if (mc.currentScreen == null)
 			return;
 		if (!(mc.currentScreen instanceof GuiChat))

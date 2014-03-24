@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-
 import acs.tabbychat.core.GuiNewChatTC;
+import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
+
 import org.apache.logging.log4j.LogManager;
 
 public class GuiNewChat extends Gui {
@@ -19,6 +20,8 @@ public class GuiNewChat extends Gui {
     private final List field_96134_d = new ArrayList();
 
 	public GuiNewChat(Minecraft par1Minecraft) {
+		if(!TabbyChatUtils.isStarted)
+			TabbyChatUtils.startup();
 		this.mc = par1Minecraft;
 	}
 

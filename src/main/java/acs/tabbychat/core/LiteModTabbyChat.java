@@ -56,6 +56,8 @@ public class LiteModTabbyChat implements InitCompleteListener {
 				log.warn("Old configs found, but unable to convert.\n" + e);
 			}
 		}
+		
+		TabbyChatUtils.startup();
 	}
 
 	@Override
