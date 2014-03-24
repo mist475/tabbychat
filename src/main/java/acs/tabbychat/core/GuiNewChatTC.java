@@ -325,7 +325,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			Point adjClick = ChatBox.scaleMouseCoords(clickX, clickY);
 			int clickXRel = Math.abs(adjClick.x - ChatBox.current.x);
 			int clickYRel = Math.abs(adjClick.y - ChatBox.current.y);
-			if(clickXRel >= 0 && clickYRel >= 0) {
+			if(clickXRel >= 0 && clickYRel >= 0 && clickXRel < this.chatWidth && clickYRel < this.chatHeight) {
 				chatReadLock.lock();
 				try {
 					int displayedLines = Math.min(this.getHeightSetting() / 9, this.chatLines.size());
