@@ -641,17 +641,7 @@ public class TabbyChatUtils {
 			for (String str : parts) {
 				str = net.minecraft.util.StringUtils.stripControlCodes(str);
 				IChatComponent partcomp = new ChatComponentText(str);
-				
-				ChatStyle style1 = partcomp.getChatStyle();
-				style1.setColor(style.getColor());
-				style1.setBold(style.getBold());
-				style1.setChatClickEvent(style.getChatClickEvent());
-				style1.setChatHoverEvent(style.getChatHoverEvent());
-				style1.setItalic(style.getItalic());
-				style1.setObfuscated(style.getObfuscated());
-				style1.setStrikethrough(style1.getStrikethrough());
-				style1.setUnderlined(style.getUnderlined());
-
+				partcomp.setChatStyle(style.createShallowCopy());
 				chatcomponent.add(partcomp);
 			}
 		}
