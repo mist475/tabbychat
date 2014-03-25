@@ -627,7 +627,7 @@ public class TabbyChatUtils {
 		while (iter.hasNext()) {
 			IChatComponent chat = iter.next();
 
-			String s = chat.getUnformattedTextForChat();
+			String s = chat.getFormattedText();
 			ChatStyle style = chat.getChatStyle();
 
 			String[] parts1 = s.split(String.format(WITH_DELIMITER, " "));
@@ -635,11 +635,11 @@ public class TabbyChatUtils {
 			// Split long words
 			List<String> parts = new ArrayList();
 			for (String s1 : parts1){
-					parts.addAll(mc.fontRenderer.listFormattedStringToWidth(s1, limit));
+				parts.addAll(mc.fontRenderer.listFormattedStringToWidth(s1, limit));
 			}
 			
-			
 			for (String str : parts) {
+				str = net.minecraft.util.StringUtils.stripControlCodes(str);
 				IChatComponent partcomp = new ChatComponentText(str);
 				
 				ChatStyle style1 = partcomp.getChatStyle();
