@@ -107,9 +107,10 @@ public class GuiChatTC extends GuiChat {
 		EmoticonsCompat.actionPerformed(par1GuiButton, this.buttonList,
 				this.inputField2);
 		
-		if (par1GuiButton instanceof PrefsButton && par1GuiButton.id == 1){
+		if (par1GuiButton.id == 1){
 			this.playerWakeUp();
-			mc.displayGuiScreen((GuiScreen) null);
+			if (!ChatBox.pinned)
+				this.mc.displayGuiScreen((GuiScreen) null);
 		}
 		
 		if (!(par1GuiButton instanceof ChatButton))
@@ -615,10 +616,9 @@ public class GuiChatTC extends GuiChat {
 
 		if (mc.thePlayer != null && mc.theWorld != null
 				&& mc.thePlayer.isPlayerSleeping()) {
-			PrefsButton leaveBed = new PrefsButton(1, this.width / 2 - 100,
-					this.height - 50, 200, 14,
-					StatCollector.translateToLocal("multiplayer.stopSleeping"),
-					0x55ffffff);
+			GuiButton leaveBed = new GuiButton(1, this.width / 2 - 100,
+					this.height - 50,
+					StatCollector.translateToLocal("multiplayer.stopSleeping"));
 			this.buttonList.add(leaveBed);
 		}
 
@@ -881,7 +881,7 @@ public class GuiChatTC extends GuiChat {
 
 		// Replicating GuiScreen's mouseClicked method since 'super' won't work
 		for (GuiButton _guibutton : (List<GuiButton>) this.buttonList) {
-			if (ChatButton.class.isInstance(_guibutton) || _guibutton.id <= 2) {
+			if (_guibutton instanceof ChatButton || _guibutton.id <= 2 && _guibutton.id != 1) {
 				if (_guibutton.mousePressed(this.mc, _x, _y)) {
 					if (_button == 0) {
 						this.selectedButton2 = _guibutton;
