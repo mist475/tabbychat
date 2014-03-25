@@ -254,13 +254,11 @@ public class ChatBox {
 		// look for snapping to top
 		if(desired.y - current.height < -scaledHeight + 1 && !anchoredTop) {
 			anchoredTop = true;
-			dragging = false;
 			desired.y -= current.height;
 		}
 		// look for snapping to bottom
 		else if(desired.y + current.height + 1 > absMinY && anchoredTop) {
 			anchoredTop = false;
-			dragging = false;
 			desired.y += current.height;
 		}
 
