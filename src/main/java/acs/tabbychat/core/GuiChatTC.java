@@ -881,18 +881,12 @@ public class GuiChatTC extends GuiChat {
 
 		// Replicating GuiScreen's mouseClicked method since 'super' won't work
 		for (GuiButton _guibutton : (List<GuiButton>) this.buttonList) {
-			if (_guibutton instanceof ChatButton || _guibutton.id <= 2 && _guibutton.id != 1) {
+			if (_guibutton instanceof ChatButton) {
 				if (_guibutton.mousePressed(this.mc, _x, _y)) {
 					if (_button == 0) {
 						this.selectedButton2 = _guibutton;
 						this.mc.thePlayer.playSound("random.click", 1.0F, 1.0F);
 						this.actionPerformed(_guibutton);
-						return;
-					} else if (_button == 1) {
-						ChatButton _cb = (ChatButton) _guibutton;
-						if (_cb.channel == this.tc.channelMap.get("*"))
-							return;
-						this.mc.displayGuiScreen(new ChatChannelGUI(_cb.channel));
 						return;
 					}
 				}
