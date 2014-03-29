@@ -17,7 +17,6 @@ public class TabbyChatMod{
 	@EventHandler
 	public void load(FMLPostInitializationEvent event){
 		FMLCommonHandler.instance().bus().register(this);
-		TabbyChatUtils.startup();
 	}
 	
 	public void clientChat(String var1){
@@ -35,7 +34,7 @@ public class TabbyChatMod{
 	}
 
 	public boolean onTickInGui(Minecraft minecraft) {
-		TabbyChatUtils.chatGuiTick();
+		TabbyChatUtils.chatGuiTick(minecraft);
 		return true;
 	}
 }

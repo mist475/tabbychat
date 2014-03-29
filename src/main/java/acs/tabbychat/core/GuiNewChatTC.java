@@ -177,11 +177,7 @@ public class GuiNewChatTC extends GuiNewChat {
 	 * Draws chat
 	 */
 	public @Override void /*drawChat*/drawChat(int currentTick) {
-		if(!tc.liteLoaded && !tc.modLoaded){
-			if(!TabbyChatUtils.isStarted)
-				TabbyChatUtils.startup();
-			TabbyChatUtils.chatGuiTick();
-		}
+		if(!tc.liteLoaded && !tc.modLoaded) TabbyChatUtils.chatGuiTick(mc);
 
 		// Save channel data if at main menu or disconnect screen, use flag so it's only saved once
 		if(mc.currentScreen != null) {
@@ -283,7 +279,7 @@ public class GuiNewChatTC extends GuiNewChat {
 						for(int i=0; i<msgList.size(); i++) {
 							visLineCounter++;
 							byte xOrigin = 0;
-							int yOrigin = ChatBox.anchoredTop && tc.enabled() ? -visLineCounter*9 + this.chatHeight : -visLineCounter * 9;
+							int yOrigin = ChatBox.anchoredTop && tc.enabled() ? -(visLineCounter*9)-this.chatHeight : -visLineCounter * 9;
 							drawRect(xOrigin, yOrigin, xOrigin + this.chatWidth + timeStampOffset, yOrigin+9, currentOpacity / 2 << 24);
 							GL11.glEnable(GL11.GL_BLEND);
 							String _chat;

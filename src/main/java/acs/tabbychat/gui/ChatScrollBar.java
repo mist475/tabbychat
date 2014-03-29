@@ -82,7 +82,8 @@ public class ChatScrollBar {
 
 		barMaxY = barBottomY - barHeight/2 - 1;
 		barMinY = barTopY + barHeight/2 + 1;
-		scrollBarCenter = Math.round(mouseLoc*barMinY + (1.0f-mouseLoc)*barMaxY);
+		if(!ChatBox.anchoredTop) scrollBarCenter = Math.round(mouseLoc*barMinY + (1.0f-mouseLoc)*barMaxY);
+		else scrollBarCenter = Math.round(mouseLoc*barMaxY + (1.0f-mouseLoc)*barMinY);
 	}
 	/**
 	 * Draws the scroll bar

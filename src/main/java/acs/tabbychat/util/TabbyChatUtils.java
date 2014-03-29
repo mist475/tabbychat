@@ -59,26 +59,19 @@ public class TabbyChatUtils {
 	public final static String modid = "tabbychat";
 	public static Logger log = LogManager.getLogger(name);
 	private static Minecraft mc = Minecraft.getMinecraft();
-	public static boolean isStarted = false;
 
 	/**
-	 * Called on startup.
+	 * 
+	 * @param mc
 	 */
-	public static void startup(){
-		// Find Forge.
+	public static void chatGuiTick(Minecraft mc) {
+		// Find Forge. Really should only be ran once on startup.
 		try {
 			Class.forName("net.minecraftforge.common.MinecraftForge");
 			TabbyChat.forgePresent = true;
 		} catch (ClassNotFoundException e) {
 		}
-		isStarted = true;
-	}
-	
-	/**
-	 * 
-	 * @param mc
-	 */
-	public static void chatGuiTick() {
+		
 		if (mc.currentScreen == null)
 			return;
 		if (!(mc.currentScreen instanceof GuiChat))
@@ -627,7 +620,7 @@ public class TabbyChatUtils {
 		while (iter.hasNext()) {
 			IChatComponent chat = iter.next();
 
-			String s = chat.getFormattedText();
+			String s = chat.getUnformattedTextForChat();
 			ChatStyle style = chat.getChatStyle();
 
 			String[] parts1 = s.split(String.format(WITH_DELIMITER, " "));
@@ -635,11 +628,11 @@ public class TabbyChatUtils {
 			// Split long words
 			List<String> parts = new ArrayList();
 			for (String s1 : parts1){
-				parts.addAll(mc.fontRenderer.listFormattedStringToWidth(s1, limit));
+					parts.addAll(mc.fontRenderer.listFormattedStringToWidth(s1, limit));
 			}
 			
+			
 			for (String str : parts) {
-				str = net.minecraft.util.StringUtils.stripControlCodes(str);
 				IChatComponent partcomp = new ChatComponentText(str);
 				partcomp.setChatStyle(style.createShallowCopy());
 				chatcomponent.add(partcomp);

@@ -106,13 +106,12 @@ public class GuiChatTC extends GuiChat {
 		// Attempt Emoticons actionPerformed if present
 		EmoticonsCompat.actionPerformed(par1GuiButton, this.buttonList,
 				this.inputField2);
-		
+
 		if (par1GuiButton.id == 1){
 			this.playerWakeUp();
-			if (!ChatBox.pinned)
+			if(!ChatBox.pinned)
 				this.mc.displayGuiScreen((GuiScreen) null);
 		}
-		
 		if (!(par1GuiButton instanceof ChatButton))
 			return;
 		ChatButton _button = (ChatButton) par1GuiButton;
@@ -534,7 +533,6 @@ public class GuiChatTC extends GuiChat {
 			if (!isShiftKeyDown())
 				wheelDelta *= 7;
 
-			
 			this.gnc.scroll(wheelDelta);
 			if (this.tc.enabled())
 				this.scrollBar.scrollBarMouseWheel();
