@@ -23,11 +23,9 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -655,7 +653,7 @@ public class TabbyChatUtils {
 			}
 		}
 		chatline.getChatStyle().setParentStyle(component.getChatStyle());
-		result.add(chatline);		
+		result.add(chatline.appendSibling(new ChatComponentText("")));		
 		return result;
 
 	}
