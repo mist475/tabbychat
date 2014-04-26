@@ -28,6 +28,7 @@ import org.lwjgl.opengl.GL11;
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatScrollBar;
 import acs.tabbychat.settings.TimeStampEnum;
+import acs.tabbychat.util.ChatComponentUtil;
 import acs.tabbychat.util.TabbyChatUtils;
 
 public class GuiNewChatTC extends GuiNewChat {
@@ -394,20 +395,19 @@ public class GuiNewChatTC extends GuiNewChat {
 					.getStringWidth(tc.generalSettings.timeStampStyle
 							.getValue().toString());
 		
-		Iterator lineIter = TabbyChatUtils.split(_msg, this.chatWidth).iterator();
+		IChatComponent[] chat = ChatComponentUtil.split(_msg, this.chatWidth);
 		//log.info(_msg);
 		
 		// Prepare list of chatlines
-		while(lineIter.hasNext()) {
-			IChatComponent _line = (IChatComponent) lineIter.next();
+		for(IChatComponent ichat : chat) {
 			if(chatOpen && this.scrollOffset > 0) {
 				this.chatScrolled = true;
 				this.scroll(1);
 			}
 			if(!isLineOne) {
-				_line = new ChatComponentText(" ").appendSibling(_line);
+				ichat = new ChatComponentText(" ").appendSibling(ichat);
 			}
-			multiLineChat.add(new TCChatLine(tick, _line, id));
+			multiLineChat.add(new TCChatLine(tick, ichat, id));
 			isLineOne = false;
 		}
 

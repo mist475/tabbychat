@@ -1,0 +1,101 @@
+package acs.tabbychat.util;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StringUtils;
+
+/**
+ * A library for modifying Chat Components.
+ * 
+ * @author Matthew Messinger
+ * 
+ */
+public class ChatComponentUtil {
+
+	private static final String WITH_DELIMITER = "((?<=%1$s)|(?=%1$s))";
+	private static FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+
+
+	/**
+	 * Replaces all instances of the given word.
+	 * 
+	 * @param chat
+	 * @param regex
+	 * @param replacement
+	 * @return
+	 */
+	public static IChatComponent replaceText(IChatComponent chat, String regex,
+			String replacement) {
+		List<IChatComponent> iter = chat.getSiblings();
+		IChatComponent newChat = new ChatComponentText("");
+		for (IChatComponent next : iter) {
+			IChatComponent comp = new ChatComponentText(next
+					.getUnformattedText().replaceAll(regex, replacement));
+			comp.setChatStyle(next.getChatStyle().createShallowCopy());
+			newChat.appendSibling(comp);
+		}
+		return newChat;
+	}
+
+	/**
+	 * Splits a ChatComponent into multiple lines so it will fit within a width.
+	 * 
+	 * @param chat
+	 * @param limit
+	 * @return
+	 */
+	public static IChatComponent[] split(IChatComponent chat, int limit) {
+		// Split components up
+		List<IChatComponent> ichatList = new ArrayList();
+		List<IChatComponent> list = new ArrayList();
+		if(chat.getSiblings().size() == 0){
+			list.add(chat);
+		} else {
+			list.addAll(chat.getSiblings());
+		}
+		for(IChatComponent ichat : list) {
+			
+			String[] str = ichat.getFormattedText().split(String.format(WITH_DELIMITER, " "));
+			List<String> chatList = new ArrayList();
+			for(String s : str){
+				for(String s1 : (List<String>)fontRenderer.listFormattedStringToWidth(s, limit)){
+					chatList.add(StringUtils.stripControlCodes(s1));
+				}
+			}
+			// Create component and add to list
+			for (String s : chatList) {
+				IChatComponent a = new ChatComponentText(s).setChatStyle(ichat
+						.getChatStyle().createDeepCopy());
+				ichatList.add(a);
+			}
+		}
+		// Assemble lines
+		List<IChatComponent> chatList = new ArrayList();
+		IChatComponent newChat = new ChatComponentText("");
+		for (IChatComponent ichat : ichatList) {
+			if (fontRenderer.getStringWidth(newChat.getUnformattedText()
+					+ ichat.getUnformattedText()) <= limit) {
+				newChat.appendSibling(ichat);
+				continue;
+			} else {
+				chatList.add(newChat.appendSibling(new ChatComponentText("")));
+				newChat = new ChatComponentText("").appendSibling(ichat);
+			}
+		}
+		if (!chatList.contains(newChat))
+			chatList.add(newChat);
+
+		return chatList.toArray(new IChatComponent[0]);
+	}
+
+}

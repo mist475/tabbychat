@@ -614,21 +614,18 @@ public class TabbyChatUtils {
 		Iterator<IChatComponent> iter = component.iterator();
 		List<IChatComponent> chatcomponent = new ArrayList();
 		List<IChatComponent> result = new ArrayList();
-		
+		iter.next();
+		// Prepare each component, creating a new one if overflow
 		while (iter.hasNext()) {
 			IChatComponent chat = iter.next();
 
-			String s = chat.getUnformattedTextForChat();
+			String s = chat.getFormattedText();
 			ChatStyle style = chat.getChatStyle();
 
-			String[] parts1 = s.split(String.format(WITH_DELIMITER, " "));
 			
 			// Split long words
 			List<String> parts = new ArrayList();
-			for (String s1 : parts1){
-					parts.addAll(mc.fontRenderer.listFormattedStringToWidth(s1, limit));
-			}
-			
+			parts.addAll(mc.fontRenderer.listFormattedStringToWidth(chat.getUnformattedTextForChat(), limit));
 			
 			for (String str : parts) {
 				IChatComponent partcomp = new ChatComponentText(str);
@@ -636,19 +633,19 @@ public class TabbyChatUtils {
 				chatcomponent.add(partcomp);
 			}
 		}
-		
+		// Prepares chat lines
 		IChatComponent chatline = null;
-		for (IChatComponent word : chatcomponent) {
+		for (IChatComponent line : chatcomponent) {
 			if (chatline == null)
-				chatline = word;
+				chatline = line;
 			else {
-				if (mc.fontRenderer.getStringWidth(chatline.getUnformattedText() + word
+				if (mc.fontRenderer.getStringWidth(chatline.getUnformattedText() + line
 						.getUnformattedText()) <= limit)
-					chatline = chatline.appendSibling(word);
+					chatline = chatline.appendSibling(line);
 				else {
 					chatline.getChatStyle().setParentStyle(component.getChatStyle());
 					result.add(chatline);
-					chatline = word;
+					chatline = line;
 				}
 			}
 		}
