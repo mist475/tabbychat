@@ -914,6 +914,7 @@ public class GuiChatTC extends GuiChat {
 	void onGuiClosed() {
 		ChatBox.dragging = false;
 		ChatBox.resizing = false;
+		gnc.resetScroll();
 	}
 
 	/**
@@ -1055,4 +1056,5 @@ public class GuiChatTC extends GuiChat {
 	void updateScreen() {
 		this.inputField2.updateCursorCounter();
 	}
+	
 }
