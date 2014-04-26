@@ -581,6 +581,10 @@ public class TabbyChat {
 	protected void loadPMPatterns() {
 		StringBuilder toMePM = new StringBuilder();
 		StringBuilder fromMePM = new StringBuilder();
+		
+		// Matches '(From Player):' and '(To Player):'
+		toMePM.append("|^\\(From ([\\p{L}\\p{N}_]{3,16})[ ]\\)?:");
+		fromMePM.append("|^\\(To ([\\p{L}\\p{N}_]{3,16})[ ]\\)?:");
 
 		// Matches '[Player -> me]' and '[me -> Player]'
 		toMePM.append("^\\[([\\p{L}\\p{N}_]{3,16})[ ]?\\-\\>[ ]?me\\]");
