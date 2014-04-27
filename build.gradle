@@ -11,23 +11,27 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
 	}
 }
 
 apply plugin: 'forge'
+apply plugin: 'liteloader'
 
 version = "1.11.0"
-
 group= "asc.tabbychat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TabbyChat"
 
 minecraft {
-    version = "1.7.2-10.12.0.1024"
+    version = "1.7.2-10.12.1.1060"
     assetDir = "eclipse/assets"
 }
 processResources
 {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+	
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info', 'litemod.json'
@@ -41,14 +45,14 @@ processResources
         exclude 'mcmod.info', 'litemod.json'
     }
 }
-repositories {
-    maven {
-        name = "dykam"
-        url = "http://nexus.dykam.nl/content/groups/public/"
-    }
+sourceSets {
+	main {
+		java {
+			exclude 'net/minecraft/**'
+		}
+	}
 }
 dependencies {
-	compile 'com.mumfrey:Liteloader:pb-4'
 	compile 'junit:junit:4.8.1'
 	compile 'net.sf.jazzy:jazzy:0.5.2-rtext-1.4.1-2'
 	compile 'org.lwjgl.lwjgl:lwjgl:2.9.0'
@@ -58,22 +62,19 @@ dependencies {
 	compile 'commons-io:commons-io:2.4'
 	compile 'com.google.guava:guava:15.0'
 }
-
-apply from: 'utils.gradle'
-task tabbyForge(type: TabbyTask) {
-    baseName 'TabbyChat-Forge'
-    includes << 'acs/tabbychat/core/TabbyChatMod.class' << 'mcmod.info'
+jar{
+	from({project.configurations.compile.collect { it.isDirectory() ? it : project.zipTree(it) }}) {
+		include 'com/swabunga/spell/**'
+	}
+	exclude 'acs/tabbychat/core/LiteModTabbyChat.class', 'litemod.json'
+	includeEmptyDirs false
+	
 }
-task tabbyBasemod(type: TabbyTask) {
-    baseName 'TabbyChat-Basemod'
-    includes << 'net/minecraft/**'
-	srg true
+jarLiteloader{
+	from({project.configurations.compile.collect { it.isDirectory() ? it : project.zipTree(it) }}) {
+		include 'com/swabunga/spell/**'
+	}
+	exclude 'acs/tabbychat/core/TabbyChatMod.class', 'mcmod.info'
+	includeEmptyDirs false
+	
 }
-task tabbyLiteloader(type: TabbyTask) {
-    baseName 'TabbyChat-Lite'
-    extension 'litemod'
-    includes << 'acs/tabbychat/core/LiteModTabbyChat.class' << 'litemod.json'
-	srg true
-}
-TabbyTask.makeExclusive(tabbyForge, tabbyBasemod, tabbyLiteloader)
-[tabbyForge, tabbyBasemod, tabbyLiteloader].each { it.execute() }
