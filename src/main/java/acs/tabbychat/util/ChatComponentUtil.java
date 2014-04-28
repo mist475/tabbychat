@@ -98,7 +98,6 @@ public class ChatComponentUtil {
 		}
 		if (!chatList.contains(newChat))
 			chatList.add(newChat);
-		chatList.add(new ChatComponentText(""));
 
 		return chatList.toArray(new IChatComponent[0]);
 	}
