@@ -595,65 +595,7 @@ public class TabbyChatUtils {
 		return newChat;
 	}
 
-	/**
-	 * <p>
-	 * Word Wrap
-	 * </p>
-	 * 
-	 * Splits an IChatComponent by the chat width. It is smart enough to not cut
-	 * off words or create orphans/widows.
-	 * 
-	 * @param component
-	 *            The chat that will get split.
-	 * @param limit
-	 *            Max length of each item.
-	 * @return
-	 */
-	public static List<IChatComponent> split(IChatComponent component, int limit) {
-
-		Iterator<IChatComponent> iter = component.iterator();
-		List<IChatComponent> chatcomponent = new ArrayList();
-		List<IChatComponent> result = new ArrayList();
-		iter.next();
-		// Prepare each component, creating a new one if overflow
-		while (iter.hasNext()) {
-			IChatComponent chat = iter.next();
-
-			String s = chat.getFormattedText();
-			ChatStyle style = chat.getChatStyle();
-
-			
-			// Split long words
-			List<String> parts = new ArrayList();
-			parts.addAll(mc.fontRenderer.listFormattedStringToWidth(chat.getUnformattedTextForChat(), limit));
-			
-			for (String str : parts) {
-				IChatComponent partcomp = new ChatComponentText(str);
-				partcomp.setChatStyle(style.createShallowCopy());
-				chatcomponent.add(partcomp);
-			}
-		}
-		// Prepares chat lines
-		IChatComponent chatline = null;
-		for (IChatComponent line : chatcomponent) {
-			if (chatline == null)
-				chatline = line;
-			else {
-				if (mc.fontRenderer.getStringWidth(chatline.getUnformattedText() + line
-						.getUnformattedText()) <= limit)
-					chatline = chatline.appendSibling(line);
-				else {
-					chatline.getChatStyle().setParentStyle(component.getChatStyle());
-					result.add(chatline);
-					chatline = line;
-				}
-			}
-		}
-		chatline.getChatStyle().setParentStyle(component.getChatStyle());
-		result.add(chatline.appendSibling(new ChatComponentText("")));		
-		return result;
-
-	}
+	
 
 	/**
 	 * Takes the substring of a paragraph-symbol formatted string
@@ -689,20 +631,5 @@ public class TabbyChatUtils {
 	}
 
 	private TabbyChatUtils() {
-	}
-	
-	public static IChatComponent mergeChatComponent(IChatComponent[] icc) {
-		if (icc.length == 0 || icc == null)
-			return null;
-		IChatComponent newChat = null;
-		for (IChatComponent chat : icc) {
-			if (newChat != null)
-				newChat = newChat.appendSibling(chat);
-			else
-				newChat = chat;
-		}
-
-		return newChat;
-
 	}
 }
