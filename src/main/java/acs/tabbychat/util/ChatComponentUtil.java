@@ -1,13 +1,7 @@
 package acs.tabbychat.util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-
-import acs.tabbychat.settings.ColorCodeEnum;
-
-import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -104,6 +98,7 @@ public class ChatComponentUtil {
 		}
 		if (!chatList.contains(newChat))
 			chatList.add(newChat);
+		chatList.add(new ChatComponentText(""));
 
 		return chatList.toArray(new IChatComponent[0]);
 	}
