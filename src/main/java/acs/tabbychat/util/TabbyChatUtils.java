@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -22,8 +21,6 @@ import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.IChatComponent;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +43,6 @@ import acs.tabbychat.threads.BackgroundChatThread;
 import com.mumfrey.liteloader.core.LiteLoader;
 
 public class TabbyChatUtils {
-	private static final String WITH_DELIMITER = "((?<=%1$s)|(?=%1$s))";
 	private static Calendar logDay = Calendar.getInstance();
 	private static File logDir = new File(new File(
 			Minecraft.getMinecraft().mcDataDir, "logs"), "TabbyChat");
@@ -56,8 +52,6 @@ public class TabbyChatUtils {
 	public final static String name = "TabbyChat";
 	public final static String modid = "tabbychat";
 	public static Logger log = LogManager.getLogger(name);
-	private static Minecraft mc = Minecraft.getMinecraft();
-
 	/**
 	 * 
 	 * @param mc

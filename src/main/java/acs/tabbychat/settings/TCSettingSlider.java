@@ -1,13 +1,11 @@
 package acs.tabbychat.settings;
 
+import net.minecraft.client.Minecraft;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import acs.tabbychat.util.TabbyChatUtils;
-
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiTextField;
 
 public class TCSettingSlider extends TCSetting implements ITCSetting {
 	protected float minValue;

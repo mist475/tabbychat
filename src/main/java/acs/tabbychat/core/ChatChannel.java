@@ -2,21 +2,20 @@ package acs.tabbychat.core;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ChatComponentText;
 
 import org.lwjgl.opengl.GL11;
 
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatButton;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.StringUtils;
 
 public class ChatChannel implements Serializable {
 	protected static int nextID = 3600;
@@ -271,7 +270,6 @@ public class ChatChannel implements Serializable {
 	public void unreadNotify(Gui _gui, int _opacity) {
 		Minecraft mc = Minecraft.getMinecraft();
 		GuiNewChatTC gnc = GuiNewChatTC.getInstance();
-		float scaleSetting = gnc.getScaleSetting();
 		int tabY = this.tab.y() - gnc.sr.getScaledHeight() - ChatBox.current.y;
 		tabY = ChatBox.anchoredTop ? tabY - ChatBox.getChatHeight() + ChatBox.getUnfocusedHeight(): tabY + ChatBox.getChatHeight() - ChatBox.getUnfocusedHeight() + 1;
 

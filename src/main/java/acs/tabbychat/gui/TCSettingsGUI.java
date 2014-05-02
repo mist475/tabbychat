@@ -81,8 +81,6 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 	public void defineDrawableSettings() {}
 
 	public void drawScreen(int x, int y, float f) {
-		//if(TabbyChat.generalSettings.tabbyChatEnable.getValue() && tc.advancedSettings.forceUnicode.getValue()) mc.fontRenderer.setUnicodeFlag(true);
-		int iMargin = (LINE_HEIGHT - mc.fontRenderer.FONT_HEIGHT)/2;
 		int effLeft = (this.width - DISPLAY_WIDTH)/2;
 		int absLeft = effLeft - MARGIN;
 		int effTop = (this.height - DISPLAY_HEIGHT)/2;
@@ -110,7 +108,6 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		for (int i = 0; i < this.buttonList.size(); i++) {
 			((GuiButton)this.buttonList.get(i)).drawButton(mc, x, y);
 		}
-		//mc.fontRenderer.setUnicodeFlag(TabbyChat.defaultUnicode);
 	}
 
 	public void handleMouseInput() {
@@ -134,10 +131,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		this.buttonList.clear();
 
 		int effLeft = (this.width - DISPLAY_WIDTH)/2;
-		int absLeft = effLeft - MARGIN;
 		int effTop = (this.height - DISPLAY_HEIGHT)/2;
-		int absTop = effTop - MARGIN;
-
 		this.lastOpened = 0;
 		int effRight = (this.width + DISPLAY_WIDTH)/2;
 		int bW = 40;

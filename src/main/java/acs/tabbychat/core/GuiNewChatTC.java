@@ -43,7 +43,7 @@ public class GuiNewChatTC extends GuiNewChat {
 	private static final Lock chatReadLock = chatListLock.readLock();
 	private static final Lock chatWriteLock = chatListLock.writeLock();
 	private int scrollOffset = 0;
-	private boolean chatScrolled = false;
+	public boolean chatScrolled = false;
 	protected boolean saveNeeded = true;
 	private static GuiNewChatTC instance = null;
 	public static TabbyChat tc;
@@ -198,7 +198,6 @@ public class GuiNewChatTC extends GuiNewChat {
 
 		int lineCounter = 0;
 		int visLineCounter = 0;
-		//if(TabbyChat.generalSettings.tabbyChatEnable.getValue() && TabbyChat.advancedSettings.forceUnicode.getValue()) this.mc.fontRenderer.setUnicodeFlag(true);
 		if(this.mc.gameSettings.chatVisibility != EntityPlayer.EnumChatVisibility.HIDDEN) {
 			int maxDisplayedLines = 0;
 			boolean chatOpen = false;
@@ -314,7 +313,6 @@ public class GuiNewChatTC extends GuiNewChat {
 			}
 			GL11.glPopMatrix();
 		}
-		//this.mc.fontRenderer.setUnicodeFlag(TabbyChat.defaultUnicode);
 	}
 	/**
 	 * 
@@ -384,19 +382,18 @@ public class GuiNewChatTC extends GuiNewChat {
 			this.deleteChatLine(id);
 		}
 		// Split message by available chatbox space
-		int maxWidth = MathHelper.floor_float((float)this.func_146228_f() / this.func_146244_h());
+		
+		MathHelper.floor_float((float)this.func_146228_f() / this.func_146244_h());
 		if(tc.enabled()) {
 			if(!backupFlag) tc.checkServer();
-			maxWidth = ChatBox.getMinChatWidth();
+			ChatBox.getMinChatWidth();
 		}
-		int timeWidth = 0;
 		if (tc.generalSettings.timeStampEnable.getValue())
-			timeWidth = mc.fontRenderer
+			mc.fontRenderer
 					.getStringWidth(tc.generalSettings.timeStampStyle
 							.getValue().toString());
 		
 		IChatComponent[] chat = ChatComponentUtil.split(_msg, this.chatWidth);
-		//log.info(_msg);
 		
 		// Prepare list of chatlines
 		for(IChatComponent ichat : chat) {
@@ -529,7 +526,6 @@ public class GuiNewChatTC extends GuiNewChat {
 	 * @return
 	 */
 	public float getScaleSetting() {
-		//return this.func_146244_h();
 		float theSetting = this.func_146244_h();
 		return Math.round(theSetting * 100.0f) / 100.0f;
 	}
@@ -605,7 +601,6 @@ public class GuiNewChatTC extends GuiNewChat {
 	public @Override void /*scroll*/scroll(int _lines) {
 		int maxLineDisplay;
 		if(tc.enabled()) {
-			float scaleFactor = 1.0f;
 			maxLineDisplay = Math.round(ChatBox.getChatHeight() / 9.0f);
 			if(!this.getChatOpen()) maxLineDisplay = Math.round(maxLineDisplay * TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue() / 100.0f);
 		} else

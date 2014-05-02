@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Properties;
 
 import acs.tabbychat.core.TabbyChat;
-import acs.tabbychat.settings.ITCSetting;
 import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingSlider;
 import acs.tabbychat.settings.TCSettingTextBox;
@@ -16,7 +15,6 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
 	private static final int MULTICHAT_DELAY_ID = 9403;
 	private static final int CHATBOX_UNFOC_HEIGHT_ID = 9406;
 	private static final int CHAT_FADE_TICKS_ID = 9408;
-	//private static final int FORCE_UNICODE_ID = 9409;
 	private static final int TEXT_IGNORE_OPACITY_ID = 9410;
 	private static final int CONVERT_UNICODE_TEXT_ID = 9411;
 
@@ -29,7 +27,6 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
 	public TCSettingTextBox multiChatDelay = new TCSettingTextBox("500", "multiChatDelay", this.propertyPrefix, MULTICHAT_DELAY_ID);
 	public TCSettingSlider chatBoxUnfocHeight = new TCSettingSlider(50.0f, "chatBoxUnfocHeight", this.propertyPrefix, CHATBOX_UNFOC_HEIGHT_ID, 20.0f, 100.0f);
 	public TCSettingSlider chatFadeTicks = new TCSettingSlider(200.0f, "chatFadeTicks", this.propertyPrefix, CHAT_FADE_TICKS_ID, 10.0f, 2000.0f);
-	//public TCSettingBool forceUnicode = new TCSettingBool(false, "forceUnicode", this.propertyPrefix, FORCE_UNICODE_ID);
 	public TCSettingBool textIgnoreOpacity = new TCSettingBool(false, "textignoreopacity", this.propertyPrefix, TEXT_IGNORE_OPACITY_ID);
 	public TCSettingBool convertUnicodeText = new TCSettingBool(false, "convertunicodetext", this.propertyPrefix, CONVERT_UNICODE_TEXT_ID);
 	
@@ -50,7 +47,6 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
 		this.buttonList.add(this.multiChatDelay);
 		this.buttonList.add(this.chatBoxUnfocHeight);
 		this.buttonList.add(this.chatFadeTicks);
-		//this.buttonList.add(this.forceUnicode);
 		this.buttonList.add(this.textIgnoreOpacity);
 		this.buttonList.add(this.convertUnicodeText);
 	}
@@ -80,10 +76,6 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
 		this.chatFadeTicks.setButtonLoc(col1x + 5 + mc.fontRenderer.getStringWidth(this.chatFadeTicks.description), this.rowY(5));
 		this.chatFadeTicks.buttonColor = buttonColor;
 		this.chatFadeTicks.units = "";
-
-		//this.forceUnicode.setButtonLoc(col1x, this.rowY(6));
-		//this.forceUnicode.setLabelLoc(col1x + 19);
-		//this.forceUnicode.buttonColor = buttonColor;
 
 		this.textIgnoreOpacity.setButtonLoc(col1x, this.rowY(6));
 		this.textIgnoreOpacity.setLabelLoc(col1x + 19);

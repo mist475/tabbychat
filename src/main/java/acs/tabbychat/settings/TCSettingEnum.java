@@ -22,7 +22,6 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
 
 	public void drawButton(Minecraft par1, int cursorX, int cursorY) {
 		int centerX = this.x() + this.width() / 2;
-		int centerY = this.y() + this.height() / 2;
 		int fgcolor = 0x99a0a0a0;
 		if(!this.enabled) {
 			fgcolor = -0x995f5f60;

@@ -231,7 +231,6 @@ public class ChatBox {
 	 * @return
 	 */
 	public static int getUnfocusedHeight() {
-		//return (int)(TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue().floatValue() * getChatHeight() / 100.0f);
 		return unfocusedHeight;
 	}
 	/**

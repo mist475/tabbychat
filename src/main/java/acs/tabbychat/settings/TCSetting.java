@@ -8,7 +8,6 @@ import java.util.Properties;
 
 abstract class TCSetting extends GuiButton implements ITCSetting {
 	public int buttonColor = 0xbba5e7e4;
-	private int buttonOffColor = 0x99000000;
 	protected int labelX;
 	public String description;
 	protected String type;

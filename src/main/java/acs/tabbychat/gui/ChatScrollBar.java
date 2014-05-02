@@ -1,13 +1,13 @@
 package acs.tabbychat.gui;
 
-import acs.tabbychat.core.GuiNewChatTC;
-import acs.tabbychat.core.TabbyChat;
-import acs.tabbychat.settings.TimeStampEnum;
+import java.awt.Point;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MathHelper;
+
 import org.lwjgl.input.Mouse;
 
-import java.awt.*;
+import acs.tabbychat.core.GuiNewChatTC;
 
 public class ChatScrollBar {
 	private static Minecraft mc;
@@ -28,14 +28,6 @@ public class ChatScrollBar {
 	 */
 	public ChatScrollBar() {
 		mc = Minecraft.getMinecraft();
-		if(TabbyChat.generalSettings.timeStampEnable.getValue()) {
-			String maxTime = ((TimeStampEnum)TabbyChat.generalSettings.timeStampStyle.getValue()).maxTime;
-			boolean oldVal = mc.fontRenderer.getUnicodeFlag();
-			//if(TabbyChat.advancedSettings.forceUnicode.getValue()) {
-			//	mc.fontRenderer.setUnicodeFlag(true);
-			//
-			//mc.fontRenderer.setUnicodeFlag(oldVal);
-		}
 	}
 	/**
 	 * 
@@ -63,9 +55,6 @@ public class ChatScrollBar {
 	 * 
 	 */
 	private static void update() {
-		int maxlines = gnc.getHeightSetting() / 9;
-		int clines = Math.min(gnc.GetChatSize(), maxlines);
-
 		barHeight = MathHelper.floor_float((float) 5 * gnc.getScaleSetting());
 		barWidth = MathHelper.floor_float((float)5 * gnc.getScaleSetting());
 
@@ -92,7 +81,6 @@ public class ChatScrollBar {
 		update();
 		int minX = barX + 1;
 		int maxlines = gnc.getHeightSetting() / 9;
-		//float chatOpacity = mc.gameSettings.chatOpacity * 0.9f + 0.1f;
 		float chatOpacity = gnc.tc.mc.gameSettings.chatOpacity * 0.9f + 0.1f;
 		int currentOpacity = (int)((float)180 * chatOpacity);
 		gnc.drawRect(barX, barTopY, barX+barWidth+2, barBottomY, currentOpacity << 24);

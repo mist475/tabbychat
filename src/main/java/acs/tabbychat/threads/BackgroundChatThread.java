@@ -1,12 +1,9 @@
 package acs.tabbychat.threads;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
-import net.minecraftforge.client.ClientCommandHandler;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.util.TabbyChatUtils;
 

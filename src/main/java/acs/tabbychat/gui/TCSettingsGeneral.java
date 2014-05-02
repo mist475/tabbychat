@@ -4,19 +4,13 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
 
-import acs.tabbychat.core.GuiNewChatTC;
+import net.minecraft.client.gui.GuiButton;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
-import acs.tabbychat.settings.ITCSetting;
 import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingEnum;
 import acs.tabbychat.settings.TimeStampEnum;
-import acs.tabbychat.util.TabbyChatUtils;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.multiplayer.ServerData;
 
 public class TCSettingsGeneral extends TCSettingsGUI {
 	public SimpleDateFormat timeStamp = new SimpleDateFormat();

@@ -65,7 +65,7 @@ public class TabbyChat {
 	}
 
 	private static Logger log = TabbyChatUtils.log;
-	private volatile List<TCChatLine> lastChat = new ArrayList();
+	private volatile List<TCChatLine> lastChat = new ArrayList<TCChatLine>();
 	private static boolean firstRun = true;
 	public static boolean liteLoaded = false;
 	public static boolean modLoaded = false;
@@ -81,7 +81,7 @@ public class TabbyChat {
 	public static TCSettingsFilters filterSettings;
 	public static TCSettingsAdvanced advancedSettings;
 	public static TCSpellCheckManager spellChecker;
-	public LinkedHashMap<String, ChatChannel> channelMap = new LinkedHashMap();
+	public LinkedHashMap<String, ChatChannel> channelMap = new LinkedHashMap<String, ChatChannel>();
 
 	private static File chanDataFile;
 	protected Calendar cal = Calendar.getInstance();
@@ -206,7 +206,7 @@ public class TabbyChat {
 	 * @param ind
 	 */
 	public void activateIndex(int ind) {
-		List actives = this.getActive();
+		List<?> actives = this.getActive();
 		if (actives.size() == 1) {
 			int i = 1;
 			Iterator<ChatChannel> iter = this.channelMap.values().iterator();
@@ -231,7 +231,7 @@ public class TabbyChat {
 	 * 
 	 */
 	public void activateNext() {
-		List actives = this.getActive();
+		List<?> actives = this.getActive();
 		if (actives.size() == 1) {
 			Iterator<ChatChannel> iter = this.channelMap.values().iterator();
 			ChatChannel chan = iter.next();
@@ -259,13 +259,12 @@ public class TabbyChat {
 	 * 
 	 */
 	public void activatePrev() {
-		List actives = this.getActive();
+		List<?> actives = this.getActive();
 		if (actives.size() == 1) {
-			ListIterator<ChatChannel> iter = new ArrayList(
+			ListIterator<ChatChannel> iter = new ArrayList<ChatChannel>(
 					this.channelMap.values()).listIterator(this.channelMap
 					.size());
 			ChatChannel chan = iter.previous();
-			ChatChannel last = chan;
 			while (iter.hasPrevious()) {
 				if (chan.getTitle().equals(actives.get(0))) {
 					if (mc.currentScreen instanceof GuiChatTC)
@@ -278,7 +277,7 @@ public class TabbyChat {
 			}
 			if (chan.getTitle().equals(actives.get(0))) {
 				chan.active = false;
-				iter = new ArrayList(this.channelMap.values())
+				iter = new ArrayList<ChatChannel>(this.channelMap.values())
 						.listIterator(this.channelMap.size());
 				if (iter.hasPrevious() && mc.currentScreen instanceof GuiChatTC)
 					((GuiChatTC) mc.currentScreen).checkCommandPrefixChange(
@@ -1017,7 +1016,7 @@ public class TabbyChat {
 	protected void updateDefaults() {
 		if (!TabbyChat.generalSettings.tabbyChatEnable.getValue())
 			return;
-		List<String> dList = new ArrayList(serverSettings.defaultChanList);
+		List<String> dList = new ArrayList<String>(serverSettings.defaultChanList);
 		int ind;
 		for (ChatChannel chan : this.channelMap.values()) {
 			ind = dList.indexOf(chan.getTitle());

@@ -51,9 +51,9 @@ public class ChatComponentUtil {
 	 */
 	public static IChatComponent[] split(IChatComponent chat, int limit) {
 		// Split components up
-		List<IChatComponent> ichatList = new ArrayList();
-		List<IChatComponent> list = new ArrayList();
-		List<IChatComponent> list1 = new ArrayList();
+		List<IChatComponent> ichatList = new ArrayList<IChatComponent>();
+		List<IChatComponent> list = new ArrayList<IChatComponent>();
+		List<IChatComponent> list1 = new ArrayList<IChatComponent>();
 		if (chat.getSiblings().size() == 0) {
 			list.add(chat);
 		} else {
@@ -69,7 +69,7 @@ public class ChatComponentUtil {
 		for (IChatComponent ichat : list1) {
 			String[] str = ichat.getFormattedText().split(
 					String.format(WITH_DELIMITER, " "));
-			List<String> chatList = new ArrayList();
+			List<String> chatList = new ArrayList<String>();
 			for (String s : str) {
 				for (String s1 : (List<String>) fontRenderer
 						.listFormattedStringToWidth(s, limit)) {
@@ -84,7 +84,7 @@ public class ChatComponentUtil {
 			}
 		}
 		// Assemble lines
-		List<IChatComponent> chatList = new ArrayList();
+		List<IChatComponent> chatList = new ArrayList<IChatComponent>();
 		IChatComponent newChat = new ChatComponentText("");
 		for (IChatComponent ichat : ichatList) {
 			if (fontRenderer.getStringWidth(newChat.getUnformattedText()
