@@ -44,6 +44,7 @@ import acs.tabbychat.compat.EmoticonsCompat;
 import acs.tabbychat.compat.MacroKeybindCompat;
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatButton;
+import acs.tabbychat.gui.ChatChannelGUI;
 import acs.tabbychat.gui.ChatScrollBar;
 import acs.tabbychat.gui.PrefsButton;
 import acs.tabbychat.util.TabbyChatUtils;
@@ -121,9 +122,13 @@ public class GuiChatTC extends GuiChat {
 		}
 		if (!this.tc.enabled())
 			return;
+		// Remove channel
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			if(_button.channel.active)
+				this.tc.activatePrev();
 			this.buttonList.remove(_button);
 			this.tc.channelMap.remove(_button.channel.getTitle());
+		// Select/Deselect channel 
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
 			if (!_button.channel.active) {
 				this.gnc.mergeChatLines(_button.channel);
@@ -881,6 +886,10 @@ public class GuiChatTC extends GuiChat {
 						this.mc.thePlayer.playSound("random.click", 1.0F, 1.0F);
 						this.actionPerformed(_guibutton);
 						return;
+					} else if (_button == 1){
+						ChatButton _cb = (ChatButton)_guibutton;
+						if(_cb.channel == this.tc.channelMap.get("*")) return;
+						this.mc.displayGuiScreen(new ChatChannelGUI(_cb.channel));
 					}
 				}
 			} else {
