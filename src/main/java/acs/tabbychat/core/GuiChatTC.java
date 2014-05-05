@@ -605,7 +605,7 @@ public class GuiChatTC extends GuiChat {
 						.trim();
 				boolean prefixHidden = this.tc.channelMap
 						.get(activeTabs.get(0)).hidePrefix;
-				if (thePrefix.length() > 0 && !prefixHidden)
+				if (thePrefix.length() > 0 && !prefixHidden && this.inputField2.getText().isEmpty())
 					this.inputField2.setText(this.tc.channelMap.get(activeTabs
 							.get(0)).cmdPrefix.trim() + " ");
 			}
