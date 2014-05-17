@@ -1,16 +1,24 @@
 package acs.tabbychat.gui;
 
-import acs.tabbychat.core.TabbyChat;
-import acs.tabbychat.settings.*;
-import acs.tabbychat.util.TabbyChatUtils;
-import net.minecraft.client.gui.GuiButton;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.TreeMap;
+
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
+import acs.tabbychat.core.TabbyChat;
+import acs.tabbychat.settings.ColorCodeEnum;
+import acs.tabbychat.settings.FormatCodeEnum;
+import acs.tabbychat.settings.ITCSetting;
+import acs.tabbychat.settings.NotificationSoundEnum;
+import acs.tabbychat.settings.TCChatFilter;
+import acs.tabbychat.settings.TCSettingBool;
+import acs.tabbychat.settings.TCSettingEnum;
+import acs.tabbychat.settings.TCSettingTextBox;
+import acs.tabbychat.util.TabbyChatUtils;
 		
 public class TCSettingsFilters extends TCSettingsGUI {
 	protected int curFilterId = 0;
@@ -56,7 +64,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 		
 	public TCSettingsFilters(TabbyChat _tc) {
 		super(_tc);
-		this.name = TabbyChat.translator.getString("settings.filters.name");
+		this.name = I18n.format("settings.filters.name");
 		this.settingsFile = new File(TabbyChatUtils.getServerDir(), "filters.cfg");
 		this.bgcolor = 0x66289f28;
 		this.filterName.setCharLimit(50);
@@ -188,8 +196,8 @@ public class TCSettingsFilters extends TCSettingsGUI {
 		
 		int buttonColor = (this.bgcolor & 0x00ffffff) + 0xff000000;
 		
-		PrefsButton newButton = new PrefsButton(ADD_ID, col1x, (this.height + DISPLAY_HEIGHT)/2 - LINE_HEIGHT, 45, LINE_HEIGHT, TabbyChat.translator.getString("settings.new"));
-		PrefsButton delButton = new PrefsButton(DEL_ID, col1x + 50, (this.height + DISPLAY_HEIGHT)/2 - LINE_HEIGHT, 45, LINE_HEIGHT, TabbyChat.translator.getString("settings.delete"));
+		PrefsButton newButton = new PrefsButton(ADD_ID, col1x, (this.height + DISPLAY_HEIGHT)/2 - LINE_HEIGHT, 45, LINE_HEIGHT, I18n.format("settings.new"));
+		PrefsButton delButton = new PrefsButton(DEL_ID, col1x + 50, (this.height + DISPLAY_HEIGHT)/2 - LINE_HEIGHT, 45, LINE_HEIGHT, I18n.format("settings.delete"));
 		newButton.bgcolor = this.bgcolor;
 		delButton.bgcolor = this.bgcolor;
 		this.buttonList.add(newButton);

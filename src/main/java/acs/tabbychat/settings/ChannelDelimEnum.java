@@ -1,14 +1,14 @@
 package acs.tabbychat.settings;
 
-import acs.tabbychat.core.TabbyChat;
+import net.minecraft.client.resources.I18n;
 
 public enum ChannelDelimEnum {
-	ANGLES(TabbyChat.translator.getString("delims.angles"), "<", ">"),
-	BRACES(TabbyChat.translator.getString("delims.braces"), "{", "}"),
-	BRACKETS(TabbyChat.translator.getString("delims.brackets"), "[", "]"),
-	PARENTHESIS(TabbyChat.translator.getString("delims.parenthesis"), "(", ")"),
-	ANGLESPARENSCOMBO(TabbyChat.translator.getString("delims.anglesparenscombo"), "<\\(", ")(?: |\u00A7r)?[A-Za-z0-9_]{1,16}>"),
-	ANGLESBRACKETSCOMBO(TabbyChat.translator.getString("delims.anglesbracketscombo"), "<\\[", "](?: |\u00A7r)?[A-Za-z0-9_]{1,16}>");
+	ANGLES(I18n.format("delims.angles"), "<", ">"),
+	BRACES(I18n.format("delims.braces"), "{", "}"),
+	BRACKETS(I18n.format("delims.brackets"), "[", "]"),
+	PARENTHESIS(I18n.format("delims.parenthesis"), "(", ")"),
+	ANGLESPARENSCOMBO(I18n.format("delims.anglesparenscombo"), "<\\(", ")(?: |\u00A7r)?[A-Za-z0-9_]{1,16}>"),
+	ANGLESBRACKETSCOMBO(I18n.format("delims.anglesbracketscombo"), "<\\[", "](?: |\u00A7r)?[A-Za-z0-9_]{1,16}>");
 	
 	private String title;
 	private String open;

@@ -1,16 +1,5 @@
 package acs.tabbychat.gui;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiButton;
-import org.lwjgl.input.Keyboard;
-
-import acs.tabbychat.core.TabbyChat;
-import acs.tabbychat.lang.TCTranslate;
-import acs.tabbychat.settings.ITCSetting;
-import acs.tabbychat.settings.TCSettingSlider;
-import acs.tabbychat.settings.TCSettingTextBox;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -19,6 +8,18 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
+
+import org.lwjgl.input.Keyboard;
+
+import acs.tabbychat.core.TabbyChat;
+import acs.tabbychat.settings.ITCSetting;
+import acs.tabbychat.settings.TCSettingSlider;
+import acs.tabbychat.settings.TCSettingTextBox;
 
 abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 	protected static TabbyChat tc;
@@ -136,9 +137,9 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		int effRight = (this.width + DISPLAY_WIDTH)/2;
 		int bW = 40;
 		int bH = LINE_HEIGHT;
-		PrefsButton savePrefs = new PrefsButton(SAVEBUTTON, effRight - bW, (this.height + DISPLAY_HEIGHT)/2 - bH, bW, bH, TabbyChat.translator.getString("settings.save"));
+		PrefsButton savePrefs = new PrefsButton(SAVEBUTTON, effRight - bW, (this.height + DISPLAY_HEIGHT)/2 - bH, bW, bH, I18n.format("settings.save"));
 		this.buttonList.add(savePrefs);
-		PrefsButton cancelPrefs = new PrefsButton(CANCELBUTTON, effRight - 2*bW - 2, (this.height + DISPLAY_HEIGHT)/2 - bH, bW, bH, TabbyChat.translator.getString("settings.cancel"));
+		PrefsButton cancelPrefs = new PrefsButton(CANCELBUTTON, effRight - 2*bW - 2, (this.height + DISPLAY_HEIGHT)/2 - bH, bW, bH, I18n.format("settings.cancel"));
 		this.buttonList.add(cancelPrefs);
 
 		for (int i = 0; i < ScreenList.size(); i++) {
@@ -151,9 +152,6 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		this.defineDrawableSettings();
 		this.initDrawableSettings();
 		this.validateButtonStates();
-		if(!TabbyChat.translator.getCurrentLang().equals(mc.gameSettings.language)) {
-			TabbyChat.translator = new TCTranslate(mc.gameSettings.language);
-		}
 		for(Object drawable : this.buttonList) {
 			if(drawable instanceof ITCSetting) ((ITCSetting)drawable).resetDescription();
 		}

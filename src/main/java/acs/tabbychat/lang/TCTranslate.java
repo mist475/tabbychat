@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import net.minecraft.client.resources.I18n;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.gui.ITCSettingsGUI;
 
@@ -14,17 +15,7 @@ public class TCTranslate {
 	private HashMap<String, String> dict = new HashMap();
 	protected static String provides = null;
 	protected static final HashMap<String, Class> langSupport = new HashMap();
-	static {
-		langSupport.put("en_US", TCLanguageEnglish.class);
-		langSupport.put("ru_RU", TCLanguageRussian.class);
-		langSupport.put("et_EE", TCLanguageEstonian.class);
-		langSupport.put("es_ES", TCLanguageSpanish.class);
-		langSupport.put("de_DE", TCLanguageGerman.class);
-		langSupport.put("uk_UA", TCLanguageUkranian.class);
-		langSupport.put("sv_SE", TCLanguageSwedish.class);
-		langSupport.put("fr_FR", TCLanguageFrench.class);
-		langSupport.put("fi_FI", TCLanguageFinnish.class);
-	}
+
 	/**
 	 * 
 	 * @param _lang
@@ -92,11 +83,6 @@ public class TCTranslate {
 	 * @return
 	 */
 	public String getString(String field) {
-		String translated = this.dict.get(field);
-		if(translated == null) {
-			translated = TCLanguageEnglish.defaults.getProperty(field);
-			if(translated == null) return " ";
-		}
-		return translated;
+		return I18n.format(field);
 	}
 }

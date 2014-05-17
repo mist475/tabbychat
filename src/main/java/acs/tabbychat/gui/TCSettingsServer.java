@@ -15,6 +15,7 @@ import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingEnum;
 import acs.tabbychat.settings.TCSettingTextBox;
 import acs.tabbychat.util.TabbyChatUtils;
+import net.minecraft.client.resources.I18n;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -54,7 +55,7 @@ public class TCSettingsServer extends TCSettingsGUI {
 
 	public TCSettingsServer(TabbyChat _tc) {
 		super(_tc);
-		this.name = TabbyChat.translator.getString("settings.server.name");
+		this.name = I18n.format("settings.server.name");
 		this.settingsFile = new File(TabbyChatUtils.getServerDir(), "settings.cfg");
 		this.bgcolor = 0x66d6d643;
 		this.defaultChannels.setCharLimit(300);

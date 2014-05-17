@@ -1,10 +1,10 @@
 package acs.tabbychat.settings;
 
-import acs.tabbychat.core.TabbyChat;
+import java.util.Properties;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-
-import java.util.Properties;
+import net.minecraft.client.resources.I18n;
 
 abstract class TCSetting extends GuiButton implements ITCSetting {
 	public int buttonColor = 0xbba5e7e4;
@@ -26,7 +26,7 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
 		this.theDefault = theSetting;
 		this.propertyName = theProperty;
 		this.categoryName = theCategory;
-		this.description = TabbyChat.translator.getString(theCategory + "." + theProperty.toLowerCase());
+		this.description = I18n.format(theCategory + "." + theProperty.toLowerCase());
 	}
 
 	public TCSetting(Object theSetting, String theProperty, String theCategory, int theID, FormatCodeEnum theFormat) {
@@ -122,7 +122,7 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
 	}
 
 	public void resetDescription() {
-		this.description = TabbyChat.translator.getString(this.categoryName + "." + this.propertyName.toLowerCase());
+		this.description = I18n.format(this.categoryName + "." + this.propertyName.toLowerCase());
 	}
 
 	public void save() {

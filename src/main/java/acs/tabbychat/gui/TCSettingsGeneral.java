@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Properties;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
@@ -43,7 +44,7 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 	
 	public TCSettingsGeneral(TabbyChat _tc) {
 		super(_tc);
-		this.name = TabbyChat.translator.getString("settings.general.name");
+		this.name = I18n.format("settings.general.name");
 		this.settingsFile = new File(tabbyChatDir, "general.cfg");
 		this.bgcolor = 0x664782be;
 		this.defineDrawableSettings();

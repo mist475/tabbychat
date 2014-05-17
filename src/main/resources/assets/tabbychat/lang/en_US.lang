@@ -1,0 +1,115 @@
+delims.angles=<Angles>
+delims.braces={Braces}
+delims.brackets=[Brackets]
+delims.parenthesis=(Parenthesis)
+delims.anglesparenscombo=<(Combo)Pl.>
+delims.anglesbracketscombo=<[Combo]Pl.>
+
+colors.default=Default
+colors.darkblue=Dark Blue
+colors.darkgreen=Dark Green
+colors.darkaqua=Dark Aqua
+colors.darkred=Dark Red
+colors.purple=Purple
+colors.gold=Gold
+colors.gray=Gray
+colors.darkgray=Dark Gray
+colors.indigo=Indigo
+colors.brightgreen=Bright Green
+colors.aqua=Aqua
+colors.red=Red
+colors.pink=Pink
+colors.yellow=Yellow
+colors.white=White
+
+formats.default=Default
+formats.bold=Bold
+formats.striked=Striked
+formats.underline=Underlined
+formats.italic=Italic
+
+sounds.orb=Orb
+sounds.anvil=Anvil
+sounds.bowhit=Bow Hit
+sounds.break=Break
+sounds.click=Click
+sounds.glass=Glass
+sounds.bass=Bass
+sounds.harp=Harp
+sounds.pling=Pling
+sounds.cat=Cat
+sounds.blast=Blast
+sounds.splash=Splash
+sounds.swim=Swim
+sounds.bat=Bat
+sounds.blaze=Blaze
+sounds.chicken=Chicken
+sounds.cow=Cow
+sounds.dragon=Dragon
+sounds.endermen=Endermen
+sounds.ghast=Ghast
+sounds.pig=Pig
+sounds.wolf=Wolf
+
+settings.save=Save
+settings.cancel=Cancel
+settings.new=New
+settings.delete=Delete
+
+settings.general.name=General
+settings.general.tabbychatenable=TabbyChat Enabled
+settings.general.savechatlog=Split chat to file
+settings.general.splitchatlog=Split log by channel
+settings.general.timestampenable=Timestamp chat
+settings.general.timestampstyle=Timestamp style
+settings.general.timestampcolor=Timestamp color
+settings.general.groupspam=Consolidate spammed chat
+settings.general.unreadflashing=Default unread notification flashing
+settings.general.spellcheckenable=Enable Spell-checking
+settings.general.updatecheckenable=Check for updates
+
+settings.server.name=Server
+settings.server.autochannelsearch=Enable channel tabs
+settings.server.autopmsearch=Enable PM tabs
+settings.server.delimiterchars=Chat-channel delimiters
+settings.server.delimcolorbool=Colored delimiters
+settings.server.delimformatbool=Formatted delimiters
+settings.server.defaultchannels=Default channels
+settings.server.ignoredchannels=Ignored channels
+settings.server.regexignorebool=Use patterns
+
+settings.filters.name=Filters
+settings.filters.inversematch=Inverse Match
+settings.filters.casesensitive=Case sensitive
+settings.filters.highlightbool=Highlight matches
+settings.filters.highlightcolor=Color
+settings.filters.highlightformat=Format
+settings.filters.audionotificationbool=Audio notification
+settings.filters.audionotificationsound=Sound
+settings.filters.filtername=Filter Name
+settings.filters.sendtotabbool=Send matches to tab
+settings.filters.sendtotabname=Tab Name
+settings.filters.sendtoalltabs=All tabs
+settings.filters.removematches=Hide matches from chat
+settings.filters.expressionstring=Expression
+
+settings.advanced.name=Advanced
+settings.advanced.chatscrollhistory=Chat history to retain (lines)
+settings.advanced.maxlengthchannelname=Channel name max. length
+settings.advanced.multichatdelay=Multi-chat send delay (ms)
+settings.advanced.chatboxunfocheight=Unfocused Height
+settings.advanced.chatfadeticks=Chat face time (ticks)
+settings.advanced.forceunicode=Force Unicode Chat Rendering
+settings.advanced.textignoreopacity=Text ignores opacity setting
+settings.advanced.convertunicodetext=Convert unicode syntax
+
+settings.channel.notificationson=Unread Notifications
+settings.channel.alias=Alias
+settings.channel.cmdprefix=Chat command prefix
+settings.channel.position=Position:
+settings.channel.of=of
+settings.channel.hideprefix=Hide prefix while typing
+
+messages.update1=An update is avaliable! (Current version is 
+messages.update2=, newest is 
+messages.update3=Visit the TabbyChat forum thread at http://www.minecraftforum.net/topic/1540451- to download

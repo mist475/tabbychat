@@ -3,6 +3,7 @@ package acs.tabbychat.gui;
 import java.io.File;
 import java.util.Properties;
 
+import net.minecraft.client.resources.I18n;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingSlider;
@@ -32,7 +33,7 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
 	
 	public TCSettingsAdvanced(TabbyChat _tc) {
 		super(_tc);
-		this.name = TabbyChat.translator.getString("settings.advanced.name");
+		this.name = I18n.format("settings.advanced.name");
 		this.settingsFile = new File(tabbyChatDir, "advanced.cfg");
 		this.bgcolor = 0x66802e94;
 		this.chatScrollHistory.setCharLimit(3);

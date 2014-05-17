@@ -51,7 +51,6 @@ import acs.tabbychat.gui.TCSettingsFilters;
 import acs.tabbychat.gui.TCSettingsGeneral;
 import acs.tabbychat.gui.TCSettingsServer;
 import acs.tabbychat.jazzy.TCSpellCheckManager;
-import acs.tabbychat.lang.TCTranslate;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
@@ -75,7 +74,6 @@ public class TabbyChat {
 	public static boolean defaultUnicode;
 	public static String version = TabbyChatUtils.version;
 	public static Minecraft mc;
-	public static TCTranslate translator;
 	public static TCSettingsGeneral generalSettings;
 	public static TCSettingsServer serverSettings;
 	public static TCSettingsFilters filterSettings;
@@ -190,7 +188,6 @@ public class TabbyChat {
 	private TabbyChat(GuiNewChatTC gncInstance) {
 		mc = Minecraft.getMinecraft();
 		gnc = gncInstance;
-		translator = new TCTranslate(mc.gameSettings.language);
 		generalSettings = new TCSettingsGeneral(this);
 		serverSettings = new TCSettingsServer(this);
 		filterSettings = new TCSettingsFilters(this);

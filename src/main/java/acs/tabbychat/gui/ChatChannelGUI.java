@@ -3,19 +3,19 @@ package acs.tabbychat.gui;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
+
 import org.lwjgl.input.Keyboard;
 
 import acs.tabbychat.core.ChatChannel;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TabbyChat;
-import acs.tabbychat.lang.TCTranslate;
 import acs.tabbychat.settings.ITCSetting;
 import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingTextBox;
 import acs.tabbychat.util.TabbyChatUtils;
-
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 
 public class ChatChannelGUI extends GuiScreen {
 	protected ChatChannel channel;
@@ -102,8 +102,8 @@ public class ChatChannelGUI extends GuiScreen {
 
 		// Draw tab position info
 		this.drawString(mc.fontRenderer, Integer.toString(this.position), rightX-34, topY+22, 0xffffff);
-		this.drawString(mc.fontRenderer, TabbyChat.translator.getString("settings.channel.position"), rightX-55-mc.fontRenderer.getStringWidth(TabbyChat.translator.getString("settings.channel.position")), topY+22, 0xffffff);
-		this.drawString(mc.fontRenderer, TabbyChat.translator.getString("settings.channel.of")+" "+this.tc.channelMap.size(), rightX-34, topY+35, 0xffffff);
+		this.drawString(mc.fontRenderer, I18n.format("settings.channel.position"), rightX-55-mc.fontRenderer.getStringWidth(I18n.format("settings.channel.position")), topY+22, 0xffffff);
+		this.drawString(mc.fontRenderer, I18n.format("settings.channel.of")+" "+this.tc.channelMap.size(), rightX-34, topY+35, 0xffffff);
 
 		// Draw buttons
 		for (int i = 0; i < this.buttonList.size(); i++) {
@@ -120,9 +120,9 @@ public class ChatChannelGUI extends GuiScreen {
 		this.buttonList.clear();
 
 		// Define generic buttons
-		PrefsButton savePrefs = new PrefsButton(SAVE_ID, rightX - 45, botY - 19, 40, 14, TabbyChat.translator.getString("settings.save"));
+		PrefsButton savePrefs = new PrefsButton(SAVE_ID, rightX - 45, botY - 19, 40, 14, I18n.format("settings.save"));
 		this.buttonList.add(savePrefs);
-		PrefsButton cancelPrefs = new PrefsButton(CANCEL_ID, rightX - 90, botY - 19, 40, 14, TabbyChat.translator.getString("settings.cancel"));
+		PrefsButton cancelPrefs = new PrefsButton(CANCEL_ID, rightX - 90, botY - 19, 40, 14, I18n.format("settings.cancel"));
 		this.buttonList.add(cancelPrefs);
 		PrefsButton nextButton = new PrefsButton(NEXT_ID, rightX - 20, topY+20, 15, 14, ">>");
 		this.buttonList.add(nextButton);
@@ -155,9 +155,6 @@ public class ChatChannelGUI extends GuiScreen {
 		while(_chanPtr.hasNext()) {
 			if(this.channel.getTitle().equals(_chanPtr.next())) break;
 			position++;
-		}
-		if(!TabbyChat.translator.getCurrentLang().equals(mc.gameSettings.language)) {
-			TabbyChat.translator = new TCTranslate(mc.gameSettings.language);
 		}
 		for(Object drawable : this.buttonList) {
 			if(drawable instanceof ITCSetting) ((ITCSetting)drawable).resetDescription();

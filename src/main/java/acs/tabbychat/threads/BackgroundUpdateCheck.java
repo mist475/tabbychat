@@ -1,5 +1,6 @@
 package acs.tabbychat.threads;
 
+import net.minecraft.client.resources.I18n;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.util.TabbyChatUtils;
@@ -44,14 +45,11 @@ public class BackgroundUpdateCheck extends Thread {
 		if (updateFound) {
 			TabbyChatUtils.log.info("Update Found!");
 			StringBuilder updateReport = new StringBuilder("\u00A77");
-			updateReport.append(TabbyChat.translator
-					.getString("messages.update1"));
+			updateReport.append(I18n.format("messages.update1"));
 			updateReport.append(current);
-			updateReport.append(TabbyChat.translator
-					.getString("messages.update2"));
+			updateReport.append(I18n.format("messages.update2"));
 			updateReport.append(newest + ") ");
-			updateReport.append(TabbyChat.translator
-					.getString("messages.update3"));
+			updateReport.append(I18n.format("messages.update3"));
 			updateReport.append("\u00A7r");
 			GuiNewChatTC.getInstance().tc.printMessageToChat(updateReport
 					.toString());

@@ -1,30 +1,30 @@
 package acs.tabbychat.settings;
 
-import acs.tabbychat.core.TabbyChat;
+import net.minecraft.client.resources.I18n;
 
 public enum NotificationSoundEnum {
-	ORB(TabbyChat.translator.getString("sounds.orb"), "random.orb"),
-	ANVIL(TabbyChat.translator.getString("sounds.anvil"), "random.anvil_land"),
-	BOWHIT(TabbyChat.translator.getString("sounds.bowhit"), "random.bowhit"),
-	BREAK(TabbyChat.translator.getString("sounds.break"), "random.break"),
-	CLICK(TabbyChat.translator.getString("sounds.click"), "random.click"),
-	GLASS(TabbyChat.translator.getString("sounds.glass"), "random.glass"),
-	BASS(TabbyChat.translator.getString("sounds.bass"), "note.bassattack"),
-	HARP(TabbyChat.translator.getString("sounds.harp"), "note.harp"),
-	PLING(TabbyChat.translator.getString("sounds.pling"), "note.pling"),
-	CAT(TabbyChat.translator.getString("sounds.cat"), "mob.cat.meow"),
-	BLAST(TabbyChat.translator.getString("sounds.blast"), "fireworks.blast"),
-	SPLASH(TabbyChat.translator.getString("sounds.splash"), "liquid.splash"),
-	SWIM(TabbyChat.translator.getString("sounds.swim"), "liquid.swim"),
-	BAT(TabbyChat.translator.getString("sounds.bat"), "mob.bat.hurt"),
-	BLAZE(TabbyChat.translator.getString("sounds.blaze"), "mob.blaze.hit"),
-	CHICKEN(TabbyChat.translator.getString("sounds.chicken"), "mob.chicken.hurt"),
-	COW(TabbyChat.translator.getString("sounds.cow"), "mob.cow.hurt"),
-	DRAGON(TabbyChat.translator.getString("sounds.dragon"), "mob.enderdragon.hit"),
-	ENDERMEN(TabbyChat.translator.getString("sounds.endermen"), "mob.endermen.hit"),
-	GHAST(TabbyChat.translator.getString("sounds.ghast"), "mob.ghast.moan"),
-	PIG(TabbyChat.translator.getString("sounds.pig"), "mob.pig.say"),
-	WOLF(TabbyChat.translator.getString("sounds.wolf"), "mob.wolf.bark");
+	ORB(I18n.format("sounds.orb"), "random.orb"),
+	ANVIL(I18n.format("sounds.anvil"), "random.anvil_land"),
+	BOWHIT(I18n.format("sounds.bowhit"), "random.bowhit"),
+	BREAK(I18n.format("sounds.break"), "random.break"),
+	CLICK(I18n.format("sounds.click"), "random.click"),
+	GLASS(I18n.format("sounds.glass"), "random.glass"),
+	BASS(I18n.format("sounds.bass"), "note.bassattack"),
+	HARP(I18n.format("sounds.harp"), "note.harp"),
+	PLING(I18n.format("sounds.pling"), "note.pling"),
+	CAT(I18n.format("sounds.cat"), "mob.cat.meow"),
+	BLAST(I18n.format("sounds.blast"), "fireworks.blast"),
+	SPLASH(I18n.format("sounds.splash"), "liquid.splash"),
+	SWIM(I18n.format("sounds.swim"), "liquid.swim"),
+	BAT(I18n.format("sounds.bat"), "mob.bat.hurt"),
+	BLAZE(I18n.format("sounds.blaze"), "mob.blaze.hit"),
+	CHICKEN(I18n.format("sounds.chicken"), "mob.chicken.hurt"),
+	COW(I18n.format("sounds.cow"), "mob.cow.hurt"),
+	DRAGON(I18n.format("sounds.dragon"), "mob.enderdragon.hit"),
+	ENDERMEN(I18n.format("sounds.endermen"), "mob.endermen.hit"),
+	GHAST(I18n.format("sounds.ghast"), "mob.ghast.moan"),
+	PIG(I18n.format("sounds.pig"), "mob.pig.say"),
+	WOLF(I18n.format("sounds.wolf"), "mob.wolf.bark");
 	
 	private String title;
 	private String file;
