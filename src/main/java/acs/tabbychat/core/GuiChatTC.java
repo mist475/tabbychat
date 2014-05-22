@@ -462,7 +462,7 @@ public class GuiChatTC extends GuiChat {
 	 * 
 	 * @return
 	 */
-	public int getFocusedFieldInd() {
+	public int getFocusedFieldIndex() {
 		int _s = this.inputList.size();
 		for (int i = 0; i < _s; i++) {
 			if (this.inputList.get(i).isFocused()
@@ -470,6 +470,16 @@ public class GuiChatTC extends GuiChat {
 				return i;
 		}
 		return 0;
+	}
+	
+	public int getInputListSize(){
+		int size = 0;
+		for (GuiTextField field : inputList){
+			if(!field.getText().isEmpty()){
+				size++;
+			}
+		}
+		return size;
 	}
 
 	/**
@@ -703,7 +713,7 @@ public class GuiChatTC extends GuiChat {
 			if (GuiScreen.isCtrlKeyDown())
 				this.getSentHistory(-1);
 			else {
-				int foc = this.getFocusedFieldInd();
+				int foc = this.getFocusedFieldIndex();
 				if (foc + 1 < this.inputList.size()
 						&& this.inputList.get(foc + 1).getVisible()) {
 					int gcp = this.inputList.get(foc).getCursorPosition();
@@ -722,7 +732,7 @@ public class GuiChatTC extends GuiChat {
 			if (GuiScreen.isCtrlKeyDown())
 				this.getSentHistory(1);
 			else {
-				int foc = this.getFocusedFieldInd();
+				int foc = this.getFocusedFieldIndex();
 				if (foc - 1 >= 0 && this.inputList.get(foc - 1).getVisible()) {
 					int gcp = this.inputList.get(foc).getCursorPosition();
 					int lng = this.inputList.get(foc - 1).getText().length();
@@ -765,9 +775,22 @@ public class GuiChatTC extends GuiChat {
 			break;
 		// LEFT/RIGHT: move the cursor
 		case Keyboard.KEY_LEFT:
+			int foc = this.getFocusedFieldIndex();
+			if(foc < this.getInputListSize() - 1 && this.inputList.get(foc).getCursorPosition() == 0){
+				this.inputList.get(foc).setFocused(false);
+				this.inputList.get(foc+1).setFocused(true);
+				this.inputList.get(foc+1).setCursorPosition(inputList.get(foc+1).getText().length());
+			}
+			this.inputList.get(this.getFocusedFieldIndex()).textboxKeyTyped(_char, _code);
+			break;
 		case Keyboard.KEY_RIGHT:
-			this.inputList.get(this.getFocusedFieldInd()).textboxKeyTyped(
-					_char, _code);
+			int foc1 = this.getFocusedFieldIndex();
+			if(foc1 > 0 && this.inputList.get(foc1).getCursorPosition() >= this.inputList.get(foc1).getText().length()){
+				this.inputList.get(foc1).setFocused(false);
+				this.inputList.get(foc1-1).setFocused(true);
+				this.inputList.get(foc1-1).setCursorPosition(0);
+			}
+			this.inputList.get(this.getFocusedFieldIndex()).textboxKeyTyped(_char, _code);
 			break;
 		default:
 			// CTRL + NUM1-9: Make the numbered tab active
