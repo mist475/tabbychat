@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
@@ -21,6 +20,7 @@ import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +32,7 @@ import acs.tabbychat.core.GuiChatTC;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TCChatLine;
 import acs.tabbychat.core.TabbyChat;
+import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ITCSettingsGUI;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
@@ -40,6 +41,7 @@ import acs.tabbychat.settings.NotificationSoundEnum;
 import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.threads.BackgroundChatThread;
 
+import com.google.common.collect.Lists;
 import com.mumfrey.liteloader.core.LiteLoader;
 
 public class TabbyChatUtils {
@@ -96,13 +98,12 @@ public class TabbyChatUtils {
 	 * @return
 	 */
 	
-	public static String chatLinesToString(List<TCChatLine> lines) {
-		StringBuilder result = new StringBuilder(500);
+	public static IChatComponent chatLinesToComponent(List<TCChatLine> lines) {
+		IChatComponent result = new ChatComponentText("");
 		for (TCChatLine line : lines) {
-			result.append(line.getChatLineString().getFormattedText()).append(
-					"\n");
+			result.appendSibling(line.getChatLineString());
 		}
-		return result.toString().trim();
+		return result;
 	}
 	
 
@@ -473,28 +474,26 @@ public class TabbyChatUtils {
 	/**
 	 * 
 	 * @param stamp
-	 * @param line
+	 * @param filtered
 	 * @param id
 	 * @param status
 	 * @return
 	 */
 	
-	public static List<TCChatLine> stringToChatLines(int stamp, String line,
+	public static List<TCChatLine> componentToChatLines(int stamp, IChatComponent filtered,
 			int id, boolean status) {
 		// List<String> lineSplit =
 		// Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(line,
 		// stringWidth);
-		List<String> lineSplit = Arrays.asList(line.split("\n"));
-		List<TCChatLine> result = new ArrayList<TCChatLine>(lineSplit.size());
+		IChatComponent[] lineSplit = ChatComponentUtil.split(filtered, ChatBox.getChatWidth());
+		List<TCChatLine> result = Lists.newArrayList();
 		boolean first = true;
-		for (String split : lineSplit) {
+		for (IChatComponent split : lineSplit) {
 			if (first) {
-				result.add(new TCChatLine(stamp, new ChatComponentText(split),
-						id, status));
+				result.add(new TCChatLine(stamp, split, id, status));
 				first = false;
 			} else
-				result.add(new TCChatLine(stamp, new ChatComponentText(" "
-						+ split), id, status));
+				result.add(new TCChatLine(stamp, new ChatComponentText(" ").appendSibling(split), id, status));
 		}
 		return result;
 	}
