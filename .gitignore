@@ -1,7 +1,4 @@
 target/
 build/
 .gradle/
-gradlew.bat
-gradlew
-gradle/
 eclipse/
