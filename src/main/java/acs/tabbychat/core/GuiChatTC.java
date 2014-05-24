@@ -22,7 +22,6 @@ import net.minecraft.event.HoverEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.client.C14PacketTabComplete;
@@ -332,8 +331,7 @@ public class GuiChatTC extends GuiChat {
 					NBTBase nbtbase = JsonToNBT.func_150315_a(hoverevent.getValue().getUnformattedText());
 					if(nbtbase != null && nbtbase instanceof NBTTagCompound)
 						itemstack = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbtbase);
-				}catch(NBTException e){
-					;
+				}catch(Exception e){
 				}
 				if(itemstack != null)
 					this.renderToolTip(itemstack, cursorX, cursorY);
