@@ -29,6 +29,7 @@ import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatScrollBar;
 import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.util.ChatComponentUtil;
+import acs.tabbychat.util.ComponentList;
 import acs.tabbychat.util.TabbyChatUtils;
 
 public class GuiNewChatTC extends GuiNewChat {
@@ -393,7 +394,7 @@ public class GuiNewChatTC extends GuiNewChat {
 					.getStringWidth(tc.generalSettings.timeStampStyle
 							.getValue().toString());
 		
-		IChatComponent[] chat = ChatComponentUtil.split(_msg, this.chatWidth);
+		ComponentList chat = ChatComponentUtil.split(_msg, this.chatWidth);
 		
 		// Prepare list of chatlines
 		for(IChatComponent ichat : chat) {

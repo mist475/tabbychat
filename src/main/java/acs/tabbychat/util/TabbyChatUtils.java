@@ -32,7 +32,6 @@ import acs.tabbychat.core.GuiChatTC;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TCChatLine;
 import acs.tabbychat.core.TabbyChat;
-import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ITCSettingsGUI;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
@@ -98,10 +97,10 @@ public class TabbyChatUtils {
 	 * @return
 	 */
 	
-	public static IChatComponent chatLinesToComponent(List<TCChatLine> lines) {
-		IChatComponent result = new ChatComponentText("");
+	public static ComponentList chatLinesToComponent(List<TCChatLine> lines) {
+		ComponentList result = ComponentList.newInstance();
 		for (TCChatLine line : lines) {
-			result.appendSibling(line.getChatLineString());
+			result.add(line.getChatLineString());
 		}
 		return result;
 	}
@@ -480,15 +479,11 @@ public class TabbyChatUtils {
 	 * @return
 	 */
 	
-	public static List<TCChatLine> componentToChatLines(int stamp, IChatComponent filtered,
+	public static List<TCChatLine> componentToChatLines(int stamp, ComponentList filtered,
 			int id, boolean status) {
-		// List<String> lineSplit =
-		// Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(line,
-		// stringWidth);
-		IChatComponent[] lineSplit = ChatComponentUtil.split(filtered, ChatBox.getChatWidth());
 		List<TCChatLine> result = Lists.newArrayList();
 		boolean first = true;
-		for (IChatComponent split : lineSplit) {
+		for (IChatComponent split : filtered) {
 			if (first) {
 				result.add(new TCChatLine(stamp, split, id, status));
 				first = false;

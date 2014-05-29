@@ -49,11 +49,11 @@ public class ChatComponentUtil {
 	 * @param limit
 	 * @return
 	 */
-	public static IChatComponent[] split(IChatComponent chat, int limit) {
+	public static ComponentList split(IChatComponent chat, int limit) {
 		// Split components up
-		List<IChatComponent> ichatList = new ArrayList<IChatComponent>();
-		List<IChatComponent> list = new ArrayList<IChatComponent>();
-		List<IChatComponent> list1 = new ArrayList<IChatComponent>();
+		ComponentList ichatList = ComponentList.newInstance();
+		ComponentList list = ComponentList.newInstance();
+		ComponentList list1 = ComponentList.newInstance();
 		if (chat.getSiblings().size() == 0) {
 			list.add(chat);
 		} else {
@@ -79,12 +79,12 @@ public class ChatComponentUtil {
 			// Create component and add to list
 			for (String s : chatList) {
 				IChatComponent a = new ChatComponentText(s).setChatStyle(ichat
-						.getChatStyle().createDeepCopy());
+						.getChatStyle().createShallowCopy());
 				ichatList.add(a);
 			}
 		}
 		// Assemble lines
-		List<IChatComponent> chatList = new ArrayList<IChatComponent>();
+		ComponentList chatList = ComponentList.newInstance();
 		IChatComponent newChat = new ChatComponentText("");
 		for (IChatComponent ichat : ichatList) {
 			if (fontRenderer.getStringWidth(newChat.getUnformattedText()
@@ -99,7 +99,7 @@ public class ChatComponentUtil {
 		if (!chatList.contains(newChat))
 			chatList.add(newChat);
 
-		return chatList.toArray(new IChatComponent[0]);
+		return chatList;
 	}
 
 	/**
@@ -162,19 +162,5 @@ public class ChatComponentUtil {
 		return newChat;
 	}
 
-	public static IChatComponent mergeChatComponent(IChatComponent[] icc) {
-		if (icc.length == 0 || icc == null)
-			return null;
-		IChatComponent newChat = null;
-		for (IChatComponent chat : icc) {
-			if (newChat != null)
-				newChat = newChat.appendSibling(chat);
-			else
-				newChat = chat;
-		}
-
-		return newChat;
-
-	}
 
 }

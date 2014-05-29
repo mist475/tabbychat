@@ -57,6 +57,7 @@ import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
 import acs.tabbychat.settings.TCChatFilter;
 import acs.tabbychat.threads.BackgroundUpdateCheck;
+import acs.tabbychat.util.ComponentList;
 import acs.tabbychat.util.TabbyChatUtils;
 
 public class TabbyChat {
@@ -670,8 +671,8 @@ public class TabbyChat {
 		toTabs.add("*");
 
 		
-		IChatComponent raw = TabbyChatUtils.chatLinesToComponent(theChat);
-		IChatComponent filtered = this.processChatForFilters(raw, filterTabs);
+		ComponentList raw = TabbyChatUtils.chatLinesToComponent(theChat);
+		ComponentList filtered = this.processChatForFilters(raw, filterTabs);
 		if (generalSettings.saveChatLog.getValue()
 				&& !generalSettings.splitChatLog.getValue())
 			TabbyChatUtils.logChat(this.getCleanTimeStamp() + raw.getUnformattedText(), null);
@@ -694,18 +695,18 @@ public class TabbyChat {
 				tab = new ChatChannel(channelTab);
 				if (generalSettings.saveChatLog.getValue()
 						&& generalSettings.splitChatLog.getValue())
-					TabbyChatUtils.logChat(this.getCleanTimeStamp() + raw.getUnformattedText(),
-							tab);
+					TabbyChatUtils.logChat(this.getCleanTimeStamp() + raw.getUnformattedText(), tab);
 			}
 			toTabs.addAll(filterTabs);
 		} else {
 			filtered = raw;
 		}
+		System.out.println("Filtered\n"+filtered);
 		resultChatLine = TabbyChatUtils.componentToChatLines(theChat.get(0)
 				.getUpdatedCounter(), filtered, theChat.get(0).getChatLineID(),
 				theChat.get(0).statusMsg);
 		
-		resultChatLine = theChat;
+		//resultChatLine = theChat;
 		this.addOptionalTimeStamp(resultChatLine);
 
 		HashSet<String> tabSet = new HashSet<String>(toTabs);
@@ -778,9 +779,9 @@ public class TabbyChat {
 	 * @param raw
 	 * @return
 	 */
-	private String processChatForChannels(IChatComponent chat) {
-		Matcher findChannelClean = this.chatChannelPatternClean.matcher(chat.getUnformattedText());
-		Matcher findChannelDirty = this.chatChannelPatternDirty.matcher(chat.getFormattedText());
+	private String processChatForChannels(ComponentList raw) {
+		Matcher findChannelClean = this.chatChannelPatternClean.matcher(raw.getUnformattedText());
+		Matcher findChannelDirty = this.chatChannelPatternDirty.matcher(raw.getFormattedText());
 		boolean dirtyCheck = (!serverSettings.delimColorBool.getValue() && !serverSettings.delimFormatBool
 				.getValue()) ? true : findChannelDirty.find();
 		if (findChannelClean.find() && dirtyCheck)
@@ -790,13 +791,13 @@ public class TabbyChat {
 
 	/**
 	 * 
-	 * @param chat
+	 * @param raw
 	 * @param destinations
 	 * @return
 	 */
-	private IChatComponent processChatForFilters(IChatComponent chat, List<String> destinations) {
-		if(chat != null)
-			return chat;
+	private ComponentList processChatForFilters(ComponentList raw, List<String> destinations) {
+		//if(raw != null)
+			//return null;
 		
 		// Flag case where chat matches a 'remove' filter, bypassing any
 		// remaining filter processing
@@ -805,14 +806,15 @@ public class TabbyChat {
 		// Iterate through defined filters
 		Entry<Integer, TCChatFilter> iFilter = filterSettings.filterMap
 				.firstEntry();
+		for(int i = 0; i < raw.size(); i++)
 		while (iFilter != null) {
-			if (iFilter.getValue().applyFilterToDirtyChat(chat)) {
+			if (iFilter.getValue().applyFilterToDirtyChat(raw.get(i))) {
 				if (iFilter.getValue().removeMatches) {
 					destinations.clear();
 					skip = true;
 					break;
 				}
-				chat = iFilter.getValue().getLastMatch();
+				raw.set(i, iFilter.getValue().getLastMatch());
 				if (iFilter.getValue().sendToTabBool) {
 					if (iFilter.getValue().sendToAllTabs) {
 						for (ChatChannel chan : this.channelMap.values()) {
@@ -835,27 +837,28 @@ public class TabbyChat {
 		}
 
 		if (!skip)
-			return chat;
+			return raw;
 		else
-			return chat;
+			return raw;
 	}
 
 	/**
 	 * Processes chat for PMs
 	 * 
-	 * @param chat
+	 * @param raw
 	 * @return
 	 */
-	private String processChatForPMs(IChatComponent chat) {
+	private String processChatForPMs(ComponentList raw2) {
+		IChatComponent raw = raw2.get(0);
 		if (this.chatPMtoMePattern != null) {
-			Matcher findPMtoMe = this.chatPMtoMePattern.matcher(chat.getUnformattedText());
+			Matcher findPMtoMe = this.chatPMtoMePattern.matcher(raw.getUnformattedText());
 			if (findPMtoMe.find()) {
 				for (int i = 1; i <= findPMtoMe.groupCount(); i++) {
 					if (findPMtoMe.group(i) != null)
 						return findPMtoMe.group(i);
 				}
 			} else if (this.chatPMfromMePattern != null) {
-				Matcher findPMfromMe = this.chatPMfromMePattern.matcher(chat.getUnformattedText());
+				Matcher findPMfromMe = this.chatPMfromMePattern.matcher(raw.getUnformattedText());
 				if (findPMfromMe.find()) {
 					for (int i = 1; i <= findPMfromMe.groupCount(); i++) {
 						if (findPMfromMe.group(i) != null)
