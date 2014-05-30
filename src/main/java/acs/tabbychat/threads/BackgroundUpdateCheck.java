@@ -25,17 +25,23 @@ public class BackgroundUpdateCheck extends Thread {
 
 		String[] newVersionString = newest.split("\\.");
 		String[] versionString = current.split("\\.");
+		
+		int[] newVersion = new int[newVersionString.length];
+		int[] version = new int[versionString.length];
+		
+		int i;
+		for(i = 0; i < newVersion.length;i++){
+			newVersion[i] = Integer.parseInt(newVersionString[i]);
+		}
+		
+		for(i = 0; i < version.length; i++){
+			version[i] = Integer.parseInt(versionString[i]);
+		}
 
-		int[] newVersion = { Integer.parseInt(newVersionString[0]),
-				Integer.parseInt(newVersionString[1]),
-				Integer.parseInt(newVersionString[2]) };
-		int[] version = { Integer.parseInt(versionString[0]),
-				Integer.parseInt(versionString[1]),
-				Integer.parseInt(versionString[2]) };
-
-		for (int i = 0; i < version.length; i++) {
+		for (i = 0; i < Math.min(version.length, newVersion.length); i++) {
 			if (version[i] < newVersion[i]) {
 				updateFound = true;
+				break;
 			} else if (version[i] > newVersion[i]) {
 				break;
 			}
