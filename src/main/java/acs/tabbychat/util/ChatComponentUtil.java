@@ -165,54 +165,46 @@ public class ChatComponentUtil {
 	public static IChatComponent subComponent(IChatComponent chat, int index){
 		IChatComponent result = new ChatComponentText("");
 		
-		int pos = 1;
+		int pos = 0;
 		boolean found = false;
 		for(IChatComponent ichat : getRecursiveSiblings(chat)){
 			String text = ichat.getUnformattedText();
-			if(text.length() + pos >= index && !found){
-				found = true;
-				IChatComponent local = new ChatComponentText(text.substring(pos - index));
-				local.setChatStyle(ichat.getChatStyle().createDeepCopy());
-				
-				result.appendSibling(local);
-			} else if (!found)
-				pos += text.length();
-			 else 
-				result.appendSibling(ichat);
+			if(text.length() + pos >= index){
+				if(found)
+					result.appendSibling(ichat);
+				else{
+					found = true;
+					IChatComponent local = new ChatComponentText(text.substring(index - pos));
+					local.setChatStyle(ichat.getChatStyle().createDeepCopy());
+					
+					result.appendSibling(local);
+				}
+			}
+			pos += text.length();
 			
 		}
-		System.out.println(result.getUnformattedText());
 		return result;
 	}
 
-	public static IChatComponent reverseSubComponent(IChatComponent chat, int index) {
-		System.out.println(chat.getUnformattedText().substring(index));
-		IChatComponent result = new ChatComponentText("");
-
-		int pos = 1;
-		boolean found = false;
-		for (IChatComponent ichat : getRecursiveSiblings(chat)) {
-			String text = ichat.getUnformattedText();        
-			if (text.length() + pos >= index && !found) {
-				found = true;
-				IChatComponent local = new ChatComponentText(text.substring(0, index - pos));
-				local.setChatStyle(ichat.getChatStyle().createDeepCopy());
-
-				result.appendSibling(local);
-				return chat;
-			} else {
-				result.appendSibling(ichat);
-				pos += text.length();
-			}
-		}
-		System.out.println(result.getUnformattedText());
-		return result;
-	}
+	
 	
 	public static IChatComponent subComponent(IChatComponent chat, int start, int end){
-		//IChatComponent result = reverseSubComponent(subComponent(chat, start), end);
-		//System.out.println(chat.getUnformattedText().substring(start, end));
-		return chat.createCopy();
+		IChatComponent result = new ChatComponentText("");
+		int pos = start;
+		
+		for(IChatComponent ichat : getRecursiveSiblings(subComponent(chat, start))){
+			String text = ichat.getUnformattedText();
+			if(pos + text.length() > end){
+				IChatComponent local = new ChatComponentText(text.substring(0, end - pos));
+				local.getChatStyle().setParentStyle(chat.getChatStyle().createShallowCopy());
+				result.appendSibling(local);
+				break;
+			} else{
+				result.appendSibling(ichat);
+			}
+			pos += text.length();
+		}
+		return result;
 	}
 
 	public static ComponentList getRecursiveSiblings(IChatComponent chat){

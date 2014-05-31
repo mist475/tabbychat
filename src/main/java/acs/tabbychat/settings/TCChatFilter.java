@@ -1,9 +1,14 @@
 package acs.tabbychat.settings;
 
+import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import org.apache.commons.lang3.ArrayUtils;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.IChatComponent;
@@ -49,14 +54,17 @@ public class TCChatFilter {
 		// Apply filter
 		Matcher findFilterMatches = this.expressionPattern.matcher(input.getUnformattedText());
 		boolean foundMatch = false;
+		List<Integer> list = Lists.newArrayList();
 		while(findFilterMatches.find()) {
 			
 			foundMatch = true;
 			// If highlighting, store desired locations for format codes
 			if(this.highlightBool) {
-				this.lastMatch = new int[]{findFilterMatches.start(), findFilterMatches.end()};
+				list.add(findFilterMatches.start());
+				list.add(findFilterMatches.end());
 			} else break;
 		}
+		this.lastMatch = ArrayUtils.toPrimitive(list.toArray(new Integer[list.size()]));
 
 		// Pull name of destination tab
 		if(this.sendToTabBool && !this.sendToAllTabs) {
@@ -118,7 +126,12 @@ public class TCChatFilter {
 
 		this.compilePattern();
 	}
-
+	/**
+	 * Returns an array containing indexes of the starts and ends of the current filter.
+	 * Will always be even and be in order.
+	 * <br />
+	 *  <code>{start1, end1, start2, end2...}</code>
+	 */
 	public int[] getLastMatch() {
 		int[] tmp = this.lastMatch;
 		this.lastMatch = null;

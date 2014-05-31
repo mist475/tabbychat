@@ -803,44 +803,48 @@ public class TabbyChat {
 		// Iterate through defined filters
 		Entry<Integer, TCChatFilter> iFilter = filterSettings.filterMap.firstEntry();
 		while (iFilter != null) {
-			for(IChatComponent chat : raw){
+			for(int i = 0; i < raw.size(); i++){
+				IChatComponent chat = raw.get(i);
 				if (iFilter.getValue().applyFilterToDirtyChat(chat)) {
 					if (iFilter.getValue().removeMatches) {
 						return ComponentList.newInstance();
 					}
-					if(iFilter.getValue().highlightBool){
+					if (iFilter.getValue().highlightBool) {
 						int[] lastMatch = iFilter.getValue().getLastMatch();
-						System.out.println(lastMatch[0] + ", " + lastMatch[1]);
-						IChatComponent chat2 = ChatComponentUtil.subComponent(chat, 0, lastMatch[0]);
-						IChatComponent chat1 = ChatComponentUtil.subComponent(chat, lastMatch[0], lastMatch[1]-1);
-						IChatComponent chat3 = ChatComponentUtil.reverseSubComponent(chat, lastMatch[1]);
-						chat3.getChatStyle().setParentStyle(chat1.getChatStyle().createDeepCopy());
-						ChatStyle style = chat.getChatStyle();
-						style.setColor(iFilter.getValue().highlightColor.toVanilla());
-						
-						switch(iFilter.getValue().highlightFormat){
-						case BOLD:
-							style.setBold(true);
-							break;
-						case ITALIC:
-							style.setItalic(true);
-							break;
-						case STRIKED:
-							style.setStrikethrough(true);
-							break;
-						case UNDERLINE:
-							style.setUnderlined(true);
-							break;
-						case MAGIC:
-							style.setObfuscated(true);
-							break;
-						case DEFAULT:
-							break;
+						for (int i1 = 0; i1 < lastMatch.length; i1+=2) {
+							int start = lastMatch[i1];
+							int end = lastMatch[i1+1];
+							
+							IChatComponent chat1 = ChatComponentUtil.subComponent(chat, 0, start);
+							IChatComponent chat2 = ChatComponentUtil.subComponent(chat, start, end);
+							IChatComponent chat3 = ChatComponentUtil.subComponent(chat, end);
+
+							ChatStyle style = chat2.getChatStyle();
+							style.setColor(iFilter.getValue().highlightColor.toVanilla());
+
+							switch (iFilter.getValue().highlightFormat) {
+							case BOLD:
+								style.setBold(true);
+								break;
+							case ITALIC:
+								style.setItalic(true);
+								break;
+							case STRIKED:
+								style.setStrikethrough(true);
+								break;
+							case UNDERLINE:
+								style.setUnderlined(true);
+								break;
+							case MAGIC:
+								style.setObfuscated(true);
+								break;
+							case DEFAULT:
+							default:
+								break;
+							}
+
+							 raw.set(i, chat1.appendSibling(chat2).appendSibling(chat3));
 						}
-						
-						//chat3.setChatStyle(chat1.getChatStyle().createDeepCopy());
-						//chat = chat1;//.appendSibling(chat3));
-						 
 					}
 					if (iFilter.getValue().sendToTabBool) {
 						if (iFilter.getValue().sendToAllTabs) {
