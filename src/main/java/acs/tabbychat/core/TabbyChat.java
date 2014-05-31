@@ -58,7 +58,7 @@ import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
 import acs.tabbychat.settings.TCChatFilter;
 import acs.tabbychat.threads.BackgroundUpdateCheck;
-import acs.tabbychat.util.ChatComponentUtil;
+import acs.tabbychat.util.ChatComponentUtils;
 import acs.tabbychat.util.ComponentList;
 import acs.tabbychat.util.TabbyChatUtils;
 
@@ -815,9 +815,9 @@ public class TabbyChat {
 							int start = lastMatch[i1];
 							int end = lastMatch[i1+1];
 							
-							IChatComponent chat1 = ChatComponentUtil.subComponent(chat, 0, start);
-							IChatComponent chat2 = ChatComponentUtil.subComponent(chat, start, end);
-							IChatComponent chat3 = ChatComponentUtil.subComponent(chat, end);
+							IChatComponent chat1 = ChatComponentUtils.subComponent(chat, 0, start);
+							IChatComponent chat2 = ChatComponentUtils.subComponent(chat, start, end);
+							IChatComponent chat3 = ChatComponentUtils.subComponent(chat, end);
 
 							ChatStyle style = chat2.getChatStyle();
 							style.setColor(iFilter.getValue().highlightColor.toVanilla());

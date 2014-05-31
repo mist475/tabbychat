@@ -19,7 +19,7 @@ apply plugin: 'forge'
 apply plugin: 'liteloader'
 
 version = "1.11.0"
-group= "asc.tabbychat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "acs.tabbychat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TabbyChat"
 
 minecraft {
