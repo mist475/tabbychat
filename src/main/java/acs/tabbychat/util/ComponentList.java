@@ -32,7 +32,8 @@ public class ComponentList extends ArrayList<IChatComponent> {
 	public String getUnformattedText(){
 		StringBuilder sb = new StringBuilder();
 		for(IChatComponent chat : this){
-			sb.append(chat.getUnformattedText());
+			sb.append(chat.getUnformattedText().trim());
+			sb.append(" ");
 		}
 		return sb.toString();
 	}
@@ -40,7 +41,8 @@ public class ComponentList extends ArrayList<IChatComponent> {
 	public String getFormattedText() {
 		StringBuilder sb = new StringBuilder();
 		for(IChatComponent chat : this){
-			sb.append(chat.getFormattedText());
+			sb.append(chat.getFormattedText().trim());
+			sb.append(" ");
 		}
 		return sb.toString();
 	}

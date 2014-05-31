@@ -41,6 +41,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StringUtils;
 
@@ -57,6 +58,7 @@ import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
 import acs.tabbychat.settings.TCChatFilter;
 import acs.tabbychat.threads.BackgroundUpdateCheck;
+import acs.tabbychat.util.ChatComponentUtil;
 import acs.tabbychat.util.ComponentList;
 import acs.tabbychat.util.TabbyChatUtils;
 
@@ -701,12 +703,10 @@ public class TabbyChat {
 		} else {
 			filtered = raw;
 		}
-		System.out.println("Filtered\n"+filtered);
 		resultChatLine = TabbyChatUtils.componentToChatLines(theChat.get(0)
 				.getUpdatedCounter(), filtered, theChat.get(0).getChatLineID(),
 				theChat.get(0).statusMsg);
 		
-		//resultChatLine = theChat;
 		this.addOptionalTimeStamp(resultChatLine);
 
 		HashSet<String> tabSet = new HashSet<String>(toTabs);
@@ -796,50 +796,74 @@ public class TabbyChat {
 	 * @return
 	 */
 	private ComponentList processChatForFilters(ComponentList raw, List<String> destinations) {
-		//if(raw != null)
-			//return null;
+		// TODO
+		if(raw == null)
+			return null;
 		
-		// Flag case where chat matches a 'remove' filter, bypassing any
-		// remaining filter processing
-		boolean skip = false;
-
 		// Iterate through defined filters
-		Entry<Integer, TCChatFilter> iFilter = filterSettings.filterMap
-				.firstEntry();
-		for(int i = 0; i < raw.size(); i++)
+		Entry<Integer, TCChatFilter> iFilter = filterSettings.filterMap.firstEntry();
 		while (iFilter != null) {
-			if (iFilter.getValue().applyFilterToDirtyChat(raw.get(i))) {
-				if (iFilter.getValue().removeMatches) {
-					destinations.clear();
-					skip = true;
-					break;
-				}
-				raw.set(i, iFilter.getValue().getLastMatch());
-				if (iFilter.getValue().sendToTabBool) {
-					if (iFilter.getValue().sendToAllTabs) {
-						for (ChatChannel chan : this.channelMap.values()) {
-							destinations.add(chan.getTitle());
+			for(IChatComponent chat : raw){
+				if (iFilter.getValue().applyFilterToDirtyChat(chat)) {
+					if (iFilter.getValue().removeMatches) {
+						return ComponentList.newInstance();
+					}
+					if(iFilter.getValue().highlightBool){
+						int[] lastMatch = iFilter.getValue().getLastMatch();
+						System.out.println(lastMatch[0] + ", " + lastMatch[1]);
+						IChatComponent chat2 = ChatComponentUtil.subComponent(chat, 0, lastMatch[0]);
+						IChatComponent chat1 = ChatComponentUtil.subComponent(chat, lastMatch[0], lastMatch[1]-1);
+						IChatComponent chat3 = ChatComponentUtil.reverseSubComponent(chat, lastMatch[1]);
+						chat3.getChatStyle().setParentStyle(chat1.getChatStyle().createDeepCopy());
+						ChatStyle style = chat.getChatStyle();
+						style.setColor(iFilter.getValue().highlightColor.toVanilla());
+						
+						switch(iFilter.getValue().highlightFormat){
+						case BOLD:
+							style.setBold(true);
+							break;
+						case ITALIC:
+							style.setItalic(true);
+							break;
+						case STRIKED:
+							style.setStrikethrough(true);
+							break;
+						case UNDERLINE:
+							style.setUnderlined(true);
+							break;
+						case MAGIC:
+							style.setObfuscated(true);
+							break;
+						case DEFAULT:
+							break;
 						}
-						continue;
-					} else {
-						String destTab = iFilter.getValue().getTabName();
-						if (destTab != null && destTab.length() > 0
-								&& !destinations.contains(destTab)) {
-							destinations.add(destTab);
+						
+						//chat3.setChatStyle(chat1.getChatStyle().createDeepCopy());
+						//chat = chat1;//.appendSibling(chat3));
+						 
+					}
+					if (iFilter.getValue().sendToTabBool) {
+						if (iFilter.getValue().sendToAllTabs) {
+							for (ChatChannel chan : this.channelMap.values()) {
+								destinations.add(chan.getTitle());
+							}
+							continue;
+						} else {
+							String destTab = iFilter.getValue().getTabName();
+							if (destTab != null && destTab.length() > 0
+									&& !destinations.contains(destTab)) {
+								destinations.add(destTab);
+							}
 						}
 					}
-				}
-				if (iFilter.getValue().audioNotificationBool) {
-					iFilter.getValue().audioNotification();
+					if (iFilter.getValue().audioNotificationBool) {
+						iFilter.getValue().audioNotification();
+					}
 				}
 			}
 			iFilter = filterSettings.filterMap.higherEntry(iFilter.getKey());
 		}
-
-		if (!skip)
-			return raw;
-		else
-			return raw;
+		return raw;
 	}
 
 	/**

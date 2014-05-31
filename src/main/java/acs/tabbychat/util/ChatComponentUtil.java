@@ -161,6 +161,71 @@ public class ChatComponentUtil {
 		}
 		return newChat;
 	}
+	
+	public static IChatComponent subComponent(IChatComponent chat, int index){
+		IChatComponent result = new ChatComponentText("");
+		
+		int pos = 1;
+		boolean found = false;
+		for(IChatComponent ichat : getRecursiveSiblings(chat)){
+			String text = ichat.getUnformattedText();
+			if(text.length() + pos >= index && !found){
+				found = true;
+				IChatComponent local = new ChatComponentText(text.substring(pos - index));
+				local.setChatStyle(ichat.getChatStyle().createDeepCopy());
+				
+				result.appendSibling(local);
+			} else if (!found)
+				pos += text.length();
+			 else 
+				result.appendSibling(ichat);
+			
+		}
+		System.out.println(result.getUnformattedText());
+		return result;
+	}
 
+	public static IChatComponent reverseSubComponent(IChatComponent chat, int index) {
+		System.out.println(chat.getUnformattedText().substring(index));
+		IChatComponent result = new ChatComponentText("");
 
+		int pos = 1;
+		boolean found = false;
+		for (IChatComponent ichat : getRecursiveSiblings(chat)) {
+			String text = ichat.getUnformattedText();        
+			if (text.length() + pos >= index && !found) {
+				found = true;
+				IChatComponent local = new ChatComponentText(text.substring(0, index - pos));
+				local.setChatStyle(ichat.getChatStyle().createDeepCopy());
+
+				result.appendSibling(local);
+				return chat;
+			} else {
+				result.appendSibling(ichat);
+				pos += text.length();
+			}
+		}
+		System.out.println(result.getUnformattedText());
+		return result;
+	}
+	
+	public static IChatComponent subComponent(IChatComponent chat, int start, int end){
+		//IChatComponent result = reverseSubComponent(subComponent(chat, start), end);
+		//System.out.println(chat.getUnformattedText().substring(start, end));
+		return chat.createCopy();
+	}
+
+	public static ComponentList getRecursiveSiblings(IChatComponent chat){
+		ComponentList list = ComponentList.newInstance();
+		List<IChatComponent> siblings = chat.getSiblings();
+		//TabbyChatUtils.log.info(chat.getSiblings().size());
+		if(siblings.size() == 0){
+			list.add(chat);
+		} else {
+			for(IChatComponent sib : siblings)
+				list.addAll(getRecursiveSiblings(sib));
+		}
+		return list;
+	}
+	
 }

@@ -7,7 +7,8 @@ public enum FormatCodeEnum {
 	BOLD(I18n.format("formats.bold"), "\u00A7l"),
 	STRIKED(I18n.format("formats.striked"), "\u00A7m"),
 	UNDERLINE(I18n.format("formats.underline"), "\u00A7n"),
-	ITALIC(I18n.format("formats.italic"), "\u00A7o");
+	ITALIC(I18n.format("formats.italic"), "\u00A7o"),
+	MAGIC(I18n.format("formats.magic"), "\u00A7k");
 	
 	private String title;
 	private String code;
