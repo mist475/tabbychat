@@ -801,10 +801,10 @@ public class TabbyChat {
 			return null;
 		
 		// Iterate through defined filters
-		Entry<Integer, TCChatFilter> iFilter = filterSettings.filterMap.firstEntry();
-		while (iFilter != null) {
-			for(int i = 0; i < raw.size(); i++){
-				IChatComponent chat = raw.get(i);
+		for(int i = 0; i < raw.size(); i++){
+			IChatComponent chat = raw.get(i);
+			Entry<Integer, TCChatFilter> iFilter = filterSettings.filterMap.firstEntry();
+			while (iFilter != null) {
 				if (iFilter.getValue().applyFilterToDirtyChat(chat)) {
 					if (iFilter.getValue().removeMatches) {
 						return ComponentList.newInstance();
@@ -820,7 +820,8 @@ public class TabbyChat {
 							IChatComponent chat3 = ChatComponentUtils.subComponent(chat, end);
 
 							ChatStyle style = chat2.getChatStyle();
-							style.setColor(iFilter.getValue().highlightColor.toVanilla());
+							if(iFilter.getValue().highlightColor != ColorCodeEnum.DEFAULT)
+								style.setColor(iFilter.getValue().highlightColor.toVanilla());
 
 							switch (iFilter.getValue().highlightFormat) {
 							case BOLD:
@@ -842,9 +843,9 @@ public class TabbyChat {
 							default:
 								break;
 							}
-
-							 raw.set(i, chat1.appendSibling(chat2).appendSibling(chat3));
+							chat = chat1.appendSibling(chat2).appendSibling(chat3);
 						}
+						raw.set(i, chat);
 					}
 					if (iFilter.getValue().sendToTabBool) {
 						if (iFilter.getValue().sendToAllTabs) {
@@ -864,8 +865,8 @@ public class TabbyChat {
 						iFilter.getValue().audioNotification();
 					}
 				}
+				iFilter = filterSettings.filterMap.higherEntry(iFilter.getKey());
 			}
-			iFilter = filterSettings.filterMap.higherEntry(iFilter.getKey());
 		}
 		return raw;
 	}

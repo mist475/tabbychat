@@ -167,7 +167,7 @@ public class ChatComponentUtils {
 		
 		int pos = 0;
 		boolean found = false;
-		for(IChatComponent ichat : getRecursiveSiblings(chat)){
+		for(IChatComponent ichat : (List<IChatComponent>) chat.getSiblings()){
 			String text = ichat.getUnformattedText();
 			if(text.length() + pos >= index){
 				if(found)
@@ -189,10 +189,11 @@ public class ChatComponentUtils {
 	
 	
 	public static IChatComponent subComponent(IChatComponent chat, int start, int end){
+		
 		IChatComponent result = new ChatComponentText("");
 		int pos = start;
 		
-		for(IChatComponent ichat : getRecursiveSiblings(subComponent(chat, start))){
+		for(IChatComponent ichat : (List<IChatComponent>) subComponent(chat, start).getSiblings()){
 			String text = ichat.getUnformattedText();
 			if(pos + text.length() > end){
 				IChatComponent local = new ChatComponentText(text.substring(0, end - pos));
@@ -206,18 +207,4 @@ public class ChatComponentUtils {
 		}
 		return result;
 	}
-
-	public static ComponentList getRecursiveSiblings(IChatComponent chat){
-		ComponentList list = ComponentList.newInstance();
-		List<IChatComponent> siblings = chat.getSiblings();
-		//TabbyChatUtils.log.info(chat.getSiblings().size());
-		if(siblings.size() == 0){
-			list.add(chat);
-		} else {
-			for(IChatComponent sib : siblings)
-				list.addAll(getRecursiveSiblings(sib));
-		}
-		return list;
-	}
-	
 }
