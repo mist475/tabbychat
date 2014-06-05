@@ -582,13 +582,13 @@ public class TabbyChat {
 		StringBuilder toMePM = new StringBuilder();
 		StringBuilder fromMePM = new StringBuilder();
 		
-		// Matches '(From Player):' and '(To Player):'
-		toMePM.append("|^\\(From ([\\p{L}\\p{N}_]{3,16})[ ]\\)?:");
-		fromMePM.append("|^\\(To ([\\p{L}\\p{N}_]{3,16})[ ]\\)?:");
-
 		// Matches '[Player -> me]' and '[me -> Player]'
 		toMePM.append("^\\[([\\p{L}\\p{N}_]{3,16})[ ]?\\-\\>[ ]?me\\]");
 		fromMePM.append("^\\[me[ ]?\\-\\>[ ]?([\\p{L}\\p{N}_]{3,16})\\]");
+
+		// Matches '(From Player):' and '(To Player):'
+		toMePM.append("|^\\(From ([\\p{L}\\p{N}_]{3,16})[ ]\\)?:");
+		fromMePM.append("|^\\(To ([\\p{L}\\p{N}_]{3,16})[ ]\\)?:");
 
 		// Matches 'From Player' and 'To Player'
 		toMePM.append("|^From ([\\p{L}\\p{N}_]{3,16})[ ]?:");
@@ -685,7 +685,7 @@ public class TabbyChat {
 				channelTab = this.processChatForChannels(raw);
 			if (channelTab == null) {
 				if (serverSettings.autoPMSearch.getValue()) {
-					pmTab = this.processChatForPMs(raw);
+					pmTab = this.processChatForPMs(raw.getUnformattedText());
 					tab = new ChatChannel(pmTab);
 					if (generalSettings.saveChatLog.getValue()
 							&& generalSettings.splitChatLog.getValue())
@@ -877,21 +877,21 @@ public class TabbyChat {
 	 * @param raw
 	 * @return
 	 */
-	private String processChatForPMs(ComponentList raw2) {
-		IChatComponent raw = raw2.get(0);
+	private String processChatForPMs(String raw) {
 		if (this.chatPMtoMePattern != null) {
-			Matcher findPMtoMe = this.chatPMtoMePattern.matcher(raw.getUnformattedText());
+			Matcher findPMtoMe = this.chatPMtoMePattern.matcher(raw);
 			if (findPMtoMe.find()) {
 				for (int i = 1; i <= findPMtoMe.groupCount(); i++) {
 					if (findPMtoMe.group(i) != null)
 						return findPMtoMe.group(i);
 				}
 			} else if (this.chatPMfromMePattern != null) {
-				Matcher findPMfromMe = this.chatPMfromMePattern.matcher(raw.getUnformattedText());
+				Matcher findPMfromMe = this.chatPMfromMePattern.matcher(raw);
 				if (findPMfromMe.find()) {
 					for (int i = 1; i <= findPMfromMe.groupCount(); i++) {
 						if (findPMfromMe.group(i) != null)
 							return findPMfromMe.group(i);
+						
 					}
 				}
 			}
