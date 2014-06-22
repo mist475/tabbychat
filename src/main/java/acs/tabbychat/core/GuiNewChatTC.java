@@ -56,7 +56,7 @@ public class GuiNewChatTC extends GuiNewChat {
 	private GuiNewChatTC(Minecraft par1Minecraft) {
 		super(par1Minecraft);
 		this.mc = par1Minecraft;
-		this.sr = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
+		this.sr = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
 	}
 	/**
 	 * Adds chat lines _add at _pos?
@@ -195,7 +195,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			}
 		}
 
-		this.sr = new ScaledResolution(this.mc.gameSettings, this.mc.displayWidth, this.mc.displayHeight);
+		this.sr = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
 
 		int lineCounter = 0;
 		int visLineCounter = 0;

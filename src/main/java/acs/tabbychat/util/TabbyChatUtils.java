@@ -41,7 +41,7 @@ import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.threads.BackgroundChatThread;
 
 import com.google.common.collect.Lists;
-import com.mumfrey.liteloader.core.LiteLoader;
+//import com.mumfrey.liteloader.core.LiteLoader;
 
 public class TabbyChatUtils {
 	private static Calendar logDay = Calendar.getInstance();
@@ -49,7 +49,7 @@ public class TabbyChatUtils {
 			Minecraft.getMinecraft().mcDataDir, "logs"), "TabbyChat");
 	private static SimpleDateFormat logNameFormat = new SimpleDateFormat(
 			"'_'MM-dd-yyyy'.txt'");
-	public final static String version = "1.11.00";
+	public final static String version = "1.11.1";
 	public final static String name = "TabbyChat";
 	public final static String modid = "tabbychat";
 	public static Logger log = LogManager.getLogger(name);
@@ -164,7 +164,7 @@ public class TabbyChatUtils {
 	 */
 	public static File getTabbyChatDir() {
 		if (TabbyChat.liteLoaded) {
-			return new File(LiteLoader.getCommonConfigFolder(), "tabbychat");
+			return null;//new File(LiteLoader.getCommonConfigFolder(), "tabbychat");
 		} else {
 			return new File(new File(Minecraft.getMinecraft().mcDataDir,
 					"config"), "tabbychat");

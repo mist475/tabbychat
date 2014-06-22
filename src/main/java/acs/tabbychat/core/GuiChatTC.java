@@ -80,8 +80,7 @@ public class GuiChatTC extends GuiChat {
 	public GuiChatTC() {
 		super();
 		this.mc = Minecraft.getMinecraft();
-		sr = new ScaledResolution(mc.gameSettings, mc.displayWidth,
-				mc.displayHeight);
+		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		this.fontRendererObj = this.mc.fontRenderer;
 		this.gnc = GuiNewChatTC.getInstance();
 		this.tc = this.gnc.tc;
@@ -265,8 +264,7 @@ public class GuiChatTC extends GuiChat {
 	 */
 	public @Override
 	void drawScreen(int cursorX, int cursorY, float pointless) {
-		sr = new ScaledResolution(mc.gameSettings, mc.displayWidth,
-				mc.displayHeight);
+		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		this.width = sr.getScaledWidth();
 		this.height = sr.getScaledHeight();
 
@@ -561,8 +559,7 @@ public class GuiChatTC extends GuiChat {
 		Keyboard.enableRepeatEvents(true);
 		this.buttonList.clear();
 		this.inputList.clear();
-		sr = new ScaledResolution(mc.gameSettings, mc.displayWidth,
-				mc.displayHeight);
+		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		this.width = sr.getScaledWidth();
 		this.height = sr.getScaledHeight();
 		this.tc.checkServer();

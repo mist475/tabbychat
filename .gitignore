@@ -3,3 +3,6 @@ build/
 bin/
 .gradle/
 eclipse/
+.classpath
+.project
+.settings/
