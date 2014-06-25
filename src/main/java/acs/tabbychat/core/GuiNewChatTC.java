@@ -33,7 +33,7 @@ import acs.tabbychat.util.ComponentList;
 import acs.tabbychat.util.TabbyChatUtils;
 
 public class GuiNewChatTC extends GuiNewChat {
-	public final Minecraft mc;
+	private Minecraft mc;
 	public ScaledResolution sr;
 	protected int chatWidth = 320;
 	public int chatHeight = 0;
@@ -49,20 +49,13 @@ public class GuiNewChatTC extends GuiNewChat {
 	private static GuiNewChatTC instance = null;
 	public static TabbyChat tc;
 	public static Logger log = TabbyChatUtils.log;
-	/**
-	 * 
-	 * @param par1Minecraft
-	 */
+
 	private GuiNewChatTC(Minecraft par1Minecraft) {
 		super(par1Minecraft);
 		this.mc = par1Minecraft;
 		this.sr = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
 	}
-	/**
-	 * Adds chat lines _add at _pos?
-	 * @param _pos
-	 * @param _add
-	 */
+	
 	public void addChatLines(int _pos, List<TCChatLine> _add) {
 		chatReadLock.lock();
 		try {
@@ -74,6 +67,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			chatReadLock.unlock();
 		}
 	}
+	
 	/**
 	 * Adds chat lines to channel _addChan.
 	 * @param _addChan
@@ -89,25 +83,18 @@ public class GuiNewChatTC extends GuiNewChat {
 			chatReadLock.unlock();
 		}
 	}
-	/**
-	 * Adds message to sent history
-	 */
-	public @Override void /*addToSentMessages*/addToSentMessages(String _msg) {
+	
+	@Override
+	public void addToSentMessages(String _msg) {
 		if(this.sentMessages.isEmpty() || !(this.sentMessages.get(this.sentMessages.size()-1)).equals(_msg)) {
 			this.sentMessages.add(_msg);
 		}
 	}
 
-//	public @Override void addTranslatedMessage(IChatComponent par1Str, Object ... par2ArrayOfObj) {
-//		this.printChatMessage(StatCollector.translateToLocalFormatted(par1Str, par2ArrayOfObj));
-//	}
-	/**
-	 * 
-	 * @return
-	 */
 	public int chatLinesTraveled() {
 		return this.scrollOffset;
 	}
+	
 	/**
 	 * Clears recieved chat
 	 */
@@ -120,10 +107,9 @@ public class GuiNewChatTC extends GuiNewChat {
 			chatWriteLock.unlock();
 		}
 	}
-	/**
-	 * Clears sent messages
-	 */
-	public @Override void /*clearChatMessages*/clearChatMessages() {
+
+	@Override
+	public void clearChatMessages() {
 		if(this.chatLines == null || this.backupLines == null) return;
 		chatWriteLock.lock();
 		try {
@@ -134,12 +120,9 @@ public class GuiNewChatTC extends GuiNewChat {
 		}
 		this.sentMessages.clear();
 	}
-	/**
-	 * Deletes chat line 
-	 * @param _id
-	 * 		line to delete
-	 */
-	public @Override void /*deleteChatLine*/deleteChatLine(int _id) {
+	
+	@Override
+	public void deleteChatLine(int _id) {
 		ChatLine chatLineRemove = null;
 		ChatLine backupLineRemove = null;
 		chatReadLock.lock();
@@ -175,18 +158,18 @@ public class GuiNewChatTC extends GuiNewChat {
 			chatWriteLock.unlock();
 		}
 	}
-	/**
-	 * Draws chat
-	 */
-	public @Override void /*drawChat*/drawChat(int currentTick) {
-		if(!tc.liteLoaded && !tc.modLoaded) TabbyChatUtils.chatGuiTick(mc);
+	
+	@Override
+	public void drawChat(int currentTick) {
+		if(!TabbyChat.liteLoaded && !TabbyChat.modLoaded)
+			TabbyChatUtils.chatGuiTick(mc);
 
 		// Save channel data if at main menu or disconnect screen, use flag so it's only saved once
 		if(mc.currentScreen != null) {
 			if(this.mc.currentScreen instanceof GuiDisconnected || this.mc.currentScreen instanceof GuiIngameMenu) {
 				if(this.saveNeeded) {
 					tc.storeChannelData();
-					tc.advancedSettings.saveSettingsFile();
+					TabbyChat.advancedSettings.saveSettingsFile();
 				}
 				this.saveNeeded = false;
 				return;
@@ -285,7 +268,7 @@ public class GuiNewChatTC extends GuiNewChat {
 							GL11.glEnable(GL11.GL_BLEND);
 							String _chat;
 							int idx = ChatBox.anchoredTop && tc.enabled() ? msgList.size() - i - 1 : i;
-							if(tc.enabled() && tc.generalSettings.timeStampEnable.getValue()) {
+							if(tc.enabled() && TabbyChat.generalSettings.timeStampEnable.getValue()) {
 								_chat = msgList.get(idx).timeStamp + msgList.get(idx).getChatLineString().getFormattedText();
 							} else {
 								_chat = msgList.get(idx).getChatLineString().getFormattedText();
@@ -315,10 +298,9 @@ public class GuiNewChatTC extends GuiNewChat {
 			GL11.glPopMatrix();
 		}
 	}
-	/**
-	 * 
-	 */
-	public @Override IChatComponent /*func_146236_a*/func_146236_a(int clickX, int clickY) {
+
+	@Override
+	public IChatComponent func_146236_a(int clickX, int clickY) {
 		if(!this.getChatOpen()) return null;
 		else {
 			IChatComponent returnMe = null;
@@ -329,8 +311,7 @@ public class GuiNewChatTC extends GuiNewChat {
 				chatReadLock.lock();
 				try {
 					int displayedLines = Math.min(this.getHeightSetting() / 9, this.chatLines.size());
-					if(clickXRel <= ChatBox.getChatWidth()
-							&& clickYRel < this.mc.fontRenderer.FONT_HEIGHT * displayedLines + displayedLines) {
+					if(clickXRel <= ChatBox.getChatWidth() && clickYRel < this.mc.fontRenderer.FONT_HEIGHT * displayedLines + displayedLines) {
 						int lineIndex = clickYRel / this.mc.fontRenderer.FONT_HEIGHT + this.scrollOffset;
 						if(lineIndex < displayedLines + this.scrollOffset && this.chatLines.get(lineIndex) != null) {
 							TCChatLine chatline = this.chatLines.get(lineIndex);
@@ -363,14 +344,7 @@ public class GuiNewChatTC extends GuiNewChat {
         return Minecraft.getMinecraft().gameSettings.chatColours ? p_146235_1_ : EnumChatFormatting.getTextWithoutFormattingCodes(p_146235_1_);
     }
 	
-	/**
-	 * 
-	 * @param _msg
-	 * @param id
-	 * @param tick
-	 * @param backupFlag
-	 */
-	public void func_146237_a(IChatComponent _msg, int id, int tick, boolean backupFlag) {
+	private void func_146237_a(IChatComponent _msg, int id, int tick, boolean backupFlag) {
 		
 		boolean chatOpen = this.getChatOpen();
 		boolean isLineOne = true;
@@ -389,10 +363,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			if(!backupFlag) tc.checkServer();
 			ChatBox.getMinChatWidth();
 		}
-		if (tc.generalSettings.timeStampEnable.getValue())
-			mc.fontRenderer
-					.getStringWidth(tc.generalSettings.timeStampStyle
-							.getValue().toString());
+		if (TabbyChat.generalSettings.timeStampEnable.getValue())mc.fontRenderer.getStringWidth(TabbyChat.generalSettings.timeStampStyle.getValue().toString());
 		
 		ComponentList chat = ChatComponentUtils.split(_msg, this.chatWidth);
 		
@@ -452,10 +423,9 @@ public class GuiNewChatTC extends GuiNewChat {
 			chatWriteLock.unlock();
 		}
 	}
-	/**
-	 * Refresh chat
-	 */
-	public @Override void /*refreshChat*/refreshChat() {
+
+	@Override
+	public void refreshChat() {
 		// Chat settings have changed
 		int backupChats = 0;
 		chatWriteLock.lock();
@@ -478,6 +448,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			if(_cl != null) this.func_146237_a(_cl.func_151461_a(), _cl.getChatLineID(), _cl.getUpdatedCounter(), true);
 		}
 	}
+	
 	/**
 	 * Returns the number of messages received.
 	 * @return
@@ -492,12 +463,12 @@ public class GuiNewChatTC extends GuiNewChat {
 		}
 		return theSize;
 	}
-	/**
-	 * Returns true when chat is open
-	 */
-	public @Override boolean /*getChatOpen*/getChatOpen() {
+	
+	@Override
+	public boolean /*getChatOpen*/getChatOpen() {
 		return (this.mc.currentScreen instanceof GuiChat || this.mc.currentScreen instanceof GuiChatTC);
 	}
+	
 	/**
 	 * Returns chat window height when unfocused
 	 * @return
@@ -508,6 +479,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		} else
 			return func_146243_b(this.mc.gameSettings.chatHeightFocused);
 	}
+	
 	/**
 	 * Returns the current instance
 	 * @return instance
@@ -522,6 +494,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		}
 		return instance;
 	}
+	
 	/**
 	 * Returns the scale settings
 	 * @return
@@ -530,13 +503,12 @@ public class GuiNewChatTC extends GuiNewChat {
 		float theSetting = this.func_146244_h();
 		return Math.round(theSetting * 100.0f) / 100.0f;
 	}
-	/**
-	 * Returns a list of sent messages
-	 * @return List
-	 */
-	public @Override List /*getSentMessages*/getSentMessages() {
+	
+	@Override
+	public List getSentMessages() {
 		return this.sentMessages;
 	}
+	
 	/**
 	 * Merges chat lines
 	 * @param _new
@@ -574,32 +546,26 @@ public class GuiNewChatTC extends GuiNewChat {
 			chatWriteLock.unlock();
 		}
 	}
-	/**
-	 * Prints chat message
-	 * @param _msg - IChatComponent message
-	 */
-	public @Override void /*printChatMessage*/printChatMessage(IChatComponent _msg) {
+	
+	@Override
+	public void printChatMessage(IChatComponent _msg) {
 		this.printChatMessageWithOptionalDeletion(_msg, 0);
 	}
-	/**
-	 * Prints chat message with optional deletion
-	 */
-	public @Override void /*printChatMessageWithOptionalDeletion*/printChatMessageWithOptionalDeletion(IChatComponent _msg, int flag) {
+	
+	@Override
+	public void printChatMessageWithOptionalDeletion(IChatComponent _msg, int flag) {
 		this.func_146237_a(_msg, flag, this.mc.ingameGUI.getUpdateCounter(), false);
         log.info("[CHAT] " + _msg.getUnformattedText());
 	}
-	/**
-	 * Resets the scroll position
-	 */
-	public @Override void /*resetscroll*/resetScroll() {
+	
+	@Override
+	public void resetScroll() {
 		this.scrollOffset = 0;
 		this.chatScrolled = false;
 	}
-	/**
-	 * Scrolls chat by _lines
-	 * @param _lines - int
-	 */
-	public @Override void /*scroll*/scroll(int _lines) {
+	
+	@Override
+	public void scroll(int _lines) {
 		int maxLineDisplay;
 		if(tc.enabled()) {
 			maxLineDisplay = Math.round(ChatBox.getChatHeight() / 9.0f);
@@ -621,11 +587,7 @@ public class GuiNewChatTC extends GuiNewChat {
 			this.chatScrolled = false;
 		}
 	}
-	/**
-	 * 
-	 * @param _pos
-	 * @param _add
-	 */
+	
 	public void setChatLines(int _pos, List<TCChatLine> _add) {
 		int clsize = 0;
 		boolean addInstead = false;

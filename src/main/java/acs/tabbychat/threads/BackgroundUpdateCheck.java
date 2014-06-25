@@ -1,16 +1,10 @@
 package acs.tabbychat.threads;
 
 import net.minecraft.client.resources.I18n;
-import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.util.TabbyChatUtils;
 
 public class BackgroundUpdateCheck extends Thread {
-	/**
-	 * Runs update check
-	 */
-	public BackgroundUpdateCheck() {
-	}
 
 	public void run() {
 		String newest = TabbyChat.getNewestVersion();
@@ -57,8 +51,7 @@ public class BackgroundUpdateCheck extends Thread {
 			updateReport.append(newest + ") ");
 			updateReport.append(I18n.format("messages.update3"));
 			updateReport.append("\u00A7r");
-			GuiNewChatTC.getInstance().tc.printMessageToChat(updateReport
-					.toString());
+			TabbyChat.printMessageToChat(updateReport.toString());
 		}
 	}
 }

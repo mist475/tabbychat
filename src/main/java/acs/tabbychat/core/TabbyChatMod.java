@@ -1,29 +1,33 @@
 package acs.tabbychat.core;
 
+import java.io.File;
+import java.net.URL;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.launchwrapper.Launch;
 import acs.tabbychat.util.TabbyChatUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 
 @Mod(name = TabbyChatUtils.name, modid = TabbyChatUtils.modid, version = TabbyChatUtils.version)
 public class TabbyChatMod{
-	private static GuiNewChatTC gnc;
 	
 	@EventHandler
-	public void load(FMLPostInitializationEvent event){
-		FMLCommonHandler.instance().bus().register(this);
-	}
-	
-	public void clientChat(String var1){
-		if(gnc == null){
-			gnc = GuiNewChatTC.getInstance();
-			gnc.tc.modLoaded = true;
+	public void load(FMLInitializationEvent event){
+		if(willBeLiteLoaded()){
+			TabbyChatUtils.log.warn("LiteLoader version detected.  Will use that instead.");
+			return;
 		}
+		TabbyChatUtils.startup();
+		FMLCommonHandler.instance().bus().register(this);
+		TabbyChat.modLoaded = true;
 	}
 	
 	@SubscribeEvent
@@ -33,8 +37,27 @@ public class TabbyChatMod{
 		}
 	}
 
-	public boolean onTickInGui(Minecraft minecraft) {
+	private boolean onTickInGui(Minecraft minecraft) {
 		TabbyChatUtils.chatGuiTick(minecraft);
 		return true;
+	}
+	
+	private boolean willBeLiteLoaded(){
+		try{
+			Class.forName("acs.tabbychat.core.LiteModTabbyChat");
+			Class.forName("com.mumfrey.liteloader.core.LiteLoader");
+			for(URL url : Launch.classLoader.getURLs()){
+				ZipFile zip = new ZipFile(new File(url.toURI()));
+				ZipEntry entry = zip.getEntry("litemod.json");
+				if(entry == null)
+					continue;
+				entry = zip.getEntry("acs/tabbychat/core/LiteModTabbyChat.class");
+				zip.close();
+				if(entry != null)
+					return true;
+			}
+		}catch(Exception e){
+		}
+		return false;
 	}
 }

@@ -81,15 +81,13 @@ public class BackgroundChatThread extends Thread {
 			// Use reflection so we don't have to import Forge.
 			if (TabbyChat.forgePresent) {
 				try {
-					Class clntCmdHndlr = Class
+					Class<?> clntCmdHndlr = Class
 							.forName("net.minecraftforge.client.ClientCommandHandler");
 					Method exeCmd;
 					try {
-						exeCmd = clntCmdHndlr.getMethod("func_71556_a",
-								ICommandSender.class, String.class);
+						exeCmd = clntCmdHndlr.getMethod("func_71556_a", ICommandSender.class, String.class);
 					} catch (NoSuchMethodException e) {
-						exeCmd = clntCmdHndlr.getMethod("executeCommand",
-								ICommandSender.class, String.class);
+						exeCmd = clntCmdHndlr.getMethod("executeCommand", ICommandSender.class, String.class);
 					}
 					Object instance = clntCmdHndlr.getField("instance").get(
 							null);

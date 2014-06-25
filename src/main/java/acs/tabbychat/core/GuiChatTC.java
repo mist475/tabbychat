@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.stream.GuiTwitchUserMode;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -39,6 +40,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import tv.twitch.chat.ChatUserInfo;
 import acs.tabbychat.compat.EmoticonsCompat;
 import acs.tabbychat.compat.MacroKeybindCompat;
 import acs.tabbychat.gui.ChatBox;
@@ -51,15 +53,14 @@ import acs.tabbychat.util.TabbyChatUtils;
 import com.google.common.collect.Lists;
 
 public class GuiChatTC extends GuiChat {
-	private TabbyChatUtils tcu;
-	private Logger log = tcu.log;
+	private Logger log = TabbyChatUtils.log;
 	public String historyBuffer = "";
 	public String defaultInputFieldText = "";
 	public int sentHistoryCursor2 = -1;
 	private boolean playerNamesFound = false;
 	private boolean waitingOnPlayerNames = false;
 	private int playerNameIndex = 0;
-	private List foundPlayerNames = new ArrayList();
+	private List<String> foundPlayerNames = Lists.newArrayList();
 	private URI clickedURI2 = null;
 	public GuiTextField inputField2;
 	public List<GuiTextField> inputList = new ArrayList<GuiTextField>(3);
@@ -79,27 +80,19 @@ public class GuiChatTC extends GuiChat {
 	 */
 	public GuiChatTC() {
 		super();
-		this.mc = Minecraft.getMinecraft();
-		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-		this.fontRendererObj = this.mc.fontRenderer;
+		sr = new ScaledResolution(mc, width, height);
 		this.gnc = GuiNewChatTC.getInstance();
-		this.tc = this.gnc.tc;
+		this.tc = GuiNewChatTC.tc;
 		EmoticonsCompat.load();
 		MacroKeybindCompat.load();
 	}
 
-	/**
-	 * 
-	 * @param par1Str
-	 */
 	public GuiChatTC(String par1Str) {
 		this();
 		this.defaultInputFieldText = par1Str;
 	}
 
-	/**
-	 * 
-	 */
+	@Override
 	public void actionPerformed(GuiButton par1GuiButton) {
 		// Attempt Emoticons actionPerformed if present
 		EmoticonsCompat.actionPerformed(par1GuiButton, this.buttonList,
@@ -142,7 +135,7 @@ public class GuiChatTC extends GuiChat {
 					chan.active = false;
 			}
 			if (!_button.channel.active) {
-				this.scrollBar.scrollBarMouseWheel();
+				ChatScrollBar.scrollBarMouseWheel();
 				if (preActiveTabs.size() == 1) {
 					this.checkCommandPrefixChange(
 							this.tc.channelMap.get(preActiveTabs.get(0)),
@@ -156,10 +149,6 @@ public class GuiChatTC extends GuiChat {
 		}
 	}
 
-	/**
-	 * 
-	 * @param brandNewChan
-	 */
 	protected void addChannelLive(ChatChannel brandNewChan) {
 		if (!this.buttonList.contains(brandNewChan.tab)) {
 			this.buttonList.add(brandNewChan.tab);
@@ -191,8 +180,8 @@ public class GuiChatTC extends GuiChat {
 	/**
 	 * Completes player names
 	 */
-	public @Override
-	void /* completePlayerName */func_146404_p_() {
+	@Override
+	public void func_146404_p_() {
 		String textBuffer;
 		if (this.playerNamesFound) {
 			this.inputField2.deleteFromCursor(this.inputField2
@@ -225,7 +214,7 @@ public class GuiChatTC extends GuiChat {
 		if (this.foundPlayerNames.size() > 1) {
 			StringBuilder _sb = new StringBuilder();
 
-			for (Iterator _iter = this.foundPlayerNames.iterator(); _iter
+			for (Iterator<String> _iter = this.foundPlayerNames.iterator(); _iter
 					.hasNext(); _sb.append(textBuffer)) {
 				textBuffer = (String) _iter.next();
 				if (_sb.length() > 0) {
@@ -242,11 +231,8 @@ public class GuiChatTC extends GuiChat {
 				.get(this.playerNameIndex++));
 	}
 
-	/**
-	 * Confirms click
-	 */
-	public @Override
-	void confirmClicked(boolean zeroId, int worldNum) {
+	@Override
+	public void confirmClicked(boolean zeroId, int worldNum) {
 		if (worldNum == 0) {
 			if (zeroId)
 				this.func_146407_a(this.clickedURI2);
@@ -255,15 +241,8 @@ public class GuiChatTC extends GuiChat {
 		}
 	}
 
-	/**
-	 * Draws chat on screen
-	 * 
-	 * @param cursorX
-	 * @param cursorY
-	 * @param pointless
-	 */
-	public @Override
-	void drawScreen(int cursorX, int cursorY, float pointless) {
+	@Override
+	public void drawScreen(int cursorX, int cursorY, float pointless) {
 		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		this.width = sr.getScaledWidth();
 		this.height = sr.getScaledHeight();
@@ -345,7 +324,7 @@ public class GuiChatTC extends GuiChat {
 					ChatComponentTranslation cct = new ChatComponentTranslation("stats.tooltip.type." + (statbase.isAchievement() ? "achievement" : "statistics"),  new Object[0]);
 					cct.getChatStyle().setItalic(Boolean.valueOf(true));
 					String s = statbase instanceof Achievement ? ((Achievement)statbase).getDescription() : null;
-					ArrayList arraylist = Lists.newArrayList(new String[] {icc1.getFormattedText(), cct.getFormattedText()});
+					ArrayList<String> arraylist = Lists.newArrayList(new String[] {icc1.getFormattedText(), cct.getFormattedText()});
 					
 					if(s != null)
 						arraylist.addAll(this.fontRendererObj.listFormattedStringToWidth(s, 150));
@@ -384,11 +363,6 @@ public class GuiChatTC extends GuiChat {
 				this.buttonList);
 	}
 
-	/**
-	 * 
-	 * @param nameStart
-	 * @param buffer
-	 */
 	public void func_73893_a(String nameStart, String buffer) {
 		if (nameStart.length() >= 1) {
 			this.mc.thePlayer.sendQueue
@@ -397,11 +371,8 @@ public class GuiChatTC extends GuiChat {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	public @Override
-	void func_146406_a(String[] par1ArrayOfStr) {
+	@Override
+	public void func_146406_a(String[] par1ArrayOfStr) {
 		if (this.waitingOnPlayerNames) {
 			this.foundPlayerNames.clear();
 			String[] _copy = par1ArrayOfStr;
@@ -422,10 +393,6 @@ public class GuiChatTC extends GuiChat {
 		}
 	}
 
-	/**
-	 * 
-	 * @param _uri
-	 */
 	private void func_146407_a(URI _uri) {
 		try {
 			Class desktop = Class.forName("java.awt.Desktop");
@@ -437,11 +404,7 @@ public class GuiChatTC extends GuiChat {
 			log.error("Couldn\'t open link", t);
 		}
 	}
-
-	/**
-	 * 
-	 * @return
-	 */
+	
 	public int getCurrentSends() {
 		int lng = 0;
 		int _s = this.inputList.size() - 1;
@@ -454,10 +417,6 @@ public class GuiChatTC extends GuiChat {
 			return (lng + 100 - 1) / 100;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	public int getFocusedFieldIndex() {
 		int _s = this.inputList.size();
 		for (int i = 0; i < _s; i++) {
@@ -478,11 +437,8 @@ public class GuiChatTC extends GuiChat {
 		return size;
 	}
 
-	/**
-	 * 
-	 */
-	public @Override
-	void /* getSentHistory */getSentHistory(int _dir) {
+	@Override
+	public void getSentHistory(int _dir) {
 		int loc = this.sentHistoryCursor2 + _dir;
 		int historyLength = this.gnc.getSentMessages().size();
 		loc = Math.max(0, loc);
@@ -502,11 +458,8 @@ public class GuiChatTC extends GuiChat {
 		}
 	}
 
-	/**
-	 * Handles mouse input
-	 */
-	public @Override
-	void handleMouseInput() {
+	@Override
+	public void handleMouseInput() {
 		// Allow chatbox dragging
 		if (ChatBox.resizing) {
 			if (!Mouse.isButtonDown(0))
@@ -543,19 +496,16 @@ public class GuiChatTC extends GuiChat {
 
 			this.gnc.scroll(wheelDelta);
 			if (this.tc.enabled())
-				this.scrollBar.scrollBarMouseWheel();
+				ChatScrollBar.scrollBarMouseWheel();
 		} else if (this.tc.enabled())
-			this.scrollBar.handleMouse();
+			ChatScrollBar.handleMouse();
 
 		if (mc.currentScreen.getClass() != GuiChat.class)
 			super.handleMouseInput();
 	}
 
-	/**
-	 * Inits the Gui
-	 */
-	public @Override
-	void initGui() {
+	@Override
+	public void initGui() {
 		Keyboard.enableRepeatEvents(true);
 		this.buttonList.clear();
 		this.inputList.clear();
@@ -655,11 +605,8 @@ public class GuiChatTC extends GuiChat {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	public @Override
-	void keyTyped(char _char, int _code) {
+	@Override
+	public void keyTyped(char _char, int _code) {
 		this.waitingOnPlayerNames = false;
 
 		if (_code != Keyboard.KEY_TAB)
@@ -690,7 +637,7 @@ public class GuiChatTC extends GuiChat {
 			for (int i = this.inputList.size() - 1; i >= 0; i--)
 				_msg.append(this.inputList.get(i).getText());
 			if (_msg.toString().length() > 0) {
-				tcu.writeLargeChat(_msg.toString());
+				TabbyChatUtils.writeLargeChat(_msg.toString());
 				for (int i = 1; i < this.inputList.size(); i++) {
 					this.inputList.get(i).setText("");
 					this.inputList.get(i).setFocused(false);
@@ -743,13 +690,13 @@ public class GuiChatTC extends GuiChat {
 		case Keyboard.KEY_PRIOR:
 			this.gnc.scroll(19);
 			if (this.tc.enabled())
-				this.scrollBar.scrollBarMouseWheel();
+				ChatScrollBar.scrollBarMouseWheel();
 			break;
 		// PAGE DOWN: scroll down through chat
 		case Keyboard.KEY_NEXT:
 			this.gnc.scroll(-19);
 			if (this.tc.enabled())
-				this.scrollBar.scrollBarMouseWheel();
+				ChatScrollBar.scrollBarMouseWheel();
 			break;
 		// BACKSPACE: delete previous character, minding potential contents of
 		// other input fields
@@ -796,7 +743,7 @@ public class GuiChatTC extends GuiChat {
 					tc.activateIndex(_code - 1);
 					// CTRL+O: open options
 				} else if (_code == Keyboard.KEY_O) {
-					this.mc.displayGuiScreen(this.tc.generalSettings);
+					this.mc.displayGuiScreen(TabbyChat.generalSettings);
 				} else {
 					this.inputField2.textboxKeyTyped(_char, _code);
 				}
@@ -814,11 +761,8 @@ public class GuiChatTC extends GuiChat {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	public @Override
-	void mouseClicked(int _x, int _y, int _button) {
+	@Override
+	public void mouseClicked(int _x, int _y, int _button) {
 		if (_button == 0 && this.mc.gameSettings.chatLinks) {
 			IChatComponent ccd = this.gnc.func_146236_a(Mouse.getX(),
 					Mouse.getY());
@@ -853,7 +797,14 @@ public class GuiChatTC extends GuiChat {
 							this.inputField2.setText(clickEvent.getValue());
 						} else if (clickEvent.getAction() == ClickEvent.Action.RUN_COMMAND) {
 							this.func_146403_a(clickEvent.getValue());
-						} else {
+						} else if (clickEvent.getAction() == ClickEvent.Action.TWITCH_USER_INFO) {
+                            ChatUserInfo var8 = this.mc.func_152346_Z().func_152926_a(clickEvent.getValue());
+                            if (var8 != null) {
+                                this.mc.displayGuiScreen(new GuiTwitchUserMode(this.mc.func_152346_Z(), var8));
+                            } else {
+                                log.error("Tried to handle twitch user but couldn\'t find them!");
+                            }
+                        } else {
 							log.error("Don\'t know how to handle " + clickEvent);
 						}
 					}
@@ -923,19 +874,16 @@ public class GuiChatTC extends GuiChat {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	public @Override
-	void mouseMovedOrUp(int _x, int _y, int _button) {
+	@Override
+	public void mouseMovedOrUp(int _x, int _y, int _button) {
 		if (this.selectedButton2 != null && _button == 0) {
 			this.selectedButton2.mouseReleased(_x, _y);
 			this.selectedButton2 = null;
 		}
 	}
 
-	public @Override
-	void onGuiClosed() {
+	@Override
+	public void onGuiClosed() {
 		ChatBox.dragging = false;
 		ChatBox.resizing = false;
 		gnc.resetScroll();
@@ -1076,8 +1024,8 @@ public class GuiChatTC extends GuiChat {
 	/**
 	 * 
 	 */
-	public @Override
-	void updateScreen() {
+	@Override
+	public void updateScreen() {
 		this.inputField2.updateCursorCounter();
 	}
 	

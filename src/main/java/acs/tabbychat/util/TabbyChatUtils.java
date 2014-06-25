@@ -7,13 +7,11 @@ import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiNewChat;
@@ -45,26 +43,25 @@ import com.google.common.collect.Lists;
 
 public class TabbyChatUtils {
 	private static Calendar logDay = Calendar.getInstance();
-	private static File logDir = new File(new File(
-			Minecraft.getMinecraft().mcDataDir, "logs"), "TabbyChat");
-	private static SimpleDateFormat logNameFormat = new SimpleDateFormat(
-			"'_'MM-dd-yyyy'.txt'");
-	public final static String version = "1.11.1";
+	private static File logDir = new File(new File(Minecraft.getMinecraft().mcDataDir, "logs"), "TabbyChat");
+	private static SimpleDateFormat logNameFormat = new SimpleDateFormat("'_'MM-dd-yyyy'.txt'");
+	public final static String version = "@@VERSION@@";
 	public final static String name = "TabbyChat";
 	public final static String modid = "tabbychat";
 	public static Logger log = LogManager.getLogger(name);
-	/**
-	 * 
-	 * @param mc
-	 */
-	public static void chatGuiTick(Minecraft mc) {
-		// Find Forge. Really should only be ran once on startup.
+ 
+	public static void startup(){
+		// check if forge is installed.
 		try {
 			Class.forName("net.minecraftforge.common.MinecraftForge");
 			TabbyChat.forgePresent = true;
+			log.info("MinecraftForge detected.  Will check for client-commands.");
 		} catch (ClassNotFoundException e) {
+			TabbyChat.forgePresent = false;
 		}
-		
+	}
+	
+	public static void chatGuiTick(Minecraft mc) {
 		if (mc.currentScreen == null)
 			return;
 		if (!(mc.currentScreen instanceof GuiChat))
@@ -90,12 +87,6 @@ public class TabbyChatUtils {
 		}
 		mc.displayGuiScreen(new GuiChatTC(inputBuffer));
 	}
-
-	/**
-	 * 
-	 * @param lines
-	 * @return
-	 */
 	
 	public static ComponentList chatLinesToComponent(List<TCChatLine> lines) {
 		ComponentList result = ComponentList.newInstance();
@@ -106,10 +97,6 @@ public class TabbyChatUtils {
 	}
 	
 
-	/**
-	 * 
-	 * @return
-	 */
 	public static ServerData getServerData() {
 		Minecraft mc = Minecraft.getMinecraft();
 		ServerData serverData = null;
@@ -119,8 +106,7 @@ public class TabbyChatUtils {
 				try {
 					serverData = (ServerData) field.get(mc);
 				} catch (Exception e) {
-					TabbyChat.printException(
-							"Unable to find server information", e);
+					TabbyChat.printException("Unable to find server information", e);
 				}
 				break;
 			}
@@ -128,10 +114,6 @@ public class TabbyChatUtils {
 		return serverData;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	public static File getServerDir() {
 		String ip = getServerIp();
 		if (ip.contains(":")) {
@@ -142,8 +124,6 @@ public class TabbyChatUtils {
 
 	/**
 	 * Returns the IP of the current server.
-	 * 
-	 * @return
 	 */
 	public static String getServerIp() {
 		String ip;
@@ -159,30 +139,22 @@ public class TabbyChatUtils {
 
 	/**
 	 * Returns the directory the the configs are stored.
-	 * 
-	 * @return
 	 */
 	public static File getTabbyChatDir() {
 		if (TabbyChat.liteLoaded) {
 			return null;//new File(LiteLoader.getCommonConfigFolder(), "tabbychat");
 		} else {
-			return new File(new File(Minecraft.getMinecraft().mcDataDir,
-					"config"), "tabbychat");
+			return new File(new File(Minecraft.getMinecraft().mcDataDir, "config"), "tabbychat");
 		}
 	}
 
-	/**
-	 * 
-	 * @param _gnc
-	 */
 	public static void hookIntoChat(GuiNewChatTC _gnc) {
 		if (Minecraft.getMinecraft().ingameGUI.getChatGUI().getClass() != GuiNewChatTC.class) {
 			try {
-				Class IngameGui = GuiIngame.class;
+				Class<GuiIngame> IngameGui = GuiIngame.class;
 				Field persistantGuiField = IngameGui.getDeclaredFields()[6];
 				persistantGuiField.setAccessible(true);
-				persistantGuiField
-						.set(Minecraft.getMinecraft().ingameGUI, _gnc);
+				persistantGuiField.set(Minecraft.getMinecraft().ingameGUI, _gnc);
 
 				int tmp = 0;
 				for (Field fields : GuiNewChat.class.getDeclaredFields()) {
@@ -206,44 +178,7 @@ public class TabbyChatUtils {
 	}
 
 	/**
-	 * 
-	 * @param _gui
-	 * @param className
-	 * @return
-	 */
-	public static boolean is(Gui _gui, String className) {
-		try {
-			return _gui.getClass().getSimpleName().contains(className);
-		} catch (Throwable e) {
-		}
-		return false;
-	}
-
-	/**
-	 * 
-	 * @param arr
-	 * @param glue
-	 * @return
-	 */
-	public static String join(String[] arr, String glue) {
-		if (arr.length < 1)
-			return "";
-		else if (arr.length == 1)
-			return arr[0];
-		StringBuilder bucket = new StringBuilder();
-		for (String s : Arrays.copyOf(arr, arr.length - 1)) {
-			bucket.append(s);
-			bucket.append(glue);
-		}
-		bucket.append(arr[arr.length - 1]);
-		return bucket.toString();
-	}
-
-	/**
 	 * Logs chat.
-	 * 
-	 * @param theChat
-	 * @param theChannel
 	 */
 	public static void logChat(String theChat, ChatChannel theChannel) {
 		Calendar tmpcal = Calendar.getInstance();
@@ -256,25 +191,20 @@ public class TabbyChatUtils {
 			theChannel = new ChatChannel("default");
 		}
 		if (getServerIp() == "singleplayer") {
-			IntegratedServer ms = Minecraft.getMinecraft()
-					.getIntegratedServer();
+			IntegratedServer ms = Minecraft.getMinecraft().getIntegratedServer();
 			String worldName = ms.getWorldName();
-			fileDir = new File(new File(new File(logDir, "singleplayer"),
-					worldName), theChannel.getTitle());
+			fileDir = new File(new File(new File(logDir, "singleplayer"), worldName), theChannel.getTitle());
 
 		} else {
-			fileDir = new File(new File(logDir, getServerIp()),
-					theChannel.getTitle());
+			fileDir = new File(new File(logDir, getServerIp()),	theChannel.getTitle());
 		}
 		if (!fileDir.exists())
 			fileDir.mkdirs();
 
 		if (theChannel.getLogFile() == null
-				|| tmpcal.get(Calendar.DAY_OF_YEAR) != logDay
-						.get(Calendar.DAY_OF_YEAR)) {
+				|| tmpcal.get(Calendar.DAY_OF_YEAR) != logDay.get(Calendar.DAY_OF_YEAR)) {
 			logDay = tmpcal;
-			theChannel.setLogFile(new File(fileDir, theChannel.getTitle()
-					+ logNameFormat.format(logDay.getTime())));
+			theChannel.setLogFile(new File(fileDir, theChannel.getTitle() + logNameFormat.format(logDay.getTime())));
 		}
 
 		if (!theChannel.getLogFile().exists()) {
@@ -282,15 +212,13 @@ public class TabbyChatUtils {
 				fileDir.mkdirs();
 				theChannel.getLogFile().createNewFile();
 			} catch (Exception e) {
-				TabbyChat.printErr("Cannot create log file : '"
-						+ e.getLocalizedMessage() + "' : " + e.toString());
+				TabbyChat.printErr("Cannot create log file : '" + e.getLocalizedMessage() + "' : " + e.toString());
 				return;
 			}
 		}
 
 		try {
-			FileOutputStream logStream = new FileOutputStream(
-					theChannel.getLogFile(), true);
+			FileOutputStream logStream = new FileOutputStream(theChannel.getLogFile(), true);
 			PrintStream logPrint = new PrintStream(logStream);
 			logPrint.println(theChat);
 			logPrint.close();
@@ -301,13 +229,6 @@ public class TabbyChatUtils {
 		}
 	}
 
-	/**
-	 * 
-	 * @param val1
-	 * @param val2
-	 * @param val3
-	 * @return
-	 */
 	public static Float median(float val1, float val2, float val3) {
 		if (val1 < val2 && val1 < val3)
 			return Math.min(val2, val3);
@@ -317,11 +238,6 @@ public class TabbyChatUtils {
 			return val1;
 	}
 
-	/**
-	 * 
-	 * @param _input
-	 * @return
-	 */
 	public static ColorCodeEnum parseColor(Object _input) {
 		if (_input == null)
 			return null;
@@ -333,11 +249,6 @@ public class TabbyChatUtils {
 		}
 	}
 
-	/**
-	 * 
-	 * @param _input
-	 * @return
-	 */
 	public static ChannelDelimEnum parseDelimiters(Object _input) {
 		if (_input == null)
 			return null;
@@ -349,33 +260,6 @@ public class TabbyChatUtils {
 		}
 	}
 
-	/**
-	 * 
-	 * @param _input
-	 * @param min
-	 * @param max
-	 * @return
-	 */
-	public static Float parseFloat(Object _input, float min, float max) {
-		if (_input == null)
-			return null;
-		String input = _input.toString();
-		Float result;
-		try {
-			result = Float.valueOf(input);
-			result = Math.max(min, result);
-			result = Math.min(max, result);
-		} catch (NumberFormatException e) {
-			result = null;
-		}
-		return result;
-	}
-
-	/**
-	 * 
-	 * @param _input
-	 * @return
-	 */
 	public static FormatCodeEnum parseFormat(Object _input) {
 		if (_input == null)
 			return null;
@@ -387,16 +271,7 @@ public class TabbyChatUtils {
 		}
 	}
 
-	/**
-	 * 
-	 * @param _input
-	 * @param min
-	 * @param max
-	 * @param fallback
-	 * @return
-	 */
-	public static Integer parseInteger(String _input, int min, int max,
-			int fallback) {
+	public static Integer parseInteger(String _input, int min, int max, int fallback) {
 		Integer result;
 		try {
 			result = Integer.parseInt(_input);
@@ -408,11 +283,6 @@ public class TabbyChatUtils {
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param _input
-	 * @return
-	 */
 	public static int parseInteger(String _input) {
 		NumberFormat formatter = NumberFormat.getInstance();
 		boolean state = formatter.isParseIntegerOnly();
@@ -426,11 +296,6 @@ public class TabbyChatUtils {
 			return -1;
 	}
 
-	/**
-	 * 
-	 * @param _input
-	 * @return
-	 */
 	public static NotificationSoundEnum parseSound(Object _input) {
 		if (_input == null)
 			return NotificationSoundEnum.ORB;
@@ -442,11 +307,6 @@ public class TabbyChatUtils {
 		}
 	}
 
-	/**
-	 * 
-	 * @param _input
-	 * @return
-	 */
 	public static String parseString(Object _input) {
 		if (_input == null)
 			return " ";
@@ -454,11 +314,6 @@ public class TabbyChatUtils {
 			return _input.toString();
 	}
 
-	/**
-	 * 
-	 * @param _input
-	 * @return
-	 */
 	public static TimeStampEnum parseTimestamp(Object _input) {
 		if (_input == null)
 			return null;
@@ -469,15 +324,6 @@ public class TabbyChatUtils {
 			return null;
 		}
 	}
-
-	/**
-	 * 
-	 * @param stamp
-	 * @param filtered
-	 * @param id
-	 * @param status
-	 * @return
-	 */
 	
 	public static List<TCChatLine> componentToChatLines(int stamp, ComponentList filtered,
 			int id, boolean status) {
@@ -493,15 +339,7 @@ public class TabbyChatUtils {
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param currentMap
-	 * @param _left
-	 * @param _right
-	 * @return
-	 */
-	public static LinkedHashMap<String, ChatChannel> swapChannels(
-			LinkedHashMap<String, ChatChannel> currentMap, int _left, int _right) {
+	public static LinkedHashMap<String, ChatChannel> swapChannels(LinkedHashMap<String, ChatChannel> currentMap, int _left, int _right) {
 		// Ensure ordering of 'indices' is 0<=_left<_right<=end
 		if (_left == _right)
 			return currentMap;
@@ -522,25 +360,20 @@ public class TabbyChatUtils {
 		arrayCopy[_right] = tmp;
 		// Create new map and populate
 		int n = arrayCopy.length;
-		LinkedHashMap<String, ChatChannel> returnMap = new LinkedHashMap(n);
+		LinkedHashMap<String, ChatChannel> returnMap = new LinkedHashMap<String, ChatChannel>(n);
 		for (int i = 0; i < n; i++) {
 			returnMap.put(arrayCopy[i], currentMap.get(arrayCopy[i]));
 		}
 		return returnMap;
 	}
 
-	/**
-	 * 
-	 * @param toSend
-	 */
 	public static void writeLargeChat(String toSend) {
 		List<String> actives = TabbyChat.getInstance().getActive();
 		BackgroundChatThread sendProc;
 		if (!TabbyChat.getInstance().enabled() || actives.size() != 1)
 			sendProc = new BackgroundChatThread(toSend);
 		else {
-			ChatChannel active = TabbyChat.getInstance().channelMap.get(actives
-					.get(0));
+			ChatChannel active = TabbyChat.getInstance().channelMap.get(actives.get(0));
 			String tabPrefix = active.cmdPrefix;
 			boolean hiddenPrefix = active.hidePrefix;
 
@@ -552,8 +385,7 @@ public class TabbyChatUtils {
 				if (!hiddenPrefix)
 					sendProc = new BackgroundChatThread(toSend, tabPrefix);
 				else if (!toSend.startsWith("/"))
-					sendProc = new BackgroundChatThread(tabPrefix + " "
-							+ toSend, tabPrefix);
+					sendProc = new BackgroundChatThread(tabPrefix + " " + toSend, tabPrefix);
 				else
 					sendProc = new BackgroundChatThread(toSend);
 			} else
@@ -581,43 +413,5 @@ public class TabbyChatUtils {
 				newChat += s;
 		}
 		return newChat;
-	}
-
-	
-
-	/**
-	 * Takes the substring of a paragraph-symbol formatted string
-	 * 
-	 * @param formatted
-	 *            The string with formatting characters.
-	 * @param beginIndex
-	 *            the beginning index, inclusive.
-	 * @param endIndex
-	 *            the ending index, exclusive.
-	 * @return A formatted substring
-	 */
-	public static String substringWithFormatters(String formatted,
-			int beginIndex, int endIndex) {
-		int length = formatted.length();
-		int unformattedIndex = 0, actualStartIndex = -1, actualEndIndex = -1;
-		for (int i = 0; i < length; i++) {
-			if (actualStartIndex == -1 && unformattedIndex == beginIndex)
-				actualStartIndex = i;
-			if (unformattedIndex == endIndex) {
-				actualEndIndex = i;
-				break;
-			}
-			if (formatted.charAt(i) == '\u00a7') {
-				i++; // Skip next character as well
-				continue;
-			}
-			unformattedIndex++;
-		}
-		if (actualStartIndex == -1 || actualEndIndex == -1)
-			throw new StringIndexOutOfBoundsException();
-		return formatted.substring(actualStartIndex, actualEndIndex);
-	}
-
-	private TabbyChatUtils() {
 	}
 }
