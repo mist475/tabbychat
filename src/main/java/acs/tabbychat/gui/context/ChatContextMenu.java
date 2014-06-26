@@ -4,6 +4,8 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
+import acs.tabbychat.core.GuiChatTC;
 
 import com.google.common.collect.Lists;
 
@@ -11,30 +13,38 @@ public class ChatContextMenu extends Gui {
 	
 	private static List<ChatContext> items = Lists.newArrayList();
 	private Minecraft mc = Minecraft.getMinecraft();
+	private ScaledResolution sr;
 	public boolean active;
+	public GuiChatTC screen;
 	private int x;
 	private int y;
 	
-	public ChatContextMenu(int x, int y){
+	public ChatContextMenu(GuiChatTC chat, int x, int y){
+		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		this.x = x;
 		this.y = y;
+		int xPos = x;
+		if(x > sr.getScaledWidth() - 75)
+			xPos = sr.getScaledWidth() - 75;
+		
 		int i = 0;
+		this.screen = chat;
 		for(ChatContext item : items){
-			if(!item.isLocationValid(x, y))
-				continue;
+			//if(!item.isLocationValid(x, y))
+			//	continue;
 			item.id = i;
 			item.parent = this;
-			item.xPosition = this.x;
-			item.yPosition = this.y + 20 * i;
+			item.xPosition = xPos;
+			item.yPosition = this.y + i*15;
 			i++;
 		}
 	}
 	
 	public void drawMenu(int x, int y){
-		if(!active)
-			return;
+		//if(!active)
+			//return;
 		for(ChatContext item : items){
-			if(!item.isLocationValid(x, y))
+			if(!item.isLocationValid(this.x, this.y))
 				continue;
 			item.drawButton(mc, this.x, this.y + 20 * item.id);
 		}

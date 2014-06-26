@@ -8,21 +8,27 @@ import net.minecraft.util.ResourceLocation;
 
 public abstract class ChatContext extends GuiButton {
 
-	private IIcon icon;
 	ChatContextMenu parent;
 	
 	public ChatContext(){
-		super(0, 0, 0, 60, 20, null);
+		super(0, 0, 0, 75, 15, null);
 		this.displayString = this.getDisplayString();
-		this.icon = this.getDisplayIcon();
 	}
 	
 	@Override
 	public void drawButton(Minecraft mc, int x, int y){
-		Gui.drawRect(xPosition, yPosition, xPosition + width, yPosition + height, 0x444444);
-		drawString(mc.fontRenderer, this.displayString, xPosition, yPosition, 0xaaaaaa);
-		if(icon != null)
-			drawTexturedModelRectFromIcon(xPosition + 2, yPosition + 2, icon, yPosition + 16, xPosition + 16);
+		Gui.drawRect(xPosition + 1, yPosition + 1, xPosition + width - 1, yPosition + height - 1, Integer.MIN_VALUE);
+		drawBorders();
+		if(getDisplayIcon() != null)
+			drawTexturedModelRectFromIcon(xPosition + 2, yPosition + 2, getDisplayIcon(), yPosition + 16, xPosition + 16);
+		this.drawString(mc.fontRenderer, this.displayString, xPosition + 22, yPosition + 3, 0xeeeeee);
+	}
+	
+	protected void drawBorders(){
+		Gui.drawRect(xPosition, yPosition, xPosition + width, yPosition + 1, -0xffffff);
+		Gui.drawRect(xPosition, yPosition, xPosition + 1, yPosition + height, -0xffffff);
+		Gui.drawRect(xPosition, yPosition + height, xPosition + width, yPosition + height - 1, -0xffffff);
+		Gui.drawRect(xPosition + width, yPosition, xPosition + width - 1, yPosition + height, -0xffffff);
 	}
 
 	/**
@@ -43,8 +49,8 @@ public abstract class ChatContext extends GuiButton {
 	/**
 	 * Checks if the clicked location is vaild to place this menu.
 	 * 
-	 * @param x X-Mouse position
-	 * @param y Y-Mouse position
+	 * @param x Mouse X position
+	 * @param y Mouse Y position
 	 */
 	public abstract boolean isLocationValid(int x, int y);
 	

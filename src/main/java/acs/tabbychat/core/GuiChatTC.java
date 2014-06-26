@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
@@ -47,7 +49,6 @@ import acs.tabbychat.gui.ChatButton;
 import acs.tabbychat.gui.ChatChannelGUI;
 import acs.tabbychat.gui.ChatScrollBar;
 import acs.tabbychat.gui.PrefsButton;
-import acs.tabbychat.gui.context.ChatContext;
 import acs.tabbychat.gui.context.ChatContextMenu;
 import acs.tabbychat.util.TabbyChatUtils;
 
@@ -260,8 +261,7 @@ public class GuiChatTC extends GuiChat {
 		// Draw text fields and background
 		int bgWidth = (MacroKeybindCompat.present) ? this.width - 24
 				: this.width - 2;
-		drawRect(2, this.height - 2 - inputHeight, bgWidth, this.height - 2,
-				Integer.MIN_VALUE);
+		drawRect(2, this.height - 2 - inputHeight, bgWidth, this.height - 2, Integer.MIN_VALUE);
 		for (GuiTextField field : this.inputList) {
 			if (field.getVisible())
 				field.drawTextBox();
@@ -360,6 +360,7 @@ public class GuiChatTC extends GuiChat {
 		// Draw context menus
 		if(this.contextMenu != null)
 			this.contextMenu.drawMenu(cursorX, cursorY);
+		//Gui.drawRect(50, 50, 100, 100, -0xffffff);
 
 		GL11.glPopMatrix();
 		
@@ -829,8 +830,7 @@ public class GuiChatTC extends GuiChat {
 		}
 		this.contextMenu = null;
 		if(_button == 1){
-			this.contextMenu = new ChatContextMenu(_x, _y);
-			this.contextMenu.active = true;
+			this.contextMenu = new ChatContextMenu(this, _x, _y);
 		}
 
 		for (int i = 0; i < this.inputList.size(); i++) {

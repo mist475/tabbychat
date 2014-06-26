@@ -19,14 +19,13 @@ public class ContextPaste extends ChatContext {
 
 	@Override
 	public IIcon getDisplayIcon() {
-		IIcon icon = Minecraft.getMinecraft().getTextureMapBlocks().registerIcon("tabbychat:textures/gui/context/paste.png");
-		return icon;
+		return null;
 	}
 
 	@Override
 	public String getDisplayString() {
 		// TODO Auto-generated method stub
-		return "paste";
+		return "Paste";
 	}
 
 	@Override
