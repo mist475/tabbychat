@@ -19,13 +19,13 @@ import static net.minecraftforge.gradle.dev.DevBasePlugin.*
 
 apply plugin: 'fml'
 
-ext.set("revision", runGit(project, project.getProjectDir(), "rev-list", "HEAD", "--count"))
+ext.set("revision", getBuildNo())
 version = "1.11.1." + revision
 group = "acs.tabbychat"
 archivesBaseName = "TabbyChat"
 
 minecraft {
-    version = "1.7.10_pre4-7.9.25.930-mc179"
+    version = "1.7.10_pre4-7.9.34.936-mc179"
     assetDir = "eclipse/assets"
 	
 	replace "@@VERSION@@", project.version
@@ -64,6 +64,11 @@ jar{
 	appendix = minecraft.version
 	exclude 'acs/tabbychat/core/LiteModTabbyChat.class', 'litemod.json'
 }
+String getBuildNo(){
+	String tag = runGit(project, project.getProjectDir(), "describe", "--tags", "--abbrev=0")
+	String rev = runGit(project, project.getProjectDir(), "rev-list", tag + "..HEAD", "--count")
+	return rev
+}
 /* // Disable until LiteLoader updates
 apply plugin: 'liteloader' 
 jarLiteloader{
@@ -72,6 +77,3 @@ jarLiteloader{
 	exclude 'acs/tabbychat/core/TabbyChatMod.class', 'mcmod.info'
 }
 */
-task listJars << {
-    configurations.runtime.each { File file -> println file.name }
-}
