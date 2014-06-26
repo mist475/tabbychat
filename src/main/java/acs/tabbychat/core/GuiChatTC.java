@@ -82,7 +82,8 @@ public class GuiChatTC extends GuiChat {
 	 */
 	public GuiChatTC() {
 		super();
-		sr = new ScaledResolution(mc, width, height);
+		this.mc = Minecraft.getMinecraft();
+		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		this.gnc = GuiNewChatTC.getInstance();
 		this.tc = GuiNewChatTC.tc;
 		EmoticonsCompat.load();
