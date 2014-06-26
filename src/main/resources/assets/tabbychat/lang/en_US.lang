@@ -94,8 +94,8 @@ settings.server.delimiterchars=Chat-channel delimiters
 settings.server.ignoredchannels=Ignored channels
 settings.server.name=Server
 settings.server.regexignorebool=Use patterns
-settings.server.pmTabRegex.toMe=PM Regex To Me
-settings.server.pmTabRegex.fromMe=PM Regex From Me
+settings.server.pmtabregex.tome=PM Regex To Me
+settings.server.pmtabregex.fromme=PM Regex From Me
 
 sounds.anvil=Anvil
 sounds.bass=Bass

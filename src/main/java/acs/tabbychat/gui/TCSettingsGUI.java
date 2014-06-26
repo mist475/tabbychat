@@ -137,9 +137,9 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 		int effRight = (this.width + DISPLAY_WIDTH)/2;
 		int bW = 40;
 		int bH = LINE_HEIGHT;
-		PrefsButton savePrefs = new PrefsButton(SAVEBUTTON, effRight - bW, (this.height + DISPLAY_HEIGHT)/2 - bH, bW, bH, I18n.format("settings.save"));
+		PrefsButton savePrefs = new PrefsButton(SAVEBUTTON, effRight + 10, (this.height + DISPLAY_HEIGHT)/2 - bH, bW, bH, I18n.format("settings.save"));
 		this.buttonList.add(savePrefs);
-		PrefsButton cancelPrefs = new PrefsButton(CANCELBUTTON, effRight - 2*bW - 2, (this.height + DISPLAY_HEIGHT)/2 - bH, bW, bH, I18n.format("settings.cancel"));
+		PrefsButton cancelPrefs = new PrefsButton(CANCELBUTTON, effRight + 10, (this.height + DISPLAY_HEIGHT)/2 - 2*bH -2, bW, bH, I18n.format("settings.cancel"));
 		this.buttonList.add(cancelPrefs);
 
 		for (int i = 0; i < ScreenList.size(); i++) {
