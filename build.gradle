@@ -26,7 +26,7 @@ group = "acs.tabbychat"
 archivesBaseName = "TabbyChat"
 
 minecraft {
-    version = "1.7.10_pre4-7.9.34.936-mc179"
+    version = "1.7.10-7.10.0.939"
     assetDir = "eclipse/assets"
 	
 	replace "@@VERSION@@", project.version
@@ -66,13 +66,11 @@ jar{
 	exclude 'acs/tabbychat/core/LiteModTabbyChat.class', 'litemod.json'
 }
 String getBuildNo(){
-	String build = runGit(project, project.getProjectDir(), "rev-list", "HEAD", "--count")
-	return build
+	return runGit(project, project.getProjectDir(), "rev-list", "HEAD", "--count")
 }
 String getRevision(){
 	String tag = runGit(project, project.getProjectDir(), "describe", "--tags", "--abbrev=0")
-	String rev = runGit(project, project.getProjectDir(), "rev-list", tag + "..HEAD", "--count")
-	return rev
+	return runGit(project, project.getProjectDir(), "rev-list", tag + "..HEAD", "--count")
 }
 /* // Disable until LiteLoader updates
 apply plugin: 'liteloader' 
