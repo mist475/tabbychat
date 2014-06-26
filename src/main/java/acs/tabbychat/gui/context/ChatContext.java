@@ -11,7 +11,7 @@ public abstract class ChatContext extends GuiButton {
 	ChatContextMenu parent;
 	
 	public ChatContext(){
-		super(0, 0, 0, 75, 15, null);
+		super(0, 0, 0, 100, 15, null);
 		this.displayString = this.getDisplayString();
 	}
 	
@@ -21,7 +21,7 @@ public abstract class ChatContext extends GuiButton {
 		drawBorders();
 		if(getDisplayIcon() != null)
 			drawTexturedModelRectFromIcon(xPosition + 2, yPosition + 2, getDisplayIcon(), yPosition + 16, xPosition + 16);
-		this.drawString(mc.fontRenderer, this.displayString, xPosition + 22, yPosition + 3, 0xeeeeee);
+		this.drawString(mc.fontRenderer, this.displayString, xPosition + 18, yPosition + 3, 0xeeeeee);
 	}
 	
 	protected void drawBorders(){
@@ -34,7 +34,7 @@ public abstract class ChatContext extends GuiButton {
 	/**
 	 * what happens when clicked
 	 */
-	public abstract void actionPreformed();
+	public abstract void onClicked();
 	
 	/**
 	 * The display string
@@ -52,7 +52,7 @@ public abstract class ChatContext extends GuiButton {
 	 * @param x Mouse X position
 	 * @param y Mouse Y position
 	 */
-	public abstract boolean isLocationValid(int x, int y);
+	public abstract boolean isPositionValid(int x, int y);
 	
 	public ChatContextMenu getParent(){
 		return this.parent;

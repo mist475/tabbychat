@@ -360,7 +360,6 @@ public class GuiChatTC extends GuiChat {
 		// Draw context menus
 		if(this.contextMenu != null)
 			this.contextMenu.drawMenu(cursorX, cursorY);
-		//Gui.drawRect(50, 50, 100, 100, -0xffffff);
 
 		GL11.glPopMatrix();
 		
@@ -771,7 +770,7 @@ public class GuiChatTC extends GuiChat {
 
 	@Override
 	public void mouseClicked(int _x, int _y, int _button) {
-		if (_button == 0 && this.mc.gameSettings.chatLinks) {
+		if (_button == 0 && this.mc.gameSettings.chatLinks && (this.contextMenu == null || !contextMenu.isCursorOver(_x, _y))) {
 			IChatComponent ccd = this.gnc.func_146236_a(Mouse.getX(), Mouse.getY());
 			if (ccd != null) {
 				ClickEvent clickEvent = ccd.getChatStyle().getChatClickEvent();
@@ -827,10 +826,13 @@ public class GuiChatTC extends GuiChat {
 					catch(URISyntaxException e){}
 				}
 			}
+		} else if(contextMenu != null && contextMenu.isCursorOver(_x, _y)){
+			contextMenu.mouseClicked(_x, _y);
 		}
-		this.contextMenu = null;
-		if(_button == 1){
+		if(_button == 1 && this.contextMenu == null){
 			this.contextMenu = new ChatContextMenu(this, _x, _y);
+		}else{
+			this.contextMenu = null;
 		}
 
 		for (int i = 0; i < this.inputList.size(); i++) {

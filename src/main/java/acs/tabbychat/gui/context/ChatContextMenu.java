@@ -16,17 +16,19 @@ public class ChatContextMenu extends Gui {
 	private ScaledResolution sr;
 	public boolean active;
 	public GuiChatTC screen;
-	private int x;
-	private int y;
+	public int xPos;
+	public int yPos;
+	public int width;
+	public int height;
 	
 	public ChatContextMenu(GuiChatTC chat, int x, int y){
 		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-		this.x = x;
-		this.y = y;
+		this.xPos = x;
+		this.yPos = y;
+		this.width = 100;
 		int xPos = x;
-		if(x > sr.getScaledWidth() - 75)
-			xPos = sr.getScaledWidth() - 75;
-		
+		if(x > sr.getScaledWidth() - width)
+			xPos = sr.getScaledWidth() - width;
 		int i = 0;
 		this.screen = chat;
 		for(ChatContext item : items){
@@ -35,23 +37,40 @@ public class ChatContextMenu extends Gui {
 			item.id = i;
 			item.parent = this;
 			item.xPosition = xPos;
-			item.yPosition = this.y + i*15;
+			item.yPosition = this.yPos + i*15;
 			i++;
 		}
+		this.height = 16*i;
+		if(y > sr.getScaledHeight() - height){
+			yPos = sr.getScaledWidth() - height;
+			for(ChatContext item : items){
+				item.yPosition -= height;
+			}
+		}
+		
 	}
 	
 	public void drawMenu(int x, int y){
 		//if(!active)
 			//return;
 		for(ChatContext item : items){
-			if(!item.isLocationValid(this.x, this.y))
+			if(!item.isPositionValid(this.xPos, this.yPos))
 				continue;
-			item.drawButton(mc, this.x, this.y + 20 * item.id);
+			item.drawButton(mc, this.xPos, this.yPos + 20 * item.id);
+		}
+	}
+	
+	public void mouseClicked(int mouseX, int mouseY){
+		for(ChatContext item : items){
+			if(mouseX >= item.xPosition && mouseX <= item.xPosition + item.width && mouseY >= item.yPosition && mouseY <= item.yPosition + item.height){
+				item.onClicked();
+				return;
+			}
 		}
 	}
 	
 	public void buttonClicked(ChatContext item){
-		item.actionPreformed();
+		item.onClicked();
 	}
 	
 	public static void addContext(Class<? extends ChatContext> item){
@@ -64,6 +83,10 @@ public class ChatContextMenu extends Gui {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean isCursorOver(int x, int y) {
+		return x >= xPos && x <= xPos + width && y >= yPos && y <= yPos + height;
 	}
 	
 	public static void insertContextAtPos(int pos, ChatContext item){
@@ -81,5 +104,4 @@ public class ChatContextMenu extends Gui {
 	public static List<ChatContext> getContextList(){
 		return items;
 	}
-
 }

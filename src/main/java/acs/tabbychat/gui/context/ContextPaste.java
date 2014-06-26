@@ -9,12 +9,8 @@ import acs.tabbychat.core.GuiChatTC;
 public class ContextPaste extends ChatContext {
 
 	@Override
-	public void actionPreformed() {
-		String clipboard = GuiScreen.getClipboardString();
-		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-		if(screen instanceof GuiChatTC){
-			((GuiChatTC)screen).inputField2.writeText(clipboard);
-		}
+	public void onClicked() {
+		parent.screen.inputField2.writeText(GuiScreen.getClipboardString());
 	}
 
 	@Override
@@ -29,8 +25,9 @@ public class ContextPaste extends ChatContext {
 	}
 
 	@Override
-	public boolean isLocationValid(int x, int y) {
-		return true;
+	public boolean isPositionValid(int x, int y) {
+		String clipboard = GuiScreen.getClipboardString();
+		return clipboard != null && !clipboard.isEmpty();
 	}
 
 }
