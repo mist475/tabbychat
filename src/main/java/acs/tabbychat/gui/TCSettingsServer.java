@@ -30,6 +30,8 @@ public class TCSettingsServer extends TCSettingsGUI {
 	private static final int IGNORED_CHANNELS_ID = 9208;
 	private static final int AUTO_PM_SEARCH_ID = 9209;
     private static final int REGEX_IGNORE_ID = 9210;
+    private static final int PM_TAB_REGEX_TO_ID = 9211;
+    private static final int PM_TAB_REGEX_FROM_ID = 9212;
 
 	{
 		this.propertyPrefix = "settings.server";
@@ -47,7 +49,9 @@ public class TCSettingsServer extends TCSettingsGUI {
 	public TCSettingTextBox defaultChannels = new TCSettingTextBox("", "defaultChannels", this.propertyPrefix, DEFAULT_CHANNELS_ID);
 	public TCSettingTextBox ignoredChannels = new TCSettingTextBox("", "ignoredChannels", this.propertyPrefix, IGNORED_CHANNELS_ID);
     public TCSettingBool regexIgnoreBool = new TCSettingBool(false, "regexIgnoreBool", this.propertyPrefix, REGEX_IGNORE_ID);
-
+    public TCSettingTextBox pmTabRegexToMe = new TCSettingTextBox("", "pmTabRegex.toMe", this.propertyPrefix, PM_TAB_REGEX_TO_ID);
+    public TCSettingTextBox pmTabRegexFromMe = new TCSettingTextBox("", "pmTabRegex.fromMe", this.propertyPrefix, PM_TAB_REGEX_FROM_ID);
+    
 	public List<String> defaultChanList = new ArrayList();
     public Pattern ignoredChanPattern = Pattern.compile("a^"); // Initialize with impossible match
 
@@ -74,6 +78,8 @@ public class TCSettingsServer extends TCSettingsGUI {
 		this.buttonList.add(this.defaultChannels);
 		this.buttonList.add(this.ignoredChannels);
 		this.buttonList.add(this.regexIgnoreBool);
+		this.buttonList.add(this.pmTabRegexToMe);
+		this.buttonList.add(this.pmTabRegexFromMe);
 	}
 
 	public void initDrawableSettings() {
@@ -119,6 +125,14 @@ public class TCSettingsServer extends TCSettingsGUI {
         this.regexIgnoreBool.setButtonLoc(col1x + 5 + mc.fontRenderer.getStringWidth(this.ignoredChannels.description), this.rowY(8));
         this.regexIgnoreBool.setLabelLoc(col1x + 5 + mc.fontRenderer.getStringWidth(this.ignoredChannels.description) + 19);
         this.regexIgnoreBool.buttonColor = buttonColor;
+        
+        this.pmTabRegexToMe.setLabelLoc(col1x);
+        this.pmTabRegexToMe.setButtonLoc(effRight - 149, this.rowY(9));
+        this.pmTabRegexToMe.setButtonDims(149, 11);
+
+        this.pmTabRegexFromMe.setLabelLoc(col1x);
+        this.pmTabRegexFromMe.setButtonLoc(effRight - 149, this.rowY(10));
+        this.pmTabRegexFromMe.setButtonDims(149, 11);
 	}
 
 	public Properties loadSettingsFile() {
