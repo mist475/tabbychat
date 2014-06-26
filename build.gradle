@@ -19,7 +19,8 @@ import static net.minecraftforge.gradle.dev.DevBasePlugin.*
 
 apply plugin: 'fml'
 
-ext.set("revision", getBuildNo())
+ext.set("revision", getRevision())
+ext.set("build", getBuildNo())
 version = "1.11.1." + revision
 group = "acs.tabbychat"
 archivesBaseName = "TabbyChat"
@@ -35,14 +36,14 @@ processResources
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
-	inputs.property "revision", project.revision
+	inputs.property "revision", project.build
 	
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info', 'litemod.json'
 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version, 'revision':project.revision
+        expand 'version':project.version, 'mcversion':project.minecraft.version, 'revision':project.build
     }
 
     // copy everything else, thats not the mcmod.info
@@ -65,6 +66,10 @@ jar{
 	exclude 'acs/tabbychat/core/LiteModTabbyChat.class', 'litemod.json'
 }
 String getBuildNo(){
+	String build = runGit(project, project.getProjectDir(), "rev-list", "HEAD", "--count")
+	return build
+}
+String getRevision(){
 	String tag = runGit(project, project.getProjectDir(), "describe", "--tags", "--abbrev=0")
 	String rev = runGit(project, project.getProjectDir(), "rev-list", tag + "..HEAD", "--count")
 	return rev
