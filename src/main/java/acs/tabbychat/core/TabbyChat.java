@@ -481,6 +481,10 @@ public class TabbyChat {
 			toMePM.append("|^\\[([\\p{L}\\p{N}_]{3,16})[ ]?\\-\\>[ ]?").append(me).append("\\]");
 			fromMePM.append("|^\\[").append(me).append("[ ]?\\-\\>[ ]?([\\p{L}\\p{N}_]{3,16})\\]");
 		}
+		
+		// Match custom pattern
+		toMePM.append("|").append(serverSettings.pmTabRegexToMe.getValue());
+		fromMePM.append("|").append(serverSettings.pmTabRegexFromMe.getValue());
 
 		this.chatPMtoMePattern = Pattern.compile(toMePM.toString());
 		this.chatPMfromMePattern = Pattern.compile(fromMePM.toString());
@@ -754,6 +758,7 @@ public class TabbyChat {
 	public void reloadSettingsData(boolean withSave) {
 		this.updateDefaults();
 		this.loadPatterns();
+		this.loadPMPatterns();
 		this.updateFilters();
 		if (withSave)
 			this.storeChannelData();
