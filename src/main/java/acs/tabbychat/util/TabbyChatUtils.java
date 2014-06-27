@@ -69,6 +69,8 @@ public class TabbyChatUtils {
 	}
 	
 	public static void chatGuiTick(Minecraft mc) {
+		if(!(mc.ingameGUI.getChatGUI() instanceof GuiNewChatTC))
+			GuiNewChatTC.getInstance();
 		if (mc.currentScreen == null)
 			return;
 		if (!(mc.currentScreen instanceof GuiChat))
