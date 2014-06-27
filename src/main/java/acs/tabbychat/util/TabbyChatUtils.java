@@ -63,9 +63,9 @@ public class TabbyChatUtils {
 		} catch (ClassNotFoundException e) {
 			TabbyChat.forgePresent = false;
 		}
-		ChatContextMenu.addContext(ContextCut.class);
-		ChatContextMenu.addContext(ContextCopy.class);
-		ChatContextMenu.addContext(ContextPaste.class);
+		ChatContextMenu.addContext(new ContextCut());
+		ChatContextMenu.addContext(new ContextCopy());
+		ChatContextMenu.addContext(new ContextPaste());
 	}
 	
 	public static void chatGuiTick(Minecraft mc) {

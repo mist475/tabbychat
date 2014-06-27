@@ -770,6 +770,7 @@ public class GuiChatTC extends GuiChat {
 
 	@Override
 	public void mouseClicked(int _x, int _y, int _button) {
+		boolean clicked = false;
 		if (_button == 0 && this.mc.gameSettings.chatLinks && (this.contextMenu == null || !contextMenu.isCursorOver(_x, _y))) {
 			IChatComponent ccd = this.gnc.func_146236_a(Mouse.getX(), Mouse.getY());
 			if (ccd != null) {
@@ -827,14 +828,15 @@ public class GuiChatTC extends GuiChat {
 				}
 			}
 		} else if(contextMenu != null && contextMenu.isCursorOver(_x, _y)){
-			contextMenu.mouseClicked(_x, _y);
+			clicked = contextMenu.mouseClicked(_x, _y);
 		}
-		if(_button == 1 && this.contextMenu == null){
-			this.contextMenu = new ChatContextMenu(this, _x, _y);
-		}else{
-			this.contextMenu = null;
-		}
-
+		if(!clicked)
+			if(_button == 1 && (this.contextMenu == null || !this.contextMenu.isCursorOver(_x, _y))){
+				this.contextMenu = new ChatContextMenu(this, _x, _y);
+			}else{
+				this.contextMenu = null;
+			}
+		
 		for (int i = 0; i < this.inputList.size(); i++) {
 			if (_y >= this.height - 12 * (i + 1)
 					&& this.inputList.get(i).getVisible()) {

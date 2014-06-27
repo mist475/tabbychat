@@ -1,22 +1,19 @@
 package acs.tabbychat.gui.context;
 
-import acs.tabbychat.core.GuiChatTC;
-import net.minecraft.client.Minecraft;
+import java.util.List;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 
 public class ContextCut extends ChatContext {
 
 	@Override
 	public void onClicked() {
-		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-		if(screen instanceof GuiChatTC){
-			GuiTextField chat = ((GuiChatTC) screen).inputField2;
-			GuiScreen.setClipboardString(chat.getSelectedText());
-			String text = chat.getText().replace(chat.getSelectedText(), "");
-			((GuiChatTC)screen).inputField2.setText(text);
-		}
+		GuiTextField chat = getMenu().screen.inputField2;
+		GuiScreen.setClipboardString(chat.getSelectedText());
+		String text = chat.getText().replace(chat.getSelectedText(), "");
+		chat.setText(text);
 	}
 
 	@Override
@@ -26,14 +23,26 @@ public class ContextCut extends ChatContext {
 	}
 
 	@Override
-	public IIcon getDisplayIcon() {
+	public ResourceLocation getDisplayIcon() {
 		// TODO Auto-generated method stub
-		return null;
+		return new ResourceLocation("tabbychat:textures/gui/icons/cut.png");
 	}
 
 	@Override
 	public boolean isPositionValid(int x, int y) {
-		return true;
+		GuiTextField text = getMenu().screen.inputField2;
+		return text != null && !text.getSelectedText().isEmpty();
+	}
+
+	@Override
+	public Behavior getDisabledBehavior(){
+		return Behavior.GRAY;
+	}
+
+	@Override
+	public List<ChatContext> getChildren() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

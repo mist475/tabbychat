@@ -1,21 +1,22 @@
 package acs.tabbychat.gui.context;
 
-import net.minecraft.client.Minecraft;
+import java.util.List;
+
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.IIcon;
-import acs.tabbychat.core.GuiChatTC;
+import net.minecraft.util.ResourceLocation;
+
+import com.google.common.collect.Lists;
 
 public class ContextPaste extends ChatContext {
 
 	@Override
 	public void onClicked() {
-		parent.screen.inputField2.writeText(GuiScreen.getClipboardString());
+		getMenu().screen.inputField2.writeText(GuiScreen.getClipboardString());
 	}
 
 	@Override
-	public IIcon getDisplayIcon() {
-		return null;
+	public ResourceLocation getDisplayIcon() {
+		return new ResourceLocation("tabbychat:textures/gui/icons/paste.png");
 	}
 
 	@Override
@@ -28,6 +29,17 @@ public class ContextPaste extends ChatContext {
 	public boolean isPositionValid(int x, int y) {
 		String clipboard = GuiScreen.getClipboardString();
 		return clipboard != null && !clipboard.isEmpty();
+	}
+
+	@Override
+	public Behavior getDisabledBehavior(){
+		return Behavior.GRAY;
+	}
+
+	@Override
+	public List<ChatContext> getChildren() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
