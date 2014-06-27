@@ -31,6 +31,10 @@ import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TCChatLine;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.gui.ITCSettingsGUI;
+import acs.tabbychat.gui.context.ChatContextMenu;
+import acs.tabbychat.gui.context.ContextCopy;
+import acs.tabbychat.gui.context.ContextCut;
+import acs.tabbychat.gui.context.ContextPaste;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
@@ -59,6 +63,9 @@ public class TabbyChatUtils {
 		} catch (ClassNotFoundException e) {
 			TabbyChat.forgePresent = false;
 		}
+		ChatContextMenu.addContext(new ContextCut());
+		ChatContextMenu.addContext(new ContextCopy());
+		ChatContextMenu.addContext(new ContextPaste());
 	}
 	
 	public static void chatGuiTick(Minecraft mc) {

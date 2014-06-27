@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
@@ -48,6 +49,7 @@ import acs.tabbychat.gui.ChatButton;
 import acs.tabbychat.gui.ChatChannelGUI;
 import acs.tabbychat.gui.ChatScrollBar;
 import acs.tabbychat.gui.PrefsButton;
+import acs.tabbychat.gui.context.ChatContextMenu;
 import acs.tabbychat.util.TabbyChatUtils;
 
 import com.google.common.collect.Lists;
@@ -74,6 +76,7 @@ public class GuiChatTC extends GuiChat {
 	private int spellCheckCounter = 0;
 	public TabbyChat tc;
 	public GuiNewChatTC gnc;
+	private ChatContextMenu contextMenu;
 
 	/**
 	 * 
@@ -258,8 +261,7 @@ public class GuiChatTC extends GuiChat {
 		// Draw text fields and background
 		int bgWidth = (MacroKeybindCompat.present) ? this.width - 24
 				: this.width - 2;
-		drawRect(2, this.height - 2 - inputHeight, bgWidth, this.height - 2,
-				Integer.MIN_VALUE);
+		drawRect(2, this.height - 2 - inputHeight, bgWidth, this.height - 2, Integer.MIN_VALUE);
 		for (GuiTextField field : this.inputList) {
 			if (field.getVisible())
 				field.drawTextBox();
@@ -354,6 +356,10 @@ public class GuiChatTC extends GuiChat {
 				_button.drawButton(this.mc, cursorX, cursorY);
 			}
 		}
+		
+		// Draw context menus
+		if(this.contextMenu != null)
+			this.contextMenu.drawMenu(cursorX, cursorY);
 
 		GL11.glPopMatrix();
 		
@@ -764,15 +770,14 @@ public class GuiChatTC extends GuiChat {
 
 	@Override
 	public void mouseClicked(int _x, int _y, int _button) {
-		if (_button == 0 && this.mc.gameSettings.chatLinks) {
-			IChatComponent ccd = this.gnc.func_146236_a(Mouse.getX(),
-					Mouse.getY());
+		boolean clicked = false;
+		if (_button == 0 && this.mc.gameSettings.chatLinks && (this.contextMenu == null || !contextMenu.isCursorOver(_x, _y))) {
+			IChatComponent ccd = this.gnc.func_146236_a(Mouse.getX(), Mouse.getY());
 			if (ccd != null) {
 				ClickEvent clickEvent = ccd.getChatStyle().getChatClickEvent();
 				if (clickEvent != null) {
 					if (isShiftKeyDown()) {
-						this.inputField2
-								.writeText(ccd.getChatStyle().getChatClickEvent().getValue());
+						this.inputField2.writeText(ccd.getChatStyle().getChatClickEvent().getValue());
 					} else {
 						URI url;
 						if (clickEvent.getAction() == ClickEvent.Action.OPEN_URL) {
@@ -781,9 +786,7 @@ public class GuiChatTC extends GuiChat {
 
 								if (this.mc.gameSettings.chatLinksPrompt) {
 									this.clickedURI2 = url;
-									this.mc.displayGuiScreen(new GuiConfirmOpenLink(
-											this, clickEvent.getValue(), 0,
-											false));
+									this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, clickEvent.getValue(), 0, false));
 								} else {
 									this.func_146407_a(url);
 								}
@@ -815,9 +818,7 @@ public class GuiChatTC extends GuiChat {
 						url = new URL(ccd.getUnformattedText());
 						if (this.mc.gameSettings.chatLinksPrompt) {
 							this.clickedURI2 = url.toURI();
-							this.mc.displayGuiScreen(new GuiConfirmOpenLink(
-									this, ccd.getUnformattedText(), 0,
-									false));
+							this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, ccd.getUnformattedText(), 0, false));
 						} else {
 							this.func_146407_a(url.toURI());
 						}
@@ -826,8 +827,16 @@ public class GuiChatTC extends GuiChat {
 					catch(URISyntaxException e){}
 				}
 			}
+		} else if(contextMenu != null && contextMenu.isCursorOver(_x, _y)){
+			clicked = contextMenu.mouseClicked(_x, _y);
 		}
-
+		if(!clicked)
+			if(_button == 1 && (this.contextMenu == null || !this.contextMenu.isCursorOver(_x, _y))){
+				this.contextMenu = new ChatContextMenu(this, _x, _y);
+			}else{
+				this.contextMenu = null;
+			}
+		
 		for (int i = 0; i < this.inputList.size(); i++) {
 			if (_y >= this.height - 12 * (i + 1)
 					&& this.inputList.get(i).getVisible()) {
