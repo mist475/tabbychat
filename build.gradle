@@ -60,9 +60,32 @@ dependencies {
 	compile configurations.customCompile
 }
 jar{
+	from sourceSets.api.output
 	from ( configurations.customCompile.collect { it.isDirectory() ? it : zipTree(it)}) { exclude 'META-INF/**' }
 	appendix = minecraft.version
 	exclude 'acs/tabbychat/core/LiteModTabbyChat.class', 'litemod.json'
+}
+task jarApi(type: Jar){
+	from sourceSets.api.output
+	appendix = minecraft.version
+	classifier = "api"
+}
+task jarDev(type: Jar){
+	from sourceSets.main.output
+	from sourceSets.api.output
+	appendix = minecraft.version
+	classifier = "dev"
+}
+task jarSrc(type: Jar){
+	from sourceSets.main.allSource
+	from sourceSets.api.allSource
+	appendix = minecraft.version
+	classifier = "src"
+}
+artifacts{
+	archives jarApi
+	archives jarDev
+	archives jarSrc
 }
 String getBuildNo(){
 	return git("rev-list", "HEAD", "--count")
@@ -82,6 +105,7 @@ String git(String[] args){
 /* // Disable until LiteLoader updates
 apply plugin: 'liteloader' 
 jarLiteloader{
+	from sourceSets.api.output
 	from configurations.customCompile.collect { it.isDirectory() ? it : project.zipTree(it)}
 	appendix = minecraft.version
 	exclude 'acs/tabbychat/core/TabbyChatMod.class', 'mcmod.info'

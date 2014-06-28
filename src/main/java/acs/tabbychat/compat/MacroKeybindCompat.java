@@ -8,9 +8,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import acs.tabbychat.api.IChatMouseExtension;
+import acs.tabbychat.api.IChatRenderExtension;
+import acs.tabbychat.api.IChatUpdateExtension;
 
-public class MacroKeybindCompat {
+public class MacroKeybindCompat
+implements IChatMouseExtension, IChatUpdateExtension, IChatRenderExtension {
 	private static Object inChatLayout = null;
 	private static Object inChatGUI = null;
 	private static Object btnGui = null;
@@ -34,10 +39,10 @@ public class MacroKeybindCompat {
 	private static Field boundingBox;
 	public static boolean present = true;
 	private static boolean hovered = false;
-	/**
-	 * Called on load
-	 */
-	public static void load() {
+
+	private GuiScreen screen;
+	
+	public void load() {
 		if(present) {
 			if(inChatLayout == null
 					|| inChatGUI == null
@@ -130,15 +135,8 @@ public class MacroKeybindCompat {
 			}
 		}
 	}
-	/**
-	 * 
-	 * @param par1
-	 * @param par2
-	 * @param par3
-	 * @param par4
-	 * @return
-	 */
-	public static boolean contextMenuClicked(int par1, int par2, int par3, GuiScreen par4) {
+
+	public boolean contextMenuClicked(int par1, int par2, int par3) {
 		if(!present) return false;
 		try {
 			String menuItem = (String)mousePressed.invoke(dropDownMenu, new Object[]{par1, par2});
@@ -157,10 +155,10 @@ public class MacroKeybindCompat {
 				} else if(menuItem.equals("edit")) {
 					if(bindable) {
 						Field id = controlClass.getField("id");
-						displayScreen.invoke(null, macroEdit.newInstance(new Object[]{id.get(control), par4}));
+						displayScreen.invoke(null, macroEdit.newInstance(new Object[]{id.get(control), screen}));
 					}
 				} else if(menuItem.equals("design")) {
-					displayScreen.invoke(null, macroDesign.newInstance(new Object[]{"inchat", par4, true}));
+					displayScreen.invoke(null, macroDesign.newInstance(new Object[]{"inchat", screen, true}));
 				}
 				return true;
 			}
@@ -170,28 +168,21 @@ public class MacroKeybindCompat {
 		}
 		return false;
 	}
-	/**
-	 * 
-	 * @param par1
-	 * @param par2
-	 * @param par3
-	 * @param par4
-	 * @return
-	 */
-	public static boolean controlClicked(int par1, int par2, int par3, GuiScreen par4) {
+
+	public boolean controlClicked(int par1, int par2, int par3) {
 		if(!present) return false;
 		boolean clicked = false;
 		try {
-			boundingBox.set(inChatGUI, new Rectangle(0, 0, par4.width, par4.height-14));
+			boundingBox.set(inChatGUI, new Rectangle(0, 0, screen.width, screen.height-14));
 			clicked = ((Boolean)controlClicked.invoke(inChatGUI, new Object[]{par1, par2, par3})).booleanValue();
 			if(clicked && par3 == 1) {
 				dropDownVisible.set(dropDownMenu, true);
 				Dimension contextMenuSize = (Dimension)dropDownSize.invoke(dropDownMenu, (Object[])null);
-				menuLocation.set(inChatGUI, new Point(Math.min(par1, par4.width - contextMenuSize.width), Math.min(par2 - 8, par4.height - contextMenuSize.height)));
+				menuLocation.set(inChatGUI, new Point(Math.min(par1, screen.width - contextMenuSize.width), Math.min(par2 - 8, screen.height - contextMenuSize.height)));
 			}
 			if(clicked) return true;
 			if(hovered) {
-				GuiScreen designerScreen = (GuiScreen)createDesignerScreen.newInstance(new Object[]{"inchat", par4, true});
+				GuiScreen designerScreen = (GuiScreen)createDesignerScreen.newInstance(new Object[]{"inchat", screen, true});
 				Minecraft.getMinecraft().displayGuiScreen(designerScreen);
 				return true;
 			}
@@ -200,16 +191,12 @@ public class MacroKeybindCompat {
 		}
 		return clicked;
 	}
-	/**
-	 * Draws screen
-	 * @param par1
-	 * @param par2
-	 * @param par3
-	 */
-	public static void drawScreen(int par1, int par2, GuiScreen par3) {
+	
+	@Override
+	public void drawScreen(int par1, int par2, float par3) {
 		if(!present) return;
 		Object[] args = new Object[3];
-		args[0] = new Rectangle(0, 0, par3.width, par3.height - 14);
+		args[0] = new Rectangle(0, 0, screen.width, screen.height - 14);
 		args[1] = par1;
 		args[2] = par2;
 
@@ -217,8 +204,8 @@ public class MacroKeybindCompat {
 		args2[0] = Minecraft.getMinecraft();
 		args2[1] = par1;
 		args2[2] = par2;
-		args2[3] = par3.width - 20;
-		args2[4] = par3.height - 14;
+		args2[3] = screen.width - 20;
+		args2[4] = screen.height - 14;
 		args2[5] = 0xff1200;
 		args2[6] = 0x80000000;
 
@@ -233,5 +220,34 @@ public class MacroKeybindCompat {
 			present = false;
 		}
 		return;
+	}
+	@Override
+	public void initGui(GuiScreen screen) {
+		this.screen = screen;
+	}
+	@Override
+	public void onGuiClosed() {
+		
+	}
+	@Override
+	public boolean mouseClicked(int x, int y, int button) {
+
+		if (contextMenuClicked(x, y, button))
+			return true;
+		if (controlClicked(x, y, button))
+			return true;
+
+		return false;
+	}
+	@Override
+	public void handleMouseInput() {
+	}
+	@Override
+	public boolean actionPerformed(GuiButton button) {
+		return false;
+	}
+	@Override
+	public void updateScreen() {
+		
 	}
 }

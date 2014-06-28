@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
@@ -42,6 +41,10 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import tv.twitch.chat.ChatUserInfo;
+import acs.tabbychat.api.IChatMouseExtension;
+import acs.tabbychat.api.IChatRenderExtension;
+import acs.tabbychat.api.IChatUpdateExtension;
+import acs.tabbychat.api.TCExtensionManager;
 import acs.tabbychat.compat.EmoticonsCompat;
 import acs.tabbychat.compat.MacroKeybindCompat;
 import acs.tabbychat.gui.ChatBox;
@@ -50,6 +53,7 @@ import acs.tabbychat.gui.ChatChannelGUI;
 import acs.tabbychat.gui.ChatScrollBar;
 import acs.tabbychat.gui.PrefsButton;
 import acs.tabbychat.gui.context.ChatContextMenu;
+import acs.tabbychat.util.ChatExtensions;
 import acs.tabbychat.util.TabbyChatUtils;
 
 import com.google.common.collect.Lists;
@@ -77,18 +81,15 @@ public class GuiChatTC extends GuiChat {
 	public TabbyChat tc;
 	public GuiNewChatTC gnc;
 	private ChatContextMenu contextMenu;
+	private ChatExtensions extensions;
 
-	/**
-	 * 
-	 */
 	public GuiChatTC() {
 		super();
 		this.mc = Minecraft.getMinecraft();
 		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		this.gnc = GuiNewChatTC.getInstance();
 		this.tc = GuiNewChatTC.tc;
-		EmoticonsCompat.load();
-		MacroKeybindCompat.load();
+		this.extensions = new ChatExtensions(TCExtensionManager.INSTANCE.getExtensions());
 	}
 
 	public GuiChatTC(String par1Str) {
@@ -98,10 +99,11 @@ public class GuiChatTC extends GuiChat {
 
 	@Override
 	public void actionPerformed(GuiButton par1GuiButton) {
-		// Attempt Emoticons actionPerformed if present
-		EmoticonsCompat.actionPerformed(par1GuiButton, this.buttonList,
-				this.inputField2);
-
+		// Attempt 
+		for(IChatMouseExtension extension : extensions.getListOf(IChatMouseExtension.class))
+			if(extension.actionPerformed(par1GuiButton))
+				return;
+		
 		if (par1GuiButton.id == 1){
 			this.playerWakeUp();
 			if(!ChatBox.pinned)
@@ -363,11 +365,10 @@ public class GuiChatTC extends GuiChat {
 
 		GL11.glPopMatrix();
 		
-		// Attempt Macro/Keybind drawScreen if present
-		MacroKeybindCompat.drawScreen(cursorX, cursorY, this);
-		// Attempt Emoticons drawScreen if present
-		EmoticonsCompat.drawScreen(cursorX, cursorY, pointless, this,
-				this.buttonList);
+		// Draw the screen for extensions
+		for(IChatRenderExtension extension : extensions.getListOf(IChatRenderExtension.class))
+			extension.drawScreen(cursorX, cursorY, pointless);
+		
 	}
 
 	public void func_73893_a(String nameStart, String buffer) {
@@ -514,6 +515,8 @@ public class GuiChatTC extends GuiChat {
 	@Override
 	public void initGui() {
 		Keyboard.enableRepeatEvents(true);
+		// Refresh the extensions when the gui is started.
+		this.extensions = new ChatExtensions(TCExtensionManager.INSTANCE.getExtensions());
 		this.buttonList.clear();
 		this.inputList.clear();
 		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
@@ -582,8 +585,9 @@ public class GuiChatTC extends GuiChat {
 			this.buttonList.add(leaveBed);
 		}
 
-		// Initialize Emoticons screen if present
-		EmoticonsCompat.initGui(this.buttonList);
+		// Init the gui for extensions.
+		for(IChatUpdateExtension extension : extensions.getListOf(IChatUpdateExtension.class))
+			extension.initGui(this);
 	}
 
 	/**
@@ -850,12 +854,11 @@ public class GuiChatTC extends GuiChat {
 			}
 		}
 
-		// Pass click info to Macro/Keybind mod if present
-		if (MacroKeybindCompat.contextMenuClicked(_x, _y, _button, this))
-			return;
-		if (MacroKeybindCompat.controlClicked(_x, _y, _button, this))
-			return;
-
+		// Pass click info to extensions
+		for(IChatMouseExtension extension : this.extensions.getListOf(IChatMouseExtension.class)){
+			if(extension.mouseClicked(_x, _y, _button))
+				return;
+		}
 		// Replicating GuiScreen's mouseClicked method since 'super' won't work
 		for (GuiButton _guibutton : (List<GuiButton>) this.buttonList) {
 			if (_guibutton instanceof ChatButton) {

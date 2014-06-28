@@ -1,18 +1,16 @@
 package acs.tabbychat.compat;
 
-import acs.tabbychat.core.GuiChatTC;
-import acs.tabbychat.gui.ChatButton;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import org.lwjgl.opengl.GL11;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class EmoticonsCompat {
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
+import acs.tabbychat.api.IChatMouseExtension;
+import acs.tabbychat.api.IChatUpdateExtension;
+
+public class EmoticonsCompat implements IChatMouseExtension, IChatUpdateExtension {
 	public static Object emoteObject = null;
 	public static Class emoteButtonClass = null;
 	private static Constructor emoteConstructor = null;
@@ -24,7 +22,7 @@ public class EmoticonsCompat {
 	/**
 	 * 
 	 */
-	public static void load() {
+	public void load() {
 		if(present) {
 			if(emoteConstructor == null || emoteActionPerformed == null || emoteInitGui == null || emoteDrawScreen == null || emoteButtonClass == null) {
 				try {
@@ -62,65 +60,49 @@ public class EmoticonsCompat {
 			}
 		}
 	}
-	/**
-	 * 
-	 * @param par1
-	 * @param par2
-	 * @param par3
-	 */
-	public static void actionPerformed(GuiButton par1, List par2, GuiTextField par3) {
-		if(!present) return;
-		Object[] args = new Object[3];
-		args[0] = par1;
-		args[1] = par2;
-		args[2] = par3;
+	
+	public boolean actionPerformed(GuiButton par1) {
+		if(!present) return false;
 		try {
-			emoteActionPerformed.invoke(emoteObject, args);
+			emoteActionPerformed.invoke(emoteObject, par1);
 		} catch (Exception e) {
 			present = false;
 		}
+		return false;
 	}
-	/**
-	 * Draws screen
-	 * @param par1
-	 * @param par2
-	 * @param par3
-	 * @param par4
-	 * @param buttonList
-	 */
-	public static void drawScreen(int par1, int par2, float par3, GuiChatTC par4, List buttonList) {
-		if(!present) return;
-		Object[] args = new Object[4];
-		args[0] = par1;
-		args[1] = par2;
-		args[2] = par3;
-		args[3] = (GuiScreen)par4;
-		emoteOffsetX = Math.max(par4.width - 427, 0);
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float)emoteOffsetX, 0.0f, 0.0f);
-		try {
-			emoteDrawScreen.invoke(emoteObject, args);
-			for(GuiButton _button : (List<GuiButton>)buttonList) {
-				if(!ChatButton.class.isInstance(_button) && _button.id > 2) _button.drawButton(Minecraft.getMinecraft(), par1-emoteOffsetX, par2);
-			}
-		} catch (Exception e) {
-			present = false;
-		} finally {
-			GL11.glPopMatrix();
-		}
-	}
-	/**
-	 * Inits the gui
-	 * @param par1
-	 */
-	public static void initGui(List par1) {
+
+	public void initGui(GuiScreen screen) {
 		if(!present) return;
 		Object[] args = new Object[1];
-		args[0] = par1;
 		try {
-			emoteInitGui.invoke(emoteObject, args);
+			emoteInitGui.invoke(emoteObject);
 		} catch (Exception e) {
 			present = false;
 		}
 	}
+
+	@Override
+	public void onGuiClosed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean mouseClicked(int x, int y, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void handleMouseInput() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateScreen() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
