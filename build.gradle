@@ -15,8 +15,6 @@ buildscript {
 	}
 }
 
-import static net.minecraftforge.gradle.dev.DevBasePlugin.*
-
 apply plugin: 'fml'
 
 ext.set("revision", getRevision())
@@ -51,31 +49,40 @@ processResources
         exclude 'mcmod.info', 'litemod.json'
     }
 }
+configurations{
+	customCompile
+}
 sourceSets {
-	main {
-		java {exclude '**/LiteMod*', 'net/minecraft/**'}
-		compileClasspath = configurations.default // Work around ForgeGradle#101
-	}
+	main {java {exclude '**/LiteMod*', 'net/minecraft/**'}}
 }
 dependencies {
-	compile 'net.sf.jazzy:jazzy:0.5.2-rtext-1.4.1-2'
+	customCompile 'net.sf.jazzy:jazzy:0.5.2-rtext-1.4.1-2'
+	compile configurations.customCompile
 }
 jar{
-	from ( configurations.compile.collect { it.isDirectory() ? it : zipTree(it)}) { exclude 'META-INF/**' }
+	from ( configurations.customCompile.collect { it.isDirectory() ? it : zipTree(it)}) { exclude 'META-INF/**' }
 	appendix = minecraft.version
 	exclude 'acs/tabbychat/core/LiteModTabbyChat.class', 'litemod.json'
 }
 String getBuildNo(){
-	return runGit(project, project.getProjectDir(), "rev-list", "HEAD", "--count")
+	return git("rev-list", "HEAD", "--count")
 }
 String getRevision(){
-	String tag = runGit(project, project.getProjectDir(), "describe", "--tags", "--abbrev=0")
-	return runGit(project, project.getProjectDir(), "rev-list", tag + "..HEAD", "--count")
+	String tag = git("describe", "--tags", "--abbrev=0")
+	return git("rev-list", tag + "..HEAD", "--count")
+}
+import static net.minecraftforge.gradle.dev.DevBasePlugin.*
+String git(String[] args){
+	try{
+		return runGit(project, project.getProjectDir(), args)
+	}catch(Exception e){
+		return null
+	}
 }
 /* // Disable until LiteLoader updates
 apply plugin: 'liteloader' 
 jarLiteloader{
-	from configurations.compile.collect { it.isDirectory() ? it : project.zipTree(it)}
+	from configurations.customCompile.collect { it.isDirectory() ? it : project.zipTree(it)}
 	appendix = minecraft.version
 	exclude 'acs/tabbychat/core/TabbyChatMod.class', 'mcmod.info'
 }
