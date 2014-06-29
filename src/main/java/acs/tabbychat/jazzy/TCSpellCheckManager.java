@@ -16,19 +16,21 @@ import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.gui.ITCSettingsGUI;
 
 import com.swabunga.spell.event.SpellCheckEvent;
+import com.swabunga.spell.event.StringWordTokenizer;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.Minecraft;
 
 public class TCSpellCheckManager {
-	private static TCSpellCheckListener listener;
 	private static TCSpellCheckManager instance = null;
-	private static HashMap<Integer, String> errorCache = new HashMap<Integer, String>();
-	private static final ReentrantReadWriteLock errorLock = new ReentrantReadWriteLock();
-	private static final Lock errorReadLock = errorLock.readLock();
-	private static final Lock errorWriteLock = errorLock.writeLock();
-	private static String lastAttemptedLocale;
+	
+	private TCSpellCheckListener listener;
+	private HashMap<Integer, String> errorCache = new HashMap<Integer, String>();
+	private final ReentrantReadWriteLock errorLock = new ReentrantReadWriteLock();
+	private final Lock errorReadLock = errorLock.readLock();
+	private final Lock errorWriteLock = errorLock.writeLock();
+	private String lastAttemptedLocale;
 	/**
 	 * 
 	 */
@@ -212,5 +214,13 @@ public class TCSpellCheckManager {
 			}
 		}
 		listener.checkSpelling(inputCache);
+	}
+	
+	public List<String> getSuggestions(String word, int threshold){
+		return this.listener.spellCheck.getSuggestions(word, threshold);
+	}
+	
+	public boolean isSpelledCorrectly(String word){
+		return this.listener.spellCheck.checkSpelling(new StringWordTokenizer(word)) == 0;
 	}
 }

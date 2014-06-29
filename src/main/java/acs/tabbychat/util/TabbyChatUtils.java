@@ -38,6 +38,7 @@ import acs.tabbychat.gui.context.ChatContextMenu;
 import acs.tabbychat.gui.context.ContextCopy;
 import acs.tabbychat.gui.context.ContextCut;
 import acs.tabbychat.gui.context.ContextPaste;
+import acs.tabbychat.gui.context.ContextSpellingSuggestion;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
@@ -66,6 +67,8 @@ public class TabbyChatUtils {
 		} catch (ClassNotFoundException e) {
 			TabbyChat.forgePresent = false;
 		}
+		
+		ChatContextMenu.addContext(new ContextSpellingSuggestion());
 		ChatContextMenu.addContext(new ContextCut());
 		ChatContextMenu.addContext(new ContextCopy());
 		ChatContextMenu.addContext(new ContextPaste());
