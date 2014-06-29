@@ -41,6 +41,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import tv.twitch.chat.ChatUserInfo;
+import acs.tabbychat.api.IChatKeyboardExtension;
 import acs.tabbychat.api.IChatMouseExtension;
 import acs.tabbychat.api.IChatRenderExtension;
 import acs.tabbychat.api.IChatUpdateExtension;
@@ -99,7 +100,8 @@ public class GuiChatTC extends GuiChat {
 
 	@Override
 	public void actionPerformed(GuiButton par1GuiButton) {
-		// Attempt 
+		// Attempts to send button to extensions.
+		// If one returns true, stops here.
 		for(IChatMouseExtension extension : extensions.getListOf(IChatMouseExtension.class))
 			if(extension.actionPerformed(par1GuiButton))
 				return;
@@ -510,6 +512,10 @@ public class GuiChatTC extends GuiChat {
 
 		if (mc.currentScreen.getClass() != GuiChat.class)
 			super.handleMouseInput();
+		
+		// let extensions handle mouse.
+		for(IChatMouseExtension ext : extensions.getListOf(IChatMouseExtension.class))
+			ext.handleMouseInput();
 	}
 
 	@Override
@@ -770,6 +776,10 @@ public class GuiChatTC extends GuiChat {
 			}
 
 		}
+		
+		// pass keyTyped to extensions
+		for(IChatKeyboardExtension ext : extensions.getListOf(IChatKeyboardExtension.class))
+			ext.keyTyped(_char, _code);
 	}
 
 	@Override
@@ -900,6 +910,10 @@ public class GuiChatTC extends GuiChat {
 		ChatBox.dragging = false;
 		ChatBox.resizing = false;
 		gnc.resetScroll();
+		
+		// run onGuiClosed on extensions
+		for(IChatUpdateExtension ext : extensions.getListOf(IChatUpdateExtension.class))
+			ext.onGuiClosed();
 	}
 
 	/**
@@ -1040,6 +1054,10 @@ public class GuiChatTC extends GuiChat {
 	@Override
 	public void updateScreen() {
 		this.inputField2.updateCursorCounter();
+		
+		// Update screen for extensions
+		for(IChatUpdateExtension ext : extensions.getListOf(IChatUpdateExtension.class))
+			ext.updateScreen();
 	}
 	
 }
