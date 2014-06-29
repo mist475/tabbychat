@@ -97,6 +97,8 @@ settings.server.regexignorebool=Use patterns
 settings.server.pmtabregex.tome=PM Regex To Me
 settings.server.pmtabregex.fromme=PM Regex From Me
 
+settings.spelling.name=Spelling
+
 sounds.anvil=Anvil
 sounds.bass=Bass
 sounds.bat=Bat
