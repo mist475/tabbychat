@@ -122,7 +122,7 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
 	}
 
 	public void resetDescription() {
-		this.description = I18n.format(this.categoryName + "." + this.propertyName.toLowerCase());
+		this.description = this.categoryName.isEmpty() ? "" : I18n.format(this.categoryName + "." + this.propertyName.toLowerCase());
 	}
 
 	public void save() {
