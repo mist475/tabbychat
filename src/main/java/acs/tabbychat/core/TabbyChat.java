@@ -449,12 +449,11 @@ public class TabbyChat {
 		if (frmt.length() == 0)
 			frmt = "(?i:\u00A7[0-9A-FK-OR])*";
 
-		this.chatChannelPatternDirty = Pattern.compile("^(\u00A7r)?" + frmt
-				+ "\\" + delims.open() + "([\\p{L}0-9_\u00A7]+)\\" + delims.close());
-		this.chatChannelPatternClean = Pattern.compile("^" + "\\"
-				+ delims.open() + "([\\p{L}0-9_]{1,"
-				+ TabbyChat.advancedSettings.maxLengthChannelName.getValue()
-				+ "})\\" + delims.close());
+		this.chatChannelPatternDirty = Pattern.compile("(^(\u00A7r)?" + frmt
+				+ "\\" + delims.open() + "([\\p{L}0-9_\u00A7]+)\\" + delims.close() + "|^\\(Twitch\\))");
+		this.chatChannelPatternClean = Pattern.compile("(^" + "\\" + delims.open() + "([\\p{L}0-9_]{1,"
+				+ TabbyChat.advancedSettings.maxLengthChannelName.getValue() + "})\\" + delims.close() +
+				"|^\\(Twitch\\))");
 	}
 
 	protected void loadPMPatterns() {
