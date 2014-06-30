@@ -23,7 +23,6 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 	private static final int GROUP_SPAM_ID = 9105;
 	private static final int UNREAD_FLASHING_ID = 9106;
 	private static final int TIMESTAMP_COLOR_ID = 9107;
-	private static final int SPELL_CHECK_ENABLE = 9108;
 	private static final int UPDATE_CHECK_ENABLE = 9109;
 	private static final int SPLIT_CHATLOG = 9110;
 
@@ -38,7 +37,6 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 	public TCSettingEnum timeStampColor = new TCSettingEnum(ColorCodeEnum.DEFAULT, "timeStampColor", this.propertyPrefix, TIMESTAMP_COLOR_ID, FormatCodeEnum.ITALIC);
 	public TCSettingBool groupSpam = new TCSettingBool(false, "groupSpam", this.propertyPrefix, GROUP_SPAM_ID);
 	public TCSettingBool unreadFlashing = new TCSettingBool(true, "unreadFlashing", this.propertyPrefix, UNREAD_FLASHING_ID);
-	public TCSettingBool spellCheckEnable = new TCSettingBool(true, "spellCheckEnable", this.propertyPrefix, SPELL_CHECK_ENABLE);
 	public TCSettingBool updateCheckEnable = new TCSettingBool(true, "updateCheckEnable", this.propertyPrefix, UPDATE_CHECK_ENABLE);
 	public TCSettingBool splitChatLog = new TCSettingBool(false, "splitChatLog", this.propertyPrefix, SPLIT_CHATLOG);
 	
@@ -83,7 +81,6 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 		this.buttonList.add(this.timeStampColor);
 		this.buttonList.add(this.groupSpam);
 		this.buttonList.add(this.unreadFlashing);
-		this.buttonList.add(this.spellCheckEnable);
 		this.buttonList.add(this.updateCheckEnable);
 		this.buttonList.add(this.splitChatLog);
 	}
@@ -127,11 +124,7 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 		this.unreadFlashing.setLabelLoc(col1x + 19);
 		this.unreadFlashing.buttonColor = buttonColor;
 
-		this.spellCheckEnable.setButtonLoc(col1x, this.rowY(8));
-		this.spellCheckEnable.setLabelLoc(col1x + 19);
-		this.spellCheckEnable.buttonColor = buttonColor;
-		
-		this.updateCheckEnable.setButtonLoc(col1x,  this.rowY(9));
+		this.updateCheckEnable.setButtonLoc(col1x,  this.rowY(8));
 		this.updateCheckEnable.setLabelLoc(col1x + 19);
 		this.updateCheckEnable.buttonColor = buttonColor;
 	}

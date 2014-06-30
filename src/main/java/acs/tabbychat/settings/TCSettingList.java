@@ -1,7 +1,6 @@
 package acs.tabbychat.settings;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,28 +14,26 @@ import net.minecraft.util.MathHelper;
 
 import org.apache.commons.io.IOUtils;
 
+import acs.tabbychat.gui.PrefsButton;
+import acs.tabbychat.jazzy.TCSpellCheckManager;
+
 import com.google.common.collect.Lists;
 
-public class TCSettingList extends Gui {
+public class TCSettingList extends TCSetting {
 	
 	private List<Entry> list = Lists.newArrayList();
-	private int currentPage;
-	private int xPosition;
-	private int yPosition;
-	private int width;
-	private int height;
-	private List<Entry> selected;
+	private List<Entry> selected = Lists.newArrayList();
+	private final File dictionary;
+	private int currentPage = 1;
+	private int id = 0;
 	
-	public TCSettingList(File file) throws IOException{
-		loadEntries(file);
-	}
-	
-	public TCSettingList(List<String> list){
-		for(String val : list)
-			this.list.add(new Entry(val));
+	public TCSettingList(File file, int id) {
+		super("", "", "", id);
+		this.dictionary = file;
 	}
 
-	public void drawList(Minecraft mc, int cursorX, int cursorY) {
+	@Override
+	public void drawButton(Minecraft mc, int cursorX, int cursorY) {
 		FontRenderer fr = mc.fontRenderer;
 		Gui.drawRect(xPosition, yPosition, xPosition + width, yPosition + height, Integer.MIN_VALUE);
 		
@@ -47,21 +44,25 @@ public class TCSettingList extends Gui {
 		
 		int i = 0;
 		for(Entry entry : getVisible()){
-			fr.drawString(entry.getValue(), xPosition + 5, yPosition + i*(mc.fontRenderer.FONT_HEIGHT + 2), 0x010101);
+			entry.drawButton(mc, cursorX, cursorY);
 			i++;
 		}
 	}
 	
 	public boolean contains(String srt){
 		for(Entry entry : list)
-			if(srt.equals(entry.getValue()))
+			if(srt.equals(entry.displayString))
 				return true;
 		return false;
 	}
 	
 	public void addToList(String str){
-		if(!contains(str))
-			list.add(new Entry(str));
+		if(str.isEmpty())
+			return;
+		if(!contains(str)){
+			list.add(new Entry(id,str));
+			id++;
+		}
 	}
 	
 	public void removeFromList(String str){
@@ -84,10 +85,16 @@ public class TCSettingList extends Gui {
 	public List<Entry> getVisible(){
 		List<Entry> list = Lists.newArrayList();
 		int i = 0;
-		while(i <= currentPage){
+		int i1 = 0;
+		while(i < currentPage){
 			list.clear();
-			for(Entry entry : this.list){
+			for(int i2 = 0; i1 < this.list.size(); i2++){
+				if(list.size() >= 8)
+					break;
+				Entry entry = this.list.get(i1);
+				entry.setPos(i2);
 				list.add(entry);
+				i1++;
 			}
 			i++;
 		}
@@ -115,8 +122,12 @@ public class TCSettingList extends Gui {
 	}
 
 	public int getTotalPages(){
-		double pages = (double)list.size() / Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;;
+		double pages = (double)list.size() / 8D;
 		return MathHelper.ceiling_double_int(pages);
+	}
+
+	public Object getPageNum() {
+		return this.currentPage;
 	}
 	
 	public void nextPage(){
@@ -124,29 +135,54 @@ public class TCSettingList extends Gui {
 	}
 	
 	public void previousPage(){
-		this.currentPage = Math.max(currentPage-1, 0);
+		this.currentPage = Math.max(currentPage-1, 1);
 	}
 	
 	public void saveEntries(File file) throws IOException {
+		FileWriter writer = new FileWriter(file);
 		for(Entry entry : list){
-			IOUtils.writeLines(list, null, new FileWriter(file));
+			writer.write(entry.displayString);
+			writer.write("\n");
 		}
+		writer.close();
+		loadEntries(file);
 	}
 	
 	public void loadEntries(File file) throws IOException{
-		list.clear();
-		for(String val : IOUtils.readLines(new FileReader(file)))
-			list.add(new Entry(val));
+		clearList();
+		for(String val : IOUtils.readLines(new FileReader(file))){
+			TCSpellCheckManager.getInstance().addToIgnoredWords(val);
+			addToList(val);
+		}
 	}
 	
-	public class Entry {
+	@Override
+	public void mouseClicked(int x, int y, int button){
+		if(x > x() && x < x() + width() && y>y() && y<y()+height())
+			for(Entry entry : getVisible()){
+				if(y > entry.y() && y < entry.y() + entry.height()){
+					actionPerformed(entry);
+					return;
+				}
+			}
+	}
+	
+	private void actionPerformed(Entry entry){
+		entry.setSelected(!entry.isSelected());
+	}
+	
+	public class Entry extends PrefsButton {
 		
 		private TCSettingList list = TCSettingList.this;
-
+		private int pos;
 		private String value;
 		
-		public Entry(String value) {
-			this.value = value;
+		public Entry(int id, String value) {
+			super(id, TCSettingList.this.x(), 0, TCSettingList.this.width(), 12, value);
+		}
+		
+		public void setPos(int y){
+			this.pos = y;
 		}
 
 		public String getValue() {
@@ -163,13 +199,27 @@ public class TCSettingList extends Gui {
 		
 		public void setSelected(boolean value){
 			if(value)
-				list.getSelected().add(this);
+				list.selectEntry(this);
 			else
-				list.getSelected().remove(this);
+				list.deselectEntry(this);
+		}
+		
+		@Override
+		public void drawButton(Minecraft mc, int x, int y){
+			if(this.isSelected())
+				this.bgcolor = 0x99999999;
+			else
+				this.bgcolor = 0xDD000000;
+			this.y(list.y() + (pos*12));
+			super.drawButton(mc, x, y);
 		}
 		
 		public void remove(){
 			list.list.remove(this);
+		}
+		
+		public void keyClicked(int x, int y, int button){
+			
 		}
 	}
 }

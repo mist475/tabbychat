@@ -130,6 +130,13 @@ public class PrefsButton extends GuiButton {
               drawRect(this.x(), this.y(), this.x() + this.width(), this.y() + this.height(), this.bgcolor);
 	          boolean hovered = cursorX >= this.x() && cursorY >= this.y() && cursorX < this.x() + this.width() && cursorY < this.y() + this.height();
 
+	          if(bgcolor == 0xDD000000 || bgcolor == 0x99999999){
+	        	  drawRect(this.x()-1, this.y()-1, this.x(), this.y() + this.height(), 0xc0c0c0c0);
+            	  drawRect(this.x()-1, this.y()-1, this.x()+this.width()+1, this.y(), 0xc0c0c0c0);
+            	  drawRect(this.x()-1, this.y()+this.height(), this.x()+this.width()+1, this.y()+this.height()+1, 0x70707070);
+            	  drawRect(this.x()+this.width(), this.y()-1, this.x()+this.width()+1, this.y()+this.height()+1, 0x70707070);
+              }
+              
 	          int var7 = 0xa0a0a0;
 	          if(!this.enabled) {
 	        	  var7 = -0x5f5f60;
