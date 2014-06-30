@@ -47,13 +47,12 @@ import net.minecraft.util.StringUtils;
 
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.collect.Lists;
-
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.TCSettingsAdvanced;
 import acs.tabbychat.gui.TCSettingsFilters;
 import acs.tabbychat.gui.TCSettingsGeneral;
 import acs.tabbychat.gui.TCSettingsServer;
+import acs.tabbychat.gui.TCSettingsSpelling;
 import acs.tabbychat.jazzy.TCSpellCheckManager;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
@@ -63,6 +62,8 @@ import acs.tabbychat.threads.BackgroundUpdateCheck;
 import acs.tabbychat.util.ChatComponentUtils;
 import acs.tabbychat.util.ComponentList;
 import acs.tabbychat.util.TabbyChatUtils;
+
+import com.google.common.collect.Lists;
 
 public class TabbyChat {
 	private static Logger log = TabbyChatUtils.log;
@@ -79,6 +80,7 @@ public class TabbyChat {
 	public static TCSettingsGeneral generalSettings;
 	public static TCSettingsServer serverSettings;
 	public static TCSettingsFilters filterSettings;
+	public static TCSettingsSpelling spellingSettings;
 	public static TCSettingsAdvanced advancedSettings;
 	public static TCSpellCheckManager spellChecker;
 	public LinkedHashMap<String, ChatChannel> channelMap = new LinkedHashMap<String, ChatChannel>();
@@ -163,6 +165,7 @@ public class TabbyChat {
 		generalSettings = new TCSettingsGeneral(this);
 		serverSettings = new TCSettingsServer(this);
 		filterSettings = new TCSettingsFilters(this);
+		spellingSettings = new TCSettingsSpelling(this);
 		advancedSettings = new TCSettingsAdvanced(this);
 		spellChecker = TCSpellCheckManager.getInstance();
 		generalSettings.loadSettingsFile();

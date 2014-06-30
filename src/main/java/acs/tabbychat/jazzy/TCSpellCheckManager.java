@@ -16,6 +16,7 @@ import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.gui.ITCSettingsGUI;
 
 import com.swabunga.spell.event.SpellCheckEvent;
+import com.swabunga.spell.event.SpellChecker;
 import com.swabunga.spell.event.StringWordTokenizer;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -221,6 +222,6 @@ public class TCSpellCheckManager {
 	}
 	
 	public boolean isSpelledCorrectly(String word){
-		return this.listener.spellCheck.checkSpelling(new StringWordTokenizer(word)) == 0;
+		return this.listener.spellCheck.checkSpelling(new StringWordTokenizer(word)) == SpellChecker.SPELLCHECK_OK;
 	}
 }

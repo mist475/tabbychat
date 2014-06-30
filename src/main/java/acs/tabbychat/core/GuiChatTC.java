@@ -283,7 +283,7 @@ public class GuiChatTC extends GuiChat {
 		}
 
 		// Update & draw spell check data
-		if (TabbyChat.generalSettings.spellCheckEnable.getValue()
+		if (TabbyChat.spellingSettings.spellCheckEnable.getValue()
 				&& this.inputField2.getText().length() > 0) {
 			TabbyChat.spellChecker.drawErrors(this, this.inputList);
 			if (this.spellCheckCounter == 200) {

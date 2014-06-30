@@ -1,0 +1,188 @@
+package acs.tabbychat.gui;
+
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
+import acs.tabbychat.core.TabbyChat;
+import acs.tabbychat.settings.TCSettingBool;
+import acs.tabbychat.settings.TCSettingList;
+import acs.tabbychat.settings.TCSettingList.Entry;
+
+public class TCSettingsSpelling extends TCSettingsGUI {
+
+	private static final int SPELL_CHECK_ENABLE = 9108;
+	private static final int WORD_INPUT = 9501;
+	private static final int ADD_WORD = 9502;
+	private static final int REMOVE_WORD = 9503;
+	private static final int CLEAR_WORDS = 9504;
+	private static final int DICTIONARY_LIST = 9505;
+	private static final int NEXT = 9506;
+	private static final int PREV = 9507;
+	private static final int OPEN = 9508;
+	
+	{
+		this.propertyPrefix = "settings.spelling";
+	}
+	
+	public TCSettingBool spellCheckEnable = new TCSettingBool(true, "spellCheckEnable", this.propertyPrefix, SPELL_CHECK_ENABLE);
+	private GuiTextField wordInput = new GuiTextField(mc.fontRenderer, 0, 0, 75, 12);
+	private PrefsButton addWord = new PrefsButton(ADD_WORD, 0, 0, 15, 12, ">");
+	private PrefsButton removeWords = new PrefsButton(REMOVE_WORD, 0, 0, 15, 12, "<");
+	private PrefsButton clearWords = new PrefsButton(CLEAR_WORDS, 0, 0, 15, 12, "<<");
+	private PrefsButton next = new PrefsButton(NEXT, 0, 0, 15, 12, "->");
+	private PrefsButton prev = new PrefsButton(PREV, 0, 0, 15, 12, "<-");
+	private PrefsButton open = new PrefsButton(OPEN, 0, 0, 85, 15, "");
+	
+	private File dictionary = new File(tabbyChatDir, "dictionary.txt");
+	public TCSettingList spellingList = new TCSettingList(dictionary, DICTIONARY_LIST);
+	
+	
+	public TCSettingsSpelling(TabbyChat _tc) {
+		super(_tc);
+		try {
+			dictionary.getParentFile().mkdirs();
+			dictionary.createNewFile();
+			spellingList.loadEntries(dictionary);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.name = I18n.format("settings.spelling.name");
+		this.settingsFile = new File(tabbyChatDir, "spellcheck.cfg");
+		this.bgcolor = 0x66ffb62f;
+		this.defineDrawableSettings();
+	}
+	
+	@Override
+	public void saveSettingsFile(){
+		try {
+			this.spellingList.saveEntries(dictionary);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		super.saveSettingsFile();
+	}
+	
+	@Override
+	public void defineDrawableSettings(){
+		this.buttonList.add(this.spellCheckEnable);
+		this.buttonList.add(spellingList);
+		this.buttonList.add(addWord);
+		this.buttonList.add(removeWords);
+		this.buttonList.add(clearWords);
+		this.buttonList.add(next);
+		this.buttonList.add(prev);
+		this.buttonList.add(open);
+	}
+	
+	@Override
+	public void initDrawableSettings(){
+		int effRight = (this.width + DISPLAY_WIDTH)/2;
+		int col1x = (this.width - DISPLAY_WIDTH)/2 + 55;
+		int col2x = this.width/2 + 25;
+		
+		int buttonColor = (this.bgcolor & 0x00ffffff) + 0xff000000;
+
+		this.spellCheckEnable.setButtonLoc(col1x, this.rowY(1));
+		this.spellCheckEnable.setLabelLoc(col1x + 19);
+		this.spellCheckEnable.buttonColor = buttonColor;
+		
+		this.spellingList.x(col2x);
+		this.spellingList.y(rowY(4));
+		this.spellingList.width(100);
+		this.spellingList.height(96);
+		
+		this.wordInput.xPosition = col1x;
+		this.wordInput.yPosition = rowY(6);
+		this.wordInput.setCanLoseFocus(true);
+		
+		this.open.displayString = I18n.format("settings.spelling.opendictionary");
+		this.open.x(col1x);
+		this.open.y(rowY(10));
+		
+		this.addWord.x(col2x - 25);
+		this.addWord.y(rowY(5));
+		
+		this.removeWords.x(col2x - 25);
+		this.removeWords.y(rowY(6));
+		
+		this.clearWords.x(col2x - 25);
+		this.clearWords.y(rowY(7));
+		
+		this.next.x(col2x +  53);
+		this.next.y(rowY(10));
+		
+		this.prev.x(col2x + 33);
+		this.prev.y(rowY(10));
+	}
+	
+	@Override
+	public void drawScreen(int x, int y, float f){
+		super.drawScreen(x, y, f);
+		this.wordInput.drawTextBox();
+		this.drawString(fontRendererObj, I18n.format("settings.spelling.userdictionary"), (rowY(5) + rowY(6))/2,  rowY(4), 0xffffff);
+		this.drawString(fontRendererObj, I18n.format("book.pageIndicator", this.spellingList.getPageNum(), this.spellingList.getTotalPages()), (rowY(13)+rowY(14))/2, rowY(3), 0xffffff);
+	}
+	
+	@Override
+	public void initGui(){
+		super.initGui();
+		try {
+			spellingList.loadEntries(dictionary);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void mouseClicked(int x, int y, int button){
+		super.mouseClicked(x, y, button);
+		this.wordInput.mouseClicked(x, y, button);
+		this.spellingList.mouseClicked(x, y, button);
+	}
+	
+	@Override
+	public void keyTyped(char c, int i){
+		super.keyTyped(c, i);
+		this.wordInput.textboxKeyTyped(c, i);
+	}
+	
+	@Override
+	public void actionPerformed(GuiButton button){
+		switch(button.id){
+		case ADD_WORD:
+			this.spellingList.addToList(this.wordInput.getText());
+			this.wordInput.setText("");
+			break;
+		case REMOVE_WORD:
+			for(Entry entry : this.spellingList.getSelected()){
+				entry.remove();
+			}
+			break;
+		case CLEAR_WORDS:
+			this.spellingList.clearList();
+			break;
+		case DICTIONARY_LIST:
+			return;
+		case NEXT:
+			this.spellingList.nextPage();
+			break;
+		case PREV:
+			this.spellingList.previousPage();
+			break;
+		case OPEN:
+			try {
+				if(Desktop.isDesktopSupported())
+					Desktop.getDesktop().open(dictionary);
+				} catch (IOException e) {
+				}
+			break;
+		}
+		super.actionPerformed(button);
+	}
+
+}

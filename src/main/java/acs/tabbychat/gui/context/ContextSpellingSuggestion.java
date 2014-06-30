@@ -15,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 public class ContextSpellingSuggestion extends ChatContext {
 
 	private String[] suggestions;
+	private String title;
 	
 	@Override
 	public void onClicked() {
@@ -23,7 +24,7 @@ public class ContextSpellingSuggestion extends ChatContext {
 
 	@Override
 	public String getDisplayString() {
-		return "Spelling";
+		return title;
 	}
 
 	@Override
@@ -34,32 +35,42 @@ public class ContextSpellingSuggestion extends ChatContext {
 	@Override
 	public List<ChatContext> getChildren() {
 		List<ChatContext> list = Lists.newArrayList();
-		if(suggestions == null)
-			list.add(makeBaby("No suggestions", false));
-		else
-			for(final String word : suggestions){
-				list.add(makeBaby(word, true));
-			}
+		if(suggestions == null){
+			return null;
+		}
+		for(final String word : suggestions){
+			list.add(makeBaby(word));
+		}
 		return list;
 	}
 
 	@Override
 	public boolean isPositionValid(int x, int y) {
+		this.title = "Spelling";
 		GuiTextField text = getMenu().screen.inputField2;
 		int start = text.getNthWordFromCursor(-1);
 		int end = text.getNthWordFromCursor(1);
 		String word = text.getText().substring(start,end);
 		if(word != null && !word.isEmpty()){
 			if(!TabbyChat.spellChecker.isSpelledCorrectly(word)){
-				List<String> suggs = TabbyChat.spellChecker.getSuggestions(word, 5);
-				suggestions = suggs.toArray(new String[suggs.size()]);
-				text.setCursorPosition(start);
-				text.setSelectionPos(end);
-				return suggestions.length > 0;
+				List<String> suggs = TabbyChat.spellChecker.getSuggestions(word, 0);
+				suggestions = objectToStringArray(suggs.toArray());
+				if(suggestions.length == 0){
+					this.title = "No Suggestions";
+					return false;
+				}
+				return true;
 			}
 		}
 		suggestions = null;
 		return false;
+	}
+	
+	private String[] objectToStringArray(Object[] object){
+		String[] array = new String[object.length];
+		for(int i = 0; i<array.length; i++)
+			array[i] = object[i].toString();
+		return array;
 	}
 	
 	@Override
@@ -69,19 +80,37 @@ public class ContextSpellingSuggestion extends ChatContext {
 		else
 			return Behavior.GRAY;
 	}
+	
+	private String[] getWordPos(GuiTextField text){
+		int pos = text.getNthWordFromCursor(-1) + 1;
+		
+		return null;
+	}
 
 	// Sexy time for spell checker ಠ_ಠ
-	private ChatContext makeBaby(final String word, final boolean enabled){
+	private ChatContext makeBaby(final String word){
 		return new ChatContext() {
 			
 			@Override
 			public void onClicked() {
-				this.getMenu().screen.inputField2.writeText(word);
+				GuiTextField field = getMenu().screen.inputField2;
+				int start = field.getNthWordFromCursor(-1);
+				int end = field.getNthWordFromCursor(1);
+				field.setCursorPosition(start);
+				field.setSelectionPos(end);
+				String sel = field.getSelectedText();
+				char pref = sel.charAt(0);
+				char suff = sel.charAt(sel.length()-1);
+				if(Character.isAlphabetic(pref))
+					pref = 0;
+				if(Character.isAlphabetic(suff))
+					suff = ' ';
+				this.getMenu().screen.inputField2.writeText((pref != 0 ? pref : "") + word + suff);
 			}
 			
 			@Override
 			public boolean isPositionValid(int x, int y) {
-				return enabled;
+				return true;
 			}
 			
 			@Override

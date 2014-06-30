@@ -76,7 +76,7 @@ settings.filters.sendtotabname=Tab Name
 settings.general.groupspam=Consolidate spammed chat
 settings.general.name=General
 settings.general.savechatlog=Log chat to file
-settings.general.spellcheckenable=Enable Spell-checking
+settings.spelling.spellcheckenable=Enable Spell-checking
 settings.general.splitchatlog=Split log by channel
 settings.general.tabbychatenable=TabbyChat Enabled
 settings.general.timestampcolor=Timestamp color
@@ -96,6 +96,10 @@ settings.server.name=Server
 settings.server.regexignorebool=Use patterns
 settings.server.pmtabregex.tome=PM Regex To Me
 settings.server.pmtabregex.fromme=PM Regex From Me
+
+settings.spelling.name=Spelling
+settings.spelling.userdictionary=User Dictionary
+settings.spelling.opendictionary=Open Dictionary
 
 sounds.anvil=Anvil
 sounds.bass=Bass
