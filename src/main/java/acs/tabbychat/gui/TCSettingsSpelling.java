@@ -30,6 +30,8 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 	public TCSettingsSpelling(TabbyChat _tc) {
 		super(_tc);
 		try {
+			dictionary.getParentFile().mkdirs();
+			dictionary.createNewFile();
 			spellingList = new TCSettingList(dictionary);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -50,6 +52,13 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 	
 	@Override
 	public void initDrawableSettings(){
+		int effRight = (this.width + DISPLAY_WIDTH)/2;
+		int col1x = (this.width - DISPLAY_WIDTH)/2 + 55;
+		int col2x = this.width/2 + 25;
+		
+		this.wordInput.xPosition = col1x;
+		this.wordInput.yPosition = 50;
+		
 		this.addWord.displayString = ">";
 		this.addWord.width(20);
 		

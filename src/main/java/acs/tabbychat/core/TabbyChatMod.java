@@ -12,6 +12,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
@@ -28,6 +29,12 @@ public class TabbyChatMod{
 		TabbyChatUtils.startup();
 		FMLCommonHandler.instance().bus().register(this);
 		TabbyChat.modLoaded = true;
+	}
+	
+	@EventHandler
+	public void postLoad(FMLServerStartedEvent event){
+		if(!TabbyChat.liteLoaded)
+			GuiNewChatTC.getInstance();
 	}
 	
 	@SubscribeEvent

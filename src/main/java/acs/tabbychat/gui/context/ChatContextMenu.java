@@ -15,7 +15,6 @@ public class ChatContextMenu extends Gui {
 	private Minecraft mc = Minecraft.getMinecraft();
 	private ScaledResolution sr;
 	protected List<ChatContext> items;
-	public boolean active;
 	public ChatContextMenu parent;
 	public GuiChatTC screen;
 	public int xPos;
@@ -65,6 +64,8 @@ public class ChatContextMenu extends Gui {
 			yPos = sr.getScaledWidth() - height;
 			for(ChatContext item : items){
 				item.yPosition -= height;
+				if(this.parent != null)
+					item.yPosition += 25;
 			}
 		}
 		for(ChatContext item : items){
@@ -75,10 +76,7 @@ public class ChatContextMenu extends Gui {
 		
 	}
 	
-	
 	public void drawMenu(int x, int y){
-		//if(!active)
-			//return;
 		for(ChatContext item : items){
 			if(!item.enabled && item.getDisabledBehavior() == ChatContext.Behavior.HIDE)
 				continue;
@@ -90,7 +88,7 @@ public class ChatContextMenu extends Gui {
 		for(ChatContext item : items){
 			if(!item.enabled)
 				continue;
-			if(item.isHovered(mouseX, mouseY)){
+			if(item.isHoveredWithChildren(mouseX, mouseY)){
 				return item.mouseClicked(mouseX, mouseY);
 			}
 		}
@@ -106,7 +104,19 @@ public class ChatContextMenu extends Gui {
 	}
 	
 	public boolean isCursorOver(int x, int y) {
-		return x >= xPos && x <= xPos + width && y >= yPos && y <= yPos + height;
+		boolean children = false;
+		for(ChatContext cont : this.items){
+			if(cont.isHoveredWithChildren(x,y) && cont.children != null){
+				children = cont.children.isCursorOver(x, y);
+			}
+			if(children)
+				break;
+		}
+		return (x > xPos &&
+				x < xPos + width &&
+				y > yPos &&
+				y < yPos + height) ||
+				children;
 	}
 	
 	public static void insertContextAtPos(int pos, ChatContext item){

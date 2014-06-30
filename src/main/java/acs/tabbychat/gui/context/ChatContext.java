@@ -24,11 +24,11 @@ public abstract class ChatContext extends GuiButton {
 	
 	public ChatContext(){
 		super(0, 0, 0, 100, 15, null);
-		this.displayString = this.getDisplayString();
 	}
 	
 	@Override
 	public void drawButton(Minecraft mc, int x, int y){
+		this.displayString = this.getDisplayString();
 		if(!visible)
 			return;
 		Gui.drawRect(xPosition + 1, yPosition + 1, xPosition + width - 1, yPosition + height - 1, getBackgroundColor(isHovered(x,y)));
@@ -47,7 +47,7 @@ public abstract class ChatContext extends GuiButton {
 					chat.visible = false;
 				}
 			}
-				children.drawMenu(x, y);
+			children.drawMenu(x, y);
 		}
 	}
 	
@@ -109,12 +109,8 @@ public abstract class ChatContext extends GuiButton {
 			this.onClicked();
 			return false;
 		} else {
-			for(ChatContext item : children.items){
-				if(!item.mouseClicked(x, y))
-					return false;
-			}
+			return children.mouseClicked(x, y);
 		}
-		return true;
 	}
 
 	/**
