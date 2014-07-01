@@ -2,9 +2,8 @@ package acs.tabbychat.api;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
-import cpw.mods.fml.common.API;
 
 /**
  * Stores the registered extension classes.
@@ -17,11 +16,12 @@ public class TCExtensionManager {
 	private TCExtensionManager(){}
 	
 	public List<Class<? extends IChatExtension>> getExtensions(){
-		return list;
+		return ImmutableList.copyOf(list);
 	}
 	
 	public void registerExtension(Class<? extends IChatExtension> ext){
-		list.add(ext);
+		if(!list.contains(ext))
+			list.add(ext);
 	}
 	
 	public void unregisterExtension(Class<? extends IChatExtension> ext){
