@@ -44,6 +44,7 @@ public class TCSettingList extends TCSetting {
 		
 		int i = 0;
 		for(Entry entry : getVisible()){
+			entry.setPos(i);
 			entry.drawButton(mc, cursorX, cursorY);
 			i++;
 		}
@@ -57,17 +58,36 @@ public class TCSettingList extends TCSetting {
 	}
 	
 	public void addToList(String str){
-		if(str.isEmpty())
+		if(str == null || str.isEmpty())
 			return;
 		if(!contains(str)){
-			list.add(new Entry(id,str));
+			char[] chararray = str.toCharArray();
+			int j = 0;
+			label_1:
+			for(Entry entry : list){
+				char[] chararray1 = entry.displayString.toCharArray();
+				for(int i = 0; i < Math.min(chararray.length, chararray1.length); i++){
+					char c = chararray[i], c1 = chararray1[i];
+					if(c > c1)
+						break;
+					if(c == c1)
+						continue;
+					if(c < c1){
+						list.add(j, new Entry(id, str));
+						break label_1;
+					}
+				}
+				j++;
+			}
+			if(!contains(str))
+				list.add(new Entry(id, str));
 			id++;
 		}
 	}
 	
 	public void removeFromList(String str){
 		for(Entry entry : list){
-			if(str.equals(entry.getValue())){
+			if(str.equals(entry.displayString)){
 				list.remove(entry);
 				this.deselectEntry(entry);
 			}
@@ -175,7 +195,6 @@ public class TCSettingList extends TCSetting {
 		
 		private TCSettingList list = TCSettingList.this;
 		private int pos;
-		private String value;
 		
 		public Entry(int id, String value) {
 			super(id, TCSettingList.this.x(), 0, TCSettingList.this.width(), 12, value);
@@ -183,14 +202,6 @@ public class TCSettingList extends TCSetting {
 		
 		public void setPos(int y){
 			this.pos = y;
-		}
-
-		public String getValue() {
-			return value;
-		}
-		
-		public void setValue(String value) {
-			this.value = value;
 		}
 		
 		public boolean isSelected(){
@@ -207,7 +218,7 @@ public class TCSettingList extends TCSetting {
 		@Override
 		public void drawButton(Minecraft mc, int x, int y){
 			if(this.isSelected())
-				this.bgcolor = 0x99999999;
+				this.bgcolor = 0xDD999999;
 			else
 				this.bgcolor = 0xDD000000;
 			this.y(list.y() + (pos*12));
