@@ -100,6 +100,7 @@ settings.server.pmtabregex.fromme=PM Regex From Me
 settings.spelling.name=Spelling
 settings.spelling.userdictionary=User Dictionary
 settings.spelling.opendictionary=Open Dictionary
+settings.spelling.reloaddictionary=Reload
 
 sounds.anvil=Anvil
 sounds.bass=Bass

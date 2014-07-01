@@ -24,6 +24,7 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 	private static final int NEXT = 9506;
 	private static final int PREV = 9507;
 	private static final int OPEN = 9508;
+	private static final int RELOAD = 9509;
 	
 	{
 		this.propertyPrefix = "settings.spelling";
@@ -37,6 +38,7 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 	private PrefsButton next = new PrefsButton(NEXT, 0, 0, 15, 12, "->");
 	private PrefsButton prev = new PrefsButton(PREV, 0, 0, 15, 12, "<-");
 	private PrefsButton open = new PrefsButton(OPEN, 0, 0, 85, 15, "");
+	private PrefsButton reload = new PrefsButton(RELOAD, 0, 0, 85, 15, "");
 	
 	private File dictionary = new File(tabbyChatDir, "dictionary.txt");
 	public TCSettingList spellingList = new TCSettingList(dictionary, DICTIONARY_LIST);
@@ -77,6 +79,7 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 		this.buttonList.add(next);
 		this.buttonList.add(prev);
 		this.buttonList.add(open);
+		this.buttonList.add(reload);
 	}
 	
 	@Override
@@ -103,6 +106,10 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 		this.open.displayString = I18n.format("settings.spelling.opendictionary");
 		this.open.x(col1x);
 		this.open.y(rowY(10));
+		
+		this.reload.displayString = I18n.format("settings.spelling.reloaddictionary");
+		this.reload.x(col1x);
+		this.reload.y(rowY(9));
 		
 		this.addWord.x(col2x - 25);
 		this.addWord.y(rowY(5));
@@ -180,6 +187,13 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 					Desktop.getDesktop().open(dictionary);
 				} catch (IOException e) {
 				}
+			break;
+		case RELOAD:
+			try {
+				this.spellingList.loadEntries(dictionary);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			break;
 		}
 		super.actionPerformed(button);
