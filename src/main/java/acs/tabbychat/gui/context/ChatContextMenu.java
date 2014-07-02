@@ -15,7 +15,7 @@ public class ChatContextMenu extends Gui {
 	private Minecraft mc = Minecraft.getMinecraft();
 	private ScaledResolution sr;
 	protected List<ChatContext> items;
-	public ChatContextMenu parent;
+	public ChatContext parent;
 	public GuiChatTC screen;
 	public int xPos;
 	public int yPos;
@@ -28,11 +28,11 @@ public class ChatContextMenu extends Gui {
 		setup(chat, x, y);
 	}
 	
-	private ChatContextMenu(ChatContextMenu parent, int x, int y, List<ChatContext> items){
+	ChatContextMenu(ChatContext parent, int x, int y, List<ChatContext> items){
 		//this(parent.screen, x, y);
 		this.parent = parent;
 		this.items = items;
-		this.screen = parent.screen;
+		this.screen = parent.getMenu().screen;
 		setup(screen, x, y);
 	}
 	
@@ -41,12 +41,17 @@ public class ChatContextMenu extends Gui {
 		this.xPos = x;
 		this.yPos = y;
 		this.width = 100;
-		int xPos = x;
+		this.height = this.items.size()*15;
 		if(x > sr.getScaledWidth() - width){
 			if(this.parent == null)
-				xPos = sr.getScaledWidth() - width;
+				xPos -= width;
 			else
 				xPos -= width*2;
+		}
+		if(yPos + height > sr.getScaledHeight()){
+			yPos -= height;
+			if(this.parent != null)
+				yPos += 15;
 		}
 		int i = 0;
 		for(ChatContext item : items){
@@ -56,24 +61,10 @@ public class ChatContextMenu extends Gui {
 				continue;
 			item.id = i;
 			item.xPosition = xPos;
-			item.yPosition = this.yPos + i*15;
+			item.yPosition = yPos + i*15;
+			System.out.println(item.yPosition);
 			i++;
 		}
-		this.height = 16*i;
-		if(yPos > sr.getScaledHeight() - height){
-			yPos = sr.getScaledWidth() - height;
-			for(ChatContext item : items){
-				item.yPosition -= height;
-				if(this.parent != null)
-					item.yPosition += 25;
-			}
-		}
-		for(ChatContext item : items){
-			if(item.getChildren() != null){
-				item.children = new ChatContextMenu(this, item.xPosition + item.width, item.yPosition, item.getChildren());
-			}
-		}
-		
 	}
 	
 	public void drawMenu(int x, int y){

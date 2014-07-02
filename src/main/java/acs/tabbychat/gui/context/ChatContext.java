@@ -28,6 +28,9 @@ public abstract class ChatContext extends GuiButton {
 	
 	@Override
 	public void drawButton(Minecraft mc, int x, int y){
+		if(getChildren() != null)
+			children = new ChatContextMenu(this, xPosition + width, yPosition, getChildren());
+			
 		this.displayString = this.getDisplayString();
 		if(!visible)
 			return;
