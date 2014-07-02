@@ -41,28 +41,35 @@ public class ChatContextMenu extends Gui {
 		this.xPos = x;
 		this.yPos = y;
 		this.width = 100;
-		this.height = this.items.size()*15;
 		if(x > sr.getScaledWidth() - width){
 			if(this.parent == null)
 				xPos -= width;
 			else
 				xPos -= width*2;
 		}
+		List<ChatContext> visible = Lists.newArrayList();
+		for(ChatContext item : items){
+			if(!item.enabled && item.getDisabledBehavior() == ChatContext.Behavior.HIDE)
+				continue;
+			visible.add(item);
+		}
+		this.height = visible.size()*15;
 		if(yPos + height > sr.getScaledHeight()){
 			yPos -= height;
 			if(this.parent != null)
 				yPos += 15;
 		}
+		if(height > sr.getScaledHeight())
+			yPos = 0;
 		int i = 0;
-		for(ChatContext item : items){
+		for(ChatContext item : visible){
 			item.menu = this;
 			item.enabled = item.isPositionValid(xPos, yPos);
-			if(!item.enabled && item.getDisabledBehavior() == ChatContext.Behavior.HIDE)
-				continue;
 			item.id = i;
 			item.xPosition = xPos;
 			item.yPosition = yPos + i*15;
-			System.out.println(item.yPosition);
+			//if(item.yPosition + item.height > sr.getScaledHeight() || item.yPosition < 0)
+				//item.visible = false;
 			i++;
 		}
 	}
