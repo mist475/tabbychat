@@ -49,6 +49,8 @@ public class ChatContextMenu extends Gui {
 		}
 		List<ChatContext> visible = Lists.newArrayList();
 		for(ChatContext item : items){
+			item.menu = this;
+			item.enabled = item.isPositionValid(xPos, yPos);
 			if(!item.enabled && item.getDisabledBehavior() == ChatContext.Behavior.HIDE)
 				continue;
 			visible.add(item);
@@ -59,12 +61,10 @@ public class ChatContextMenu extends Gui {
 			if(this.parent != null)
 				yPos += 15;
 		}
-		if(height > sr.getScaledHeight())
+		if(yPos < 0)
 			yPos = 0;
 		int i = 0;
 		for(ChatContext item : visible){
-			item.menu = this;
-			item.enabled = item.isPositionValid(xPos, yPos);
 			item.id = i;
 			item.xPosition = xPos;
 			item.yPosition = yPos + i*15;
