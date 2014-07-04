@@ -144,6 +144,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 
 		for (int i = 0; i < ScreenList.size(); i++) {
 			ScreenList.get(i).id = 9000+i;
+			ScreenList.get(i).name = I18n.format(ScreenList.get(i).propertyPrefix + ".name");
 			if (ScreenList.get(i) != this) {
 				this.buttonList.add(new PrefsButton(ScreenList.get(i).id, effLeft, effTop + 30*i, 45, 20, mc.fontRenderer.trimStringToWidth(ScreenList.get(i).name,35)+"..."));
 				((PrefsButton)this.buttonList.get(this.buttonList.size()-1)).bgcolor = 0x00000000;
