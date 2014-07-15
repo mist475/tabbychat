@@ -89,7 +89,7 @@ public class GuiChatTC extends GuiChat {
 		this.mc = Minecraft.getMinecraft();
 		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 		this.gnc = GuiNewChatTC.getInstance();
-		this.tc = GuiNewChatTC.tc;
+		this.tc = TabbyChat.getInstance();
 		this.extensions = new ChatExtensions(TCExtensionManager.INSTANCE.getExtensions());
 	}
 

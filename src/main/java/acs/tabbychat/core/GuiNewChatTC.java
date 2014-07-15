@@ -54,6 +54,7 @@ public class GuiNewChatTC extends GuiNewChat {
 		super(par1Minecraft);
 		this.mc = par1Minecraft;
 		this.sr = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
+		this.tc = TabbyChat.getInstance();
 	}
 	
 	public void addChatLines(int _pos, List<TCChatLine> _add) {

@@ -53,16 +53,7 @@ public class TabbyChatMod{
 		try{
 			Class.forName("acs.tabbychat.core.LiteModTabbyChat");
 			Class.forName("com.mumfrey.liteloader.core.LiteLoader");
-			for(URL url : Launch.classLoader.getURLs()){
-				ZipFile zip = new ZipFile(new File(url.toURI()));
-				ZipEntry entry = zip.getEntry("litemod.json");
-				if(entry == null)
-					continue;
-				entry = zip.getEntry("acs/tabbychat/core/LiteModTabbyChat.class");
-				zip.close();
-				if(entry != null)
-					return true;
-			}
+			return true;
 		}catch(Exception e){
 		}
 		return false;
