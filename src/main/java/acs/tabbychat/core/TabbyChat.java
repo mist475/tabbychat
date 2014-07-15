@@ -493,6 +493,8 @@ public class TabbyChat {
 	}
 
 	public void pollForUnread(Gui _gui, int _tick) {
+		if(this.getActive().contains("*"))
+			return;
 		int _opacity = 0;
 		int tickdiff = 50;
 
