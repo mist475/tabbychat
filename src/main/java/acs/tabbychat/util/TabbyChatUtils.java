@@ -15,6 +15,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.ChatComponentText;
@@ -31,6 +33,7 @@ import acs.tabbychat.core.ChatChannel;
 //import acs.tabbychat.core.FilterTest;
 import acs.tabbychat.core.GuiChatTC;
 import acs.tabbychat.core.GuiNewChatTC;
+import acs.tabbychat.core.GuiSleepTC;
 import acs.tabbychat.core.TCChatLine;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.gui.ITCSettingsGUI;
@@ -79,11 +82,14 @@ public class TabbyChatUtils {
 	}
 	
 	public static void chatGuiTick(Minecraft mc) {
-		if (mc.currentScreen == null)
+		GuiScreen screen = mc.currentScreen;
+		if (screen == null)
 			return;
-		if (!(mc.currentScreen instanceof GuiChat))
+		if (!(screen instanceof GuiChat))
 			return;
-		if (mc.currentScreen.getClass() == GuiChatTC.class)
+		if (screen.getClass() == GuiChatTC.class)
+			return;
+		if (screen.getClass() == GuiSleepTC.class)
 			return;
 
 		String inputBuffer = "";
@@ -102,7 +108,10 @@ public class TabbyChatUtils {
 		} catch (Exception e) {
 			TabbyChat.printException("Unable to display chat interface", e);
 		}
-		mc.displayGuiScreen(new GuiChatTC(inputBuffer));
+		if(screen instanceof GuiSleepMP)
+			mc.displayGuiScreen(new GuiSleepTC());
+		else
+			mc.displayGuiScreen(new GuiChatTC(inputBuffer));
 	}
 	
 	public static ComponentList chatLinesToComponent(List<TCChatLine> lines) {

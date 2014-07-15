@@ -17,14 +17,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.stream.GuiTwitchUserMode;
-import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.client.C14PacketTabComplete;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.StatBase;
@@ -33,7 +31,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StatCollector;
 
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
@@ -106,11 +103,6 @@ public class GuiChatTC extends GuiChat {
 			if(extension.actionPerformed(par1GuiButton))
 				return;
 		
-		if (par1GuiButton.id == 1){
-			this.playerWakeUp();
-			if(!ChatBox.pinned)
-				this.mc.displayGuiScreen((GuiScreen) null);
-		}
 		if (!(par1GuiButton instanceof ChatButton))
 			return;
 		ChatButton _button = (ChatButton) par1GuiButton;
@@ -583,14 +575,6 @@ public class GuiChatTC extends GuiChat {
 			ChatBox.enforceScreenBoundary(ChatBox.current);
 		}
 
-		if (mc.thePlayer != null && mc.theWorld != null
-				&& mc.thePlayer.isPlayerSleeping()) {
-			GuiButton leaveBed = new GuiButton(1, this.width / 2 - 100,
-					this.height - 50,
-					StatCollector.translateToLocal("multiplayer.stopSleeping"));
-			this.buttonList.add(leaveBed);
-		}
-
 		// Init the gui for extensions.
 		for(IChatUpdateExtension extension : extensions.getListOf(IChatUpdateExtension.class))
 			extension.initGui(this);
@@ -644,27 +628,12 @@ public class GuiChatTC extends GuiChat {
 			break;
 		// ESCAPE: close the chat interface
 		case Keyboard.KEY_ESCAPE:
-			if(mc.thePlayer.isPlayerSleeping())
-				this.playerWakeUp();
 			this.mc.displayGuiScreen((GuiScreen) null);
 			break;
 		// RETURN: send chat to server
+		case Keyboard.KEY_NUMPADENTER:
 		case Keyboard.KEY_RETURN:
-			StringBuilder _msg = new StringBuilder(1500);
-			for (int i = this.inputList.size() - 1; i >= 0; i--)
-				_msg.append(this.inputList.get(i).getText());
-			if (_msg.toString().length() > 0) {
-				TabbyChatUtils.writeLargeChat(_msg.toString());
-				for (int i = 1; i < this.inputList.size(); i++) {
-					this.inputList.get(i).setText("");
-					this.inputList.get(i).setFocused(false);
-				}
-			}
-			if (!tc.enabled() || !ChatBox.pinned)
-				this.mc.displayGuiScreen((GuiScreen) null);
-			else {
-				this.resetInputFields();
-			}
+			this.sendChat(ChatBox.pinned);
 			break;
 		// UP: if currently in multi-line chat, move into the above textbox.
 		// Otherwise, go back one in the sent history (forced by Ctrl)
@@ -780,6 +749,24 @@ public class GuiChatTC extends GuiChat {
 		// pass keyTyped to extensions
 		for(IChatKeyboardExtension ext : extensions.getListOf(IChatKeyboardExtension.class))
 			ext.keyTyped(_char, _code);
+	}
+
+	protected void sendChat(boolean keepopen) {
+		StringBuilder _msg = new StringBuilder(1500);
+		for (int i = this.inputList.size() - 1; i >= 0; i--)
+			_msg.append(this.inputList.get(i).getText());
+		if (_msg.toString().length() > 0) {
+			TabbyChatUtils.writeLargeChat(_msg.toString());
+			for (int i = 1; i < this.inputList.size(); i++) {
+				this.inputList.get(i).setText("");
+				this.inputList.get(i).setFocused(false);
+			}
+		}
+		if (!tc.enabled() || !keepopen)
+			this.mc.displayGuiScreen((GuiScreen) null);
+		else {
+			this.resetInputFields();
+		}
 	}
 
 	@Override
@@ -914,14 +901,6 @@ public class GuiChatTC extends GuiChat {
 		// run onGuiClosed on extensions
 		for(IChatUpdateExtension ext : extensions.getListOf(IChatUpdateExtension.class))
 			ext.onGuiClosed();
-	}
-
-	/**
-	 * Wakes up the player
-	 */
-	private void playerWakeUp() {
-		NetHandlerPlayClient var1 = this.mc.thePlayer.sendQueue;
-		var1.addToSendQueue(new C0BPacketEntityAction(this.mc.thePlayer, 3));
 	}
 
 	/**
