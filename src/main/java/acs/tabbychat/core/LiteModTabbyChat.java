@@ -52,7 +52,7 @@ public class LiteModTabbyChat implements InitCompleteListener {
 				FileUtils.copyDirectory(mcConfigDir, liteConfigDir);
 				log.info("Old configs found! Converting.");
 			} catch (IOException e) {
-				log.warn("Old configs found, but unable to convert.\n" + e);
+				log.warn("Old configs found, but unable to convert.", e);
 			}
 		}
 		TabbyChatUtils.startup();

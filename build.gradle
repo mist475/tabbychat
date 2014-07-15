@@ -23,14 +23,13 @@ version = "1.11.1." + revision
 group = "acs.tabbychat"
 archivesBaseName = "TabbyChat"
 
-minecraft {
-    version = "1.7.10-7.10.0.939"
-    assetDir = "eclipse/assets"
+minecraft{
+    version = "1.7.10-7.10.22.956"
+    runDir = "eclipse/assets"
 	
 	replace "@@VERSION@@", project.version
 }
-processResources
-{
+processResources{
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
@@ -52,10 +51,7 @@ processResources
 configurations{
 	customCompile
 }
-sourceSets {
-	main {java {exclude '**/LiteMod*', 'net/minecraft/**'}}
-}
-dependencies {
+dependencies{
 	customCompile 'net.sf.jazzy:jazzy:0.5.2-rtext-1.4.1-2'
 	compile configurations.customCompile
 }
@@ -102,12 +98,10 @@ String git(String[] args){
 		return null
 	}
 }
-/* // Disable until LiteLoader updates
 apply plugin: 'liteloader' 
 jarLiteloader{
 	from sourceSets.api.output
-	from configurations.customCompile.collect { it.isDirectory() ? it : project.zipTree(it)}
+	from (configurations.customCompile.collect { it.isDirectory() ? it : project.zipTree(it)}) { exclude 'META-INF/**' }
 	appendix = minecraft.version
 	exclude 'acs/tabbychat/core/TabbyChatMod.class', 'mcmod.info'
 }
-*/
