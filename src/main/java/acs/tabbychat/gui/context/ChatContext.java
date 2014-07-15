@@ -75,7 +75,7 @@ public abstract class ChatContext extends GuiButton {
 	protected void drawIcon(){
 		int x1 = xPosition + 4, y1 = yPosition + 3, x2 = x1 + 9, y2 = y1 + 9;
 		GL11.glColor4f(1F,1F,1F,1F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(getDisplayIcon());
+		Minecraft.getMinecraft().getTextureManager().bindTexture(getDisplayIcon());
 		Tessellator tess = Tessellator.instance;
 		tess.startDrawingQuads();
 		tess.addVertexWithUV(x1, y1, this.zLevel, 0, 0);
