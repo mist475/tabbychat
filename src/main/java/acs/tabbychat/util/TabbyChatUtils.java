@@ -2,14 +2,18 @@ package acs.tabbychat.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
@@ -22,6 +26,8 @@ import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
+import org.apache.commons.compress.compressors.gzip.GzipUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,7 +61,7 @@ import com.mumfrey.liteloader.core.LiteLoader;
 public class TabbyChatUtils {
 	private static Calendar logDay = Calendar.getInstance();
 	private static File logDir = new File(new File(Minecraft.getMinecraft().mcDataDir, "logs"), "TabbyChat");
-	private static SimpleDateFormat logNameFormat = new SimpleDateFormat("'_'MM-dd-yyyy'.txt'");
+	private static SimpleDateFormat logNameFormat = new SimpleDateFormat("'_'MM-dd-yyyy'.log'");
 	public final static String version = "@@VERSION@@";
 	public final static String name = "TabbyChat";
 	public final static String modid = "tabbychat";
@@ -71,6 +77,8 @@ public class TabbyChatUtils {
 			TabbyChat.forgePresent = false;
 		}
 		
+		compressLogs();
+		
 		ChatContextMenu.addContext(new ContextSpellingSuggestion());
 		ChatContextMenu.addContext(new ContextCut());
 		ChatContextMenu.addContext(new ContextCopy());
@@ -81,6 +89,38 @@ public class TabbyChatUtils {
 		
 	}
 	
+	private static void compressLogs() {
+		if(!logDir.exists())
+			return;
+		Collection<File> logs = FileUtils.listFiles(logDir, new String[]{"txt", "log"}, true);
+		for(File file : logs){
+			String name = file.getName();
+			if(name.contains(logNameFormat.format(logDay.getTime())))
+				continue; // This is today's log.
+			try {
+				gzipFile(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private static void gzipFile(File file) throws IOException {
+		File dest = new File(file.getParentFile(), GzipUtils.getCompressedFilename(file.getName()));
+		FileOutputStream os = new FileOutputStream(dest);
+		try{
+			OutputStreamWriter writer = new OutputStreamWriter(new GZIPOutputStream(os), "UTF-8");
+			try{
+				writer.write(FileUtils.readFileToString(file));
+			}finally{
+				writer.close();
+				file.delete();
+			}
+		}finally{
+			os.close();
+		}
+	}
+
 	public static void chatGuiTick(Minecraft mc) {
 		GuiScreen screen = mc.currentScreen;
 		if (screen == null)
