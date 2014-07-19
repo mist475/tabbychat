@@ -31,7 +31,7 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 	}
 	
 	public TCSettingBool spellCheckEnable = new TCSettingBool(true, "spellCheckEnable", this.propertyPrefix, SPELL_CHECK_ENABLE);
-	private GuiTextField wordInput = new GuiTextField(mc.fontRenderer, 0, 0, 75, 12);
+	private GuiTextField wordInput;
 	private PrefsButton addWord = new PrefsButton(ADD_WORD, 0, 0, 15, 12, ">");
 	private PrefsButton removeWords = new PrefsButton(REMOVE_WORD, 0, 0, 15, 12, "<");
 	private PrefsButton clearWords = new PrefsButton(CLEAR_WORDS, 0, 0, 15, 12, "<<");
@@ -99,8 +99,7 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 		this.spellingList.width(100);
 		this.spellingList.height(96);
 		
-		this.wordInput.xPosition = col1x;
-		this.wordInput.yPosition = rowY(6);
+		this.wordInput = new GuiTextField(mc.fontRenderer, col1x, rowY(6), 75, 12);
 		this.wordInput.setCanLoseFocus(true);
 		
 		this.open.displayString = I18n.format("settings.spelling.opendictionary");
