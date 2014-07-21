@@ -466,8 +466,8 @@ public class TabbyChat {
 		fromMePM.append("^\\[me[ ]?\\-\\>[ ]?([\\p{L}\\p{N}_]{3,16})\\]");
 
 		// Matches '(From Player):' and '(To Player):'
-		toMePM.append("|^\\(From ([\\p{L}\\p{N}_]{3,16})[ ]\\)?:");
-		fromMePM.append("|^\\(To ([\\p{L}\\p{N}_]{3,16})[ ]\\)?:");
+		toMePM.append("|^\\(From ([\\p{L}\\p{N}_]{3,16})\\)[ ]?:");
+		fromMePM.append("|^\\(To ([\\p{L}\\p{N}_]{3,16})\\)[ ]?:");
 
 		// Matches 'From Player' and 'To Player'
 		toMePM.append("|^From ([\\p{L}\\p{N}_]{3,16})[ ]?:");
