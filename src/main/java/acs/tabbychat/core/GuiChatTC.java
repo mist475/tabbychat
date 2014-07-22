@@ -449,7 +449,7 @@ public class GuiChatTC extends GuiChat {
 			return;
 		if (loc == historyLength) {
 			this.sentHistoryCursor2 = historyLength;
-			this.setText(new StringBuilder(""), 1);
+			this.setText(new StringBuilder(historyBuffer), 1);
 		} else {
 			if (this.sentHistoryCursor2 == historyLength)
 				this.historyBuffer = this.inputField2.getText();
@@ -534,12 +534,15 @@ public class GuiChatTC extends GuiChat {
 		this.sentHistoryCursor2 = this.gnc.getSentMessages().size();
 		int textFieldWidth = (MacroKeybindCompat.present) ? this.width - 26
 				: this.width - 4;
+		String text = this.defaultInputFieldText;
+		if(this.inputField2 != null)
+			text = inputField2.getText();
 		this.inputField2 = new GuiTextField(this.fontRendererObj, 4,
 				this.height - 12, textFieldWidth, 12);
 		this.inputField2.setMaxStringLength(500);
 		this.inputField2.setCanLoseFocus(false);
 		this.inputField2.setFocused(true);
-		this.inputField2.setText(this.defaultInputFieldText);
+		this.inputField2.setText(text);
 		this.inputField2.setVisible(true);
 		this.inputField2.setEnableBackgroundDrawing(false);
 		this.inputList.add(0, this.inputField2);
@@ -767,6 +770,7 @@ public class GuiChatTC extends GuiChat {
 		else {
 			this.resetInputFields();
 		}
+		this.sentHistoryCursor2 = this.gnc.getSentMessages().size() + 1;
 	}
 
 	@Override
