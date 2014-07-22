@@ -486,8 +486,8 @@ public class TabbyChat {
 		}
 		
 		// Match custom pattern
-		toMePM.append("|").append(serverSettings.pmTabRegexToMe.getValue());
-		fromMePM.append("|").append(serverSettings.pmTabRegexFromMe.getValue());
+		toMePM.append("|").append(serverSettings.pmTabRegexToMe.getValue().replace("{$player}", "([\\p{L}\\p{N}_]{3,16})"));
+		fromMePM.append("|").append(serverSettings.pmTabRegexFromMe.getValue().replace("{$player}", "([\\p{L}\\p{N}_]{3,16})"));
 
 		this.chatPMtoMePattern = Pattern.compile(toMePM.toString());
 		this.chatPMfromMePattern = Pattern.compile(fromMePM.toString());
