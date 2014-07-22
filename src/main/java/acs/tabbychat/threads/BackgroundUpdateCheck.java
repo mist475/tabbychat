@@ -25,11 +25,11 @@ public class BackgroundUpdateCheck extends Thread {
 		
 		int i;
 		for(i = 0; i < newVersion.length;i++){
-			newVersion[i] = Integer.parseInt(newVersionString[i]);
+			newVersion[i] = TabbyChatUtils.parseInteger(newVersionString[i], Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
 		}
 		
 		for(i = 0; i < version.length; i++){
-			version[i] = Integer.parseInt(versionString[i]);
+			version[i] = TabbyChatUtils.parseInteger(versionString[i], Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
 		}
 
 		for (i = 0; i < Math.min(version.length, newVersion.length); i++) {
