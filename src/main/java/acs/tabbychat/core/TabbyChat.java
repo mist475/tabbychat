@@ -549,8 +549,7 @@ public class TabbyChat {
 		
 		ComponentList raw = TabbyChatUtils.chatLinesToComponent(theChat);
 		ComponentList filtered = this.processChatForFilters(raw, filterTabs);
-		if (generalSettings.saveChatLog.getValue()
-				&& !generalSettings.splitChatLog.getValue())
+		if (generalSettings.saveChatLog.getValue())
 			TabbyChatUtils.logChat(this.getCleanTimeStamp() + raw.getUnformattedText(), null);
 
 		if (filtered != null) {
@@ -562,8 +561,7 @@ public class TabbyChat {
 					pmTab = this.processChatForPMs(raw.getUnformattedText());
 					tab = new ChatChannel(pmTab);
 					if (generalSettings.saveChatLog.getValue() && generalSettings.splitChatLog.getValue())
-						TabbyChatUtils.logChat(this.getCleanTimeStamp()
-								+ raw.getUnformattedText(), tab);
+						TabbyChatUtils.logChat(this.getCleanTimeStamp() + raw.getUnformattedText(), tab);
 				}
 			} else {
 				toTabs.add(channelTab);

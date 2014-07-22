@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
@@ -36,7 +35,6 @@ import acs.tabbychat.api.TCExtensionManager;
 import acs.tabbychat.compat.EmoticonsCompat;
 import acs.tabbychat.compat.MacroKeybindCompat;
 import acs.tabbychat.core.ChatChannel;
-//import acs.tabbychat.core.FilterTest;
 import acs.tabbychat.core.GuiChatTC;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.GuiSleepTC;
@@ -249,48 +247,44 @@ public class TabbyChatUtils {
 	public static void logChat(String theChat, ChatChannel theChannel) {
 		Calendar tmpcal = Calendar.getInstance();
 		File fileDir;
-		try {
-			if (theChannel.getTitle().equals(null)) {
-				theChannel = new ChatChannel("default");
-			}
-		} catch (NullPointerException e) {
-			theChannel = new ChatChannel("default");
+		String basename;
+		// If the channel or title is null, create a new one.
+		if (theChannel == null || theChannel.getTitle() == null) {
+			theChannel = new ChatChannel("*");
 		}
+		// Set log file directory.
 		if (getServerIp() == "singleplayer") {
 			IntegratedServer ms = Minecraft.getMinecraft().getIntegratedServer();
-			String worldName = ms.getWorldName();
-			fileDir = new File(new File(new File(logDir, "singleplayer"), worldName), theChannel.getTitle());
-
+			fileDir = new File(new File(logDir, "singleplayer"), ms.getWorldName());
 		} else {
-			fileDir = new File(new File(logDir, getServerIp()),	theChannel.getTitle());
+			fileDir = new File(logDir, getServerIp());
 		}
-		if (!fileDir.exists())
-			fileDir.mkdirs();
-
-		if (theChannel.getLogFile() == null
-				|| tmpcal.get(Calendar.DAY_OF_YEAR) != logDay.get(Calendar.DAY_OF_YEAR)) {
+		if(!theChannel.getTitle().equals("*")){
+			fileDir = new File(fileDir, theChannel.getTitle());
+			basename = theChannel.getTitle();
+		} else {
+			basename = "all";
+		}
+		// Set log file
+		if (theChannel.getLogFile() == null || tmpcal.get(Calendar.DAY_OF_YEAR) != logDay.get(Calendar.DAY_OF_YEAR)) {
 			logDay = tmpcal;
-			theChannel.setLogFile(new File(fileDir, theChannel.getTitle() + logNameFormat.format(logDay.getTime())));
+			theChannel.setLogFile(new File(fileDir, basename + logNameFormat.format(logDay.getTime())));
 		}
-
+		// Create the file
 		if (!theChannel.getLogFile().exists()) {
 			try {
 				fileDir.mkdirs();
 				theChannel.getLogFile().createNewFile();
-			} catch (Exception e) {
+			} catch (IOException e) {
 				TabbyChat.printErr("Cannot create log file : '" + e.getLocalizedMessage() + "' : " + e.toString());
 				return;
 			}
 		}
-
+		// If all good, log it
 		try {
-			FileOutputStream logStream = new FileOutputStream(theChannel.getLogFile(), true);
-			PrintStream logPrint = new PrintStream(logStream);
-			logPrint.println(theChat);
-			logPrint.close();
-		} catch (Exception e) {
-			TabbyChat.printErr("Cannot write to log file : '"
-					+ e.getLocalizedMessage() + "' : " + e.toString());
+			FileUtils.writeLines(theChannel.getLogFile(), "UTF-8", Lists.newArrayList(theChat.trim()), true);
+		} catch (IOException e) {
+			TabbyChat.printErr("Cannot write to log file : '" + e.getLocalizedMessage() + "' : " + e.toString());
 			return;
 		}
 	}
