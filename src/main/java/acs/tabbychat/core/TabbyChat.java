@@ -36,6 +36,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -485,9 +486,28 @@ public class TabbyChat {
 			fromMePM.append("|^\\[").append(me).append("[ ]?\\-\\>[ ]?([\\p{L}\\p{N}_]{3,16})\\]");
 		}
 		
-		// Match custom pattern
-		toMePM.append("|").append(serverSettings.pmTabRegexToMe.getValue().replace("{$player}", "([\\p{L}\\p{N}_]{3,16})"));
-		fromMePM.append("|").append(serverSettings.pmTabRegexFromMe.getValue().replace("{$player}", "([\\p{L}\\p{N}_]{3,16})"));
+		// Match custom pattern, reset if invalid.
+		try {
+			String toMe = this.serverSettings.pmTabRegexToMe.getValue().replace("{$player}", "([\\p{L}\\p{N}_]{3,16})");
+			if(!toMe.isEmpty()){
+				Pattern.compile(toMe);
+				toMePM.append("|").append(toMe);
+			}
+		} catch(PatternSyntaxException e){
+			this.log.error("Error while settings 'To me' regex.", e);
+			this.serverSettings.pmTabRegexToMe.setValue("");
+			this.printMessageToChat(ColorCodeEnum.RED.toCode() + "Unable to set 'To me' pm regex. See console for details.");
+		} try {
+			String fromMe = this.serverSettings.pmTabRegexFromMe.getValue().replace("{$player}", "([\\p{L}\\p{N}_]{3,16})");
+			if(!fromMe.isEmpty()){
+				Pattern.compile(fromMe);
+				fromMePM.append("|").append(fromMe);
+			}
+		} catch(PatternSyntaxException e){
+			this.log.error("Error while setting 'From me' regex.", e);
+			this.serverSettings.pmTabRegexFromMe.setValue("");
+			this.printMessageToChat(ColorCodeEnum.RED.toCode() + "Unable to set 'From me' pm regex. See console for details.");
+		}
 
 		this.chatPMtoMePattern = Pattern.compile(toMePM.toString());
 		this.chatPMfromMePattern = Pattern.compile(fromMePM.toString());
