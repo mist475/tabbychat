@@ -20,7 +20,7 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 	private static final int ADD_WORD = 9502;
 	private static final int REMOVE_WORD = 9503;
 	private static final int CLEAR_WORDS = 9504;
-	private static final int DICTIONARY_LIST = 9505;
+
 	private static final int NEXT = 9506;
 	private static final int PREV = 9507;
 	private static final int OPEN = 9508;
@@ -41,7 +41,7 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 	private PrefsButton reload = new PrefsButton(RELOAD, 0, 0, 85, 15, "");
 	
 	private File dictionary = new File(tabbyChatDir, "dictionary.txt");
-	public TCSettingList spellingList = new TCSettingList(dictionary, DICTIONARY_LIST);
+	public TCSettingList spellingList = new TCSettingList(dictionary);
 	
 	
 	public TCSettingsSpelling(TabbyChat _tc) {
@@ -72,7 +72,6 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 	@Override
 	public void defineDrawableSettings(){
 		this.buttonList.add(this.spellCheckEnable);
-		this.buttonList.add(spellingList);
 		this.buttonList.add(addWord);
 		this.buttonList.add(removeWords);
 		this.buttonList.add(clearWords);
@@ -130,6 +129,7 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 	public void drawScreen(int x, int y, float f){
 		super.drawScreen(x, y, f);
 		this.wordInput.drawTextBox();
+		this.spellingList.drawList(mc, x, y);
 		this.drawString(fontRendererObj, I18n.format("settings.spelling.userdictionary"), (rowY(5) + rowY(6))/2,  rowY(4), 0xffffff);
 		this.drawString(fontRendererObj, I18n.format("book.pageIndicator", this.spellingList.getPageNum(), this.spellingList.getTotalPages()), (rowY(13)+rowY(14))/2, rowY(3), 0xffffff);
 	}
@@ -172,8 +172,6 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 		case CLEAR_WORDS:
 			this.spellingList.clearList();
 			break;
-		case DICTIONARY_LIST:
-			return;
 		case NEXT:
 			this.spellingList.nextPage();
 			break;

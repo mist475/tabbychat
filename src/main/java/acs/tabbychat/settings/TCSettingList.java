@@ -19,21 +19,21 @@ import acs.tabbychat.jazzy.TCSpellCheckManager;
 
 import com.google.common.collect.Lists;
 
-public class TCSettingList extends TCSetting {
+public class TCSettingList extends Gui{
 	
 	private List<Entry> list = Lists.newArrayList();
 	private List<Entry> selected = Lists.newArrayList();
 	private final File dictionary;
 	private int currentPage = 1;
 	private int id = 0;
+	private int xPosition, yPosition;
+	private int width, height;
 	
-	public TCSettingList(File file, int id) {
-		super("", "", "", id);
+	public TCSettingList(File file) {
 		this.dictionary = file;
 	}
 
-	@Override
-	public void drawButton(Minecraft mc, int cursorX, int cursorY) {
+	public void drawList(Minecraft mc, int cursorX, int cursorY) {
 		FontRenderer fr = mc.fontRenderer;
 		Gui.drawRect(xPosition, yPosition, xPosition + width, yPosition + height, Integer.MIN_VALUE);
 		
@@ -176,11 +176,11 @@ public class TCSettingList extends TCSetting {
 		}
 	}
 	
-	@Override
 	public void mouseClicked(int x, int y, int button){
 		if(x > x() && x < x() + width() && y>y() && y<y()+height())
 			for(Entry entry : getVisible()){
 				if(y > entry.y() && y < entry.y() + entry.height()){
+					entry.func_146113_a(Minecraft.getMinecraft().getSoundHandler());
 					actionPerformed(entry);
 					return;
 				}
@@ -190,7 +190,39 @@ public class TCSettingList extends TCSetting {
 	private void actionPerformed(Entry entry){
 		entry.setSelected(!entry.isSelected());
 	}
-	
+
+	public int width() {
+		return width;
+	}
+
+	public void width(int w){
+		this.width = w;
+	}
+
+	public int height() {
+		return height;
+	}
+
+	public void height(int h){
+		this.height = h;
+	}
+
+	public int x() {
+		return xPosition;
+	}
+
+	public void x(int x){
+		this.xPosition = x;
+	}
+
+	public int y() {
+		return yPosition;
+	}
+
+	public void y(int y){
+		this.yPosition = y;
+	}
+
 	public class Entry extends PrefsButton {
 		
 		private TCSettingList list = TCSettingList.this;
