@@ -46,6 +46,7 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StringUtils;
 
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.logging.log4j.Logger;
 
 import acs.tabbychat.gui.ChatBox;
@@ -873,11 +874,9 @@ public class TabbyChat {
 			printErr("Unable to write channel data to file : '"
 					+ e.getLocalizedMessage() + "' : " + e.toString());
 		} finally {
-			try {
-				cObjStream.close();
-				cBuffStream.close();
-			} catch (Exception e) {
-			}
+			IOUtils.closeQuietly(cFileStream);
+			IOUtils.closeQuietly(cObjStream);
+			IOUtils.closeQuietly(cBuffStream);
 		}
 	}
 
