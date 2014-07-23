@@ -495,7 +495,7 @@ public class TabbyChat {
 				toMePM.append("|").append(toMe);
 			}
 		} catch(PatternSyntaxException e){
-			this.log.error("Error while settings 'To me' regex.", e);
+			this.log.error("Error while setting 'To me' regex.", e);
 			this.serverSettings.pmTabRegexToMe.setValue("");
 			this.printMessageToChat(ColorCodeEnum.RED.toCode() + "Unable to set 'To me' pm regex. See console for details.");
 		} try {
