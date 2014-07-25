@@ -171,6 +171,7 @@ public class TabbyChat {
 		advancedSettings = new TCSettingsAdvanced(this);
 		spellChecker = TCSpellCheckManager.getInstance();
 		generalSettings.loadSettingsFile();
+		spellingSettings.loadSettingsFile();
 		advancedSettings.loadSettingsFile();
 		defaultUnicode = mc.fontRenderer.getUnicodeFlag();
 	}

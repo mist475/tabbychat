@@ -46,13 +46,6 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 	
 	public TCSettingsSpelling(TabbyChat _tc) {
 		super(_tc);
-		try {
-			dictionary.getParentFile().mkdirs();
-			dictionary.createNewFile();
-			spellingList.loadEntries(dictionary);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		this.name = I18n.format("settings.spelling.name");
 		this.settingsFile = new File(tabbyChatDir, "spellcheck.cfg");
 		this.bgcolor = 0x66ffb62f;
@@ -67,6 +60,19 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 			e.printStackTrace();
 		}
 		super.saveSettingsFile();
+	}
+
+	@Override
+	public Properties loadSettingsFile(){
+		super.loadSettingsFile();
+		try{
+			dictionary.getParentFile().mkdirs();
+			dictionary.createNewFile();
+			spellingList.loadEntries(dictionary);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	@Override
@@ -195,5 +201,4 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 		}
 		super.actionPerformed(button);
 	}
-
 }
