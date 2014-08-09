@@ -32,7 +32,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import acs.tabbychat.api.TCExtensionManager;
-import acs.tabbychat.compat.EmoticonsCompat;
 import acs.tabbychat.compat.MacroKeybindCompat;
 import acs.tabbychat.core.ChatChannel;
 import acs.tabbychat.core.GuiChatTC;
@@ -82,7 +81,6 @@ public class TabbyChatUtils {
 		ChatContextMenu.addContext(new ContextCopy());
 		ChatContextMenu.addContext(new ContextPaste());
 		
-		TCExtensionManager.INSTANCE.registerExtension(EmoticonsCompat.class);
 		TCExtensionManager.INSTANCE.registerExtension(MacroKeybindCompat.class);
 		
 	}

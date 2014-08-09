@@ -112,7 +112,7 @@ public abstract class ChatContext extends GuiButton {
 		boolean b = true;
 		if(getChildren() == null){
 			this.onClicked();
-			return false;
+			return true;
 		} else {
 			return children.mouseClicked(x, y);
 		}

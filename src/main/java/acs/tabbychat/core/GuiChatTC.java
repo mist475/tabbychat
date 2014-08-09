@@ -43,7 +43,6 @@ import acs.tabbychat.api.IChatMouseExtension;
 import acs.tabbychat.api.IChatRenderExtension;
 import acs.tabbychat.api.IChatUpdateExtension;
 import acs.tabbychat.api.TCExtensionManager;
-import acs.tabbychat.compat.EmoticonsCompat;
 import acs.tabbychat.compat.MacroKeybindCompat;
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatButton;
@@ -344,13 +343,7 @@ public class GuiChatTC extends GuiChat {
 					continue;
 				}
 			}
-			if (EmoticonsCompat.present) {
-				if (!EmoticonsCompat.emoteButtonClass.isInstance(_button)
-						&& _button.id != 54 && _button.id != 53)
-					_button.drawButton(this.mc, cursorX, cursorY);
-			} else {
-				_button.drawButton(this.mc, cursorX, cursorY);
-			}
+			_button.drawButton(this.mc, cursorX, cursorY);
 		}
 		
 		// Draw context menus
@@ -856,9 +849,10 @@ public class GuiChatTC extends GuiChat {
 		}
 
 		// Pass click info to extensions
-		for(IChatMouseExtension extension : this.extensions.getListOf(IChatMouseExtension.class)){
-			if(extension.mouseClicked(_x, _y, _button))
-				return;
+		if(!clicked)
+			for(IChatMouseExtension extension : this.extensions.getListOf(IChatMouseExtension.class)){
+				if(extension.mouseClicked(_x, _y, _button))
+					return;
 		}
 		// Replicating GuiScreen's mouseClicked method since 'super' won't work
 		for (GuiButton _guibutton : (List<GuiButton>) this.buttonList) {
@@ -874,15 +868,6 @@ public class GuiChatTC extends GuiChat {
 						if(_cb.channel == this.tc.channelMap.get("*")) return;
 						this.mc.displayGuiScreen(new ChatChannelGUI(_cb.channel));
 					}
-				}
-			} else {
-				if (_guibutton.mousePressed(this.mc, _x
-						- EmoticonsCompat.emoteOffsetX, _y)
-						&& _button == 0) {
-					this.selectedButton2 = _guibutton;
-					this.mc.thePlayer.playSound("random.click", 1.0F, 1.0F);
-					this.actionPerformed(_guibutton);
-					return;
 				}
 			}
 		}

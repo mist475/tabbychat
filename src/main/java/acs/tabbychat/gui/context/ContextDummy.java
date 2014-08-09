@@ -14,10 +14,17 @@ public class ContextDummy extends ChatContext {
 
 	private Method onClick;
 	private Method isValid;
-	private Behavior behavior;
+	private Behavior behavior = Behavior.GRAY;
 	private String string;
 	private ResourceLocation icon;
 	private List<ChatContext> children;
+	
+	public ContextDummy(){
+	}
+	
+	public ContextDummy(String display){
+		this.displayString = display;
+	}
 	
 	@Override
 	public void onClicked() {
@@ -33,7 +40,7 @@ public class ContextDummy extends ChatContext {
 	@Override
 	public String getDisplayString() {
 		// TODO Auto-generated method stub
-		return this.string;
+		return this.displayString;
 	}
 
 	@Override
@@ -51,7 +58,7 @@ public class ContextDummy extends ChatContext {
 	@Override
 	public boolean isPositionValid(int x, int y) {
 		if(this.isValid == null)
-			return true;
+			return false;
 		try{
 			return ((Boolean)isValid.invoke(null)).booleanValue();
 		}catch(Exception e){
@@ -108,7 +115,7 @@ public class ContextDummy extends ChatContext {
 	}
 	
 	public void setDisplayString(String string){
-		this.string = string;
+		this.displayString = string;
 	}
 	
 	public void setChildren(List<ChatContext> children){

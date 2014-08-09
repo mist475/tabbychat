@@ -90,7 +90,7 @@ public class ChatContextMenu extends Gui {
 				return item.mouseClicked(mouseX, mouseY);
 			}
 		}
-		return true;
+		return false;
 	}
 	
 	public void buttonClicked(ChatContext item){
