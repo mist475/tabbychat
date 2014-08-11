@@ -177,10 +177,7 @@ public class TabbyChatUtils {
 	}
 
 	public static File getServerDir() {
-		String ip = getServerIp();
-		if (ip.contains(":")) {
-			ip = ip.replaceAll(":", "(") + ")";
-		}
+		String ip = new IPResolver(getServerIp()).getSafeAddress();
 		return new File(ITCSettingsGUI.tabbyChatDir, ip);
 	}
 
@@ -255,7 +252,7 @@ public class TabbyChatUtils {
 			IntegratedServer ms = Minecraft.getMinecraft().getIntegratedServer();
 			fileDir = new File(new File(logDir, "singleplayer"), ms.getWorldName());
 		} else {
-			fileDir = new File(logDir, getServerIp());
+			fileDir = new File(logDir, new IPResolver(getServerIp()).getSafeAddress());
 		}
 		if(!theChannel.getTitle().equals("*")){
 			fileDir = new File(fileDir, theChannel.getTitle());

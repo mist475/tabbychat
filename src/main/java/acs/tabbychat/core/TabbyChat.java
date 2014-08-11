@@ -581,9 +581,11 @@ public class TabbyChat {
 			if (channelTab == null) {
 				if (serverSettings.autoPMSearch.getValue()) {
 					pmTab = this.processChatForPMs(raw.getUnformattedText());
-					tab = new ChatChannel(pmTab);
-					if (generalSettings.saveChatLog.getValue() && generalSettings.splitChatLog.getValue())
-						TabbyChatUtils.logChat(this.getCleanTimeStamp() + raw.getUnformattedText(), tab);
+					if(pmTab != null){
+						tab = new ChatChannel(pmTab);
+						if (generalSettings.saveChatLog.getValue() && generalSettings.splitChatLog.getValue())
+							TabbyChatUtils.logChat(this.getCleanTimeStamp() + raw.getUnformattedText(), tab);
+					}
 				}
 			} else {
 				toTabs.add(channelTab);
