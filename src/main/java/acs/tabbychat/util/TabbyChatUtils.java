@@ -58,7 +58,7 @@ import com.mumfrey.liteloader.core.LiteLoader;
 public class TabbyChatUtils {
 	private static Calendar logDay = Calendar.getInstance();
 	private static File logDir = new File(new File(Minecraft.getMinecraft().mcDataDir, "logs"), "TabbyChat");
-	private static SimpleDateFormat logNameFormat = new SimpleDateFormat("'_'MM-dd-yyyy'.log'");
+	private static SimpleDateFormat logNameFormat = new SimpleDateFormat("'_'yyyy-MM-dd'.log'");
 	public final static String version = "@@VERSION@@";
 	public final static String name = "TabbyChat";
 	public final static String modid = "tabbychat";
