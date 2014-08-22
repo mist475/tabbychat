@@ -4,16 +4,19 @@ import java.io.File;
 import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.INetHandler;
+import net.minecraft.network.play.server.S01PacketJoinGame;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.Logger;
 
 import acs.tabbychat.util.TabbyChatUtils;
 
-import com.mumfrey.liteloader.InitCompleteListener;
+import com.mumfrey.liteloader.JoinGameListener;
+import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.core.LiteLoader;
 
-public class LiteModTabbyChat implements InitCompleteListener {
+public class LiteModTabbyChat implements Tickable, JoinGameListener {
 	private static Logger log = TabbyChatUtils.log;
 
 	@Override
@@ -27,8 +30,7 @@ public class LiteModTabbyChat implements InitCompleteListener {
 	}
 
 	@Override
-	public void onInitCompleted(Minecraft var1, LiteLoader var2) {
-		TabbyChat.liteLoaded = true;
+	public void onJoinGame(INetHandler netHandler, S01PacketJoinGame joinGamePacket) {
 		GuiNewChatTC.getInstance();
 	}
 
@@ -39,12 +41,10 @@ public class LiteModTabbyChat implements InitCompleteListener {
 
 	@Override
 	public void init(File configPath) {
+		TabbyChat.liteLoaded = true;
 		String relativeConfig = "tabbychat";
-		File liteConfigDir = new File(LiteLoader.getCommonConfigFolder(),
-				relativeConfig);
-		File mcConfigDir = new File(LiteLoader.getGameDirectory(),
-				new StringBuilder().append("config").append(File.separatorChar)
-						.append(relativeConfig).toString());
+		File liteConfigDir = new File(LiteLoader.getCommonConfigFolder(), relativeConfig);
+		File mcConfigDir = new File(new File(LiteLoader.getGameDirectory(), "config"), relativeConfig);
 
 		// If forge old exist and liteloader configs don't, copy over.
 		if (!liteConfigDir.exists() && mcConfigDir.exists()) {
@@ -59,8 +59,7 @@ public class LiteModTabbyChat implements InitCompleteListener {
 	}
 
 	@Override
-	public void upgradeSettings(String version, File configPath,
-			File oldConfigPath) {
+	public void upgradeSettings(String version, File configPath, File oldConfigPath) {
 		// TODO Auto-generated method stub
 
 	}

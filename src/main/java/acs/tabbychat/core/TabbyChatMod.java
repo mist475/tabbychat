@@ -1,21 +1,18 @@
 package acs.tabbychat.core;
 
-import java.io.File;
-import java.net.URL;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.launchwrapper.Launch;
 import acs.tabbychat.util.TabbyChatUtils;
+
+import com.mumfrey.liteloader.core.LiteLoader;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 
 @Mod(name = TabbyChatUtils.name, modid = TabbyChatUtils.modid, version = TabbyChatUtils.version)
 public class TabbyChatMod{
@@ -23,7 +20,7 @@ public class TabbyChatMod{
 	@EventHandler
 	public void load(FMLInitializationEvent event){
 		if(willBeLiteLoaded()){
-			TabbyChatUtils.log.warn("LiteLoader version detected.  Will use that instead.");
+			TabbyChatUtils.log.warn("LiteModTabbyChat detected and enabled.  Will use that instead.");
 			return;
 		}
 		TabbyChatUtils.startup();
@@ -31,8 +28,8 @@ public class TabbyChatMod{
 		TabbyChat.modLoaded = true;
 	}
 	
-	@EventHandler
-	public void postLoad(FMLServerStartedEvent event){
+	@SubscribeEvent
+	public void postLoad(ClientConnectedToServerEvent event){
 		if(!TabbyChat.liteLoaded)
 			GuiNewChatTC.getInstance();
 	}
@@ -51,10 +48,10 @@ public class TabbyChatMod{
 	
 	private boolean willBeLiteLoaded(){
 		try{
-			Class.forName("acs.tabbychat.core.LiteModTabbyChat");
-			Class.forName("com.mumfrey.liteloader.core.LiteLoader");
-			return true;
-		}catch(Exception e){
+			LiteLoader liteloader = LiteLoader.getInstance();
+			LiteModTabbyChat litemod = liteloader.getMod(LiteModTabbyChat.class);
+			return liteloader.isModEnabled(litemod.getName());
+		}catch(NoClassDefFoundError e){
 		}
 		return false;
 	}
