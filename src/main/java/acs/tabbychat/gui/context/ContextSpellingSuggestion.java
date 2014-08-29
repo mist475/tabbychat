@@ -101,9 +101,9 @@ public class ContextSpellingSuggestion extends ChatContext {
 				String sel = field.getSelectedText();
 				char pref = sel.charAt(0);
 				char suff = sel.charAt(sel.length()-1);
-				if(Character.isAlphabetic(pref))
+				if(Character.isLetter(pref))
 					pref = 0;
-				if(Character.isAlphabetic(suff))
+				if(Character.isLetter(suff))
 					suff = ' ';
 				this.getMenu().screen.inputField2.writeText((pref != 0 ? pref : "") + word + suff);
 			}
