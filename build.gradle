@@ -61,11 +61,6 @@ jar{
 	appendix = minecraft.version
 	exclude 'acs/tabbychat/core/LiteModTabbyChat.class', 'litemod.json'
 }
-task jarApi(type: Jar){
-	from sourceSets.api.output
-	appendix = minecraft.version
-	classifier = "api"
-}
 task jarDev(type: Jar){
 	from sourceSets.main.output
 	from sourceSets.api.output
@@ -79,7 +74,6 @@ task jarSrc(type: Jar){
 	classifier = "src"
 }
 artifacts{
-	archives jarApi
 	archives jarDev
 	archives jarSrc
 }
@@ -88,7 +82,9 @@ String getBuildNo(){
 }
 String getRevision(){
 	String tag = git("describe", "--tags", "--abbrev=0")
-	return git("rev-list", tag + "..HEAD", "--count")
+	String rev = git("rev-list", tag + "..HEAD", "--count")
+	boolean unstaged = !git("ls-files", "-om", "--exclude-standard").trim().isEmpty()
+	return rev + (unstaged ? "-unstaged" : "")
 }
 import static net.minecraftforge.gradle.dev.DevBasePlugin.*
 String git(String[] args){
