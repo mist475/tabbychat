@@ -24,8 +24,10 @@ group = "acs.tabbychat"
 archivesBaseName = "TabbyChat"
 
 minecraft{
-    version = "1.7.10-7.10.22.956"
-    runDir = "eclipse/assets"
+    version = "1.7.2-7.2.217.935"
+    runDir = "eclipse"
+
+	setExt "liteloaderVersion", "1.7.2_04"
 	
 	replace "@@VERSION@@", project.version
 }
@@ -40,7 +42,7 @@ processResources{
         include 'mcmod.info', 'litemod.json'
 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version, 'revision':project.build
+        expand 'version':project.version, 'mcversion':project.minecraft.version, 'revision':project.build, 'llversion':project.minecraft.getExt("liteloaderVersion")
     }
 
     // copy everything else, thats not the mcmod.info
@@ -58,28 +60,22 @@ dependencies{
 jar{
 	from sourceSets.api.output
 	from ( configurations.customCompile.collect { it.isDirectory() ? it : zipTree(it)}) { exclude 'META-INF/**' }
-	appendix = minecraft.version
+	appendix minecraft.version
 	exclude 'acs/tabbychat/core/LiteModTabbyChat.class', 'litemod.json'
-}
-task jarApi(type: Jar){
-	from sourceSets.api.output
-	appendix = minecraft.version
-	classifier = "api"
 }
 task jarDev(type: Jar){
 	from sourceSets.main.output
 	from sourceSets.api.output
-	appendix = minecraft.version
-	classifier = "dev"
+	appendix minecraft.version
+	classifier "dev"
 }
 task jarSrc(type: Jar){
 	from sourceSets.main.allSource
 	from sourceSets.api.allSource
 	appendix = minecraft.version
-	classifier = "src"
+	classifier "src"
 }
 artifacts{
-	archives jarApi
 	archives jarDev
 	archives jarSrc
 }
@@ -98,10 +94,11 @@ String git(String[] args){
 		return null
 	}
 }
-apply plugin: 'liteloader' 
+// Because there's no mcp jar for liteloader-1.7.2_05
+apply plugin: 'liteloader'
 jarLiteloader{
 	from sourceSets.api.output
 	from (configurations.customCompile.collect { it.isDirectory() ? it : project.zipTree(it)}) { exclude 'META-INF/**' }
-	appendix = minecraft.version
+	appendix minecraft.version
 	exclude 'acs/tabbychat/core/TabbyChatMod.class', 'mcmod.info'
 }

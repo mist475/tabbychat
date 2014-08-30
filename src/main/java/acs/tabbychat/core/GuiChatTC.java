@@ -16,7 +16,7 @@ import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.stream.GuiTwitchUserMode;
+//import net.minecraft.client.gui.stream.GuiTwitchUserMode;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.item.ItemStack;
@@ -37,7 +37,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import tv.twitch.chat.ChatUserInfo;
+//import tv.twitch.chat.ChatUserInfo;
 import acs.tabbychat.api.IChatKeyboardExtension;
 import acs.tabbychat.api.IChatMouseExtension;
 import acs.tabbychat.api.IChatRenderExtension;
@@ -83,7 +83,7 @@ public class GuiChatTC extends GuiChat {
 	public GuiChatTC() {
 		super();
 		this.mc = Minecraft.getMinecraft();
-		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		this.gnc = GuiNewChatTC.getInstance();
 		this.tc = TabbyChat.getInstance();
 		this.extensions = new ChatExtensions(TCExtensionManager.INSTANCE.getExtensions());
@@ -242,7 +242,7 @@ public class GuiChatTC extends GuiChat {
 
 	@Override
 	public void drawScreen(int cursorX, int cursorY, float pointless) {
-		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		this.width = sr.getScaledWidth();
 		this.height = sr.getScaledHeight();
 
@@ -510,7 +510,7 @@ public class GuiChatTC extends GuiChat {
 		this.extensions = new ChatExtensions(TCExtensionManager.INSTANCE.getExtensions());
 		this.buttonList.clear();
 		this.inputList.clear();
-		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		this.width = sr.getScaledWidth();
 		this.height = sr.getScaledHeight();
 		this.tc.checkServer();
@@ -799,14 +799,14 @@ public class GuiChatTC extends GuiChat {
 							this.inputField2.setText(clickEvent.getValue());
 						} else if (clickEvent.getAction() == ClickEvent.Action.RUN_COMMAND) {
 							this.func_146403_a(clickEvent.getValue());
-						} else if (clickEvent.getAction() == ClickEvent.Action.TWITCH_USER_INFO) {
+						}/* else if (clickEvent.getAction() == ClickEvent.Action.TWITCH_USER_INFO) {
                             ChatUserInfo var8 = this.mc.func_152346_Z().func_152926_a(clickEvent.getValue());
                             if (var8 != null) {
                                 this.mc.displayGuiScreen(new GuiTwitchUserMode(this.mc.func_152346_Z(), var8));
                             } else {
                                 log.error("Tried to handle twitch user but couldn\'t find them!");
                             }
-                        } else {
+                        }*/ else {
 							log.error("Don\'t know how to handle " + clickEvent);
 						}
 					}

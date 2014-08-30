@@ -25,7 +25,7 @@ import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
-import org.apache.commons.compress.compressors.gzip.GzipUtils;
+//import org.apache.commons.compress.compressors.gzip.GzipUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
@@ -74,7 +74,7 @@ public class TabbyChatUtils {
 			TabbyChat.forgePresent = false;
 		}
 		
-		compressLogs();
+		//compressLogs();
 		
 		ChatContextMenu.addContext(new ContextSpellingSuggestion());
 		ChatContextMenu.addContext(new ContextCut());
@@ -84,7 +84,7 @@ public class TabbyChatUtils {
 		TCExtensionManager.INSTANCE.registerExtension(MacroKeybindCompat.class);
 		
 	}
-	
+	/* Unable to compress logs in 1.7.2
 	private static void compressLogs() {
 		if(!logDir.exists())
 			return;
@@ -116,7 +116,7 @@ public class TabbyChatUtils {
 			os.close();
 		}
 	}
-
+	*/
 	public static void chatGuiTick(Minecraft mc) {
 		GuiScreen screen = mc.currentScreen;
 		if (screen == null)

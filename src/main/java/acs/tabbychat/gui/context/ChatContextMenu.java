@@ -37,7 +37,7 @@ public class ChatContextMenu extends Gui {
 	}
 	
 	private void setup(GuiChatTC chat, int x, int y){
-		sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		sr = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 		this.xPos = x;
 		this.yPos = y;
 		this.width = 100;

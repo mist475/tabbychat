@@ -1,5 +1,5 @@
 {
-    "mcversion":"${mcversion}",
+    "mcversion":"${llversion}",
     "name":		"TabbyChat",
 	"version":  "${version}",
     "revision":	"${revision}",
