@@ -83,7 +83,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.bgcolor = 0x66289f28;
         this.filterName.setCharLimit(50);
         this.sendToTabName.setCharLimit(20);
-        this.expressionString.setCharLimit(600);
+        this.expressionString.setCharLimit(Integer.MAX_VALUE);
         this.defineDrawableSettings();
     }
 
