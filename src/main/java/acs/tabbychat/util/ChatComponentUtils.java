@@ -1,14 +1,15 @@
 package acs.tabbychat.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A library for modifying Chat Components.
@@ -17,7 +18,6 @@ import net.minecraft.util.StringUtils;
  */
 public class ChatComponentUtils {
 
-    private static final String WITH_DELIMITER = "((?<=%1$s)|(?=%1$s))";
     private static FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 
     /**
@@ -41,63 +41,93 @@ public class ChatComponentUtils {
         return newChat;
     }
 
+    public static String formatString(String text, boolean force) {
+        return !force && !Minecraft.getMinecraft().gameSettings.chatColours ? EnumChatFormatting
+                .getTextWithoutFormattingCodes(text) : text;
+    }
+
     /**
      * Splits a ChatComponent into multiple lines so it will fit within a width.
-     * 
+     * Adapted from Minecraft 1.8's GuiUtilRenderComponents
+     *
      * @param chat
      * @param limit
      * @return
      */
     @SuppressWarnings("unchecked")
     public static ComponentList split(IChatComponent chat, int limit) {
-        // Split components up
-        ComponentList ichatList = ComponentList.newInstance();
-        ComponentList list = ComponentList.newInstance();
-        ComponentList list1 = ComponentList.newInstance();
-        if (chat.getSiblings().size() == 0) {
-            list.add(chat);
-        } else {
-            list.addAll(chat.getSiblings());
-        }
-        // Convert legacy formatting
-        for (IChatComponent ichat : list) {
-            if (ichat.getUnformattedTextForChat().contains("\u00a7"))
-                list1.addAll(formattedStringToChat(ichat.getUnformattedTextForChat()).getSiblings());
-            else
-                list1.add(ichat);
-        }
-        for (IChatComponent ichat : list1) {
-            String[] str = ichat.getFormattedText().split(String.format(WITH_DELIMITER, " "));
-            List<String> chatList = new ArrayList<String>();
-            for (String s : str) {
-                for (String s1 : (List<String>) fontRenderer.listFormattedStringToWidth(s, limit)) {
-                    chatList.add(StringUtils.stripControlCodes(s1));
-                }
-            }
-            // Create component and add to list
-            for (String s : chatList) {
-                IChatComponent a = new ChatComponentText(s).setChatStyle(ichat.getChatStyle()
-                        .createShallowCopy());
-                ichatList.add(a);
-            }
-        }
-        // Assemble lines
-        ComponentList chatList = ComponentList.newInstance();
-        IChatComponent newChat = new ChatComponentText("");
-        for (IChatComponent ichat : ichatList) {
-            if (fontRenderer.getStringWidth(newChat.getUnformattedText()
-                    + ichat.getUnformattedText()) <= limit) {
-                newChat.appendSibling(ichat);
-                continue;
-            } else {
-                chatList.add(newChat.appendSibling(new ChatComponentText("")));
-                newChat = new ChatComponentText("").appendSibling(ichat);
-            }
-        }
-        if (!chatList.contains(newChat))
-            chatList.add(newChat);
 
-        return chatList;
+        int j = 0;
+        ChatComponentText chatcomponenttext = new ChatComponentText("");
+        ComponentList arraylist = ComponentList.newInstance();
+        ArrayList<IChatComponent> arraylist1 = Lists.newArrayList(chat);
+
+        for (int k = 0; k < arraylist1.size(); ++k) {
+            IChatComponent ichatcomponent1 = arraylist1.get(k);
+            String s = ichatcomponent1.getUnformattedTextForChat();
+            boolean flag2 = false;
+            String s1;
+
+            if (s.contains("\n")) {
+                int l = s.indexOf(10);
+                s1 = s.substring(l + 1);
+                s = s.substring(0, l + 1);
+                ChatComponentText chatcomponenttext1 = new ChatComponentText(s1);
+                chatcomponenttext1.setChatStyle(ichatcomponent1.getChatStyle().createShallowCopy());
+                arraylist1.add(k + 1, chatcomponenttext1);
+                flag2 = true;
+            }
+            // Second boolean v
+            String s4 = formatString(ichatcomponent1.getChatStyle().getFormattingCode() + s, true);
+            s1 = s4.endsWith("\n") ? s4.substring(0, s4.length() - 1) : s4;
+            int j1 = fontRenderer.getStringWidth(s1);
+            ChatComponentText chatcomponenttext2 = new ChatComponentText(s1);
+            chatcomponenttext2.setChatStyle(ichatcomponent1.getChatStyle().createShallowCopy());
+
+            if (j + j1 > limit) {
+                String s2 = fontRenderer.trimStringToWidth(s4, limit - j, false);
+                String s3 = s2.length() < s4.length() ? s4.substring(s2.length()) : null;
+
+                if (s3 != null && s3.length() > 0) {
+                    int i1 = s2.lastIndexOf(" ");
+
+                    if (i1 >= 0 && fontRenderer.getStringWidth(s4.substring(0, i1)) > 0) {
+                        s2 = s4.substring(0, i1);
+                        ++i1; // first boolean
+                        s3 = s4.substring(i1);
+                    } else if (j > 0 && !s4.contains(" ")) {
+                        s2 = "";
+                        s3 = s4;
+                    }
+
+                    ChatComponentText chatcomponenttext3 = new ChatComponentText(s3);
+                    chatcomponenttext3.setChatStyle(ichatcomponent1.getChatStyle()
+                            .createShallowCopy());
+                    arraylist1.add(k + 1, chatcomponenttext3);
+                }
+
+                j1 = fontRenderer.getStringWidth(s2);
+                chatcomponenttext2 = new ChatComponentText(s2);
+                chatcomponenttext2.setChatStyle(ichatcomponent1.getChatStyle().createShallowCopy());
+                flag2 = true;
+            }
+
+            if (j + j1 <= limit) {
+                j += j1;
+                chatcomponenttext.appendSibling(chatcomponenttext2);
+            } else {
+                flag2 = true;
+            }
+
+            if (flag2) {
+                arraylist.add(chatcomponenttext);
+                j = 0;
+                chatcomponenttext = new ChatComponentText("");
+            }
+        }
+
+        arraylist.add(chatcomponenttext);
+        return arraylist;
     }
 
     /**

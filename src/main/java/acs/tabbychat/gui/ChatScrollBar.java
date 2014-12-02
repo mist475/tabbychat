@@ -1,17 +1,16 @@
 package acs.tabbychat.gui;
 
-import java.awt.Point;
-
+import acs.tabbychat.core.GuiNewChatTC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.MathHelper;
 
 import org.lwjgl.input.Mouse;
 
-import acs.tabbychat.core.GuiNewChatTC;
+import java.awt.Point;
 
 public class ChatScrollBar {
-    private static Minecraft mc;
+    private static Minecraft mc = Minecraft.getMinecraft();
     private static GuiNewChatTC gnc = GuiNewChatTC.getInstance();
     private static float mouseLoc = 0.0f;
     private static int scrollBarCenter = 0;
@@ -24,13 +23,6 @@ public class ChatScrollBar {
     protected static int barHeight = 5;
     protected static int barWidth = 5;
     private static boolean scrolling = false;
-
-    /**
-	 * 
-	 */
-    public ChatScrollBar() {
-        mc = Minecraft.getMinecraft();
-    }
 
     /**
 	 * 
@@ -60,8 +52,8 @@ public class ChatScrollBar {
 	 * 
 	 */
     private static void update() {
-        barHeight = MathHelper.floor_float((float) 5 * gnc.getScaleSetting());
-        barWidth = MathHelper.floor_float((float) 5 * gnc.getScaleSetting());
+        barHeight = MathHelper.floor_float(5 * gnc.getScaleSetting());
+        barWidth = MathHelper.floor_float(5 * gnc.getScaleSetting());
 
         barX = ChatBox.current.width - barWidth - 2;
         barBottomY = 0;
@@ -90,7 +82,7 @@ public class ChatScrollBar {
         int minX = barX + 1;
         int maxlines = gnc.getHeightSetting() / 9;
         float chatOpacity = mc.gameSettings.chatOpacity * 0.9f + 0.1f;
-        int currentOpacity = (int) ((float) 180 * chatOpacity);
+        int currentOpacity = (int) (180 * chatOpacity);
         Gui.drawRect(barX, barTopY, barX + barWidth + 2, barBottomY, currentOpacity << 24);
         if (gnc.GetChatSize() > maxlines) {
             Gui.drawRect(minX, scrollBarCenter - barHeight / 2, minX + barWidth, scrollBarCenter
