@@ -15,44 +15,45 @@ import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 
 @Mod(name = TabbyChatUtils.name, modid = TabbyChatUtils.modid, version = TabbyChatUtils.version)
-public class TabbyChatMod{
-	
-	@EventHandler
-	public void load(FMLInitializationEvent event){
-		if(willBeLiteLoaded()){
-			TabbyChatUtils.log.warn("LiteModTabbyChat detected and enabled.  Will use that instead.");
-			return;
-		}
-		TabbyChatUtils.startup();
-		FMLCommonHandler.instance().bus().register(this);
-		TabbyChat.modLoaded = true;
-	}
-	
-	@SubscribeEvent
-	public void postLoad(ClientConnectedToServerEvent event){
-		if(!TabbyChat.liteLoaded)
-			GuiNewChatTC.getInstance();
-	}
-	
-	@SubscribeEvent
-	public void onTick(RenderTickEvent event){
-		if(!event.phase.equals(Phase.START) && Minecraft.getMinecraft().theWorld != null){
-			onTickInGui(Minecraft.getMinecraft());
-		}
-	}
+public class TabbyChatMod {
 
-	private boolean onTickInGui(Minecraft minecraft) {
-		TabbyChatUtils.chatGuiTick(minecraft);
-		return true;
-	}
-	
-	private boolean willBeLiteLoaded(){
-		try{
-			LiteLoader liteloader = LiteLoader.getInstance();
-			LiteModTabbyChat litemod = liteloader.getMod(LiteModTabbyChat.class);
-			return liteloader.isModEnabled(litemod.getName());
-		}catch(NoClassDefFoundError e){
-		}
-		return false;
-	}
+    @EventHandler
+    public void load(FMLInitializationEvent event) {
+        if (willBeLiteLoaded()) {
+            TabbyChatUtils.log
+                    .warn("LiteModTabbyChat detected and enabled.  Will use that instead.");
+            return;
+        }
+        TabbyChatUtils.startup();
+        FMLCommonHandler.instance().bus().register(this);
+        TabbyChat.modLoaded = true;
+    }
+
+    @SubscribeEvent
+    public void postLoad(ClientConnectedToServerEvent event) {
+        if (!TabbyChat.liteLoaded)
+            GuiNewChatTC.getInstance();
+    }
+
+    @SubscribeEvent
+    public void onTick(RenderTickEvent event) {
+        if (!event.phase.equals(Phase.START) && Minecraft.getMinecraft().theWorld != null) {
+            onTickInGui(Minecraft.getMinecraft());
+        }
+    }
+
+    private boolean onTickInGui(Minecraft minecraft) {
+        TabbyChatUtils.chatGuiTick(minecraft);
+        return true;
+    }
+
+    private boolean willBeLiteLoaded() {
+        try {
+            LiteLoader liteloader = LiteLoader.getInstance();
+            LiteModTabbyChat litemod = liteloader.getMod(LiteModTabbyChat.class);
+            return liteloader.isModEnabled(litemod.getName());
+        } catch (NoClassDefFoundError e) {
+        }
+        return false;
+    }
 }

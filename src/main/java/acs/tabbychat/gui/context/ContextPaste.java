@@ -5,41 +5,39 @@ import java.util.List;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
-import com.google.common.collect.Lists;
-
 public class ContextPaste extends ChatContext {
 
-	@Override
-	public void onClicked() {
-		getMenu().screen.inputField2.writeText(GuiScreen.getClipboardString());
-	}
+    @Override
+    public void onClicked() {
+        getMenu().screen.inputField2.writeText(GuiScreen.getClipboardString());
+    }
 
-	@Override
-	public ResourceLocation getDisplayIcon() {
-		return new ResourceLocation("tabbychat:textures/gui/icons/paste.png");
-	}
+    @Override
+    public ResourceLocation getDisplayIcon() {
+        return new ResourceLocation("tabbychat:textures/gui/icons/paste.png");
+    }
 
-	@Override
-	public String getDisplayString() {
-		// TODO Auto-generated method stub
-		return "Paste";
-	}
+    @Override
+    public String getDisplayString() {
+        // TODO Auto-generated method stub
+        return "Paste";
+    }
 
-	@Override
-	public boolean isPositionValid(int x, int y) {
-		String clipboard = GuiScreen.getClipboardString();
-		return clipboard != null && !clipboard.isEmpty();
-	}
+    @Override
+    public boolean isPositionValid(int x, int y) {
+        String clipboard = GuiScreen.getClipboardString();
+        return clipboard != null && !clipboard.isEmpty();
+    }
 
-	@Override
-	public Behavior getDisabledBehavior(){
-		return Behavior.GRAY;
-	}
+    @Override
+    public Behavior getDisabledBehavior() {
+        return Behavior.GRAY;
+    }
 
-	@Override
-	public List<ChatContext> getChildren() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public List<ChatContext> getChildren() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

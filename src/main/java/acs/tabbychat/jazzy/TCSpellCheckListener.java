@@ -14,47 +14,49 @@ import com.swabunga.spell.event.SpellChecker;
 import com.swabunga.spell.event.StringWordTokenizer;
 
 public class TCSpellCheckListener implements SpellCheckListener {
-	protected SpellChecker spellCheck = null;
-	/**
+    protected SpellChecker spellCheck = null;
+
+    /**
 	 * 
 	 */
-	public TCSpellCheckListener() {
-		try {
-			InputStream in = TCSpellCheckListener.class.getResourceAsStream("/english.0");
-			SpellDictionary dictionary = new SpellDictionaryHashMap(new InputStreamReader(in));
-			this.spellCheck = new SpellChecker(dictionary);
-			this.spellCheck.addSpellCheckListener(this);
-		} catch (Exception e) {
-			TabbyChat.printException("", e);
-		}
-		
-	}
-	/**
+    public TCSpellCheckListener() {
+        try {
+            InputStream in = TCSpellCheckListener.class.getResourceAsStream("/english.0");
+            SpellDictionary dictionary = new SpellDictionaryHashMap(new InputStreamReader(in));
+            this.spellCheck = new SpellChecker(dictionary);
+            this.spellCheck.addSpellCheckListener(this);
+        } catch (Exception e) {
+            TabbyChat.printException("", e);
+        }
+
+    }
+
+    /**
+     * @param dict
+     */
+    public TCSpellCheckListener(File dict) {
+        try {
+            SpellDictionary dictionary = new SpellDictionaryHashMap(dict);
+            this.spellCheck = new SpellChecker(dictionary);
+            this.spellCheck.addSpellCheckListener(this);
+        } catch (Exception e) {
+            TabbyChat.printException("Error instantiating spell checker", e);
+        }
+    }
+
+    /**
 	 * 
-	 * @param dict
 	 */
-	public TCSpellCheckListener(File dict) {
-		try {
-			SpellDictionary dictionary = new SpellDictionaryHashMap(dict);
-			this.spellCheck = new SpellChecker(dictionary);
-			this.spellCheck.addSpellCheckListener(this);
-		} catch (Exception e) {
-			TabbyChat.printException("Error instantiating spell checker", e);
-		}
-	}
-	/**
-	 * 
-	 */
-	@Override
-	public void spellingError(SpellCheckEvent event) {
-		TabbyChat.spellChecker.handleListenerEvent(event);		
-	}
-	/**
-	 * 
-	 * @param line
-	 */
-	public void checkSpelling(String line) {
-		this.spellCheck.checkSpelling(new StringWordTokenizer(line));
-	}
+    @Override
+    public void spellingError(SpellCheckEvent event) {
+        TabbyChat.spellChecker.handleListenerEvent(event);
+    }
+
+    /**
+     * @param line
+     */
+    public void checkSpelling(String line) {
+        this.spellCheck.checkSpelling(new StringWordTokenizer(line));
+    }
 
 }
