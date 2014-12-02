@@ -1,32 +1,26 @@
 package acs.tabbychat.threads;
 
-import java.lang.reflect.Method;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.command.ICommandSender;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.util.TabbyChatUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.command.ICommandSender;
+
+import java.lang.reflect.Method;
 
 public class BackgroundChatThread extends Thread {
     String sendChat = "";
     String knownPrefix = null;
 
-    /**
-     * @param _send
-     */
     public BackgroundChatThread(String _send) {
         this.sendChat = _send;
     }
 
-    /**
-     * @param _send
-     * @param _prefix
-     */
     public BackgroundChatThread(String _send, String _prefix) {
         this.sendChat = _send;
         this.knownPrefix = _prefix;
     }
 
+    @Override
     public synchronized void run() {
         Minecraft mc = Minecraft.getMinecraft();
         mc.ingameGUI.getChatGUI().addToSentMessages(this.sendChat);

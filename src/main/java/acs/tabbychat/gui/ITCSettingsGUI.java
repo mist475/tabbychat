@@ -1,10 +1,10 @@
 package acs.tabbychat.gui;
 
+import acs.tabbychat.util.TabbyChatUtils;
+import net.minecraft.client.gui.GuiButton;
+
 import java.io.File;
 import java.util.Properties;
-
-import net.minecraft.client.gui.GuiButton;
-import acs.tabbychat.util.TabbyChatUtils;
 
 public interface ITCSettingsGUI {
     int SAVEBUTTON = 8901;

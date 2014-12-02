@@ -6,6 +6,7 @@ import acs.tabbychat.util.TabbyChatUtils;
 
 public class BackgroundUpdateCheck extends Thread {
 
+    @Override
     public void run() {
         String newest = TabbyChat.getNewestVersion();
         String current = TabbyChatUtils.version;

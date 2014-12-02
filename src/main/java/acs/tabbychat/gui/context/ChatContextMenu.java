@@ -1,13 +1,14 @@
 package acs.tabbychat.gui.context;
 
-import java.util.List;
+import acs.tabbychat.core.GuiChatTC;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import acs.tabbychat.core.GuiChatTC;
 
-import com.google.common.collect.Lists;
+import java.util.List;
 
 public class ChatContextMenu extends Gui {
 

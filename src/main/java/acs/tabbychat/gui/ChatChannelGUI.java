@@ -1,14 +1,5 @@
 package acs.tabbychat.gui;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-
-import org.lwjgl.input.Keyboard;
-
 import acs.tabbychat.core.ChatChannel;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TabbyChat;
@@ -16,6 +7,14 @@ import acs.tabbychat.settings.ITCSetting;
 import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingTextBox;
 import acs.tabbychat.util.TabbyChatUtils;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
+
+import org.lwjgl.input.Keyboard;
+
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 public class ChatChannelGUI extends GuiScreen {
     protected ChatChannel channel;
@@ -42,9 +41,6 @@ public class ChatChannelGUI extends GuiScreen {
     private TCSettingTextBox cmdPrefix = new TCSettingTextBox("", "cmdPrefix", "settings.channel",
             CMD_PREFIX_ID);
 
-    /**
-     * @param _c
-     */
     public ChatChannelGUI(ChatChannel _c) {
         this.tc = GuiNewChatTC.tc;
         this.channel = _c;
@@ -58,9 +54,7 @@ public class ChatChannelGUI extends GuiScreen {
         this.title = _c.getTitle();
     }
 
-    /**
-	 * 
-	 */
+    @Override
     public void actionPerformed(GuiButton _button) {
         switch (_button.id) {
         case SAVE_ID:
@@ -98,6 +92,7 @@ public class ChatChannelGUI extends GuiScreen {
         }
     }
 
+    @Override
     public void drawScreen(int _x, int _y, float _f) {
         int leftX = (this.width - this.displayWidth) / 2;
         int topY = (this.height - this.displayHeight) / 2;
@@ -123,6 +118,7 @@ public class ChatChannelGUI extends GuiScreen {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void initGui() {
         int leftX = (this.width - this.displayWidth) / 2;
@@ -179,6 +175,7 @@ public class ChatChannelGUI extends GuiScreen {
         }
     }
 
+    @Override
     protected void keyTyped(char par1, int par2) {
         for (int i = 0; i < this.buttonList.size(); i++) {
             if (ITCSetting.class.isInstance(this.buttonList.get(i))) {
@@ -191,6 +188,7 @@ public class ChatChannelGUI extends GuiScreen {
         super.keyTyped(par1, par2);
     }
 
+    @Override
     public void mouseClicked(int par1, int par2, int par3) {
         for (int i = 0; i < this.buttonList.size(); i++) {
             if (ITCSetting.class.isInstance(this.buttonList.get(i))) {

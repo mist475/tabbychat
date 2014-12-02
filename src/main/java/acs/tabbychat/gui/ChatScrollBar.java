@@ -24,9 +24,6 @@ public class ChatScrollBar {
     protected static int barWidth = 5;
     private static boolean scrolling = false;
 
-    /**
-	 * 
-	 */
     public static void handleMouse() {
         Point cursor = ChatBox.scaleMouseCoords(Mouse.getEventX(), Mouse.getEventY());
 
@@ -48,9 +45,6 @@ public class ChatScrollBar {
         }
     }
 
-    /**
-	 * 
-	 */
     private static void update() {
         barHeight = MathHelper.floor_float(5 * gnc.getScaleSetting());
         barWidth = MathHelper.floor_float(5 * gnc.getScaleSetting());
@@ -151,10 +145,6 @@ public class ChatScrollBar {
         lastY = _absY;
     }
 
-    /**
-     * @param _x
-     * @param _y
-     */
     public static void setOffset(int _x, int _y) {
         int maxlines = gnc.getHeightSetting() / 9;
         int clines = (gnc.GetChatSize() < maxlines) ? gnc.GetChatSize() : maxlines;

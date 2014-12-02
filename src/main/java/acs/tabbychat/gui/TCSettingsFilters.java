@@ -1,14 +1,5 @@
 package acs.tabbychat.gui;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.TreeMap;
-
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
@@ -19,6 +10,15 @@ import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingEnum;
 import acs.tabbychat.settings.TCSettingTextBox;
 import acs.tabbychat.util.TabbyChatUtils;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.TreeMap;
 
 public class TCSettingsFilters extends TCSettingsGUI {
     protected int curFilterId = 0;
@@ -87,6 +87,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.defineDrawableSettings();
     }
 
+    @Override
     public void actionPerformed(GuiButton button) {
         this.storeTempFilter();
         switch (button.id) {
@@ -127,6 +128,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void defineDrawableSettings() {
         this.buttonList.add(this.filterName);
@@ -208,6 +210,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void initDrawableSettings() {
         int effRight = (this.width + DISPLAY_WIDTH) / 2;
@@ -298,6 +301,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.displayCurrentFilter();
     }
 
+    @Override
     public Properties loadSettingsFile() {
         this.filterMap.clear();
         if (this.settingsFile == null)
@@ -345,6 +349,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         return null;
     }
 
+    @Override
     public void mouseClicked(int par1, int par2, int par3) {
         if (this.audioNotificationSound.hovered(par1, par2)) {
             this.audioNotificationSound.mouseClicked(par1, par2, par3);
@@ -355,6 +360,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
             super.mouseClicked(par1, par2, par3);
     }
 
+    @Override
     public void resetTempVars() {
         this.tempFilterMap.clear();
         Entry<Integer, TCChatFilter> realFilter = this.filterMap.firstEntry();
@@ -366,6 +372,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void saveSettingsFile() {
         Properties settingsTable = new Properties();
@@ -430,6 +437,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 
     }
 
+    @Override
     public void storeTempVars() {
         this.filterMap.clear();
 
@@ -444,6 +452,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.settingsFile = new File(TabbyChatUtils.getServerDir(), "filters.cfg");
     }
 
+    @Override
     public void validateButtonStates() {
         this.inverseMatch.enabled = !this.highlightBool.getTempValue();
         this.caseSensitive.enabled = true;

@@ -18,16 +18,19 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
         this.textBox.setText((String) this.value);
     }
 
+    @Override
     public void clear() {
         super.clear();
         this.textBox.setText((String) this.theDefault);
     }
 
+    @Override
     public void disable() {
         super.disable();
         this.textBox.setEnabled(false);
     }
 
+    @Override
     public void drawButton(Minecraft par1, int cursorX, int cursorY) {
         int labelColor = (this.enabled) ? 0xffffff : 0x666666;
 
@@ -37,6 +40,7 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
                         + (this.height() - 6) / 2, labelColor);
     }
 
+    @Override
     public void enable() {
         super.enable();
         this.textBox.setEnabled(true);
@@ -47,10 +51,12 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
         this.textBox.setEnabled(val);
     }
 
+    @Override
     public String getTempValue() {
         return this.textBox.getText().trim();
     }
 
+    @Override
     public String getValue() {
         return (String) this.value;
     }
@@ -59,6 +65,7 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
         this.textBox.textboxKeyTyped(par1, par2);
     }
 
+    @Override
     public void mouseClicked(int par1, int par2, int par3) {
         this.textBox.mouseClicked(par1, par2, par3);
     }
@@ -71,21 +78,25 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
         this.textBox.setText(tmp);
     }
 
+    @Override
     public void reset() {
         if (this.value == null)
             this.value = "";
         this.textBox.setText((String) this.value);
     }
 
+    @Override
     public void save() {
         this.value = this.textBox.getText().trim();
     }
 
+    @Override
     public void setButtonDims(int wide, int tall) {
         super.setButtonDims(wide, tall);
         this.reassignField();
     }
 
+    @Override
     public void setButtonLoc(int bx, int by) {
         super.setButtonLoc(bx, by);
         this.reassignField();
@@ -100,6 +111,7 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
         this.theDefault = newDefault;
     }
 
+    @Override
     public void setTempValue(Object theVal) {
         this.textBox.setText((String) theVal);
     }

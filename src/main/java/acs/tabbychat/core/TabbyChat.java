@@ -9,6 +9,35 @@ package acs.tabbychat.core;
  * prohibited, and a violation of copyright.
  */
 
+import acs.tabbychat.gui.ChatBox;
+import acs.tabbychat.gui.TCSettingsAdvanced;
+import acs.tabbychat.gui.TCSettingsFilters;
+import acs.tabbychat.gui.TCSettingsGeneral;
+import acs.tabbychat.gui.TCSettingsServer;
+import acs.tabbychat.gui.TCSettingsSpelling;
+import acs.tabbychat.jazzy.TCSpellCheckManager;
+import acs.tabbychat.settings.ChannelDelimEnum;
+import acs.tabbychat.settings.ColorCodeEnum;
+import acs.tabbychat.settings.FormatCodeEnum;
+import acs.tabbychat.settings.TCChatFilter;
+import acs.tabbychat.threads.BackgroundUpdateCheck;
+import acs.tabbychat.util.ChatComponentUtils;
+import acs.tabbychat.util.ComponentList;
+import acs.tabbychat.util.TabbyChatUtils;
+
+import com.google.common.collect.Lists;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StringUtils;
+
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -37,35 +66,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StringUtils;
-
-import org.apache.commons.compress.utils.IOUtils;
-import org.apache.logging.log4j.Logger;
-
-import acs.tabbychat.gui.ChatBox;
-import acs.tabbychat.gui.TCSettingsAdvanced;
-import acs.tabbychat.gui.TCSettingsFilters;
-import acs.tabbychat.gui.TCSettingsGeneral;
-import acs.tabbychat.gui.TCSettingsServer;
-import acs.tabbychat.gui.TCSettingsSpelling;
-import acs.tabbychat.jazzy.TCSpellCheckManager;
-import acs.tabbychat.settings.ChannelDelimEnum;
-import acs.tabbychat.settings.ColorCodeEnum;
-import acs.tabbychat.settings.FormatCodeEnum;
-import acs.tabbychat.settings.TCChatFilter;
-import acs.tabbychat.threads.BackgroundUpdateCheck;
-import acs.tabbychat.util.ChatComponentUtils;
-import acs.tabbychat.util.ComponentList;
-import acs.tabbychat.util.TabbyChatUtils;
-
-import com.google.common.collect.Lists;
 
 public class TabbyChat {
     private static Logger log = TabbyChatUtils.log;
@@ -368,6 +368,7 @@ public class TabbyChat {
         return generalSettings.tabbyChatEnable.getValue();
     }
 
+    @Override
     protected void finalize() {
         this.storeChannelData();
     }

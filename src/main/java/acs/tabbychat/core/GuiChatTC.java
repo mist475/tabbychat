@@ -1,13 +1,21 @@
 package acs.tabbychat.core;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import acs.tabbychat.api.IChatKeyboardExtension;
+import acs.tabbychat.api.IChatMouseExtension;
+import acs.tabbychat.api.IChatRenderExtension;
+import acs.tabbychat.api.IChatUpdateExtension;
+import acs.tabbychat.api.TCExtensionManager;
+import acs.tabbychat.compat.MacroKeybindCompat;
+import acs.tabbychat.gui.ChatBox;
+import acs.tabbychat.gui.ChatButton;
+import acs.tabbychat.gui.ChatChannelGUI;
+import acs.tabbychat.gui.ChatScrollBar;
+import acs.tabbychat.gui.PrefsButton;
+import acs.tabbychat.gui.context.ChatContextMenu;
+import acs.tabbychat.util.ChatExtensions;
+import acs.tabbychat.util.TabbyChatUtils;
+
+import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -38,22 +46,15 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import tv.twitch.chat.ChatUserInfo;
-import acs.tabbychat.api.IChatKeyboardExtension;
-import acs.tabbychat.api.IChatMouseExtension;
-import acs.tabbychat.api.IChatRenderExtension;
-import acs.tabbychat.api.IChatUpdateExtension;
-import acs.tabbychat.api.TCExtensionManager;
-import acs.tabbychat.compat.MacroKeybindCompat;
-import acs.tabbychat.gui.ChatBox;
-import acs.tabbychat.gui.ChatButton;
-import acs.tabbychat.gui.ChatChannelGUI;
-import acs.tabbychat.gui.ChatScrollBar;
-import acs.tabbychat.gui.PrefsButton;
-import acs.tabbychat.gui.context.ChatContextMenu;
-import acs.tabbychat.util.ChatExtensions;
-import acs.tabbychat.util.TabbyChatUtils;
 
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class GuiChatTC extends GuiChat {
     private Logger log = TabbyChatUtils.log;
@@ -210,7 +211,7 @@ public class GuiChatTC extends GuiChat {
 
             for (Iterator<String> _iter = this.foundPlayerNames.iterator(); _iter.hasNext(); _sb
                     .append(textBuffer)) {
-                textBuffer = (String) _iter.next();
+                textBuffer = _iter.next();
                 if (_sb.length() > 0) {
                     _sb.append(", ");
                 }
@@ -220,7 +221,7 @@ public class GuiChatTC extends GuiChat {
                     new ChatComponentText(_sb.toString()), 1);
         }
 
-        this.inputField2.writeText((String) this.foundPlayerNames.get(this.playerNameIndex++));
+        this.inputField2.writeText(this.foundPlayerNames.get(this.playerNameIndex++));
     }
 
     @Override
@@ -446,7 +447,7 @@ public class GuiChatTC extends GuiChat {
         } else {
             if (this.sentHistoryCursor2 == historyLength)
                 this.historyBuffer = this.inputField2.getText();
-            StringBuilder _sb = new StringBuilder((String) this.gnc.getSentMessages().get(loc));
+            StringBuilder _sb = new StringBuilder(this.gnc.getSentMessages().get(loc));
             this.setText(_sb, _sb.length());
             this.sentHistoryCursor2 = loc;
         }
@@ -953,10 +954,6 @@ public class GuiChatTC extends GuiChat {
         this.sentHistoryCursor2 = this.gnc.getSentMessages().size();
     }
 
-    /**
-     * @param txt
-     * @param pos
-     */
     public void setText(StringBuilder txt, int pos) {
         List<String> txtList = this.stringListByWidth(txt, sr.getScaledWidth() - 20);
 
@@ -993,11 +990,6 @@ public class GuiChatTC extends GuiChat {
         }
     }
 
-    /**
-     * @param _sb
-     * @param _w
-     * @return
-     */
     public List<String> stringListByWidth(StringBuilder _sb, int _w) {
         List<String> result = new ArrayList<String>(5);
         int _len = 0;
@@ -1018,9 +1010,6 @@ public class GuiChatTC extends GuiChat {
         return result;
     }
 
-    /**
-	 * 
-	 */
     @Override
     public void updateScreen() {
         this.inputField2.updateCursorCounter();

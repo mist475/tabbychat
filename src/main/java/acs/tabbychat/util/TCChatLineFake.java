@@ -32,10 +32,12 @@ public class TCChatLineFake extends ChatLine {
         return this.lineString;
     }
 
+    @Override
     public int getUpdatedCounter() {
         return this.updateCounterCreated;
     }
 
+    @Override
     public int getChatLineID() {
         return this.chatLineID;
     }

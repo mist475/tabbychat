@@ -20,10 +20,12 @@ public class TCSettingBool extends TCSetting implements ITCSetting {
         this.height(9);
     }
 
+    @Override
     public void actionPerformed() {
         this.toggle();
     }
 
+    @Override
     public void drawButton(Minecraft par1, int cursorX, int cursorY) {
         int centerX = this.x() + this.width() / 2;
         int centerY = this.y() + this.height() / 2;
@@ -59,19 +61,22 @@ public class TCSettingBool extends TCSetting implements ITCSetting {
                         + (this.height() - 6) / 2, labelColor);
     }
 
+    @Override
     public Boolean getTempValue() {
         return (Boolean) this.tempValue;
     }
 
+    @Override
     public Boolean getValue() {
         return (Boolean) this.value;
     }
 
+    @Override
     public void setCleanValue(Object _input) {
         if (_input == null)
             this.clear();
         else {
-            this.value = (Boolean) Boolean.parseBoolean(_input.toString());
+            this.value = Boolean.parseBoolean(_input.toString());
         }
     }
 

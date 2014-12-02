@@ -32,6 +32,7 @@ public enum ColorCodeEnum {
         this.vanilla = _vanilla;
     }
 
+    @Override
     public String toString() {
         return this.code + this.title + "\u00A7r";
     }

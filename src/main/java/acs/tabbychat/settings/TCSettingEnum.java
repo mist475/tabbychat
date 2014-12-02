@@ -21,6 +21,7 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
         super(theSetting, theProperty, theCategory, theID, theFormat);
     }
 
+    @Override
     public void drawButton(Minecraft par1, int cursorX, int cursorY) {
         int centerX = this.x() + this.width() / 2;
         int fgcolor = 0x99a0a0a0;
@@ -49,14 +50,17 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
                         + (this.height() - 6) / 2, labelColor);
     }
 
+    @Override
     public Enum<?> getTempValue() {
         return (Enum<?>) this.tempValue;
     }
 
+    @Override
     public Enum<?> getValue() {
         return (Enum<?>) this.value;
     }
 
+    @Override
     public void loadSelfFromProps(Properties readProps) {
         String found = (String) readProps.get(this.propertyName);
         if (found == null) {
@@ -76,6 +80,7 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
         }
     }
 
+    @Override
     public void mouseClicked(int par1, int par2, int par3) {
         if (this.hovered(par1, par2) && this.enabled) {
             if (par3 == 1)

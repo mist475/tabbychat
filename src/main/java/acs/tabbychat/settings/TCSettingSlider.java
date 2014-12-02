@@ -37,12 +37,14 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
                 / (this.maxValue - this.minValue);
     }
 
+    @Override
     public void clear() {
         super.clear();
         this.sliderValue = ((Float) this.tempValue - this.minValue)
                 / (this.maxValue - this.minValue);
     }
 
+    @Override
     public void drawButton(Minecraft par1, int cursorX, int cursorY) {
         int fgcolor = 0x99a0a0a0;
         if (!this.enabled) {
@@ -106,11 +108,13 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
                         + (this.height() - 6) / 2, labelColor);
     }
 
+    @Override
     public Float getTempValue() {
         this.tempValue = this.sliderValue * (this.maxValue - this.minValue) + this.minValue;
         return (Float) this.tempValue;
     }
 
+    @Override
     public Float getValue() {
         return (Float) this.value;
     }
@@ -146,6 +150,7 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
         this.tempValue = this.sliderValue * (this.maxValue - this.minValue) + this.minValue;
     }
 
+    @Override
     public void mouseClicked(int par1, int par2, int par3) {
         if (par3 == 0 && this.hovered(par1, par2) && this.enabled) {
             this.sliderX = par1 - 1;
@@ -160,21 +165,25 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
         }
     }
 
+    @Override
     public void mouseReleased(int par1, int par2) {
         this.dragging = false;
     }
 
+    @Override
     public void reset() {
         super.reset();
         this.sliderValue = ((Float) this.tempValue - this.minValue)
                 / (this.maxValue - this.minValue);
     }
 
+    @Override
     public void save() {
         this.tempValue = this.sliderValue * (this.maxValue - this.minValue) + this.minValue;
         super.save();
     }
 
+    @Override
     public void setCleanValue(Object updateVal) {
         if (updateVal == null)
             this.clear();
@@ -190,6 +199,7 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
                 / (this.maxValue - this.minValue);
     }
 
+    @Override
     public void setTempValue(Object theVal) {
         super.setTempValue(theVal);
         this.sliderValue = ((Float) this.tempValue - this.minValue)

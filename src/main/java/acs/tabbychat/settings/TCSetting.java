@@ -35,6 +35,7 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
         this.description = theFormat.toCode() + this.description + "\u00A7r";
     }
 
+    @Override
     public void actionPerformed() {}
 
     public int width() {
@@ -69,37 +70,46 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
         yPosition = _y;
     }
 
+    @Override
     public void clear() {
         this.value = this.theDefault;
         this.tempValue = this.theDefault;
     }
 
+    @Override
     public void disable() {
         this.enabled = false;
     }
 
+    @Override
     public void drawButton(Minecraft mc, int cursorX, int cursorY) {}
 
+    @Override
     public void enable() {
         this.enabled = true;
     }
 
+    @Override
     public boolean enabled() {
         return this.enabled;
     }
 
+    @Override
     public Object getDefault() {
         return this.theDefault;
     }
 
+    @Override
     public String getProperty() {
         return this.propertyName;
     }
 
+    @Override
     public Object getTempValue() {
         return this.tempValue;
     }
 
+    @Override
     public String getType() {
         return this.type;
     }
@@ -108,30 +118,37 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
         return this.value;
     }
 
+    @Override
     public Boolean hovered(int cursorX, int cursorY) {
         return cursorX >= this.x() && cursorY >= this.y() && cursorX < this.x() + this.width()
                 && cursorY < this.y() + this.height();
     }
 
+    @Override
     public void loadSelfFromProps(Properties readProps) {
         this.setCleanValue(readProps.get(this.propertyName));
     }
 
+    @Override
     public void mouseClicked(int par1, int par2, int par3) {}
 
+    @Override
     public void reset() {
         this.tempValue = this.value;
     }
 
+    @Override
     public void resetDescription() {
         this.description = this.categoryName.isEmpty() ? "" : I18n.format(this.categoryName + "."
                 + this.propertyName.toLowerCase());
     }
 
+    @Override
     public void save() {
         this.value = this.tempValue;
     }
 
+    @Override
     public void saveSelfToProps(Properties writeProps) {
         if (this.value instanceof Enum)
             writeProps.put(this.propertyName, ((Enum<?>) this.value).name());
@@ -139,24 +156,29 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
             writeProps.put(this.propertyName, this.value.toString());
     }
 
+    @Override
     public void setButtonDims(int wide, int tall) {
         this.width(wide);
         this.height(tall);
     }
 
+    @Override
     public void setButtonLoc(int bx, int by) {
         this.x(bx);
         this.y(by);
     }
 
+    @Override
     public void setLabelLoc(int _x) {
         this.labelX = _x;
     }
 
+    @Override
     public void setTempValue(Object updateVal) {
         this.tempValue = updateVal;
     }
 
+    @Override
     public void setCleanValue(Object updateVal) {
         if (updateVal == null)
             this.clear();
@@ -164,6 +186,7 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
             this.value = updateVal;
     }
 
+    @Override
     public void setValue(Object updateVal) {
         this.value = updateVal;
     }

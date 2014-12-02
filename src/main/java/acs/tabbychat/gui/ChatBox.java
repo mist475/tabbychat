@@ -430,31 +430,18 @@ public class ChatBox {
                 .getValue().floatValue() * getChatHeight() / 100.0f));
     }
 
-    /**
-     * @param atX
-     * @param atY
-     */
     public static void startDragging(int atX, int atY) {
         dragging = true;
         resizing = false;
         dragStart = scaleMouseCoords(atX, atY, true);
     }
 
-    /**
-     * @param atX
-     * @param atY
-     */
     public static void startResizing(int atX, int atY) {
         dragging = false;
         resizing = true;
         dragStart = scaleMouseCoords(atX, atY, true);
     }
 
-    /**
-     * @param mx
-     * @param my
-     * @return
-     */
     public static boolean tabTrayHovered(int mx, int my) {
         boolean chatOpen = gnc.getChatOpen();
         GuiScreen theScreen = TabbyChat.mc.currentScreen;

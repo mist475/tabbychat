@@ -1,12 +1,5 @@
 package acs.tabbychat.gui;
 
-import java.util.List;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.regex.Pattern;
-
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
@@ -18,6 +11,13 @@ import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.resources.I18n;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+import java.util.regex.Pattern;
 
 public class TCSettingsServer extends TCSettingsGUI {
     private static final int AUTO_CHANNEL_SEARCH_ID = 9201;
@@ -82,6 +82,7 @@ public class TCSettingsServer extends TCSettingsGUI {
         this.defineDrawableSettings();
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void defineDrawableSettings() {
         this.buttonList.add(this.autoChannelSearch);
@@ -98,6 +99,7 @@ public class TCSettingsServer extends TCSettingsGUI {
         this.buttonList.add(this.pmTabRegexFromMe);
     }
 
+    @Override
     public void initDrawableSettings() {
         int effRight = (this.width + DISPLAY_WIDTH) / 2;
         int col1x = (this.width - DISPLAY_WIDTH) / 2 + 55;
@@ -156,6 +158,7 @@ public class TCSettingsServer extends TCSettingsGUI {
         this.pmTabRegexFromMe.setButtonDims(149, 11);
     }
 
+    @Override
     public Properties loadSettingsFile() {
         if (this.settingsFile != null) {
             super.loadSettingsFile();
@@ -164,6 +167,7 @@ public class TCSettingsServer extends TCSettingsGUI {
         return null;
     }
 
+    @Override
     public void storeTempVars() {
         super.storeTempVars();
         parseChannelsFromInput();
@@ -188,6 +192,7 @@ public class TCSettingsServer extends TCSettingsGUI {
         this.settingsFile = new File(TabbyChatUtils.getServerDir(), "settings.cfg");
     }
 
+    @Override
     public void validateButtonStates() {
         this.delimColorBool.enabled = this.autoChannelSearch.getTempValue();
         this.delimFormatBool.enabled = this.autoChannelSearch.getTempValue();

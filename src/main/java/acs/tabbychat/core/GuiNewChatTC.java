@@ -1,15 +1,13 @@
 package acs.tabbychat.core;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
+import acs.tabbychat.gui.ChatBox;
+import acs.tabbychat.gui.ChatScrollBar;
+import acs.tabbychat.settings.TimeStampEnum;
+import acs.tabbychat.util.ChatComponentUtils;
+import acs.tabbychat.util.ComponentList;
+import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.gui.GuiIngameMenu;
@@ -25,12 +23,12 @@ import net.minecraft.util.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
-import acs.tabbychat.gui.ChatBox;
-import acs.tabbychat.gui.ChatScrollBar;
-import acs.tabbychat.settings.TimeStampEnum;
-import acs.tabbychat.util.ChatComponentUtils;
-import acs.tabbychat.util.ComponentList;
-import acs.tabbychat.util.TabbyChatUtils;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class GuiNewChatTC extends GuiNewChat {
     private Minecraft mc;
@@ -140,12 +138,12 @@ public class GuiNewChatTC extends GuiNewChat {
                         if (!_iter.hasNext()) {
                             return;
                         }
-                        _cl = (ChatLine) _iter.next();
+                        _cl = _iter.next();
                     } while (_cl.getChatLineID() != _id);
                     backupLineRemove = _cl;
                     break;
                 }
-                _cl = (ChatLine) _iter.next();
+                _cl = _iter.next();
             } while (_cl.getChatLineID() != _id);
             chatLineRemove = _cl;
         } finally {
@@ -226,13 +224,11 @@ public class GuiNewChatTC extends GuiNewChat {
                 fadeTicks = TabbyChat.advancedSettings.chatFadeTicks.getValue().intValue();
             } else {
                 maxDisplayedLines = this.func_146232_i();
-                this.chatWidth = MathHelper.ceiling_float_int((float) this.func_146228_f()
-                        / chatScaling);
+                this.chatWidth = MathHelper.ceiling_float_int(this.func_146228_f() / chatScaling);
             }
             GL11.glPushMatrix();
             if (tc.enabled()) {
-                GL11.glTranslatef((float) ChatBox.current.x, 48.0f + (float) ChatBox.current.y,
-                        0.0f);
+                GL11.glTranslatef(ChatBox.current.x, 48.0f + ChatBox.current.y, 0.0f);
             } else {
                 GL11.glTranslatef(2.0f, 29.0f, 0.0f);
             }
@@ -284,7 +280,7 @@ public class GuiNewChatTC extends GuiNewChat {
                     } else {
                         currentOpacity = 255;
                     }
-                    currentOpacity = (int) ((float) currentOpacity * chatOpacity);
+                    currentOpacity = (int) (currentOpacity * chatOpacity);
                     if (currentOpacity > 3) {
                         for (int i = 0; i < msgList.size(); i++) {
                             visLineCounter++;
@@ -324,10 +320,10 @@ public class GuiNewChatTC extends GuiNewChat {
                 if (chatOpen) {
                     ChatBox.setChatSize(this.chatHeight);
                     ChatScrollBar.drawScrollBar();
-                    ChatBox.drawChatBoxBorder((Gui) this, true, (int) (255 * chatOpacity));
+                    ChatBox.drawChatBoxBorder(this, true, (int) (255 * chatOpacity));
                 } else {
                     ChatBox.setUnfocusedHeight(this.chatHeight);
-                    ChatBox.drawChatBoxBorder((Gui) this, false, currentOpacity);
+                    ChatBox.drawChatBoxBorder(this, false, currentOpacity);
                     tc.pollForUnread(this, currentTick);
                 }
             }
@@ -403,7 +399,7 @@ public class GuiNewChatTC extends GuiNewChat {
         }
         // Split message by available chatbox space
 
-        MathHelper.floor_float((float) this.func_146228_f() / this.func_146244_h());
+        MathHelper.floor_float(this.func_146228_f() / this.func_146244_h());
         if (tc.enabled()) {
             if (!backupFlag)
                 tc.checkServer();
@@ -686,9 +682,6 @@ public class GuiNewChatTC extends GuiNewChat {
 
     }
 
-    /**
-     * @param _move
-     */
     public void setVisChatLines(int _move) {
         this.scrollOffset = _move;
     }

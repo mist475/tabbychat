@@ -1,5 +1,17 @@
 package acs.tabbychat.jazzy;
 
+import acs.tabbychat.core.TabbyChat;
+import acs.tabbychat.gui.ITCSettingsGUI;
+
+import com.swabunga.spell.event.SpellCheckEvent;
+import com.swabunga.spell.event.SpellChecker;
+import com.swabunga.spell.event.StringWordTokenizer;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -12,18 +24,6 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import acs.tabbychat.core.TabbyChat;
-import acs.tabbychat.gui.ITCSettingsGUI;
-
-import com.swabunga.spell.event.SpellCheckEvent;
-import com.swabunga.spell.event.SpellChecker;
-import com.swabunga.spell.event.StringWordTokenizer;
-
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.Minecraft;
-
 public class TCSpellCheckManager {
     private static TCSpellCheckManager instance = null;
 
@@ -34,9 +34,6 @@ public class TCSpellCheckManager {
     private final Lock errorWriteLock = errorLock.writeLock();
     private String lastAttemptedLocale;
 
-    /**
-	 * 
-	 */
     private TCSpellCheckManager() {
         this.reloadDictionaries();
     }
@@ -51,10 +48,6 @@ public class TCSpellCheckManager {
             listener.spellCheck.ignoreAll(word);
     }
 
-    /**
-     * @param screen
-     * @param inputFields
-     */
     public void drawErrors(GuiScreen screen, List<GuiTextField> inputFields) {
         List<String> inputCache = new ArrayList<String>();
         int activeFields = 0;
@@ -145,9 +138,6 @@ public class TCSpellCheckManager {
         }
     }
 
-    /**
-     * @return
-     */
     public static TCSpellCheckManager getInstance() {
         if (instance == null) {
             instance = new TCSpellCheckManager();
@@ -155,9 +145,6 @@ public class TCSpellCheckManager {
         return instance;
     }
 
-    /**
-     * @param event
-     */
     protected void handleListenerEvent(SpellCheckEvent event) {
         errorWriteLock.lock();
         try {
@@ -217,9 +204,6 @@ public class TCSpellCheckManager {
         this.loadUserDictionary();
     }
 
-    /**
-     * @param inputFields
-     */
     public void update(List<GuiTextField> inputFields) {
         if (lastAttemptedLocale != Minecraft.getMinecraft().gameSettings.language)
             this.reloadDictionaries();

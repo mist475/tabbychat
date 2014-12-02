@@ -1,14 +1,14 @@
 package acs.tabbychat.gui;
 
-import java.io.File;
-import java.util.Properties;
-
-import net.minecraft.client.resources.I18n;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingSlider;
 import acs.tabbychat.settings.TCSettingTextBox;
 import acs.tabbychat.util.TabbyChatUtils;
+import net.minecraft.client.resources.I18n;
+
+import java.io.File;
+import java.util.Properties;
 
 public class TCSettingsAdvanced extends TCSettingsGUI {
     private static final int CHAT_SCROLL_HISTORY_ID = 9401;
@@ -49,6 +49,7 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
         this.defineDrawableSettings();
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void defineDrawableSettings() {
         this.buttonList.add(this.chatScrollHistory);
@@ -60,6 +61,7 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
         this.buttonList.add(this.convertUnicodeText);
     }
 
+    @Override
     public void initDrawableSettings() {
         int col1x = (this.width - DISPLAY_WIDTH) / 2 + 55;
 
@@ -105,6 +107,7 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
         this.convertUnicodeText.buttonColor = buttonColor;
     }
 
+    @Override
     public Properties loadSettingsFile() {
         Properties result = super.loadSettingsFile();
         ChatBox.current.x = TabbyChatUtils.parseInteger(result.getProperty("chatbox.x"),
@@ -120,6 +123,7 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
         return null;
     }
 
+    @Override
     public void saveSettingsFile() {
         Properties settingsTable = new Properties();
         settingsTable.put("chatbox.x", Integer.toString(ChatBox.current.x));

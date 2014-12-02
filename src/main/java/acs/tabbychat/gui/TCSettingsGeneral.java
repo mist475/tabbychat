@@ -1,17 +1,17 @@
 package acs.tabbychat.gui;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Properties;
-
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.settings.ColorCodeEnum;
 import acs.tabbychat.settings.FormatCodeEnum;
 import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingEnum;
 import acs.tabbychat.settings.TimeStampEnum;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Properties;
 
 public class TCSettingsGeneral extends TCSettingsGUI {
     public SimpleDateFormat timeStamp = new SimpleDateFormat();
@@ -57,6 +57,7 @@ public class TCSettingsGeneral extends TCSettingsGUI {
         this.defineDrawableSettings();
     }
 
+    @Override
     public void actionPerformed(GuiButton button) {
         switch (button.id) {
         case TABBYCHAT_ENABLE_ID:
@@ -83,6 +84,7 @@ public class TCSettingsGeneral extends TCSettingsGUI {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void defineDrawableSettings() {
         this.buttonList.add(this.tabbyChatEnable);
@@ -96,6 +98,7 @@ public class TCSettingsGeneral extends TCSettingsGUI {
         this.buttonList.add(this.splitChatLog);
     }
 
+    @Override
     public void initDrawableSettings() {
         int effRight = (this.width + DISPLAY_WIDTH) / 2;
         int col1x = (this.width - DISPLAY_WIDTH) / 2 + 55;
@@ -142,17 +145,20 @@ public class TCSettingsGeneral extends TCSettingsGUI {
         this.updateCheckEnable.buttonColor = buttonColor;
     }
 
+    @Override
     public Properties loadSettingsFile() {
         super.loadSettingsFile();
         this.applyTimestampPattern();
         return null;
     }
 
+    @Override
     public void storeTempVars() {
         super.storeTempVars();
         this.applyTimestampPattern();
     }
 
+    @Override
     public void validateButtonStates() {
         this.timeStampColor.enabled = this.timeStampEnable.getTempValue();
     }

@@ -1,33 +1,25 @@
 package acs.tabbychat.gui;
 
-import java.awt.Rectangle;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-
 import acs.tabbychat.core.ChatChannel;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.TabbyChat;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.Rectangle;
+
 public class ChatButton extends GuiButton {
+
     public ChatChannel channel;
 
     public ChatButton() {
         super(9999, 0, 0, 1, 1, "");
     }
 
-    /**
-     * @param _id
-     * @param _x
-     * @param _y
-     * @param _w
-     * @param _h
-     * @param _title
-     */
     public ChatButton(int _id, int _x, int _y, int _w, int _h, String _title) {
         super(_id, _x, _y, _w, _h, _title);
     }
@@ -108,10 +100,6 @@ public class ChatButton extends GuiButton {
         this.channel = null;
     }
 
-    /**
-     * @param unscaled
-     * @return
-     */
     private static Rectangle translateButtonDims(Rectangle unscaled) {
         float scaleSetting = GuiNewChatTC.getInstance().getScaleSetting();
         int adjX = Math.round((unscaled.x - ChatBox.current.x) * scaleSetting + ChatBox.current.x);
@@ -125,6 +113,7 @@ public class ChatButton extends GuiButton {
         return new Rectangle(adjX, adjY, adjW, adjH);
     }
 
+    @Override
     public boolean mousePressed(Minecraft mc, int par2, int par3) {
         Rectangle cursor = translateButtonDims(new Rectangle(this.x(), this.y(), this.width(),
                 this.height()));
@@ -132,11 +121,12 @@ public class ChatButton extends GuiButton {
                 && par2 < cursor.x + cursor.width && par3 < cursor.y + cursor.height;
     }
 
+    @Override
     public void drawButton(Minecraft mc, int cursorX, int cursorY) {
         if (this.visible) {
             FontRenderer fr = mc.fontRenderer;
             float _mult = mc.gameSettings.chatOpacity * 0.9F + 0.1F;
-            int _opacity = (int) ((float) 255 * _mult);
+            int _opacity = (int) (255 * _mult);
             int textOpacity = (TabbyChat.advancedSettings.textIgnoreOpacity.getValue() ? 255
                     : _opacity);
 

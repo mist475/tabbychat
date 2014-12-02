@@ -146,6 +146,7 @@ public class PrefsButton extends GuiButton {
         return (badWidth > goodWidth) ? badWidth - goodWidth : 0;
     }
 
+    @Override
     public void drawButton(Minecraft mc, int cursorX, int cursorY) {
         if (this.visible) {
             FontRenderer fr = mc.fontRenderer;

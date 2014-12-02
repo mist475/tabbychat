@@ -18,6 +18,7 @@ public enum FormatCodeEnum {
         this.code = _code;
     }
 
+    @Override
     public String toString() {
         return this.code + this.title + "\u00A7r";
     }

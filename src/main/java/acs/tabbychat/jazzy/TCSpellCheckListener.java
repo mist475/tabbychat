@@ -1,9 +1,5 @@
 package acs.tabbychat.jazzy;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import acs.tabbychat.core.TabbyChat;
 
 import com.swabunga.spell.engine.SpellDictionary;
@@ -13,12 +9,13 @@ import com.swabunga.spell.event.SpellCheckListener;
 import com.swabunga.spell.event.SpellChecker;
 import com.swabunga.spell.event.StringWordTokenizer;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class TCSpellCheckListener implements SpellCheckListener {
     protected SpellChecker spellCheck = null;
 
-    /**
-	 * 
-	 */
     public TCSpellCheckListener() {
         try {
             InputStream in = TCSpellCheckListener.class.getResourceAsStream("/english.0");
@@ -31,9 +28,6 @@ public class TCSpellCheckListener implements SpellCheckListener {
 
     }
 
-    /**
-     * @param dict
-     */
     public TCSpellCheckListener(File dict) {
         try {
             SpellDictionary dictionary = new SpellDictionaryHashMap(dict);
@@ -44,17 +38,11 @@ public class TCSpellCheckListener implements SpellCheckListener {
         }
     }
 
-    /**
-	 * 
-	 */
     @Override
     public void spellingError(SpellCheckEvent event) {
         TabbyChat.spellChecker.handleListenerEvent(event);
     }
 
-    /**
-     * @param line
-     */
     public void checkSpelling(String line) {
         this.spellCheck.checkSpelling(new StringWordTokenizer(line));
     }

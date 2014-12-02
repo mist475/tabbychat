@@ -20,6 +20,7 @@ public enum TimeStampEnum {
         this.regEx = _regex;
     }
 
+    @Override
     public String toString() {
         return this.maxTime;
     }
