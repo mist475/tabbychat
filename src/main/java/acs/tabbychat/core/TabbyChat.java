@@ -328,14 +328,14 @@ public class TabbyChat {
      * Disables modded chat.
      */
     public void disable() {
-        this.channelMap.clear();
-        this.channelMap.put("*", new ChatChannel("*"));
+        storeChannelData();
     }
 
     /**
      * Enables modded chat.
      */
     public void enable() {
+        storeChannelData();
         if (!this.channelMap.containsKey("*")) {
             this.channelMap.put("*", new ChatChannel("*"));
             this.channelMap.get("*").active = true;

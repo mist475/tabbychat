@@ -434,6 +434,7 @@ public class GuiNewChatTC extends GuiNewChat {
             try {
                 for (int i = 0; i < _len; i++) {
                     this.chatLines.add(0, multiLineChat.get(i));
+                    tc.addToChannel("*", multiLineChat.get(i), true);
                     if (!backupFlag)
                         this.backupLines.add(0, multiLineChat.get(i));
                 }
