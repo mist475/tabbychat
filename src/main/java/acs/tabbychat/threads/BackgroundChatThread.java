@@ -4,6 +4,7 @@ import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatAllowedCharacters;
 
 import java.lang.reflect.Method;
 
@@ -64,6 +65,7 @@ public class BackgroundChatThread extends Thread {
         }
         if (sendPart.length() > 0 || cmdPrefix.length() > 0) {
             String message = cmdPrefix + sendPart.toString().trim();
+            message = ChatAllowedCharacters.filerAllowedCharacters(message);
 
             // Check for client commands.
             // Use reflection so we don't have to import Forge.
