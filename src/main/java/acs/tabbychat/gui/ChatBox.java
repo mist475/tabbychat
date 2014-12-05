@@ -166,11 +166,12 @@ public class ChatBox {
                 // -unfocusedHeight, current.width, 0, opacity / 2 << 24);
             } else {
                 // Draw border around unfocused chatbox
-                Gui.drawRect(-1, unfocusedHeight, current.width + 1, unfocusedHeight + 1,
+                int y = getChatHeight() - unfocusedHeight;
+                Gui.drawRect(-1, y + unfocusedHeight, current.width + 1, y + unfocusedHeight + 1,
                         borderColor);
-                Gui.drawRect(-1, unfocusedHeight, 0, 0, borderColor);
-                Gui.drawRect(current.width, unfocusedHeight, current.width + 1, 0, borderColor);
-                Gui.drawRect(-1, 0, current.width + 1, -1, borderColor);
+                Gui.drawRect(-1, y + unfocusedHeight, 0, y, borderColor);
+                Gui.drawRect(current.width, y + unfocusedHeight, current.width + 1, y, borderColor);
+                Gui.drawRect(-1, y, current.width + 1, y - 1, borderColor);
 
                 // Draw filler for scrollbar
                 // overlay.drawRect(current.width-ChatScrollBar.barWidth-2,

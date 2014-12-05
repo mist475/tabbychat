@@ -286,7 +286,7 @@ public class GuiNewChatTC extends GuiNewChat {
                             visLineCounter++;
                             byte xOrigin = 0;
                             int yOrigin = ChatBox.anchoredTop && tc.enabled() ? -(visLineCounter * 9)
-                                    + this.chatHeight
+                                    + ChatBox.getChatHeight()
                                     : -visLineCounter * 9;
                             drawRect(xOrigin, yOrigin, xOrigin + this.chatWidth + timeStampOffset,
                                     yOrigin + 9, currentOpacity / 2 << 24);
