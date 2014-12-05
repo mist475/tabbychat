@@ -311,6 +311,7 @@ public class GuiNewChatTC extends GuiNewChat {
                             } else
                                 this.mc.fontRenderer.drawStringWithShadow(_chat, xOrigin,
                                         yOrigin + 1, 0xffffff + (textOpacity << 24));
+                            GL11.glDisable(GL11.GL_ALPHA_TEST);
                         }
                     }
                 }
