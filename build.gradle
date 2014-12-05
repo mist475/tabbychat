@@ -24,7 +24,7 @@ group = "acs.tabbychat"
 archivesBaseName = "TabbyChat"
 
 minecraft{
-    version = "1.7.10-7.10.22.956"
+    version = "1.7.10-7.10.86.1007"
     runDir = "eclipse/assets"
 	
 	replace "@@VERSION@@", project.version

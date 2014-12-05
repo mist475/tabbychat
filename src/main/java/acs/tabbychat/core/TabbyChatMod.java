@@ -1,6 +1,5 @@
 package acs.tabbychat.core;
 
-import net.minecraft.client.Minecraft;
 import acs.tabbychat.util.TabbyChatUtils;
 
 import com.mumfrey.liteloader.core.LiteLoader;
@@ -13,6 +12,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
+import net.minecraft.client.Minecraft;
 
 @Mod(name = TabbyChatUtils.name, modid = TabbyChatUtils.modid, version = TabbyChatUtils.version)
 public class TabbyChatMod {
@@ -50,8 +50,8 @@ public class TabbyChatMod {
     private boolean willBeLiteLoaded() {
         try {
             LiteLoader liteloader = LiteLoader.getInstance();
-            LiteModTabbyChat litemod = liteloader.getMod(LiteModTabbyChat.class);
-            return liteloader.isModEnabled(litemod.getName());
+            if (liteloader != null)
+                return liteloader.isModEnabled(TabbyChatUtils.name);
         } catch (NoClassDefFoundError e) {
         }
         return false;
