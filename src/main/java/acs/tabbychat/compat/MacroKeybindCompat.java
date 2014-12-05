@@ -40,6 +40,7 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
     private static Method onControlClicked = null;
     private static Method displayScreen = null;
     private static Method coreInstance = null;
+    private static Method mkgetBoundLayout;
     private static Field menuLocation;
     private static Field dropDownVisible;
     private static Field clickedControl;
@@ -98,8 +99,7 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
                     macroDesign = guiDesigner.getDeclaredConstructor(new Class[] { String.class,
                             GuiScreen.class, boolean.class });
 
-                    // Methods
-                    Method mkgetBoundLayout = layoutManager.getDeclaredMethod("getBoundLayout",
+                    mkgetBoundLayout = layoutManager.getDeclaredMethod("getBoundLayout",
                             new Class[] { String.class, boolean.class });
                     layoutTick = designableGuiLayout.getDeclaredMethod("onTick", (Class[]) null);
                     drawBtnGui = buttonClass.getDeclaredMethod("drawControlAt", new Class[] {
@@ -241,6 +241,13 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
     @Override
     public void initGui(GuiScreen screen) {
         this.screen = screen;
+        if (present) {
+            try {
+                inChatLayout = mkgetBoundLayout.invoke(null, new Object[] { "inchat", false });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
