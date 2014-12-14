@@ -128,20 +128,22 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 
         this.prev.x(col2x + 33);
         this.prev.y(rowY(10));
+
     }
 
     @Override
     public void drawScreen(int x, int y, float f) {
+        int col1x = (this.width - DISPLAY_WIDTH) / 2 + 55;
+        int col2x = this.width / 2 + 45;
         super.drawScreen(x, y, f);
         this.wordInput.drawTextBox();
         this.spellingList.drawList(mc, x, y);
-        this.drawString(fontRendererObj, I18n.format("settings.spelling.userdictionary"),
-                (rowY(5) + rowY(6)) / 2, rowY(4), 0xffffff);
+        this.drawString(fontRendererObj, I18n.format("settings.spelling.userdictionary"), col1x,
+                rowY(3), 0xffffff);
         this.drawString(
                 fontRendererObj,
                 I18n.format("book.pageIndicator", this.spellingList.getPageNum(),
-                        this.spellingList.getTotalPages()), (rowY(13) + rowY(14)) / 2, rowY(3),
-                0xffffff);
+                        this.spellingList.getTotalPages()), col2x, rowY(3), 0xffffff);
     }
 
     @Override
