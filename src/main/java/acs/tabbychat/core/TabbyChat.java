@@ -32,6 +32,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StringUtils;
 
@@ -690,7 +691,8 @@ public class TabbyChat {
     }
 
     private String processChatForChannels(ComponentList raw) {
-        Matcher findChannelClean = this.chatChannelPatternClean.matcher(raw.getUnformattedText());
+        Matcher findChannelClean = this.chatChannelPatternClean.matcher(EnumChatFormatting
+                .getTextWithoutFormattingCodes(raw.getUnformattedText()));
         Matcher findChannelDirty = this.chatChannelPatternDirty.matcher(raw.getFormattedText());
         boolean dirtyCheck = (!serverSettings.delimColorBool.getValue() && !serverSettings.delimFormatBool
                 .getValue()) ? true : findChannelDirty.find();
@@ -776,6 +778,7 @@ public class TabbyChat {
     }
 
     private String processChatForPMs(String raw) {
+        raw = EnumChatFormatting.getTextWithoutFormattingCodes(raw);
         if (this.chatPMtoMePattern != null) {
             Matcher findPMtoMe = this.chatPMtoMePattern.matcher(raw);
             if (findPMtoMe.find()) {
