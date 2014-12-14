@@ -1,19 +1,21 @@
 package acs.tabbychat.settings;
 
+import acs.tabbychat.core.TabbyChat;
+import acs.tabbychat.util.TabbyChatUtils;
+
+import com.google.common.collect.Lists;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
-import org.apache.commons.lang3.ArrayUtils;
-
-import com.google.common.collect.Lists;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.IChatComponent;
-import acs.tabbychat.core.TabbyChat;
-import acs.tabbychat.util.TabbyChatUtils;
 
 public class TCChatFilter {
     public boolean inverseMatch = false;
@@ -53,7 +55,8 @@ public class TCChatFilter {
     public boolean applyFilterToDirtyChat(IChatComponent input) {
 
         // Apply filter
-        Matcher findFilterMatches = this.expressionPattern.matcher(input.getUnformattedText());
+        Matcher findFilterMatches = this.expressionPattern.matcher(EnumChatFormatting
+                .getTextWithoutFormattingCodes(input.getUnformattedText()));
         boolean foundMatch = false;
         List<Integer> list = Lists.newArrayList();
         while (findFilterMatches.find()) {
