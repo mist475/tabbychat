@@ -47,6 +47,7 @@ import org.lwjgl.opengl.GL11;
 
 import tv.twitch.chat.ChatUserInfo;
 
+import java.awt.Point;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -351,7 +352,7 @@ public class GuiChatTC extends GuiChat {
 
         // Draw context menus
         if (this.contextMenu != null)
-            this.contextMenu.drawMenu(cursorX, cursorY);
+            this.contextMenu.drawMenu(Mouse.getX(), Mouse.getY());
 
         GL11.glPopMatrix();
 
@@ -767,9 +768,10 @@ public class GuiChatTC extends GuiChat {
     @SuppressWarnings("unchecked")
     @Override
     public void mouseClicked(int _x, int _y, int _button) {
+        Point scaled = ChatBox.scaleMouseCoords(Mouse.getX(), Mouse.getY(), true);
         boolean clicked = false;
         if (_button == 0 && this.mc.gameSettings.chatLinks
-                && (this.contextMenu == null || !contextMenu.isCursorOver(_x, _y))) {
+                && (this.contextMenu == null || !contextMenu.isCursorOver(scaled.x, scaled.y))) {
             IChatComponent ccd = this.gnc.func_146236_a(Mouse.getX(), Mouse.getY());
             if (ccd != null) {
                 ClickEvent clickEvent = ccd.getChatStyle().getChatClickEvent();
@@ -829,13 +831,14 @@ public class GuiChatTC extends GuiChat {
                     }
                 }
             }
-        } else if (contextMenu != null && contextMenu.isCursorOver(_x, _y)) {
-            clicked = contextMenu.mouseClicked(_x, _y);
+        } else if (contextMenu != null && contextMenu.isCursorOver(scaled.x, scaled.y)) {
+            clicked = !contextMenu.mouseClicked(scaled.x, scaled.y);
         }
         if (!clicked)
             if (_button == 1
-                    && (this.contextMenu == null || !this.contextMenu.isCursorOver(_x, _y))) {
-                this.contextMenu = new ChatContextMenu(this, _x, _y);
+                    && (this.contextMenu == null || !this.contextMenu.isCursorOver(scaled.x,
+                            scaled.y))) {
+                this.contextMenu = new ChatContextMenu(this, scaled.x, scaled.y);
             } else {
                 this.contextMenu = null;
             }

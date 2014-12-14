@@ -1,6 +1,7 @@
 package acs.tabbychat.gui.context;
 
 import acs.tabbychat.core.GuiChatTC;
+import acs.tabbychat.gui.ChatBox;
 
 import com.google.common.collect.Lists;
 
@@ -8,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 
+import java.awt.Point;
 import java.util.List;
 
 public class ChatContextMenu extends Gui {
@@ -77,10 +79,11 @@ public class ChatContextMenu extends Gui {
     }
 
     public void drawMenu(int x, int y) {
+        Point scaled = ChatBox.scaleMouseCoords(x, y, true);
         for (ChatContext item : items) {
             if (!item.enabled && item.getDisabledBehavior() == ChatContext.Behavior.HIDE)
                 continue;
-            item.drawButton(mc, x, y);
+            item.drawButton(mc, scaled.x, scaled.y);
         }
     }
 
