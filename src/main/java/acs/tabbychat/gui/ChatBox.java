@@ -36,7 +36,7 @@ public class ChatBox {
      * Adds a row to the tab tray
      */
     public static void addRowToTray() {
-        // // Grow virtual screen width/height to counter reduced size due to
+        // Grow virtual screen width/height to counter reduced size due to
         // chat scaling
         float sf = gnc.getScaleSetting();
         int sh = MathHelper.floor_float((gnc.sr.getScaledHeight() + current.y) / sf - current.y);
@@ -44,27 +44,17 @@ public class ChatBox {
         // Add tab row to tray
         tabTrayHeight += tabHeight;
 
-        if (current.height + tabHeight - absMinY > sh) { // Check if box is too
-                                                         // tall for screen
+        if (current.height + tabHeight - absMinY > sh) {
+            // Check if box is too tall for screen
             // Constrain box height to screen, stick to top
             current.y = anchoredTop ? -sh + 1 : -sh + 1 + current.height;
             current.height = sh + absMinY - 3;
-        } else if (!anchoredTop && current.y - current.height - tabHeight - 1 < -sh) { // Tray
-                                                                                       // needs
-                                                                                       // to
-                                                                                       // slide
-                                                                                       // up,
-                                                                                       // but
-                                                                                       // can't
+        } else if (!anchoredTop && current.y - current.height - tabHeight - 1 < -sh) {
+            // Tray needs to slide up, but can't
             current.y = -sh + current.height + 1;
             current.height += tabHeight;
-        } else if (anchoredTop && current.y + current.height + tabHeight > absMinY) { // Tray
-                                                                                      // needs
-                                                                                      // to
-                                                                                      // slide
-                                                                                      // down,
-                                                                                      // but
-                                                                                      // can't
+        } else if (anchoredTop && current.y + current.height + tabHeight > absMinY) {
+            // Tray needs to slide down, but can't
             current.height += tabHeight;
             current.y = absMinY - current.height;
         } else { // Tray/chatbox is free to move either way
@@ -136,8 +126,8 @@ public class ChatBox {
                         trayColor);
 
                 // Draw filler for extra chat space
-                Gui.drawRect(0, current.height - tabTrayHeight - 1, current.width
-                        - ChatScrollBar.barWidth - 2, chatHeight, opacity / 2 << 24);
+                Gui.drawRect(0, current.height - tabTrayHeight - chatHeight - 1, current.width
+                        - ChatScrollBar.barWidth - 2, 0, opacity / 2 << 24);
 
                 // Draw handle for mouse drag
                 Gui.drawRect(current.width - 7, current.height - 2, current.width - 2,
