@@ -26,6 +26,7 @@ import acs.tabbychat.util.ComponentList;
 import acs.tabbychat.util.TabbyChatUtils;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -87,6 +88,8 @@ public class TabbyChat {
     public static TCSettingsAdvanced advancedSettings;
     public static TCSpellCheckManager spellChecker;
     public LinkedHashMap<String, ChatChannel> channelMap = new LinkedHashMap<String, ChatChannel>();
+    // Stores the last received chat for each channel.
+    private Map<ChatChannel, String> lastChatMap = Maps.newHashMap();
 
     private static File chanDataFile;
     protected Calendar cal = Calendar.getInstance();
@@ -260,17 +263,23 @@ public class TabbyChat {
 
     public void addToChannel(String _name, List<TCChatLine> thisChat, boolean visible) {
         ChatChannel theChan = this.channelMap.get(_name);
+
+        IChatComponent chat = new ChatComponentText("");
+        for (TCChatLine cl : thisChat) {
+            chat.appendSibling(cl.getChatLineString());
+            // this.addToChannel(_name, cl, visible);
+        }
+        TCChatLine line = new TCChatLine(thisChat.get(0).getUpdatedCounter(), chat, thisChat.get(0)
+                .getChatLineID());
         if (theChan != null && generalSettings.groupSpam.getValue()) {
-            this.spamCheck(theChan, thisChat);
+            this.spamCheck(theChan, line);
             if (!theChan.hasSpam) {
-                for (TCChatLine cl : thisChat) {
-                    this.addToChannel(_name, cl, visible);
-                }
+                addToChannel(_name, line, visible);
             }
         } else {
-            for (TCChatLine cl : thisChat) {
-                this.addToChannel(_name, cl, visible);
-            }
+            this.lastChatMap.put(theChan, line.getChatLineString().getUnformattedText());
+            this.addToChannel(_name, line, visible);
+
         }
     }
 
@@ -825,6 +834,7 @@ public class TabbyChat {
      *            tab to remove
      */
     public void removeTab(String _name) {
+        this.lastChatMap.remove(this.channelMap.get(_name));
         this.channelMap.remove(_name);
     }
 
@@ -843,44 +853,31 @@ public class TabbyChat {
     /**
      * Checks for spam
      */
-    private void spamCheck(ChatChannel theChan, List<TCChatLine> lastChat) {
+    private void spamCheck(ChatChannel theChan, TCChatLine lineChat) {
         String oldChat = "";
-        String newChat = "";
-        if (theChan.getChatLogSize() < lastChat.size() || lastChat.size() == 0) {
-            theChan.hasSpam = false;
-            theChan.spamCount = 1;
-            return;
+        String newChat = lineChat.getChatLineString().getUnformattedText();
+
+        if (lastChatMap.containsKey(theChan)) {
+            oldChat = lastChatMap.get(theChan);
         }
-        int _size = lastChat.size();
-        for (int i = 0; i < _size; i++) {
-            if (lastChat.get(i).getChatLineString() == null
-                    || theChan.getChatLine(i).getChatLineString() == null)
-                continue;
-            newChat = newChat + lastChat.get(i).getChatLineString().getUnformattedText();
-            oldChat = theChan.getChatLine(i).getChatLineString().getUnformattedText() + oldChat;
-        }
-        if (theChan.hasSpam) {
-            oldChat = oldChat.substring(0,
-                    oldChat.length() - 4 - Integer.toString(theChan.spamCount).length());
-        }
+
         if (oldChat.equals(newChat)) {
             theChan.hasSpam = true;
             theChan.spamCount++;
-            for (int i = 1; i < _size; i++) {
-                TCChatLine line = new TCChatLine(lastChat.get(0).getUpdatedCounter(), lastChat.get(
-                        lastChat.size() - i - 1).getChatLineString(), lastChat.get(0)
-                        .getChatLineID());
-                line.timeStamp = this.getTimeStamp();
-                theChan.setChatLogLine(i, line);
-            }
-            TCChatLine line = new TCChatLine(lastChat.get(0).getUpdatedCounter(), lastChat
-                    .get(lastChat.size() - 1).getChatLineString().createCopy()
-                    .appendText(" [" + theChan.spamCount + "x]"), lastChat.get(0).getChatLineID());
+
+            TCChatLine line = new TCChatLine(lineChat);
+            line.timeStamp = this.getTimeStamp();
+            theChan.setChatLogLine(0, line);
+
+            line = new TCChatLine(lineChat.getUpdatedCounter(), lineChat.getChatLineString()
+                    .createCopy().appendText(" [" + theChan.spamCount + "x]"),
+                    lineChat.getChatLineID());
             line.timeStamp = this.getTimeStamp();
             theChan.setChatLogLine(0, line);
         } else {
             theChan.hasSpam = false;
             theChan.spamCount = 1;
+            this.lastChatMap.put(theChan, newChat);
         }
     }
 

@@ -410,8 +410,15 @@ public class GuiNewChatTC extends GuiNewChat {
             mc.fontRenderer.getStringWidth(TabbyChat.generalSettings.timeStampStyle.getValue()
                     .toString());
 
-        ComponentList chat = ChatComponentUtils.split(_msg, this.chatWidth);
-
+        ComponentList chat;
+        if (tc.enabled() && !optionalDeletion && !backupFlag) {
+            // only process one line of chat. Will be split after the chat
+            // refreshes.
+            chat = ComponentList.newInstance();
+            chat.add(_msg);
+        } else {
+            chat = ChatComponentUtils.split(_msg, this.chatWidth);
+        }
         // Prepare list of chatlines
         for (IChatComponent ichat : chat) {
             if (chatOpen && this.scrollOffset > 0) {
@@ -428,6 +435,7 @@ public class GuiNewChatTC extends GuiNewChat {
         // Add chatlines to appropriate lists
         if (tc.enabled() && !optionalDeletion && !backupFlag) {
             tc.processChat(multiLineChat);
+            refreshChat();
         } else {
             int _len = multiLineChat.size();
             chatWriteLock.lock();
@@ -498,6 +506,8 @@ public class GuiNewChatTC extends GuiNewChat {
                 this.func_146237_a(_cl.func_151461_a(), _cl.getChatLineID(),
                         _cl.getUpdatedCounter(), true);
         }
+        // Ensure that we don't lose the active channel status.
+        tc.resetDisplayedChat();
     }
 
     /**
