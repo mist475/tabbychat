@@ -82,6 +82,9 @@ public class ChatComponentUtils {
         ArrayList<IChatComponent> arraylist1 = Lists.newArrayList(chat);
 
         for (int k = 0; k < arraylist1.size(); ++k) {
+            if (!arraylist.isEmpty()) {
+                chatcomponenttext.appendText(" ");
+            }
             IChatComponent ichatcomponent1 = arraylist1.get(k);
             String s = ichatcomponent1.getUnformattedTextForChat();
             boolean flag2 = false;
