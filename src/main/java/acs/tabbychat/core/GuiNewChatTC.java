@@ -58,8 +58,12 @@ public class GuiNewChatTC extends GuiNewChat {
     public void addChatLines(int _pos, List<TCChatLine> _add) {
         chatReadLock.lock();
         try {
+            List<TCChatLine> lines = ChatComponentUtils.split(_add, this.chatWidth);
+            for (int i = 0; i < lines.size(); i++) {
+
+                this.chatLines.add(_pos, lines.get(i));
+            }
             for (int i = 0; i < _add.size(); i++) {
-                this.chatLines.add(_pos, _add.get(i));
                 this.backupLines.add(_pos, _add.get(i));
             }
         } finally {
@@ -435,7 +439,7 @@ public class GuiNewChatTC extends GuiNewChat {
         // Add chatlines to appropriate lists
         if (tc.enabled() && !optionalDeletion && !backupFlag) {
             tc.processChat(multiLineChat);
-            refreshChat();
+            // refreshChat();
         } else {
             int _len = multiLineChat.size();
             chatWriteLock.lock();
@@ -484,29 +488,6 @@ public class GuiNewChatTC extends GuiNewChat {
     @Override
     public void refreshChat() {
         // Chat settings have changed
-        int backupChats = 0;
-        chatWriteLock.lock();
-        try {
-            this.chatLines.clear();
-            backupChats = this.backupLines.size();
-        } finally {
-            chatWriteLock.unlock();
-        }
-
-        this.resetScroll();
-        for (int i = backupChats - 1; i >= 0; --i) {
-            chatReadLock.lock();
-            ChatLine _cl = null;
-            try {
-                _cl = this.backupLines.get(i);
-            } finally {
-                chatReadLock.unlock();
-            }
-            if (_cl != null)
-                this.func_146237_a(_cl.func_151461_a(), _cl.getChatLineID(),
-                        _cl.getUpdatedCounter(), true);
-        }
-        // Ensure that we don't lose the active channel status.
         tc.resetDisplayedChat();
     }
 

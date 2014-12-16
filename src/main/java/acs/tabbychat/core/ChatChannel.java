@@ -2,6 +2,7 @@ package acs.tabbychat.core;
 
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatButton;
+import acs.tabbychat.util.ChatComponentUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -88,8 +89,9 @@ public class ChatChannel implements Serializable {
     public TCChatLine getChatLine(int index) {
         TCChatLine retVal = null;
         this.chatReadLock.lock();
+        List<TCChatLine> lines = getSplitChat();
         try {
-            retVal = this.chatLog.get(index);
+            retVal = lines.get(index);
         } finally {
             this.chatReadLock.unlock();
         }
@@ -100,8 +102,9 @@ public class ChatChannel implements Serializable {
         List<TCChatLine> retVal = new ArrayList<TCChatLine>(toInd - fromInd);
         this.chatReadLock.lock();
         try {
+            List<TCChatLine> lines = getSplitChat();
             for (int i = toInd - 1; i >= fromInd; i--) {
-                retVal.add(this.chatLog.get(i));
+                retVal.add(lines.get(i));
             }
         } finally {
             this.chatReadLock.unlock();
@@ -118,11 +121,15 @@ public class ChatChannel implements Serializable {
         int mySize = 0;
         this.chatReadLock.lock();
         try {
-            mySize = this.chatLog.size();
+            mySize = getSplitChat().size();
         } finally {
             this.chatReadLock.unlock();
         }
         return mySize;
+    }
+
+    private List<TCChatLine> getSplitChat() {
+        return ChatComponentUtils.split(this.chatLog, ChatBox.getChatWidth());
     }
 
     public int getID() {

@@ -1,5 +1,7 @@
 package acs.tabbychat.util;
 
+import acs.tabbychat.core.TCChatLine;
+
 import com.google.common.collect.Lists;
 
 import net.minecraft.client.Minecraft;
@@ -44,6 +46,23 @@ public class ChatComponentUtils {
     public static String formatString(String text, boolean force) {
         return !force && !Minecraft.getMinecraft().gameSettings.chatColours ? EnumChatFormatting
                 .getTextWithoutFormattingCodes(text) : text;
+    }
+
+    public static List<TCChatLine> split(List<TCChatLine> lines, int width) {
+        List<TCChatLine> list = Lists.newArrayList();
+        for (TCChatLine line : lines) {
+            list.addAll(split(line, width));
+        }
+        return list;
+    }
+
+    public static List<TCChatLine> split(TCChatLine line, int width) {
+        List<TCChatLine> list = Lists.newArrayList();
+        List<IChatComponent> ichat = split(line.getChatLineString(), width);
+        for (IChatComponent chat : ichat) {
+            list.add(0, new TCChatLine(line.getUpdatedCounter(), chat, line.getChatLineID()));
+        }
+        return list;
     }
 
     /**
