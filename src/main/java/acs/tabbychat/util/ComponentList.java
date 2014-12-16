@@ -1,9 +1,9 @@
 package acs.tabbychat.util;
 
-import java.util.ArrayList;
-
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+
+import java.util.ArrayList;
 
 /**
  * Stores a List of IChatComponents and provides

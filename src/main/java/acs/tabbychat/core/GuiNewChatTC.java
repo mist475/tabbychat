@@ -59,7 +59,7 @@ public class GuiNewChatTC extends GuiNewChat {
         chatReadLock.lock();
         try {
             List<TCChatLine> lines = ChatComponentUtils.split(_add, this.chatWidth);
-            for (int i = 0; i < lines.size(); i++) {
+            for (int i = lines.size() - 1; i >= 0; i--) {
 
                 this.chatLines.add(_pos, lines.get(i));
             }
