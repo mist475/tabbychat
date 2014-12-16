@@ -1,36 +1,5 @@
 package acs.tabbychat.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.zip.GZIPOutputStream;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSleepMP;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
-
-import org.apache.commons.compress.compressors.gzip.GzipUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import acs.tabbychat.api.TCExtensionManager;
 import acs.tabbychat.compat.MacroKeybindCompat;
 import acs.tabbychat.core.ChatChannel;
@@ -54,6 +23,35 @@ import acs.tabbychat.threads.BackgroundChatThread;
 
 import com.google.common.collect.Lists;
 import com.mumfrey.liteloader.core.LiteLoader;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiSleepMP;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.server.integrated.IntegratedServer;
+
+import org.apache.commons.compress.compressors.gzip.GzipUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 public class TabbyChatUtils {
     private static Calendar logDay = Calendar.getInstance();
@@ -149,14 +147,6 @@ public class TabbyChatUtils {
             mc.displayGuiScreen(new GuiSleepTC());
         else
             mc.displayGuiScreen(new GuiChatTC(inputBuffer));
-    }
-
-    public static ComponentList chatLinesToComponent(List<TCChatLine> lines) {
-        ComponentList result = ComponentList.newInstance();
-        for (TCChatLine line : lines) {
-            result.add(line.getChatLineString());
-        }
-        return result;
     }
 
     public static ServerData getServerData() {
@@ -384,21 +374,6 @@ public class TabbyChatUtils {
         } catch (IllegalArgumentException e) {
             return null;
         }
-    }
-
-    public static List<TCChatLine> componentToChatLines(int stamp, ComponentList filtered, int id,
-            boolean status) {
-        List<TCChatLine> result = Lists.newArrayList();
-        boolean first = true;
-        for (IChatComponent split : filtered) {
-            if (first) {
-                result.add(new TCChatLine(stamp, split, id, status));
-                first = false;
-            } else
-                result.add(new TCChatLine(stamp, new ChatComponentText(" ").appendSibling(split),
-                        id, status));
-        }
-        return result;
     }
 
     public static LinkedHashMap<String, ChatChannel> swapChannels(

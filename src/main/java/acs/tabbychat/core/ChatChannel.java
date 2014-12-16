@@ -113,20 +113,6 @@ public class ChatChannel implements Serializable {
         return retVal;
     }
 
-    public List<TCChatLine> getChatLogSublistCopy(int fromInd, int toInd) {
-        List<TCChatLine> retVal = new ArrayList<TCChatLine>(toInd - fromInd);
-        this.chatReadLock.lock();
-        try {
-            List<TCChatLine> lines = getSplitChat(false);
-            for (int i = toInd - 1; i >= fromInd; i--) {
-                retVal.add(lines.get(i));
-            }
-        } finally {
-            this.chatReadLock.unlock();
-        }
-        return retVal;
-    }
-
     /**
      * Returns the size of the log
      * 
@@ -260,6 +246,19 @@ public class ChatChannel implements Serializable {
         } finally {
             this.chatWriteLock.unlock();
         }
+        GuiNewChatTC.getInstance().refreshChat();
+    }
+
+    public void removeChatLine(int pos) {
+        this.chatWriteLock.lock();
+        try {
+            if (pos < this.chatLog.size() && pos >= 0) {
+                this.chatLog.remove(pos);
+            }
+        } finally {
+            this.chatWriteLock.unlock();
+        }
+        GuiNewChatTC.getInstance().refreshChat();
     }
 
     /**

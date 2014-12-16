@@ -4,7 +4,6 @@ import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatScrollBar;
 import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.util.ChatComponentUtils;
-import acs.tabbychat.util.ComponentList;
 import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
@@ -55,7 +54,7 @@ public class GuiNewChatTC extends GuiNewChat {
         GuiNewChatTC.tc = TabbyChat.getInstance();
     }
 
-    public void addChatLines(int _pos, List<TCChatLine> _add) {
+    public void addChatLines(int _pos, TCChatLine _add) {
         chatReadLock.lock();
         try {
             List<TCChatLine> lines = ChatComponentUtils.split(_add, this.chatWidth);
@@ -63,9 +62,8 @@ public class GuiNewChatTC extends GuiNewChat {
 
                 this.chatLines.add(_pos, lines.get(i));
             }
-            for (int i = 0; i < _add.size(); i++) {
-                this.backupLines.add(_pos, _add.get(i));
-            }
+            this.backupLines.add(_pos, _add);
+
         } finally {
             chatReadLock.unlock();
         }
@@ -392,17 +390,14 @@ public class GuiNewChatTC extends GuiNewChat {
 
     private void func_146237_a(IChatComponent _msg, int id, int tick, boolean backupFlag) {
 
-        boolean chatOpen = this.getChatOpen();
-        boolean isLineOne = true;
         boolean optionalDeletion = false;
-        List<TCChatLine> multiLineChat = new ArrayList<TCChatLine>();
+        TCChatLine chatLine = new TCChatLine(tick, _msg, id);
 
         // Delete message if requested
         if (id != 0) {
             optionalDeletion = true;
             this.deleteChatLine(id);
         }
-        // Split message by available chatbox space
 
         MathHelper.floor_float(this.func_146228_f() / this.func_146244_h());
         if (tc.enabled()) {
@@ -414,42 +409,16 @@ public class GuiNewChatTC extends GuiNewChat {
             mc.fontRenderer.getStringWidth(TabbyChat.generalSettings.timeStampStyle.getValue()
                     .toString());
 
-        ComponentList chat;
-        if (tc.enabled() && !optionalDeletion && !backupFlag) {
-            // only process one line of chat. Will be split after the chat
-            // refreshes.
-            chat = ComponentList.newInstance();
-            chat.add(_msg);
-        } else {
-            chat = ChatComponentUtils.split(_msg, this.chatWidth);
-        }
-        // Prepare list of chatlines
-        for (IChatComponent ichat : chat) {
-            if (chatOpen && this.scrollOffset > 0) {
-                this.chatScrolled = true;
-                this.scroll(1);
-            }
-            if (!isLineOne) {
-                ichat = new ChatComponentText(" ").appendSibling(ichat);
-            }
-            multiLineChat.add(new TCChatLine(tick, ichat, id));
-            isLineOne = false;
-        }
-
         // Add chatlines to appropriate lists
         if (tc.enabled() && !optionalDeletion && !backupFlag) {
-            tc.processChat(multiLineChat);
-            // refreshChat();
+            tc.processChat(chatLine);
         } else {
-            int _len = multiLineChat.size();
             chatWriteLock.lock();
             try {
-                for (int i = 0; i < _len; i++) {
-                    this.chatLines.add(0, multiLineChat.get(i));
-                    tc.addToChannel("*", multiLineChat.get(i), true);
-                    if (!backupFlag)
-                        this.backupLines.add(0, multiLineChat.get(i));
-                }
+                this.chatLines.add(0, chatLine);
+                tc.addToChannel("*", chatLine, true);
+                if (!backupFlag)
+                    this.backupLines.add(0, chatLine);
             } finally {
                 chatWriteLock.unlock();
             }
@@ -508,7 +477,7 @@ public class GuiNewChatTC extends GuiNewChat {
     }
 
     @Override
-    public boolean /* getChatOpen */getChatOpen() {
+    public boolean getChatOpen() {
         return (this.mc.currentScreen instanceof GuiChat || this.mc.currentScreen instanceof GuiChatTC);
     }
 
@@ -641,38 +610,6 @@ public class GuiNewChatTC extends GuiNewChat {
             this.scrollOffset = 0;
             this.chatScrolled = false;
         }
-    }
-
-    public void setChatLines(int _pos, List<TCChatLine> _add) {
-        int clsize = 0;
-        boolean addInstead = false;
-        chatReadLock.lock();
-        try {
-            clsize = Math.min(this.chatLines.size(), this.backupLines.size());
-        } finally {
-            chatReadLock.unlock();
-        }
-        if (_pos + _add.size() > clsize) {
-            addInstead = true;
-        }
-
-        chatWriteLock.lock();
-        try {
-            int j;
-            for (int i = _add.size() - 1; i >= 0; i--) {
-                j = _add.size() - i - 1;
-                if (addInstead) {
-                    this.chatLines.add(_add.get(i));
-                    this.backupLines.add(_add.get(i));
-                } else {
-                    this.chatLines.set(_pos + j, _add.get(i));
-                    this.backupLines.set(_pos + j, _add.get(i));
-                }
-            }
-        } finally {
-            chatWriteLock.unlock();
-        }
-
     }
 
     public void setVisChatLines(int _move) {

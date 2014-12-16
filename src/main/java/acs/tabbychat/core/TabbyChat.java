@@ -22,7 +22,6 @@ import acs.tabbychat.settings.FormatCodeEnum;
 import acs.tabbychat.settings.TCChatFilter;
 import acs.tabbychat.threads.BackgroundUpdateCheck;
 import acs.tabbychat.util.ChatComponentUtils;
-import acs.tabbychat.util.ComponentList;
 import acs.tabbychat.util.TabbyChatUtils;
 
 import com.google.common.collect.Lists;
@@ -71,7 +70,7 @@ import java.util.regex.PatternSyntaxException;
 
 public class TabbyChat {
     private static Logger log = TabbyChatUtils.log;
-    private volatile List<TCChatLine> lastChat = Lists.newArrayList();
+    private volatile TCChatLine lastChat;
     private static boolean firstRun = true;
     public static boolean liteLoaded = false;
     public static boolean modLoaded = false;
@@ -100,8 +99,8 @@ public class TabbyChat {
     private Pattern chatPMtoMePattern = null;
     private final ReentrantReadWriteLock lastChatLock = new ReentrantReadWriteLock(true);
     private final Lock lastChatReadLock = lastChatLock.readLock();
-
     private final Lock lastChatWriteLock = lastChatLock.writeLock();
+
     private static GuiNewChatTC gnc;
 
     private static TabbyChat instance = null;
@@ -255,32 +254,8 @@ public class TabbyChat {
         }
     }
 
-    private void addOptionalTimeStamp(List<TCChatLine> orig) {
-        for (TCChatLine line : orig) {
-            line.timeStamp = this.getTimeStamp();
-        }
-    }
-
-    public void addToChannel(String _name, List<TCChatLine> thisChat, boolean visible) {
-        ChatChannel theChan = this.channelMap.get(_name);
-
-        IChatComponent chat = new ChatComponentText("");
-        for (TCChatLine cl : thisChat) {
-            chat.appendSibling(cl.getChatLineString());
-            // this.addToChannel(_name, cl, visible);
-        }
-        TCChatLine line = new TCChatLine(thisChat.get(0).getUpdatedCounter(), chat, thisChat.get(0)
-                .getChatLineID());
-        if (theChan != null && generalSettings.groupSpam.getValue()) {
-            this.spamCheck(theChan, line);
-            if (!theChan.hasSpam) {
-                addToChannel(_name, line, visible);
-            }
-        } else {
-            this.lastChatMap.put(theChan, line.getChatLineString().getUnformattedText());
-            this.addToChannel(_name, line, visible);
-
-        }
+    private void addOptionalTimeStamp(TCChatLine line) {
+        line.timeStamp = this.getTimeStamp();
     }
 
     public void addToChannel(String name, TCChatLine thisChat, boolean visible) {
@@ -288,6 +263,7 @@ public class TabbyChat {
             return;
 
         ChatChannel theChan = this.channelMap.get(name);
+
         if (theChan == null) {
             if (this.channelMap.size() >= 20)
                 return;
@@ -297,9 +273,17 @@ public class TabbyChat {
                 ((GuiChatTC) mc.currentScreen).addChannelLive(theChan);
             }
         }
-
+        if (generalSettings.groupSpam.getValue()) {
+            this.spamCheck(theChan, thisChat);
+            if (theChan.hasSpam) {
+                theChan.removeChatLine(0);
+            }
+        } else {
+            this.lastChatMap.put(theChan, thisChat.getChatLineString().getUnformattedText());
+        }
         theChan.addChat(thisChat, visible);
         theChan.trimLog();
+
     }
 
     public boolean channelExists(String name) {
@@ -554,8 +538,8 @@ public class TabbyChat {
 
         this.lastChatReadLock.lock();
         try {
-            if (this.lastChat != null && this.lastChat.size() > 0)
-                tickdiff = _tick - this.lastChat.get(0).getUpdatedCounter();
+            if (this.lastChat != null)
+                tickdiff = _tick - this.lastChat.getUpdatedCounter();
         } finally {
             this.lastChatReadLock.unlock();
         }
@@ -585,23 +569,23 @@ public class TabbyChat {
     }
 
     @SuppressWarnings("unchecked")
-    public void processChat(List<TCChatLine> theChat) {
+    public void processChat(TCChatLine theChat) {
         if (this.serverDataLock.availablePermits() == 0) {
             this.serverDataLock.acquireUninterruptibly();
             this.serverDataLock.release();
         }
-        if (theChat.isEmpty())
+        if (theChat == null)
             return;
 
-        List<TCChatLine> resultChatLine;
+        TCChatLine resultChatLine;
         List<String> toTabs = new ArrayList<String>(20);
         List<String> filterTabs = new ArrayList<String>(20);
         String channelTab = null;
         String pmTab = null;
         toTabs.add("*");
 
-        ComponentList raw = TabbyChatUtils.chatLinesToComponent(theChat);
-        ComponentList filtered = this.processChatForFilters(raw, filterTabs);
+        IChatComponent raw = theChat.getChatLineString();
+        IChatComponent filtered = this.processChatForFilters(raw, filterTabs);
         if (generalSettings.saveChatLog.getValue())
             TabbyChatUtils.logChat(this.getCleanTimeStamp() + raw.getUnformattedText(), null);
 
@@ -632,8 +616,8 @@ public class TabbyChat {
         } else {
             filtered = raw;
         }
-        resultChatLine = TabbyChatUtils.componentToChatLines(theChat.get(0).getUpdatedCounter(),
-                filtered, theChat.get(0).getChatLineID(), theChat.get(0).statusMsg);
+        resultChatLine = new TCChatLine(theChat.getUpdatedCounter(), filtered,
+                theChat.getChatLineID(), theChat.statusMsg);
 
         this.addOptionalTimeStamp(resultChatLine);
 
@@ -671,35 +655,24 @@ public class TabbyChat {
             this.addToChannel(tab, resultChatLine, visible);
         }
 
-        this.lastChatWriteLock.lock();
+        lastChatWriteLock.lock();
         try {
-            if (generalSettings.groupSpam.getValue() && activeTabs.size() > 0) {
-                if (toTabs.contains(activeTabs.get(0)))
-                    this.lastChat = this.channelMap.get(activeTabs.get(0)).getChatLogSublistCopy(0,
-                            resultChatLine.size());
-                else
-                    this.lastChat = resultChatLine;
-            } else
-                this.lastChat = resultChatLine;
+            this.lastChat = resultChatLine;
         } finally {
-            this.lastChatWriteLock.unlock();
+            lastChatWriteLock.unlock();
         }
+
         this.lastChatReadLock.lock();
         try {
             if (visible) {
-                if (generalSettings.groupSpam.getValue()
-                        && this.channelMap.get(activeTabs.get(0)).hasSpam) {
-                    gnc.setChatLines(0, new ArrayList<TCChatLine>(this.lastChat));
-                } else {
-                    gnc.addChatLines(0, new ArrayList<TCChatLine>(this.lastChat));
-                }
+                gnc.addChatLines(0, (this.lastChat));
             }
         } finally {
             this.lastChatReadLock.unlock();
         }
     }
 
-    private String processChatForChannels(ComponentList raw) {
+    private String processChatForChannels(IChatComponent raw) {
         Matcher findChannelClean = this.chatChannelPatternClean.matcher(EnumChatFormatting
                 .getTextWithoutFormattingCodes(raw.getUnformattedText()));
         Matcher findChannelDirty = this.chatChannelPatternDirty.matcher(raw.getFormattedText());
@@ -710,78 +683,75 @@ public class TabbyChat {
         return null;
     }
 
-    private ComponentList processChatForFilters(ComponentList raw, List<String> destinations) {
+    private IChatComponent processChatForFilters(IChatComponent raw, List<String> destinations) {
         // TODO
         if (raw == null)
             return null;
 
         // Iterate through defined filters
-        for (int i = 0; i < raw.size(); i++) {
-            IChatComponent chat = raw.get(i);
-            Entry<Integer, TCChatFilter> iFilter = filterSettings.filterMap.firstEntry();
-            while (iFilter != null) {
-                if (iFilter.getValue().applyFilterToDirtyChat(chat)) {
-                    if (iFilter.getValue().removeMatches) {
-                        return ComponentList.newInstance();
-                    }
-                    if (iFilter.getValue().highlightBool) {
-                        int[] lastMatch = iFilter.getValue().getLastMatch();
-                        for (int i1 = 0; i1 < lastMatch.length; i1 += 2) {
-                            int start = lastMatch[i1];
-                            int end = lastMatch[i1 + 1];
+        IChatComponent chat = raw;
+        Entry<Integer, TCChatFilter> iFilter = filterSettings.filterMap.firstEntry();
+        while (iFilter != null) {
+            if (iFilter.getValue().applyFilterToDirtyChat(chat)) {
+                if (iFilter.getValue().removeMatches) {
+                    return null;
+                }
+                if (iFilter.getValue().highlightBool) {
+                    int[] lastMatch = iFilter.getValue().getLastMatch();
+                    for (int i1 = 0; i1 < lastMatch.length; i1 += 2) {
+                        int start = lastMatch[i1];
+                        int end = lastMatch[i1 + 1];
 
-                            IChatComponent chat1 = ChatComponentUtils.subComponent(chat, 0, start);
-                            IChatComponent chat2 = ChatComponentUtils
-                                    .subComponent(chat, start, end);
-                            IChatComponent chat3 = ChatComponentUtils.subComponent(chat, end);
+                        IChatComponent chat1 = ChatComponentUtils.subComponent(chat, 0, start);
+                        IChatComponent chat2 = ChatComponentUtils.subComponent(chat, start, end);
+                        IChatComponent chat3 = ChatComponentUtils.subComponent(chat, end);
 
-                            ChatStyle style = chat2.getChatStyle();
-                            if (iFilter.getValue().highlightColor != ColorCodeEnum.DEFAULT)
-                                style.setColor(iFilter.getValue().highlightColor.toVanilla());
+                        ChatStyle style = chat2.getChatStyle();
+                        if (iFilter.getValue().highlightColor != ColorCodeEnum.DEFAULT)
+                            style.setColor(iFilter.getValue().highlightColor.toVanilla());
 
-                            switch (iFilter.getValue().highlightFormat) {
-                            case BOLD:
-                                style.setBold(true);
-                                break;
-                            case ITALIC:
-                                style.setItalic(true);
-                                break;
-                            case STRIKED:
-                                style.setStrikethrough(true);
-                                break;
-                            case UNDERLINE:
-                                style.setUnderlined(true);
-                                break;
-                            case MAGIC:
-                                style.setObfuscated(true);
-                                break;
-                            case DEFAULT:
-                            default:
-                                break;
-                            }
-                            chat = chat1.appendSibling(chat2).appendSibling(chat3);
+                        switch (iFilter.getValue().highlightFormat) {
+                        case BOLD:
+                            style.setBold(true);
+                            break;
+                        case ITALIC:
+                            style.setItalic(true);
+                            break;
+                        case STRIKED:
+                            style.setStrikethrough(true);
+                            break;
+                        case UNDERLINE:
+                            style.setUnderlined(true);
+                            break;
+                        case MAGIC:
+                            style.setObfuscated(true);
+                            break;
+                        case DEFAULT:
+                        default:
+                            break;
                         }
-                        raw.set(i, chat);
+                        chat = chat1.appendSibling(chat2).appendSibling(chat3);
                     }
-                    if (iFilter.getValue().sendToTabBool) {
-                        if (iFilter.getValue().sendToAllTabs) {
-                            for (ChatChannel chan : this.channelMap.values()) {
-                                destinations.add(chan.getTitle());
-                            }
-                        } else {
-                            String destTab = iFilter.getValue().getTabName();
-                            if (destTab != null && destTab.length() > 0
-                                    && !destinations.contains(destTab)) {
-                                destinations.add(destTab);
-                            }
+                    raw = chat;
+                }
+                if (iFilter.getValue().sendToTabBool) {
+                    if (iFilter.getValue().sendToAllTabs) {
+                        for (ChatChannel chan : this.channelMap.values()) {
+                            destinations.add(chan.getTitle());
                         }
-                    }
-                    if (iFilter.getValue().audioNotificationBool) {
-                        iFilter.getValue().audioNotification();
+                    } else {
+                        String destTab = iFilter.getValue().getTabName();
+                        if (destTab != null && destTab.length() > 0
+                                && !destinations.contains(destTab)) {
+                            destinations.add(destTab);
+                        }
                     }
                 }
-                iFilter = filterSettings.filterMap.higherEntry(iFilter.getKey());
+                if (iFilter.getValue().audioNotificationBool) {
+                    iFilter.getValue().audioNotification();
+                }
             }
+            iFilter = filterSettings.filterMap.higherEntry(iFilter.getKey());
         }
         return raw;
     }
@@ -865,15 +835,7 @@ public class TabbyChat {
             theChan.hasSpam = true;
             theChan.spamCount++;
 
-            TCChatLine line = new TCChatLine(lineChat);
-            line.timeStamp = this.getTimeStamp();
-            theChan.setChatLogLine(0, line);
-
-            line = new TCChatLine(lineChat.getUpdatedCounter(), lineChat.getChatLineString()
-                    .createCopy().appendText(" [" + theChan.spamCount + "x]"),
-                    lineChat.getChatLineID());
-            line.timeStamp = this.getTimeStamp();
-            theChan.setChatLogLine(0, line);
+            lineChat.getChatLineString().appendText(" [" + theChan.spamCount + "x]");
         } else {
             theChan.hasSpam = false;
             theChan.spamCount = 1;

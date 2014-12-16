@@ -74,11 +74,11 @@ public class ChatComponentUtils {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static ComponentList split(IChatComponent chat, int limit) {
+    public static List<IChatComponent> split(IChatComponent chat, int limit) {
 
         int j = 0;
         ChatComponentText chatcomponenttext = new ChatComponentText("");
-        ComponentList arraylist = ComponentList.newInstance();
+        List<IChatComponent> arraylist = Lists.newArrayList();
         ArrayList<IChatComponent> arraylist1 = Lists.newArrayList(chat);
 
         for (int k = 0; k < arraylist1.size(); ++k) {
