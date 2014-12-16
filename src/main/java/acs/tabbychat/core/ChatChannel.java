@@ -3,6 +3,10 @@ package acs.tabbychat.core;
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatButton;
 import acs.tabbychat.util.ChatComponentUtils;
+
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -14,6 +18,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -36,6 +41,16 @@ public class ChatChannel implements Serializable {
     private String alias;
     public String cmdPrefix = "";
     private File logFile;
+
+    // Caches the split chat. Has a short expiration so we update when we need
+    // to. If problems persist, increase expiration.
+    private Supplier<List<TCChatLine>> supplier = Suppliers.memoizeWithExpiration(
+            new Supplier<List<TCChatLine>>() {
+                @Override
+                public List<TCChatLine> get() {
+                    return ChatChannel.this.getSplitChat(true);
+                }
+            }, 50, TimeUnit.MILLISECONDS);
 
     public ChatChannel() {
         this.chanID = nextID;
@@ -89,7 +104,7 @@ public class ChatChannel implements Serializable {
     public TCChatLine getChatLine(int index) {
         TCChatLine retVal = null;
         this.chatReadLock.lock();
-        List<TCChatLine> lines = getSplitChat();
+        List<TCChatLine> lines = getSplitChat(false);
         try {
             retVal = lines.get(index);
         } finally {
@@ -102,7 +117,7 @@ public class ChatChannel implements Serializable {
         List<TCChatLine> retVal = new ArrayList<TCChatLine>(toInd - fromInd);
         this.chatReadLock.lock();
         try {
-            List<TCChatLine> lines = getSplitChat();
+            List<TCChatLine> lines = getSplitChat(false);
             for (int i = toInd - 1; i >= fromInd; i--) {
                 retVal.add(lines.get(i));
             }
@@ -121,14 +136,17 @@ public class ChatChannel implements Serializable {
         int mySize = 0;
         this.chatReadLock.lock();
         try {
-            mySize = getSplitChat().size();
+            mySize = getSplitChat(false).size();
         } finally {
             this.chatReadLock.unlock();
         }
         return mySize;
     }
 
-    private List<TCChatLine> getSplitChat() {
+    private List<TCChatLine> getSplitChat(boolean force) {
+        if (!force) {
+            return supplier.get();
+        }
         return ChatComponentUtils.split(this.chatLog, ChatBox.getChatWidth());
     }
 
