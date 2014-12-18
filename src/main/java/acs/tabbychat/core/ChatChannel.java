@@ -44,7 +44,7 @@ public class ChatChannel implements Serializable {
 
     // Caches the split chat. Has a short expiration so we update when we need
     // to. If problems persist, increase expiration.
-    private Supplier<List<TCChatLine>> supplier = Suppliers.memoizeWithExpiration(
+    private transient Supplier<List<TCChatLine>> supplier = Suppliers.memoizeWithExpiration(
             new Supplier<List<TCChatLine>>() {
                 @Override
                 public List<TCChatLine> get() {
