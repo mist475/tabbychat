@@ -1,17 +1,18 @@
 package acs.tabbychat.util;
 
-import acs.tabbychat.core.TCChatLine;
-
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import acs.tabbychat.core.TCChatLine;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.collect.Lists;
 
 /**
  * A library for modifying Chat Components.
@@ -218,8 +219,13 @@ public class ChatComponentUtils {
 
         int pos = 0;
         boolean found = false;
-        for (IChatComponent ichat : (List<IChatComponent>) chat.getSiblings()) {
-            String text = ichat.getUnformattedText();
+        Iterator<IChatComponent> iter = chat.iterator();
+        while (iter.hasNext()) {
+            IChatComponent ichat = iter.next();
+            if (!ichat.getSiblings().isEmpty()) {
+                continue;
+            }
+            String text = ichat.getUnformattedTextForChat();
             if (text.length() + pos >= index) {
                 if (found)
                     result.appendSibling(ichat);
@@ -232,28 +238,32 @@ public class ChatComponentUtils {
                 }
             }
             pos += text.length();
-
         }
         return result;
     }
 
     @SuppressWarnings("unchecked")
     public static IChatComponent subComponent(IChatComponent chat, int start, int end) {
-
         IChatComponent result = new ChatComponentText("");
         int pos = start;
-
-        for (IChatComponent ichat : (List<IChatComponent>) subComponent(chat, start).getSiblings()) {
-            String text = ichat.getUnformattedText();
-            if (pos + text.length() > end) {
+        Iterator<IChatComponent> iter = ChatComponentStyle.createDeepCopyIterator(subComponent(
+                chat, start).getSiblings());
+        while (iter.hasNext()) {
+            IChatComponent ichat = iter.next();
+            if (!ichat.getSiblings().isEmpty()) {
+                continue;
+            }
+            String text = ichat.getUnformattedTextForChat();
+            if (pos + text.length() >= end) {
                 IChatComponent local = new ChatComponentText(text.substring(0, end - pos));
-                local.getChatStyle().setParentStyle(chat.getChatStyle().createShallowCopy());
+                local.getChatStyle().setParentStyle(chat.getChatStyle().createDeepCopy());
                 result.appendSibling(local);
                 break;
             } else {
                 result.appendSibling(ichat);
             }
             pos += text.length();
+
         }
         return result;
     }
