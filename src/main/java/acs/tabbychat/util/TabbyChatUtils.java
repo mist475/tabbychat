@@ -106,7 +106,7 @@ public class TabbyChatUtils {
         try {
             OutputStreamWriter writer = new OutputStreamWriter(new GZIPOutputStream(os), "UTF-8");
             try {
-                writer.write(FileUtils.readFileToString(file));
+                writer.write(FileUtils.readFileToString(file, "UTF-8"));
             } finally {
                 writer.close();
                 file.delete();
