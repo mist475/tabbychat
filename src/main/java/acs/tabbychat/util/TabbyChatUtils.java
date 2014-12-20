@@ -1,5 +1,35 @@
 package acs.tabbychat.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.zip.GZIPOutputStream;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiSleepMP;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.util.StringUtils;
+
+import org.apache.commons.compress.compressors.gzip.GzipUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import acs.tabbychat.api.TCExtensionManager;
 import acs.tabbychat.compat.MacroKeybindCompat;
 import acs.tabbychat.core.ChatChannel;
@@ -23,35 +53,6 @@ import acs.tabbychat.threads.BackgroundChatThread;
 
 import com.google.common.collect.Lists;
 import com.mumfrey.liteloader.core.LiteLoader;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSleepMP;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.server.integrated.IntegratedServer;
-
-import org.apache.commons.compress.compressors.gzip.GzipUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.zip.GZIPOutputStream;
 
 public class TabbyChatUtils {
     private static Calendar logDay = Calendar.getInstance();
@@ -232,6 +233,8 @@ public class TabbyChatUtils {
      */
     public static void logChat(String theChat, ChatChannel theChannel) {
         Calendar tmpcal = Calendar.getInstance();
+        String time = SimpleDateFormat.getTimeInstance().format(Calendar.getInstance().getTime());
+        theChat = StringUtils.stripControlCodes(String.format("[%s] %s", time, theChat));
         File fileDir;
         String basename;
         // If the channel or title is null, create a new one.

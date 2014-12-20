@@ -574,7 +574,7 @@ public class TabbyChat {
         IChatComponent raw = theChat.func_151461_a();
         IChatComponent filtered = this.processChatForFilters(raw, filterTabs);
         if (generalSettings.saveChatLog.getValue())
-            TabbyChatUtils.logChat(theChat.getCleanTimeStamp() + raw.getUnformattedText(), null);
+            TabbyChatUtils.logChat(raw.getUnformattedText(), null);
 
         if (filtered != null) {
             ChatChannel tab = null;
@@ -587,8 +587,7 @@ public class TabbyChat {
                         tab = new ChatChannel(pmTab);
                         if (generalSettings.saveChatLog.getValue()
                                 && generalSettings.splitChatLog.getValue())
-                            TabbyChatUtils.logChat(
-                                    theChat.getCleanTimeStamp() + raw.getUnformattedText(), tab);
+                            TabbyChatUtils.logChat(raw.getUnformattedText(), tab);
                     }
                 }
             } else {
@@ -596,8 +595,7 @@ public class TabbyChat {
                 tab = new ChatChannel(channelTab);
                 if (generalSettings.saveChatLog.getValue()
                         && generalSettings.splitChatLog.getValue())
-                    TabbyChatUtils.logChat(theChat.getCleanTimeStamp() + raw.getUnformattedText(),
-                            tab);
+                    TabbyChatUtils.logChat(raw.getUnformattedText(), tab);
             }
             toTabs.addAll(filterTabs);
         } else {

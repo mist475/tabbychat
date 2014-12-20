@@ -10,7 +10,6 @@ import net.minecraft.client.gui.ChatLine;
 import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StringUtils;
 import acs.tabbychat.util.TCChatLineFake;
 
 public class TCChatLine extends TCChatLineFake implements Serializable {
@@ -33,10 +32,6 @@ public class TCChatLine extends TCChatLineFake implements Serializable {
 
     protected void setChatLineString(IChatComponent newLine) {
         this.lineString = newLine;
-    }
-
-    public String getCleanTimeStamp() {
-        return StringUtils.stripControlCodes(this.getTimeStamp().getUnformattedText());
     }
 
     public IChatComponent getTimeStamp() {
