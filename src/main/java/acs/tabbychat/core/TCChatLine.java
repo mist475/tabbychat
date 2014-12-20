@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Date;
 
 import net.minecraft.client.gui.ChatLine;
@@ -55,15 +54,15 @@ public class TCChatLine extends TCChatLineFake implements Serializable {
     }
 
     private void writeObject(ObjectOutputStream _write) throws IOException {
-        _write.writeUTF(ChatComponentStyle.Serializer.func_150696_a(this.getChatLineString()));
+        _write.writeUTF(ChatComponentStyle.Serializer.func_150696_a(this.func_151461_a()));
         _write.writeBoolean(this.statusMsg);
-        _write.writeUTF(this.timeStamp.toString());
+        _write.writeLong(this.timeStamp.getTime());
     }
 
     private void readObject(ObjectInputStream _read) throws IOException, ClassNotFoundException {
         this.updateCounterCreated = -1;
         this.lineString = ChatComponentStyle.Serializer.func_150699_a(_read.readUTF());
         this.statusMsg = _read.readBoolean();
-        this.timeStamp = Date.from(Instant.parse(_read.readUTF()));
+        this.timeStamp = new Date(_read.readLong());
     }
 }
