@@ -1,19 +1,23 @@
 package acs.tabbychat.core;
 
-import acs.tabbychat.util.TCChatLineFake;
-import net.minecraft.client.gui.ChatLine;
-import net.minecraft.util.ChatComponentStyle;
-import net.minecraft.util.IChatComponent;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.Date;
+
+import net.minecraft.client.gui.ChatLine;
+import net.minecraft.util.ChatComponentStyle;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StringUtils;
+import acs.tabbychat.util.TCChatLineFake;
 
 public class TCChatLine extends TCChatLineFake implements Serializable {
     private static final long serialVersionUID = 646162627943686174L;
     protected boolean statusMsg = false;
-    protected String timeStamp = "";
+    public Date timeStamp;
 
     public TCChatLine(int _counter, IChatComponent _string, int _id) {
         super(_counter, _string, _id);
@@ -32,16 +36,34 @@ public class TCChatLine extends TCChatLineFake implements Serializable {
         this.lineString = newLine;
     }
 
+    public String getCleanTimeStamp() {
+        return StringUtils.stripControlCodes(this.getTimeStamp().getUnformattedText());
+    }
+
+    public IChatComponent getTimeStamp() {
+        String format = TabbyChat.generalSettings.timeStamp.format(timeStamp);
+        return new ChatComponentText(format + " ");
+    }
+
+    @Override
+    public IChatComponent getChatLineString() {
+        IChatComponent result = func_151461_a();
+        if (TabbyChat.generalSettings.timeStampEnable.getValue() && timeStamp != null) {
+            result = getTimeStamp().appendSibling(result);
+        }
+        return result;
+    }
+
     private void writeObject(ObjectOutputStream _write) throws IOException {
         _write.writeUTF(ChatComponentStyle.Serializer.func_150696_a(this.getChatLineString()));
         _write.writeBoolean(this.statusMsg);
-        _write.writeUTF(this.timeStamp);
+        _write.writeUTF(this.timeStamp.toString());
     }
 
     private void readObject(ObjectInputStream _read) throws IOException, ClassNotFoundException {
         this.updateCounterCreated = -1;
         this.lineString = ChatComponentStyle.Serializer.func_150699_a(_read.readUTF());
         this.statusMsg = _read.readBoolean();
-        this.timeStamp = _read.readUTF();
+        this.timeStamp = Date.from(Instant.parse(_read.readUTF()));
     }
 }

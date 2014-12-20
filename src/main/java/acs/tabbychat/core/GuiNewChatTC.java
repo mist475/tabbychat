@@ -1,10 +1,12 @@
 package acs.tabbychat.core;
 
-import acs.tabbychat.gui.ChatBox;
-import acs.tabbychat.gui.ChatScrollBar;
-import acs.tabbychat.settings.TimeStampEnum;
-import acs.tabbychat.util.ChatComponentUtils;
-import acs.tabbychat.util.TabbyChatUtils;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiChat;
@@ -22,12 +24,11 @@ import net.minecraft.util.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import acs.tabbychat.gui.ChatBox;
+import acs.tabbychat.gui.ChatScrollBar;
+import acs.tabbychat.settings.TimeStampEnum;
+import acs.tabbychat.util.ChatComponentUtils;
+import acs.tabbychat.util.TabbyChatUtils;
 
 public class GuiNewChatTC extends GuiNewChat {
     private Minecraft mc;
@@ -293,16 +294,10 @@ public class GuiNewChatTC extends GuiNewChat {
                             drawRect(xOrigin, yOrigin, xOrigin + this.chatWidth + timeStampOffset,
                                     yOrigin + 9, currentOpacity / 2 << 24);
                             GL11.glEnable(GL11.GL_BLEND);
-                            String _chat;
                             int idx = ChatBox.anchoredTop && tc.enabled() ? msgList.size() - i - 1
                                     : i;
-                            if (tc.enabled()
-                                    && TabbyChat.generalSettings.timeStampEnable.getValue()) {
-                                _chat = msgList.get(idx).timeStamp
-                                        + msgList.get(idx).getChatLineString().getFormattedText();
-                            } else {
-                                _chat = msgList.get(idx).getChatLineString().getFormattedText();
-                            }
+                            String _chat = msgList.get(idx).getChatLineString().getFormattedText();
+
                             if (!this.mc.gameSettings.chatColours)
                                 _chat = StringUtils.stripControlCodes(_chat);
                             int textOpacity = (TabbyChat.advancedSettings.textIgnoreOpacity

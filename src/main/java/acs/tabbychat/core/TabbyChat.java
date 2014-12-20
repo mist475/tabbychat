@@ -9,36 +9,6 @@ package acs.tabbychat.core;
  * prohibited, and a violation of copyright.
  */
 
-import acs.tabbychat.gui.ChatBox;
-import acs.tabbychat.gui.TCSettingsAdvanced;
-import acs.tabbychat.gui.TCSettingsFilters;
-import acs.tabbychat.gui.TCSettingsGeneral;
-import acs.tabbychat.gui.TCSettingsServer;
-import acs.tabbychat.gui.TCSettingsSpelling;
-import acs.tabbychat.jazzy.TCSpellCheckManager;
-import acs.tabbychat.settings.ChannelDelimEnum;
-import acs.tabbychat.settings.ColorCodeEnum;
-import acs.tabbychat.settings.FormatCodeEnum;
-import acs.tabbychat.settings.TCChatFilter;
-import acs.tabbychat.threads.BackgroundUpdateCheck;
-import acs.tabbychat.util.ChatComponentUtils;
-import acs.tabbychat.util.TabbyChatUtils;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StringUtils;
-
-import org.apache.commons.compress.utils.IOUtils;
-import org.apache.logging.log4j.Logger;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -67,6 +37,35 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.logging.log4j.Logger;
+
+import acs.tabbychat.gui.ChatBox;
+import acs.tabbychat.gui.TCSettingsAdvanced;
+import acs.tabbychat.gui.TCSettingsFilters;
+import acs.tabbychat.gui.TCSettingsGeneral;
+import acs.tabbychat.gui.TCSettingsServer;
+import acs.tabbychat.gui.TCSettingsSpelling;
+import acs.tabbychat.jazzy.TCSpellCheckManager;
+import acs.tabbychat.settings.ChannelDelimEnum;
+import acs.tabbychat.settings.ColorCodeEnum;
+import acs.tabbychat.settings.FormatCodeEnum;
+import acs.tabbychat.settings.TCChatFilter;
+import acs.tabbychat.threads.BackgroundUpdateCheck;
+import acs.tabbychat.util.ChatComponentUtils;
+import acs.tabbychat.util.TabbyChatUtils;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public class TabbyChat {
     private static Logger log = TabbyChatUtils.log;
@@ -254,10 +253,6 @@ public class TabbyChat {
         }
     }
 
-    private void addOptionalTimeStamp(TCChatLine line) {
-        line.timeStamp = this.getTimeStamp();
-    }
-
     public void addToChannel(String name, TCChatLine thisChat, boolean visible) {
         if (serverSettings.ignoredChanPattern.matcher(name).matches())
             return;
@@ -376,14 +371,6 @@ public class TabbyChat {
                 actives.add(chan.getTitle());
         }
         return actives;
-    }
-
-    private String getCleanTimeStamp() {
-        return StringUtils.stripControlCodes(this.getTimeStamp());
-    }
-
-    private String getTimeStamp() {
-        return generalSettings.timeStamp.format(Calendar.getInstance().getTime());
     }
 
     @SuppressWarnings("unchecked")
@@ -584,10 +571,10 @@ public class TabbyChat {
         String pmTab = null;
         toTabs.add("*");
 
-        IChatComponent raw = theChat.getChatLineString();
+        IChatComponent raw = theChat.func_151461_a();
         IChatComponent filtered = this.processChatForFilters(raw, filterTabs);
         if (generalSettings.saveChatLog.getValue())
-            TabbyChatUtils.logChat(this.getCleanTimeStamp() + raw.getUnformattedText(), null);
+            TabbyChatUtils.logChat(theChat.getCleanTimeStamp() + raw.getUnformattedText(), null);
 
         if (filtered != null) {
             ChatChannel tab = null;
@@ -601,7 +588,7 @@ public class TabbyChat {
                         if (generalSettings.saveChatLog.getValue()
                                 && generalSettings.splitChatLog.getValue())
                             TabbyChatUtils.logChat(
-                                    this.getCleanTimeStamp() + raw.getUnformattedText(), tab);
+                                    theChat.getCleanTimeStamp() + raw.getUnformattedText(), tab);
                     }
                 }
             } else {
@@ -609,8 +596,8 @@ public class TabbyChat {
                 tab = new ChatChannel(channelTab);
                 if (generalSettings.saveChatLog.getValue()
                         && generalSettings.splitChatLog.getValue())
-                    TabbyChatUtils
-                            .logChat(this.getCleanTimeStamp() + raw.getUnformattedText(), tab);
+                    TabbyChatUtils.logChat(theChat.getCleanTimeStamp() + raw.getUnformattedText(),
+                            tab);
             }
             toTabs.addAll(filterTabs);
         } else {
@@ -619,7 +606,7 @@ public class TabbyChat {
         resultChatLine = new TCChatLine(theChat.getUpdatedCounter(), filtered,
                 theChat.getChatLineID(), theChat.statusMsg);
 
-        this.addOptionalTimeStamp(resultChatLine);
+        resultChatLine.timeStamp = Calendar.getInstance().getTime();
 
         HashSet<String> tabSet = new HashSet<String>(toTabs);
         List<String> activeTabs = this.getActive();
