@@ -11,7 +11,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import acs.tabbychat.core.TCChatLine;
-import acs.tabbychat.core.TabbyChat;
 
 import com.google.common.collect.Lists;
 
@@ -60,13 +59,10 @@ public class ChatComponentUtils {
 
     public static List<TCChatLine> split(TCChatLine line, int width) {
         List<TCChatLine> list = Lists.newArrayList();
-        if (TabbyChat.generalSettings.timeStampEnable.getValue())
-            width -= fontRenderer.getStringWidth(line.getTimeStamp().getUnformattedText());
-        List<IChatComponent> ichat = split(line.func_151461_a(), width);
+        List<IChatComponent> ichat = split(line.getChatLineString(), width);
         for (IChatComponent chat : ichat) {
             list.add(0, new TCChatLine(line.getUpdatedCounter(), chat, line.getChatLineID()));
         }
-        list.get(list.size() - 1).timeStamp = line.timeStamp;
         return list;
     }
 
