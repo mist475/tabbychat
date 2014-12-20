@@ -60,8 +60,5 @@ public class LiteModTabbyChat implements Tickable, JoinGameListener {
     }
 
     @Override
-    public void upgradeSettings(String version, File configPath, File oldConfigPath) {
-        // TODO Auto-generated method stub
-
-    }
+    public void upgradeSettings(String version, File configPath, File oldConfigPath) {}
 }

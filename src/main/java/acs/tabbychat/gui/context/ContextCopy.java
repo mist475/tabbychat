@@ -1,12 +1,12 @@
 package acs.tabbychat.gui.context;
 
-import acs.tabbychat.core.GuiChatTC;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.List;
+import acs.tabbychat.core.GuiChatTC;
 
 public class ContextCopy extends ChatContext {
 
@@ -41,7 +41,6 @@ public class ContextCopy extends ChatContext {
 
     @Override
     public List<ChatContext> getChildren() {
-        // TODO Auto-generated method stub
         return null;
     }
 

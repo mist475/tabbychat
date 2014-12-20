@@ -671,7 +671,6 @@ public class TabbyChat {
     }
 
     private IChatComponent processChatForFilters(IChatComponent raw, List<String> destinations) {
-        // TODO
         if (raw == null)
             return null;
 

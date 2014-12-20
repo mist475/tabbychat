@@ -1,11 +1,11 @@
 package acs.tabbychat.gui.context;
 
+import java.lang.reflect.Method;
+import java.util.List;
+
 import net.minecraft.util.ResourceLocation;
 
 import org.apache.logging.log4j.LogManager;
-
-import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * Dummy context menu that includes setter methods and extra getter methods.
@@ -37,19 +37,16 @@ public class ContextDummy extends ChatContext {
 
     @Override
     public String getDisplayString() {
-        // TODO Auto-generated method stub
         return this.displayString;
     }
 
     @Override
     public ResourceLocation getDisplayIcon() {
-        // TODO Auto-generated method stub
         return this.icon;
     }
 
     @Override
     public List<ChatContext> getChildren() {
-        // TODO Auto-generated method stub
         return this.children;
     }
 
@@ -67,7 +64,6 @@ public class ContextDummy extends ChatContext {
 
     @Override
     public Behavior getDisabledBehavior() {
-        // TODO Auto-generated method stub
         return this.behavior;
     }
 

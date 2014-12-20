@@ -1,9 +1,9 @@
 package acs.tabbychat.gui.context;
 
+import java.util.List;
+
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.List;
 
 public class ContextPaste extends ChatContext {
 
@@ -19,7 +19,6 @@ public class ContextPaste extends ChatContext {
 
     @Override
     public String getDisplayString() {
-        // TODO Auto-generated method stub
         return "Paste";
     }
 
@@ -36,7 +35,6 @@ public class ContextPaste extends ChatContext {
 
     @Override
     public List<ChatContext> getChildren() {
-        // TODO Auto-generated method stub
         return null;
     }
 

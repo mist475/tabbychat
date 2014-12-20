@@ -1,21 +1,21 @@
 package acs.tabbychat.compat;
 
-import acs.tabbychat.api.IChatMouseExtension;
-import acs.tabbychat.api.IChatRenderExtension;
-import acs.tabbychat.api.IChatUpdateExtension;
-import acs.tabbychat.gui.context.ChatContextMenu;
-import acs.tabbychat.gui.context.ContextDummy;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
-
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
+import acs.tabbychat.api.IChatMouseExtension;
+import acs.tabbychat.api.IChatRenderExtension;
+import acs.tabbychat.api.IChatUpdateExtension;
+import acs.tabbychat.gui.context.ChatContextMenu;
+import acs.tabbychat.gui.context.ContextDummy;
 
 public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExtension,
         IChatRenderExtension {
@@ -279,7 +279,6 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
         try {
             return clickedControl.get(inChatGUI);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
@@ -289,7 +288,6 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
         try {
             return chatGuiHook.get(coreInstance.invoke(null, new Object[0]));
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
