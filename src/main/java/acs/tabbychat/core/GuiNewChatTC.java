@@ -249,7 +249,7 @@ public class GuiNewChatTC extends GuiNewChat {
                 try {
                     msgList.add(this.chatLines.get(lineCounter + this.scrollOffset));
                     if (msgList.get(0) != null
-                            && msgList.get(0).getChatLineString().getFormattedText()
+                            && msgList.get(0).getChatComponentWithTimestamp().getFormattedText()
                                     .startsWith(" ")) {
                         for (int sameMsgCounter = 1; lineCounter + sameMsgCounter
                                 + this.scrollOffset < numLinesTotal
@@ -259,7 +259,8 @@ public class GuiNewChatTC extends GuiNewChat {
                             if (checkLine.getUpdatedCounter() != msgList.get(0).getUpdatedCounter())
                                 break;
                             msgList.add(checkLine);
-                            if (!checkLine.getChatLineString().getFormattedText().startsWith(" "))
+                            if (!checkLine.getChatComponentWithTimestamp().getFormattedText()
+                                    .startsWith(" "))
                                 break;
                         }
                     }
@@ -296,7 +297,8 @@ public class GuiNewChatTC extends GuiNewChat {
                             GL11.glEnable(GL11.GL_BLEND);
                             int idx = ChatBox.anchoredTop && tc.enabled() ? msgList.size() - i - 1
                                     : i;
-                            String _chat = msgList.get(idx).getChatLineString().getFormattedText();
+                            String _chat = msgList.get(idx).getChatComponentWithTimestamp()
+                                    .getFormattedText();
 
                             if (!this.mc.gameSettings.chatColours)
                                 _chat = StringUtils.stripControlCodes(_chat);
@@ -355,7 +357,7 @@ public class GuiNewChatTC extends GuiNewChat {
 
                             clickYRel = 0;
 
-                            Iterator<?> iter = chatline.getChatLineString().iterator();
+                            Iterator<?> iter = chatline.getChatComponentWithTimestamp().iterator();
                             while (iter.hasNext()) {
                                 returnMe = (IChatComponent) iter.next();
                                 if (returnMe instanceof ChatComponentText) {
@@ -545,8 +547,8 @@ public class GuiNewChatTC extends GuiNewChat {
                     _n++;
                 } else if (dt == 0) {
                     if (_current.get(_c).equals(_new.getChatLine(_n))
-                            || _current.get(_c).getChatLineString()
-                                    .equals(_new.getChatLine(_n).getChatLineString())) {
+                            || _current.get(_c).getChatComponent()
+                                    .equals(_new.getChatLine(_n).getChatComponent())) {
                         _c++;
                         _n++;
                     } else

@@ -4,9 +4,12 @@ import net.minecraft.client.gui.ChatLine;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
+import com.google.gson.annotations.Expose;
+
 public class TCChatLineFake extends ChatLine {
-    protected int updateCounterCreated;
-    protected IChatComponent lineString;
+    protected int updateCounterCreated = -1;
+    @Expose
+    protected IChatComponent chatComponent;
     protected int chatLineID;
 
     public TCChatLineFake() {
@@ -17,19 +20,20 @@ public class TCChatLineFake extends ChatLine {
         super(_counter, _string, _id);
         this.updateCounterCreated = _counter;
         if (_string == null)
-            this.lineString = new ChatComponentText("");
+            this.chatComponent = new ChatComponentText("");
         else
-            this.lineString = _string;
+            this.chatComponent = _string;
         this.chatLineID = _id;
     }
 
-    /**
-     * Returns the chat line as a string
-     * 
-     * @return
-     */
-    public IChatComponent getChatLineString() {
-        return this.lineString;
+    @Override
+    @Deprecated
+    public IChatComponent func_151461_a() {
+        return getChatComponent();
+    }
+
+    public IChatComponent getChatComponent() {
+        return this.chatComponent;
     }
 
     @Override

@@ -59,7 +59,7 @@ public class ChatComponentUtils {
 
     public static List<TCChatLine> split(TCChatLine line, int width) {
         List<TCChatLine> list = Lists.newArrayList();
-        List<IChatComponent> ichat = split(line.getChatLineString(), width);
+        List<IChatComponent> ichat = split(line.getChatComponentWithTimestamp(), width);
         for (IChatComponent chat : ichat) {
             list.add(0, new TCChatLine(line.getUpdatedCounter(), chat, line.getChatLineID()));
         }

@@ -1,50 +1,56 @@
 package acs.tabbychat.core;
 
-import acs.tabbychat.gui.ChatBox;
-import acs.tabbychat.gui.ChatButton;
-import acs.tabbychat.util.ChatComponentUtils;
-
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.ChatComponentText;
-
-import org.lwjgl.opengl.GL11;
-
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class ChatChannel implements Serializable {
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
+
+import org.lwjgl.opengl.GL11;
+
+import acs.tabbychat.gui.ChatBox;
+import acs.tabbychat.gui.ChatButton;
+import acs.tabbychat.util.ChatComponentUtils;
+
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.gson.annotations.Expose;
+
+public class ChatChannel {
     protected static int nextID = 3600;
-    private static final long serialVersionUID = 546162627943686174L;
-    private String title;
-    public transient ChatButton tab;
-    private ArrayList<TCChatLine> chatLog;
+    public ChatButton tab;
     private final ReentrantReadWriteLock chatListLock = new ReentrantReadWriteLock(true);
     private final Lock chatReadLock = this.chatListLock.readLock();
     private final Lock chatWriteLock = this.chatListLock.writeLock();
-    protected int chanID = nextID + 1;
     public boolean unread = false;
-    public boolean active = false;
     protected boolean hasSpam = false;
     protected int spamCount = 1;
-    public boolean notificationsOn = false;
-    public boolean hidePrefix = false;
-    private String alias;
-    public String cmdPrefix = "";
     private File logFile;
+    @Expose
+    protected int chanID = nextID + 1;
+    @Expose
+    private String title;
+    @Expose
+    private String alias;
+    @Expose
+    public boolean active = false;
+    @Expose
+    public boolean notificationsOn = false;
+    @Expose
+    public boolean hidePrefix = false;
+    @Expose
+    public String cmdPrefix = "";
+    @Expose
+    private ArrayList<TCChatLine> chatLog;
 
     // Caches the split chat. Has a short expiration so we update when we need
     // to. If problems persist, increase expiration.
-    private transient Supplier<List<TCChatLine>> supplier = Suppliers.memoizeWithExpiration(
+    private Supplier<List<TCChatLine>> supplier = Suppliers.memoizeWithExpiration(
             new Supplier<List<TCChatLine>>() {
                 @Override
                 public List<TCChatLine> get() {
@@ -313,8 +319,7 @@ public class ChatChannel implements Serializable {
             for (TCChatLine oldChat : oldChan.chatLog) {
                 if (oldChat == null || oldChat.statusMsg)
                     continue;
-                this.chatLog.add(new TCChatLine(-1, new ChatComponentText(oldChat
-                        .getChatLineString().getUnformattedTextForChat()), 0));
+                this.chatLog.add(oldChat);
             }
         } finally {
             this.chatWriteLock.unlock();

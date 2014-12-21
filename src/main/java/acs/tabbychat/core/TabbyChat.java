@@ -9,15 +9,13 @@ package acs.tabbychat.core;
  * prohibited, and a violation of copyright.
  */
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -37,6 +35,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -46,7 +46,9 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Logger;
 
 import acs.tabbychat.gui.ChatBox;
@@ -66,9 +68,20 @@ import acs.tabbychat.util.TabbyChatUtils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 public class TabbyChat {
     private static Logger log = TabbyChatUtils.log;
+    private static Gson gson = new GsonBuilder()
+            .excludeFieldsWithoutExposeAnnotation()
+            .enableComplexMapKeySerialization()
+            // Register chat
+            .registerTypeAdapter(IChatComponent.class, new IChatComponent.Serializer())
+            // Create
+            .create();
+
     private volatile TCChatLine lastChat;
     private static boolean firstRun = true;
     public static boolean liteLoaded = false;
@@ -274,7 +287,7 @@ public class TabbyChat {
                 theChan.removeChatLine(0);
             }
         } else {
-            this.lastChatMap.put(theChan, thisChat.getChatLineString().getUnformattedText());
+            this.lastChatMap.put(theChan, thisChat.getChatComponent().getUnformattedText());
         }
         theChan.addChat(thisChat, visible);
         theChan.trimLog();
@@ -373,26 +386,24 @@ public class TabbyChat {
         return actives;
     }
 
-    @SuppressWarnings("unchecked")
     protected void loadChannelData() {
-        LinkedHashMap<String, ChatChannel> importData = null;
+        Map<String, ChatChannel> importData = null;
         if (!chanDataFile.exists())
             return;
 
-        FileInputStream cFileStream = null;
-        BufferedInputStream cBuffStream = null;
-        ObjectInputStream cObjStream = null;
+        InputStream inputstream = null;
         try {
-            cFileStream = new FileInputStream(chanDataFile);
-            cBuffStream = new BufferedInputStream(cFileStream);
-            cObjStream = new ObjectInputStream(cBuffStream);
-            importData = (LinkedHashMap<String, ChatChannel>) cObjStream.readObject();
-            cObjStream.close();
-            cBuffStream.close();
+            Type type = new TypeToken<Map<String, ChatChannel>>() {}.getType();
+
+            inputstream = new GZIPInputStream(FileUtils.openInputStream(chanDataFile));
+            String data = IOUtils.toString(inputstream, Charsets.UTF_8);
+            importData = gson.fromJson(data, type);
         } catch (Exception e) {
             printException("Unable to read channel data file : '" + e.getLocalizedMessage() + "'",
                     e);
             return;
+        } finally {
+            IOUtils.closeQuietly(inputstream);
         }
 
         if (importData == null)
@@ -415,16 +426,17 @@ public class TabbyChat {
                 _new.notificationsOn = chan.getValue().notificationsOn;
                 _new.hidePrefix = chan.getValue().hidePrefix;
                 _new.cmdPrefix = chan.getValue().cmdPrefix;
+                _new.importOldChat(chan.getValue());
                 this.addToChannel(chan.getKey(),
                         new TCChatLine(-1, new ChatComponentText("-- chat history from "
                                 + (new SimpleDateFormat()).format(chanDataFile.lastModified())), 0,
                                 true), true);
-                _new.importOldChat(chan.getValue());
                 oldIDs++;
             }
         } catch (ClassCastException e) {
             TabbyChat
                     .printMessageToChat("Unable to load channel history data due to upgrade (sorry!)");
+            TabbyChat.printException("Unable to load channel history", e);
         }
         ChatChannel.nextID = 3600 + oldIDs;
         this.resetDisplayedChat();
@@ -571,7 +583,7 @@ public class TabbyChat {
         String pmTab = null;
         toTabs.add("*");
 
-        IChatComponent raw = theChat.func_151461_a();
+        IChatComponent raw = theChat.getChatComponent();
         IChatComponent filtered = this.processChatForFilters(raw, filterTabs);
         if (generalSettings.saveChatLog.getValue())
             TabbyChatUtils.logChat(raw.getUnformattedText(), null);
@@ -809,7 +821,7 @@ public class TabbyChat {
      */
     private void spamCheck(ChatChannel theChan, TCChatLine lineChat) {
         String oldChat = "";
-        String newChat = lineChat.getChatLineString().getUnformattedText();
+        String newChat = lineChat.getChatComponent().getUnformattedText();
 
         if (lastChatMap.containsKey(theChan)) {
             oldChat = lastChatMap.get(theChan);
@@ -819,7 +831,7 @@ public class TabbyChat {
             theChan.hasSpam = true;
             theChan.spamCount++;
 
-            lineChat.getChatLineString().appendText(" [" + theChan.spamCount + "x]");
+            lineChat.getChatComponent().appendText(" [" + theChan.spamCount + "x]");
         } else {
             theChan.hasSpam = false;
             theChan.spamCount = 1;
@@ -833,22 +845,16 @@ public class TabbyChat {
         if (!chanDataFile.getParentFile().exists())
             chanDataFile.getParentFile().mkdirs();
 
-        FileOutputStream cFileStream = null;
-        BufferedOutputStream cBuffStream = null;
-        ObjectOutputStream cObjStream = null;
+        OutputStream output = null;
         try {
-            cFileStream = new FileOutputStream(chanDataFile);
-            cBuffStream = new BufferedOutputStream(cFileStream);
-            cObjStream = new ObjectOutputStream(cBuffStream);
-            cObjStream.writeObject(instance.channelMap);
-            cObjStream.flush();
+            String data = gson.toJson(channelMap);
+            output = new GZIPOutputStream(new FileOutputStream(chanDataFile));
+            IOUtils.write(data, output, Charsets.UTF_8);
         } catch (Exception e) {
             printErr("Unable to write channel data to file : '" + e.getLocalizedMessage() + "' : "
                     + e.toString());
         } finally {
-            IOUtils.closeQuietly(cFileStream);
-            IOUtils.closeQuietly(cObjStream);
-            IOUtils.closeQuietly(cBuffStream);
+            IOUtils.closeQuietly(output);
         }
     }
 
