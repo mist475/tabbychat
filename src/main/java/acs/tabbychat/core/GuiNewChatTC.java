@@ -26,7 +26,6 @@ import org.lwjgl.opengl.GL11;
 
 import acs.tabbychat.gui.ChatBox;
 import acs.tabbychat.gui.ChatScrollBar;
-import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.util.ChatComponentUtils;
 import acs.tabbychat.util.TabbyChatUtils;
 
@@ -180,7 +179,6 @@ public class GuiNewChatTC extends GuiNewChat {
             int maxDisplayedLines = 0;
             boolean chatOpen = false;
             float chatOpacity = this.mc.gameSettings.chatOpacity * 0.9f + 0.1f;
-            int timeStampOffset = 0;
             ;
             float chatScaling = this.func_146244_h();
             int fadeTicks = 200;
@@ -200,16 +198,13 @@ public class GuiNewChatTC extends GuiNewChat {
 
             if (tc.enabled()) {
                 if (TabbyChat.generalSettings.timeStampEnable.getValue())
-                    timeStampOffset = mc.fontRenderer
-                            .getStringWidth(((TimeStampEnum) TabbyChat.generalSettings.timeStampStyle
-                                    .getValue()).maxTime);
 
-                maxDisplayedLines = MathHelper.floor_float(ChatBox.getChatHeight() / 9.0f);
+                    maxDisplayedLines = MathHelper.floor_float(ChatBox.getChatHeight() / 9.0f);
                 if (!chatOpen)
                     maxDisplayedLines = MathHelper
                             .floor_float(TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue()
                                     * ChatBox.getChatHeight() / 900.0f);
-                this.chatWidth = ChatBox.getChatWidth() - timeStampOffset;
+                this.chatWidth = ChatBox.getChatWidth();
                 fadeTicks = TabbyChat.advancedSettings.chatFadeTicks.getValue().intValue();
             } else {
                 maxDisplayedLines = this.func_146232_i();
@@ -278,8 +273,8 @@ public class GuiNewChatTC extends GuiNewChat {
                             int yOrigin = ChatBox.anchoredTop && tc.enabled() ? -(visLineCounter * 9)
                                     + ChatBox.getChatHeight()
                                     : -visLineCounter * 9;
-                            drawRect(xOrigin, yOrigin, xOrigin + this.chatWidth + timeStampOffset,
-                                    yOrigin + 9, currentOpacity / 2 << 24);
+                            drawRect(xOrigin, yOrigin, xOrigin + this.chatWidth, yOrigin + 9,
+                                    currentOpacity / 2 << 24);
                             GL11.glEnable(GL11.GL_BLEND);
                             int idx = ChatBox.anchoredTop && tc.enabled() ? msgList.size() - i - 1
                                     : i;
@@ -395,16 +390,10 @@ public class GuiNewChatTC extends GuiNewChat {
         // Add chatlines to appropriate lists
         if (tc.enabled() && !optionalDeletion && !backupFlag) {
             tc.processChat(chatLine);
+            // refreshChat();
         } else {
-            chatWriteLock.lock();
-            try {
-                this.chatLines.add(0, chatLine);
-                tc.addToChannel("*", chatLine, true);
-                if (!backupFlag)
-                    this.backupLines.add(0, chatLine);
-            } finally {
-                chatWriteLock.unlock();
-            }
+            this.addChatLines(0, chatLine);
+            tc.addToChannel("*", chatLine, true);
         }
 
         // Trim lists to size as needed
