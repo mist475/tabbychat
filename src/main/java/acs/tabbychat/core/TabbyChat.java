@@ -294,6 +294,12 @@ public class TabbyChat {
 
     }
 
+    public void deleteChatLines(int id) {
+        for (ChatChannel chan : this.channelMap.values()) {
+            chan.deleteChatLines(id);
+        }
+    }
+
     public boolean channelExists(String name) {
         return (this.channelMap.get(name) != null);
     }

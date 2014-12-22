@@ -2,6 +2,7 @@ package acs.tabbychat.core;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -93,6 +94,21 @@ public class ChatChannel {
         }
         if (!this.title.equals("*") && this.notificationsOn && !visible)
             this.unread = true;
+    }
+
+    public void deleteChatLines(int id) {
+        this.chatReadLock.lock();
+        try {
+            Iterator<TCChatLine> iter = this.chatLog.iterator();
+            while (iter.hasNext()) {
+                TCChatLine line = iter.next();
+                if (line.getChatLineID() == id) {
+                    iter.remove();
+                }
+            }
+        } finally {
+            this.chatReadLock.unlock();
+        }
     }
 
     public boolean doesButtonEqual(GuiButton btnObj) {

@@ -128,40 +128,26 @@ public class GuiNewChatTC extends GuiNewChat {
 
     @Override
     public void deleteChatLine(int _id) {
-        ChatLine chatLineRemove = null;
-        ChatLine backupLineRemove = null;
         chatReadLock.lock();
         try {
             Iterator<TCChatLine> _iter = this.chatLines.iterator();
             ChatLine _cl;
-            do {
-                if (!_iter.hasNext()) {
-                    _iter = this.backupLines.iterator();
-                    do {
-                        if (!_iter.hasNext()) {
-                            return;
-                        }
-                        _cl = _iter.next();
-                    } while (_cl.getChatLineID() != _id);
-                    backupLineRemove = _cl;
-                    break;
-                }
+            while (_iter.hasNext()) {
                 _cl = _iter.next();
-            } while (_cl.getChatLineID() != _id);
-            chatLineRemove = _cl;
+                if (_cl.getChatLineID() == _id) {
+                    _iter.remove();
+                }
+            }
+            _iter = this.backupLines.iterator();
+            while (_iter.hasNext()) {
+                _cl = _iter.next();
+                if (_cl.getChatLineID() == _id) {
+                    _iter.remove();
+                }
+            }
+            tc.deleteChatLines(_id);
         } finally {
             chatReadLock.unlock();
-        }
-
-        chatWriteLock.lock();
-        try {
-            if (chatLineRemove != null && chatLineRemove.getChatLineID() == _id) {
-                this.chatLines.remove(chatLineRemove);
-            }
-            if (backupLineRemove != null && backupLineRemove.getChatLineID() == _id)
-                this.backupLines.remove(backupLineRemove);
-        } finally {
-            chatWriteLock.unlock();
         }
     }
 
