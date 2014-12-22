@@ -1,21 +1,14 @@
 package acs.tabbychat.core;
 
-import acs.tabbychat.api.IChatKeyboardExtension;
-import acs.tabbychat.api.IChatMouseExtension;
-import acs.tabbychat.api.IChatRenderExtension;
-import acs.tabbychat.api.IChatUpdateExtension;
-import acs.tabbychat.api.TCExtensionManager;
-import acs.tabbychat.compat.MacroKeybindCompat;
-import acs.tabbychat.gui.ChatBox;
-import acs.tabbychat.gui.ChatButton;
-import acs.tabbychat.gui.ChatChannelGUI;
-import acs.tabbychat.gui.ChatScrollBar;
-import acs.tabbychat.gui.PrefsButton;
-import acs.tabbychat.gui.context.ChatContextMenu;
-import acs.tabbychat.util.ChatExtensions;
-import acs.tabbychat.util.TabbyChatUtils;
-
-import com.google.common.collect.Lists;
+import java.awt.Point;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -46,16 +39,22 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import tv.twitch.chat.ChatUserInfo;
+import acs.tabbychat.api.IChatKeyboardExtension;
+import acs.tabbychat.api.IChatMouseExtension;
+import acs.tabbychat.api.IChatRenderExtension;
+import acs.tabbychat.api.IChatUpdateExtension;
+import acs.tabbychat.api.TCExtensionManager;
+import acs.tabbychat.compat.MacroKeybindCompat;
+import acs.tabbychat.gui.ChatBox;
+import acs.tabbychat.gui.ChatButton;
+import acs.tabbychat.gui.ChatChannelGUI;
+import acs.tabbychat.gui.ChatScrollBar;
+import acs.tabbychat.gui.PrefsButton;
+import acs.tabbychat.gui.context.ChatContextMenu;
+import acs.tabbychat.util.ChatExtensions;
+import acs.tabbychat.util.TabbyChatUtils;
 
-import java.awt.Point;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.google.common.collect.Lists;
 
 public class GuiChatTC extends GuiChat {
     private Logger log = TabbyChatUtils.log;
@@ -208,15 +207,35 @@ public class GuiChatTC extends GuiChat {
         }
 
         if (this.foundPlayerNames.size() > 1) {
-            StringBuilder _sb = new StringBuilder();
+            int low = this.playerNameIndex - 2;
+            int high = this.playerNameIndex + 3;
+            if (low < 0) {
+                int diff = Math.abs(low);
+                low = 0;
+                high += diff;
+            }
+            if (high >= this.foundPlayerNames.size()){
+                high = foundPlayerNames.size();
+            }
+            while (high - low < 5) {
+                low--;
+            }
+            List<String> newList = Lists.newArrayList();
+            for (int i = low; i < high; i++) {
+                newList.add(this.foundPlayerNames.get(i));
+            }
 
-            for (Iterator<String> _iter = this.foundPlayerNames.iterator(); _iter.hasNext(); _sb
+            StringBuilder _sb = new StringBuilder();
+            for (Iterator<String> _iter = newList.iterator(); _iter
+                    .hasNext(); _sb
                     .append(textBuffer)) {
                 textBuffer = _iter.next();
                 if (_sb.length() > 0) {
                     _sb.append(", ");
                 }
             }
+            if (high < this.foundPlayerNames.size())
+            _sb.append(" ...");
 
             this.mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(
                     new ChatComponentText(_sb.toString()), 1);
