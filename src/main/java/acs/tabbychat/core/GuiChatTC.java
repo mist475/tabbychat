@@ -207,8 +207,8 @@ public class GuiChatTC extends GuiChat {
         }
 
         if (this.foundPlayerNames.size() > 1) {
-            int low = this.playerNameIndex - 2;
-            int high = this.playerNameIndex + 3;
+            int low = this.playerNameIndex - 1;
+            int high = this.playerNameIndex + 4;
             if (low < 0) {
                 int diff = Math.abs(low);
                 low = 0;
@@ -217,22 +217,33 @@ public class GuiChatTC extends GuiChat {
             if (high >= this.foundPlayerNames.size()){
                 high = foundPlayerNames.size();
             }
-            while (high - low < 5) {
+            while (high - low < 5 && this.foundPlayerNames.size() >= 5) {
                 low--;
+            }
+            if (high - low < 5) {
+                low = 0;
             }
             List<String> newList = Lists.newArrayList();
             for (int i = low; i < high; i++) {
                 newList.add(this.foundPlayerNames.get(i));
             }
 
+            int counter = low;
             StringBuilder _sb = new StringBuilder();
             for (Iterator<String> _iter = newList.iterator(); _iter
                     .hasNext(); _sb
                     .append(textBuffer)) {
                 textBuffer = _iter.next();
+                if (counter == this.playerNameIndex + 1) {
+                    _sb.append(EnumChatFormatting.RESET);
+                }
                 if (_sb.length() > 0) {
                     _sb.append(", ");
                 }
+                if (counter == this.playerNameIndex) {
+                    _sb.append(EnumChatFormatting.BOLD);
+                }
+                counter++;
             }
             if (high < this.foundPlayerNames.size())
             _sb.append(" ...");
