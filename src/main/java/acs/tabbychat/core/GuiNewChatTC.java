@@ -197,9 +197,7 @@ public class GuiNewChatTC extends GuiNewChat {
             }
 
             if (tc.enabled()) {
-                if (TabbyChat.generalSettings.timeStampEnable.getValue())
-
-                    maxDisplayedLines = MathHelper.floor_float(ChatBox.getChatHeight() / 9.0f);
+                maxDisplayedLines = MathHelper.floor_float(ChatBox.getChatHeight() / 9.0f);
                 if (!chatOpen)
                     maxDisplayedLines = MathHelper
                             .floor_float(TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue()
