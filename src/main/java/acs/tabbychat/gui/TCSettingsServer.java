@@ -1,5 +1,16 @@
 package acs.tabbychat.gui;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+import java.util.regex.Pattern;
+
+import net.minecraft.client.resources.I18n;
+
+import org.apache.commons.lang3.StringUtils;
+
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
@@ -8,16 +19,6 @@ import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingEnum;
 import acs.tabbychat.settings.TCSettingTextBox;
 import acs.tabbychat.util.TabbyChatUtils;
-import net.minecraft.client.resources.I18n;
-
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.regex.Pattern;
 
 public class TCSettingsServer extends TCSettingsGUI {
     private static final int AUTO_CHANNEL_SEARCH_ID = 9201;
@@ -77,8 +78,10 @@ public class TCSettingsServer extends TCSettingsGUI {
         this.name = I18n.format("settings.server.name");
         this.settingsFile = new File(TabbyChatUtils.getServerDir(), "settings.cfg");
         this.bgcolor = 0x66d6d643;
-        this.defaultChannels.setCharLimit(300);
-        this.ignoredChannels.setCharLimit(300);
+        this.defaultChannels.setCharLimit(Integer.MAX_VALUE);
+        this.ignoredChannels.setCharLimit(Integer.MAX_VALUE);
+        this.pmTabRegexFromMe.setCharLimit(Integer.MAX_VALUE);
+        this.pmTabRegexToMe.setCharLimit(Integer.MAX_VALUE);
         this.defineDrawableSettings();
     }
 
