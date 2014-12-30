@@ -21,6 +21,10 @@ public class TCChatLine extends TCChatLineFake {
 
     public TCChatLine(ChatLine _cl) {
         super(_cl.getUpdatedCounter(), _cl.func_151461_a(), _cl.getChatLineID());
+        if (_cl instanceof TCChatLine) {
+            timeStamp = ((TCChatLine) _cl).timeStamp;
+            statusMsg = ((TCChatLine) _cl).statusMsg;
+        }
     }
 
     public TCChatLine(int _counter, IChatComponent _string, int _id, boolean _stat) {

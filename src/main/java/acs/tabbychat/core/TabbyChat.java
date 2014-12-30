@@ -21,6 +21,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -270,6 +271,9 @@ public class TabbyChat {
         if (serverSettings.ignoredChanPattern.matcher(name).matches())
             return;
 
+        // Create new line so it doesn't effect other channels.
+        thisChat = new TCChatLine(thisChat);
+        thisChat.setChatLineString(thisChat.getChatComponent().createCopy());
         ChatChannel theChan = this.channelMap.get(name);
 
         if (theChan == null) {
@@ -656,6 +660,21 @@ public class TabbyChat {
         while (tabIter.hasNext()) {
             String tab = tabIter.next();
             this.addToChannel(tab, resultChatLine, visible);
+        }
+
+        // Add spam counter to result if it's spam.
+        if (!Collections.disjoint(getActive(), tabSet)) {
+            for (String name : tabSet) {
+                ChatChannel channel = channelMap.get(name);
+                if (channel.active && channel.hasSpam) {
+                    resultChatLine.getChatComponent().appendText(" [" + channel.spamCount + "x]");
+                    break;
+                }
+
+            }
+        }
+        for (ChatChannel channel : channelMap.values()) {
+            channel.hasSpam = false;
         }
 
         lastChatWriteLock.lock();
