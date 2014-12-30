@@ -621,7 +621,7 @@ public class TabbyChat {
             }
             toTabs.addAll(filterTabs);
         } else {
-            filtered = raw;
+            return;
         }
         resultChatLine = new TCChatLine(theChat.getUpdatedCounter(), filtered,
                 theChat.getChatLineID(), theChat.statusMsg);
