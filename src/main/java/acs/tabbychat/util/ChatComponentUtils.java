@@ -88,6 +88,10 @@ public class ChatComponentUtils {
             }
             IChatComponent ichatcomponent1 = arraylist1.get(k);
             String s = ichatcomponent1.getUnformattedTextForChat();
+            // Fix for when bad coders create chat using a null string
+            if (s == null) {
+                s = "";
+            }
             boolean flag2 = false;
             String s1;
 
