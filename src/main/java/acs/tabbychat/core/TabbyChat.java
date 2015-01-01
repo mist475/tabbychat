@@ -666,7 +666,7 @@ public class TabbyChat {
         if (!Collections.disjoint(getActive(), tabSet)) {
             for (String name : tabSet) {
                 ChatChannel channel = channelMap.get(name);
-                if (channel.active && channel.hasSpam) {
+                if (channel != null && channel.active && channel.hasSpam) {
                     resultChatLine.getChatComponent().appendText(" [" + channel.spamCount + "x]");
                     break;
                 }
