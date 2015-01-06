@@ -212,7 +212,6 @@ public class GuiNewChatTC extends GuiNewChat {
             GL11.glPushMatrix();
             // Reset the matrix to default in case someone else messed with
             // GuiIngame.
-            float scale = func_146244_h();
             // restore defaults
             GL11.glLoadIdentity();
             GL11.glTranslatef(0, 0, -2000);

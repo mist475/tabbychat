@@ -83,8 +83,8 @@ public class ChatComponentUtils {
         ArrayList<IChatComponent> arraylist1 = Lists.newArrayList(chat);
 
         for (int k = 0; k < arraylist1.size(); ++k) {
-            if (!arraylist.isEmpty()) {
-                chatcomponenttext.appendText(" ");
+            if (chatcomponenttext == null) {
+                chatcomponenttext = new ChatComponentText(" ");
             }
             IChatComponent ichatcomponent1 = arraylist1.get(k);
             String s = ichatcomponent1.getUnformattedTextForChat();
@@ -149,7 +149,7 @@ public class ChatComponentUtils {
             if (flag2) {
                 arraylist.add(chatcomponenttext);
                 j = 0;
-                chatcomponenttext = new ChatComponentText("");
+                chatcomponenttext = null;
             }
         }
 
