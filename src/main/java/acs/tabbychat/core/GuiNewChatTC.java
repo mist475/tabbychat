@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -209,6 +210,19 @@ public class GuiNewChatTC extends GuiNewChat {
                 this.chatWidth = MathHelper.ceiling_float_int(this.func_146228_f() / chatScaling);
             }
             GL11.glPushMatrix();
+            // Reset the matrix to default in case someone else messed with
+            // GuiIngame.
+            float scale = func_146244_h();
+            // restore defaults
+            GL11.glLoadIdentity();
+            GL11.glTranslatef(0, 0, -2000);
+
+            // from GuiIngame
+            GL11.glEnable(GL11.GL_BLEND);
+            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+            GL11.glDisable(GL11.GL_ALPHA_TEST);
+            GL11.glTranslatef(0.0F, sr.getScaledHeight() - 48, 0.0F);
+
             if (tc.enabled()) {
                 GL11.glTranslatef(ChatBox.current.x, 48.0f + ChatBox.current.y, 0.0f);
             } else {
