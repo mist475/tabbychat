@@ -19,12 +19,12 @@ apply plugin: 'fml'
 
 ext.set("revision", getRevision())
 ext.set("build", getBuildNo())
-version = "1.11.1." + revision
+version = "1.11.2." + revision
 group = "acs.tabbychat"
 archivesBaseName = "TabbyChat"
 
 minecraft{
-    version = "1.7.10-7.10.86.1007"
+    version = "1.7.10-latest"
     runDir = "eclipse/assets"
 	
 	replace "@@VERSION@@", project.version
