@@ -1,9 +1,6 @@
 package acs.tabbychat.core;
 
-import acs.tabbychat.util.TabbyChatUtils;
-
-import com.mumfrey.liteloader.core.LiteLoader;
-
+import acs.tabbychat.util.TabbyChatUtils; 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -49,10 +46,17 @@ public class TabbyChatMod {
 
     private boolean willBeLiteLoaded() {
         try {
-            LiteLoader liteloader = LiteLoader.getInstance();
-            if (liteloader != null)
-                return liteloader.isModEnabled(TabbyChatUtils.name);
-        } catch (NoClassDefFoundError e) {
+            Class.forName("com.mumfrey.liteloader.core.LiteLoader");
+            Class.forName("acs.tabbychat.core.LiteModTabbyChat");
+            // Add -Dtabbychat.ignoreLiteMod=true to JVM args to ignore
+            if ("true".equals(System.getProperty("tabbychat.ignoreLiteMod"))) {
+                TabbyChatUtils.log
+                        .info("LiteModTabbyChat was detected, but will register FML events anyway.");
+                return false;
+            }
+            return true;
+
+        } catch (ClassNotFoundException e) {
         }
         return false;
     }
