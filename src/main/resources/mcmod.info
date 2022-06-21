@@ -1,7 +1,9 @@
 [
 {
-	"modid": "tabbychat",
-	"name": "TabbyChat",
+	"modid": "${modId}",
+	"name": "${modName}",
+	"version": "${modVersion}",
+	"mcversion": "${minecraftVersion}",
 	"description": "SMP Chat Overhaul
 - Split chat into tabs
 - Custom filters w/ highlighting & sounds
@@ -10,12 +12,9 @@
 - Log chat to file - Hide Spam
 - Customize chatbox size
 - Unread chat notifications",
-	"version": "${version}",
-	"mcversion": "${mcversion}",
-	"url": "http://www.minecraftforum.net/topic/1540451-",
-	"updateUrl": "",
+	"url": "https://github.com/mist475/tabbychat",
 	"authorList": ["RocketMan10404"],
-	"credits": "Dykam and Killjoy1221 for updating to 1.7",
+	"credits": "Dykam and Killjoy1221 for updating to 1.7, mist475 for build script update",
 	"logoFile": "",
 	"screenshots": []
 }

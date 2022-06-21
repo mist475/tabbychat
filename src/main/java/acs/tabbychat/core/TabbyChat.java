@@ -85,7 +85,6 @@ public class TabbyChat {
 
     private volatile TCChatLine lastChat;
     private static boolean firstRun = true;
-    public static boolean liteLoaded = false;
     public static boolean modLoaded = false;
     public static boolean forgePresent = false;
     private static boolean updateChecked = false;
@@ -130,13 +129,8 @@ public class TabbyChat {
     }
 
     public static String getNewestVersion() {
-        String updateURL;
-        if (liteLoaded) {
-            updateURL = "http://tabbychat.port0.org/tabbychat/current_version.php?type=LL&mc="
-                    + mcversion;
-        } else {
-            updateURL = "http://tabbychat.port0.org/tabbychat/current_version.php?mc=" + mcversion;
-        }
+        String updateURL = "http://tabbychat.port0.org/tabbychat/current_version.php?mc=" + mcversion;
+
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(updateURL).openConnection();
             BufferedReader buffer = new BufferedReader(new InputStreamReader(conn.getInputStream()));

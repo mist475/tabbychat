@@ -153,7 +153,7 @@ public class GuiNewChatTC extends GuiNewChat {
 
     @Override
     public void drawChat(int currentTick) {
-        if (!TabbyChat.liteLoaded && !TabbyChat.modLoaded)
+        if (!TabbyChat.modLoaded)
             TabbyChatUtils.chatGuiTick(mc);
 
         // Save channel data if at main menu or disconnect screen, use flag so

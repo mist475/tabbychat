@@ -1,0 +1,6 @@
+// Add your dependencies here
+
+dependencies {
+    // https://mvnrepository.com/artifact/net.sf.jazzy/jazzy
+    implementation("net.sf.jazzy:jazzy:0.5.2-rtext-1.4.1-2")
+}
