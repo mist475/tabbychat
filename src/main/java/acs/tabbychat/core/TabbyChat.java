@@ -134,7 +134,7 @@ public class TabbyChat {
         http://tabbychat.port0.org/tabbychat/current_version.php?mc=1.7.10
         String updateURL = "http://tabbychat.port0.org/tabbychat/current_version.php?mc=" + mcversion;
          */
-        String updateURL = "https://raw.githubusercontent.com/mist475/tabbychat/Build-fix/latest";
+        String updateURL = "https://raw.githubusercontent.com/mist475/tabbychat/master/latest";
 
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(updateURL).openConnection();
