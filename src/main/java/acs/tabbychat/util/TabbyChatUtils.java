@@ -58,9 +58,9 @@ public class TabbyChatUtils {
     private static File logDir = new File(new File(Minecraft.getMinecraft().mcDataDir, "logs"),
             "TabbyChat");
     private static SimpleDateFormat logNameFormat = new SimpleDateFormat("'_'yyyy-MM-dd'.log'");
-    public final static String version = "@@VERSION@@";
-    public final static String name = "TabbyChat";
-    public final static String modid = "tabbychat";
+    public final static String version = "GRADLETOKEN_VERSION";
+    public final static String name = "GRADLETOKEN_MODNAME";
+    public final static String modid = "GRADLETOKEN_MODID";
     public static Logger log = LogManager.getLogger(name);
 
     public static void startup() {

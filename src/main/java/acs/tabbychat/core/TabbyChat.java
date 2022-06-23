@@ -129,7 +129,12 @@ public class TabbyChat {
     }
 
     public static String getNewestVersion() {
+        /*
+        The Old url was resolved to this, unfortunately this domain has gone offline, so I switched to a file on GitHub no notate the latest version
+        http://tabbychat.port0.org/tabbychat/current_version.php?mc=1.7.10
         String updateURL = "http://tabbychat.port0.org/tabbychat/current_version.php?mc=" + mcversion;
+         */
+        String updateURL = "https://raw.githubusercontent.com/mist475/tabbychat/Build-fix/latest";
 
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(updateURL).openConnection();
