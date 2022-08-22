@@ -48,9 +48,9 @@ public class BackgroundUpdateCheck extends Thread {
         if (updateFound) {
             TabbyChatUtils.log.info("Update Found!");
             StringBuilder updateReport = new StringBuilder("\u00A77");
-            updateReport.append(I18n.format("messages.update1"));
+            updateReport.append(I18n.format("messages.update1") + ' ');
             updateReport.append(current);
-            updateReport.append(I18n.format("messages.update2"));
+            updateReport.append(I18n.format("messages.update2") + ' ');
             updateReport.append(newest + ") ");
             updateReport.append(I18n.format("messages.update3"));
             updateReport.append("\u00A7r");

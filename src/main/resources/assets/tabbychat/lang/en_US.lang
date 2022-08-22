@@ -32,8 +32,8 @@ formats.magic=Magic
 formats.striked=Striked
 formats.underline=Underlined
 
-messages.update1=An update is available\! (Current version is 
-messages.update2=, newest is 
+messages.update1=An update is available! (Current version is
+messages.update2=, newest is
 messages.update3=Visit the mod page on Github to download
 
 settings.advanced.chatboxunfocheight=Unfocused Height
