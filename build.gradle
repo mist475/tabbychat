@@ -1,4 +1,4 @@
-//version: 1656003793falsepattern55
+//version: 1656003793falsepattern58
 /*
 DO NOT CHANGE THIS FILE!
 
@@ -307,15 +307,15 @@ dependencies {
         annotationProcessor("org.ow2.asm:asm-debug-all:5.0.3")
         annotationProcessor("com.google.guava:guava:24.1.1-jre")
         annotationProcessor("com.google.code.gson:gson:2.8.6")
-        annotationProcessor("com.llamalad7:MixinExtras:0.1.0-gasstation")
-        annotationProcessor("org.spongepowered:mixin:0.8.5-gasstation_5")
-        compile("org.spongepowered:mixin:0.8.5-gasstation_5")
-        compile("com.llamalad7:MixinExtras:0.1.0-gasstation")
-        compile("com.falsepattern:00gasstation-mc1.7.10:0.4.0:dev")
+        annotationProcessor("com.llamalad7:MixinExtras:0.1.1-gasstation")
+        annotationProcessor("org.spongepowered:mixin:0.8.5-gasstation_7")
+        compile("org.spongepowered:mixin:0.8.5-gasstation_7")
+        compile("com.llamalad7:MixinExtras:0.1.1-gasstation")
+        compile("com.falsepattern:00gasstation-mc1.7.10:0.5.1:dev")
     } else if(hasMixinDeps.toBoolean()) {
-        runtime("com.llamalad7:MixinExtras:0.1.0-gasstation")
-        runtime("org.spongepowered:mixin:0.8.5-gasstation_5")
-        runtime("com.falsepattern:00gasstation-mc1.7.10:0.4.0:dev")
+        runtime("com.llamalad7:MixinExtras:0.1.1-gasstation")
+        runtime("org.spongepowered:mixin:0.8.5-gasstation_7")
+        runtime("com.falsepattern:00gasstation-mc1.7.10:0.5.1:dev")
     }
 }
 
@@ -413,7 +413,7 @@ runClient {
 
     if (usesMixins.toBoolean()) {
         arguments += [
-                "--mods=../build/libs/$archivesBaseName-${version}.jar"
+                "--mods=" + Paths.get("$projectDir").resolve(minecraft.runDir).normalize().relativize(Paths.get("$projectDir/build/libs/$archivesBaseName-${version}.jar"))
         ]
     }
 
@@ -443,7 +443,7 @@ runServer {
 
     if (usesMixins.toBoolean()) {
         arguments += [
-                "--mods=../build/libs/$archivesBaseName-${version}.jar"
+                "--mods=" + Paths.get("$projectDir").resolve(minecraft.runDir).normalize().relativize(Paths.get("$projectDir/build/libs/$archivesBaseName-${version}.jar"))
         ]
     }
 
