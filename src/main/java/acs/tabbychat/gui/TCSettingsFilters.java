@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.TreeMap;
 
@@ -73,8 +74,8 @@ public class TCSettingsFilters extends TCSettingsGUI {
     public TCSettingTextBox expressionString = new TCSettingTextBox(".*", "expressionString",
             this.propertyPrefix, EXPRESSION_ID);
 
-    public TreeMap<Integer, TCChatFilter> filterMap = new TreeMap<Integer, TCChatFilter>();
-    protected TreeMap<Integer, TCChatFilter> tempFilterMap = new TreeMap<Integer, TCChatFilter>();
+    public TreeMap<Integer, TCChatFilter> filterMap = new TreeMap<>();
+    protected TreeMap<Integer, TCChatFilter> tempFilterMap = new TreeMap<>();
 
     public TCSettingsFilters(TabbyChat _tc) {
         super(_tc);
@@ -167,29 +168,25 @@ public class TCSettingsFilters extends TCSettingsGUI {
     }
 
     private boolean displayNextFilter() {
-        Entry<Integer, TCChatFilter> next = this.tempFilterMap.higherEntry(this.curFilterId);
-        if (next == null) {
-            this.clearDisplay();
-            return false;
-        } else {
-            Properties displayMe = next.getValue().getProperties();
-            for (Object drawable : this.buttonList) {
-                if (drawable instanceof ITCSetting) {
-                    ITCSetting tcDrawable = (ITCSetting) drawable;
-                    if (tcDrawable.getType().equals("enum")) {
-                        ((TCSettingEnum) tcDrawable).setTempValueFromProps(displayMe);
-                    } else {
-                        tcDrawable.setTempValue(displayMe.get(tcDrawable.getProperty()));
-                    }
-                }
-            }
-            this.curFilterId = next.getKey();
-            return true;
-        }
+        return displayOtherFilter(true);
     }
 
     private boolean displayPreviousFilter() {
-        Entry<Integer, TCChatFilter> next = this.tempFilterMap.lowerEntry(this.curFilterId);
+        return displayOtherFilter(false);
+    }
+
+    /**
+     * Shows either the next or the previous filter
+     * Extracted as only assignment differed
+     */
+    private boolean displayOtherFilter(boolean nextBool) {
+        Entry<Integer, TCChatFilter> next;
+        if (nextBool) {
+            next = this.tempFilterMap.higherEntry(this.curFilterId);
+        }
+        else {
+            next = this.tempFilterMap.lowerEntry(this.curFilterId);
+        }
         if (next == null) {
             this.clearDisplay();
             return false;
@@ -469,16 +466,16 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.audioNotificationSound.enabled = this.audioNotificationBool.getTempValue();
         this.sendToAllTabs.enabled = this.sendToTabBool.getTempValue();
 
-        for (int i = 0; i < this.buttonList.size(); i++) {
-            if (ITCSetting.class.isInstance(this.buttonList.get(i))) {
-                ITCSetting tmp = (ITCSetting) this.buttonList.get(i);
+        for (Object o : this.buttonList) {
+            if (o instanceof ITCSetting) {
+                ITCSetting tmp = (ITCSetting) o;
                 if (this.tempFilterMap.size() == 0)
                     tmp.disable();
-                else if (tmp.getType() == "textbox")
+                else if (Objects.equals(tmp.getType(), "textbox"))
                     tmp.enable();
-                else if (tmp.getType() == "bool")
-                    ((TCSettingBool) tmp).setTempValue(((TCSettingBool) tmp).getTempValue()
-                            && tmp.enabled());
+                else if (Objects.equals(tmp.getType(), "bool"))
+                    tmp.setTempValue(((TCSettingBool) tmp).getTempValue()
+                                             && tmp.enabled());
             }
         }
         this.sendToTabName.func_146184_c(this.sendToTabBool.getTempValue()
