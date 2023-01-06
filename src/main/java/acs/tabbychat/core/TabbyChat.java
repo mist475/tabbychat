@@ -11,13 +11,13 @@ package acs.tabbychat.core;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,7 +41,6 @@ import java.util.zip.GZIPOutputStream;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
@@ -74,8 +73,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 public class TabbyChat {
-    private static Logger log = TabbyChatUtils.log;
-    private static Gson gson = new GsonBuilder()
+    private static final Logger log = TabbyChatUtils.log;
+    private static final Gson gson = new GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
             .enableComplexMapKeySerialization()
             // Register chat
@@ -88,7 +87,6 @@ public class TabbyChat {
     public static boolean modLoaded = false;
     public static boolean forgePresent = false;
     private static boolean updateChecked = false;
-    private static String mcversion = (new ServerData("", "")).gameVersion;
     public static boolean defaultUnicode;
     public static String version = TabbyChatUtils.version;
     public static Minecraft mc;
@@ -98,12 +96,11 @@ public class TabbyChat {
     public static TCSettingsSpelling spellingSettings;
     public static TCSettingsAdvanced advancedSettings;
     public static TCSpellCheckManager spellChecker;
-    public LinkedHashMap<String, ChatChannel> channelMap = new LinkedHashMap<String, ChatChannel>();
+    public LinkedHashMap<String, ChatChannel> channelMap = new LinkedHashMap<>();
     // Stores the last received chat for each channel.
-    private Map<ChatChannel, String> lastChatMap = Maps.newHashMap();
+    private final Map<ChatChannel, String> lastChatMap = Maps.newHashMap();
 
     private static File chanDataFile;
-    protected Calendar cal = Calendar.getInstance();
     protected Semaphore serverDataLock = new Semaphore(0, true);
     private Pattern chatChannelPatternClean = Pattern.compile("^\\[([\\p{L}0-9_]{1,10})\\]");
     private Pattern chatChannelPatternDirty = Pattern.compile("^\\[([\\p{L}0-9_]{1,10})\\]");
@@ -130,7 +127,7 @@ public class TabbyChat {
 
     public static String getNewestVersion() {
         /*
-        The Old url was resolved to this, unfortunately this domain has gone offline, so I switched to a file on GitHub no notate the latest version
+        The Old url was resolved to this, unfortunately this domain has gone offline, so I switched to a file on GitHub to notate the latest version
         http://tabbychat.port0.org/tabbychat/current_version.php?mc=1.7.10
         String updateURL = "http://tabbychat.port0.org/tabbychat/current_version.php?mc=" + mcversion;
          */
@@ -257,7 +254,7 @@ public class TabbyChat {
             }
             if (chan.getTitle().equals(actives.get(0))) {
                 chan.active = false;
-                iter = new ArrayList<ChatChannel>(this.channelMap.values())
+                iter = new ArrayList<>(this.channelMap.values())
                         .listIterator(this.channelMap.size());
                 if (iter.hasPrevious() && mc.currentScreen instanceof GuiChatTC)
                     ((GuiChatTC) mc.currentScreen).checkCommandPrefixChange(chan, iter.previous());
@@ -323,7 +320,6 @@ public class TabbyChat {
             } else
                 this.disable();
         }
-        return;
     }
 
     public void createNewChannel(String name) {
@@ -332,7 +328,6 @@ public class TabbyChat {
         if (name == null || name.length() <= 0 || this.channelMap.size() >= 20)
             return;
         this.channelMap.put(name, new ChatChannel(name));
-        return;
     }
 
     /**
@@ -386,7 +381,7 @@ public class TabbyChat {
 
     public List<String> getActive() {
         int n = this.channelMap.size();
-        List<String> actives = new ArrayList<String>(n);
+        List<String> actives = new ArrayList<>(n);
 
         for (ChatChannel chan : this.channelMap.values()) {
             if (chan.active)
@@ -396,7 +391,7 @@ public class TabbyChat {
     }
 
     protected void loadChannelData() {
-        Map<String, ChatChannel> importData = null;
+        Map<String, ChatChannel> importData;
         if (!chanDataFile.exists())
             return;
 
@@ -541,7 +536,7 @@ public class TabbyChat {
     public void pollForUnread(Gui _gui, int _tick) {
         if (this.getActive().contains("*"))
             return;
-        int _opacity = 0;
+        int _opacity;
         int tickdiff = 50;
 
         this.lastChatReadLock.lock();
@@ -586,8 +581,8 @@ public class TabbyChat {
             return;
 
         TCChatLine resultChatLine;
-        List<String> toTabs = new ArrayList<String>(20);
-        List<String> filterTabs = new ArrayList<String>(20);
+        List<String> toTabs = new ArrayList<>(20);
+        List<String> filterTabs = new ArrayList<>(20);
         String channelTab = null;
         String pmTab = null;
         toTabs.add("*");
@@ -598,7 +593,7 @@ public class TabbyChat {
             TabbyChatUtils.logChat(raw.getUnformattedText(), null);
 
         if (filtered != null) {
-            ChatChannel tab = null;
+            ChatChannel tab;
             if (serverSettings.autoChannelSearch.getValue())
                 channelTab = this.processChatForChannels(raw);
             if (channelTab == null) {
@@ -627,7 +622,7 @@ public class TabbyChat {
 
         resultChatLine.timeStamp = Calendar.getInstance().getTime();
 
-        HashSet<String> tabSet = new HashSet<String>(toTabs);
+        HashSet<String> tabSet = new HashSet<>(toTabs);
         List<String> activeTabs = this.getActive();
 
         boolean visible = false;
@@ -641,7 +636,7 @@ public class TabbyChat {
                 if (mc.currentScreen instanceof GuiChatTC) {
                     ((GuiChatTC) mc.currentScreen).addChannelLive(pm);
                 }
-            } else if (this.channelMap.containsKey(pmTab)) {
+            } else {
                 if (activeTabs.contains(pmTab))
                     visible = true;
                 this.addToChannel(pmTab, resultChatLine, visible);
@@ -655,9 +650,7 @@ public class TabbyChat {
                 visible = true;
         }
 
-        Iterator<String> tabIter = tabSet.iterator();
-        while (tabIter.hasNext()) {
-            String tab = tabIter.next();
+        for (String tab : tabSet) {
             this.addToChannel(tab, resultChatLine, visible);
         }
 
@@ -872,11 +865,11 @@ public class TabbyChat {
         OutputStream output = null;
         try {
             String data = gson.toJson(channelMap);
-            output = new GZIPOutputStream(new FileOutputStream(chanDataFile));
+            output = new GZIPOutputStream(Files.newOutputStream(chanDataFile.toPath()));
             IOUtils.write(data, output, Charsets.UTF_8);
         } catch (Exception e) {
             printErr("Unable to write channel data to file : '" + e.getLocalizedMessage() + "' : "
-                    + e.toString());
+                    + e);
         } finally {
             IOUtils.closeQuietly(output);
         }
@@ -898,7 +891,7 @@ public class TabbyChat {
     protected void updateDefaults() {
         if (!TabbyChat.generalSettings.tabbyChatEnable.getValue())
             return;
-        List<String> dList = new ArrayList<String>(serverSettings.defaultChanList);
+        List<String> dList = new ArrayList<>(serverSettings.defaultChanList);
         int ind;
         for (ChatChannel chan : this.channelMap.values()) {
             ind = dList.indexOf(chan.getTitle());
