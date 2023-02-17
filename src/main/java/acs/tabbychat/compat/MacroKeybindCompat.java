@@ -1,27 +1,25 @@
 package acs.tabbychat.compat;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
 import acs.tabbychat.api.IChatMouseExtension;
 import acs.tabbychat.api.IChatRenderExtension;
 import acs.tabbychat.api.IChatUpdateExtension;
 import acs.tabbychat.gui.context.ChatContextMenu;
 import acs.tabbychat.gui.context.ContextDummy;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
+
+import java.awt.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExtension,
         IChatRenderExtension {
     public static final ResourceLocation ICONS_MAIN = new ResourceLocation("macros",
-            "textures/gui/macrosGuiMain.png");
-
+                                                                           "textures/gui/macrosGuiMain.png");
+    public static boolean present = true;
     private static Object inChatLayout = null;
     private static Object inChatGUI = null;
     private static Object btnGui = null;
@@ -46,10 +44,29 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
     private static Field clickedControl;
     private static Field boundingBox;
     private static Field chatGuiHook;
-    public static boolean present = true;
     private static boolean hovered = false;
 
     private GuiScreen screen;
+
+    public static Object getControl() {
+        try {
+            return clickedControl.get(inChatGUI);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Object getChatHook() {
+        try {
+            return chatGuiHook.get(coreInstance.invoke(null, new Object[0]));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public void load() {
@@ -88,40 +105,40 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
 
                     // Constructors
                     Constructor<?> mkButtonConstructor = buttonClass
-                            .getDeclaredConstructor(new Class[] { Minecraft.class, int.class,
-                                    int.class, int.class });
-                    Constructor<?> guiConstructor = guiCustomGui.getConstructor(new Class[] {
-                            designableGuiLayout, GuiScreen.class });
-                    createDesignerScreen = guiDesigner.getDeclaredConstructor(new Class[] {
-                            String.class, GuiScreen.class, boolean.class });
-                    macroEdit = guiMacroEdit.getDeclaredConstructor(new Class[] { int.class,
-                            GuiScreen.class });
-                    macroDesign = guiDesigner.getDeclaredConstructor(new Class[] { String.class,
-                            GuiScreen.class, boolean.class });
+                            .getDeclaredConstructor(new Class[]{Minecraft.class, int.class,
+                                    int.class, int.class});
+                    Constructor<?> guiConstructor = guiCustomGui.getConstructor(new Class[]{
+                            designableGuiLayout, GuiScreen.class});
+                    createDesignerScreen = guiDesigner.getDeclaredConstructor(new Class[]{
+                            String.class, GuiScreen.class, boolean.class});
+                    macroEdit = guiMacroEdit.getDeclaredConstructor(new Class[]{int.class,
+                            GuiScreen.class});
+                    macroDesign = guiDesigner.getDeclaredConstructor(new Class[]{String.class,
+                            GuiScreen.class, boolean.class});
 
                     mkgetBoundLayout = layoutManager.getDeclaredMethod("getBoundLayout",
-                            new Class[] { String.class, boolean.class });
+                                                                       new Class[]{String.class, boolean.class});
                     layoutTick = designableGuiLayout.getDeclaredMethod("onTick", (Class[]) null);
-                    drawBtnGui = buttonClass.getDeclaredMethod("drawControlAt", new Class[] {
+                    drawBtnGui = buttonClass.getDeclaredMethod("drawControlAt", new Class[]{
                             Minecraft.class, int.class, int.class, int.class, int.class, int.class,
-                            int.class });
-                    drawDropDown = guiDropDownMenu.getDeclaredMethod("drawControlAt", new Class[] {
-                            int.class, int.class, int.class, int.class });
-                    draw = designableGuiLayout.getDeclaredMethod("draw", new Class[] {
-                            Rectangle.class, int.class, int.class });
-                    controlClicked = guiCustomGui.getDeclaredMethod("controlClicked", new Class[] {
-                            int.class, int.class, int.class });
+                            int.class});
+                    drawDropDown = guiDropDownMenu.getDeclaredMethod("drawControlAt", new Class[]{
+                            int.class, int.class, int.class, int.class});
+                    draw = designableGuiLayout.getDeclaredMethod("draw", new Class[]{
+                            Rectangle.class, int.class, int.class});
+                    controlClicked = guiCustomGui.getDeclaredMethod("controlClicked", new Class[]{
+                            int.class, int.class, int.class});
                     dropDownSize = guiDropDownMenu.getDeclaredMethod("getSize", (Class[]) null);
-                    mousePressed = guiDropDownMenu.getDeclaredMethod("mousePressed", new Class[] {
-                            int.class, int.class });
+                    mousePressed = guiDropDownMenu.getDeclaredMethod("mousePressed", new Class[]{
+                            int.class, int.class});
                     onControlClicked = guiCustomGui.getDeclaredMethod("onControlClicked",
-                            new Class[] { guiControl });
+                                                                      new Class[]{guiControl});
                     displayScreen = abstractionLayer.getDeclaredMethod("displayGuiScreen",
-                            new Class[] { GuiScreen.class });
-                    Method dropDownAdd = guiDropDownMenu.getDeclaredMethod("addItem", new Class[] {
-                            String.class, String.class, int.class, int.class });
+                                                                       new Class[]{GuiScreen.class});
+                    Method dropDownAdd = guiDropDownMenu.getDeclaredMethod("addItem", new Class[]{
+                            String.class, String.class, int.class, int.class});
                     Method getLocalisedString = localisationProvider.getDeclaredMethod(
-                            "getLocalisedString", new Class[] { String.class });
+                            "getLocalisedString", new Class[]{String.class});
                     coreInstance = macroModCore.getMethod("getInstance", new Class[0]);
                     controlClicked.setAccessible(true);
                     onControlClicked.setAccessible(true);
@@ -141,18 +158,18 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
                     chatGuiHook.setAccessible(true);
 
                     // Objects
-                    inChatLayout = mkgetBoundLayout.invoke(null, new Object[] { "inchat", false });
-                    btnGui = mkButtonConstructor.newInstance(new Object[] {
-                            Minecraft.getMinecraft(), 4, 104, 64 });
-                    inChatGUI = guiConstructor.newInstance(new Object[] { inChatLayout, null });
+                    inChatLayout = mkgetBoundLayout.invoke(null, new Object[]{"inchat", false});
+                    btnGui = mkButtonConstructor.newInstance(new Object[]{
+                            Minecraft.getMinecraft(), 4, 104, 64});
+                    inChatGUI = guiConstructor.newInstance(new Object[]{inChatLayout, null});
                     dropDownMenu = mkContextMenu.get(inChatGUI);
                     dropDownAdd.invoke(
                             dropDownMenu,
-                            new Object[] {
+                            new Object[]{
                                     "design",
                                     "\247e"
                                             + getLocalisedString.invoke(null,
-                                                    new Object[] { "tooltip.guiedit" }), 26, 16 });
+                                                                        new Object[]{"tooltip.guiedit"}), 26, 16});
 
                     // Add context menus in reverse order.
                     // ChatContextMenu.insertContextAtPos(0, new
@@ -161,17 +178,20 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
                     ChatContextMenu.insertContextAtPos(2, new MacrosContext(2));
                     ChatContextMenu.insertContextAtPos(3, new ContextDummy("-------"));
 
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     present = false;
                 }
-            } else {
+            }
+            else {
                 try {
                     Class<?> designableGuiLayout = Class
                             .forName("net.eq2online.macros.gui.designable.DesignableGuiLayout");
-                    Constructor<?> guiConstructor = guiCustomGui.getConstructor(new Class[] {
-                            designableGuiLayout, GuiScreen.class });
-                    inChatGUI = guiConstructor.newInstance(new Object[] { inChatLayout, null });
-                } catch (Exception e) {
+                    Constructor<?> guiConstructor = guiCustomGui.getConstructor(new Class[]{
+                            designableGuiLayout, GuiScreen.class});
+                    inChatGUI = guiConstructor.newInstance(new Object[]{inChatLayout, null});
+                }
+                catch (Exception e) {
                     present = false;
                 }
             }
@@ -185,11 +205,11 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
         try {
             boundingBox.set(inChatGUI, new Rectangle(0, 0, screen.width, screen.height - 14));
             clicked = ((Boolean) controlClicked
-                    .invoke(inChatGUI, new Object[] { par1, par2, par3 })).booleanValue();
+                    .invoke(inChatGUI, new Object[]{par1, par2, par3})).booleanValue();
             if (clicked && par3 == 1) {
                 dropDownVisible.set(dropDownMenu, true);
                 Dimension contextMenuSize = (Dimension) dropDownSize.invoke(dropDownMenu,
-                        (Object[]) null);
+                                                                            (Object[]) null);
                 menuLocation.set(
                         inChatGUI,
                         new Point(Math.min(par1, screen.width - contextMenuSize.width), Math.min(
@@ -199,11 +219,12 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
                 return true;
             if (hovered) {
                 GuiScreen designerScreen = (GuiScreen) createDesignerScreen
-                        .newInstance(new Object[] { "inchat", screen, true });
+                        .newInstance(new Object[]{"inchat", screen, true});
                 Minecraft.getMinecraft().displayGuiScreen(designerScreen);
                 return true;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             present = false;
         }
         return clicked;
@@ -232,7 +253,8 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
             draw.invoke(inChatLayout, args);
             Object isHovered = drawBtnGui.invoke(btnGui, args2);
             hovered = ((Boolean) isHovered).booleanValue();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             present = false;
         }
         return;
@@ -243,8 +265,9 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
         this.screen = screen;
         if (present) {
             try {
-                inChatLayout = mkgetBoundLayout.invoke(null, new Object[] { "inchat", false });
-            } catch (Exception e) {
+                inChatLayout = mkgetBoundLayout.invoke(null, new Object[]{"inchat", false});
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -263,7 +286,8 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
     }
 
     @Override
-    public void handleMouseInput() {}
+    public void handleMouseInput() {
+    }
 
     @Override
     public boolean actionPerformed(GuiButton button) {
@@ -273,24 +297,6 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
     @Override
     public void updateScreen() {
 
-    }
-
-    public static Object getControl() {
-        try {
-            return clickedControl.get(inChatGUI);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static Object getChatHook() {
-        try {
-            return chatGuiHook.get(coreInstance.invoke(null, new Object[0]));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
 }
