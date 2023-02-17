@@ -4,12 +4,17 @@ import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingSlider;
 import acs.tabbychat.settings.TCSettingTextBox;
+import acs.tabbychat.settings.files.TCSettingsAdvancedFile;
 import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.resources.I18n;
 
 import java.io.File;
 import java.util.Properties;
 
+/**
+ * UI handling for advanced settings
+ * Actual settings file handling happens in {@link TCSettingsAdvancedFile}
+ */
 public class TCSettingsAdvanced extends TCSettingsGUI {
     private static final int CHAT_SCROLL_HISTORY_ID = 9401;
     private static final int MAXLENGTH_CHANNEL_NAME_ID = 9402;
@@ -19,27 +24,34 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
     private static final int TEXT_IGNORE_OPACITY_ID = 9410;
     private static final int CONVERT_UNICODE_TEXT_ID = 9411;
 
-    {
-        this.propertyPrefix = "settings.advanced";
-    }
-
-    public TCSettingTextBox chatScrollHistory = new TCSettingTextBox("100", "chatScrollHistory",
-            this.propertyPrefix, CHAT_SCROLL_HISTORY_ID);
-    public TCSettingTextBox maxLengthChannelName = new TCSettingTextBox("10",
-            "maxLengthChannelName", this.propertyPrefix, MAXLENGTH_CHANNEL_NAME_ID);
-    public TCSettingTextBox multiChatDelay = new TCSettingTextBox("500", "multiChatDelay",
-            this.propertyPrefix, MULTICHAT_DELAY_ID);
-    public TCSettingSlider chatBoxUnfocHeight = new TCSettingSlider(50.0f, "chatBoxUnfocHeight",
-            this.propertyPrefix, CHATBOX_UNFOC_HEIGHT_ID, 20.0f, 100.0f);
-    public TCSettingSlider chatFadeTicks = new TCSettingSlider(200.0f, "chatFadeTicks",
-            this.propertyPrefix, CHAT_FADE_TICKS_ID, 10.0f, 2000.0f);
-    public TCSettingBool textIgnoreOpacity = new TCSettingBool(false, "textignoreopacity",
-            this.propertyPrefix, TEXT_IGNORE_OPACITY_ID);
-    public TCSettingBool convertUnicodeText = new TCSettingBool(false, "convertunicodetext",
-            this.propertyPrefix, CONVERT_UNICODE_TEXT_ID);
+    private final TCSettingsAdvancedFile settings = new TCSettingsAdvancedFile();
+    public TCSettingTextBox chatScrollHistory;
+    public TCSettingTextBox maxLengthChannelName;
+    public TCSettingTextBox multiChatDelay;
+    public TCSettingSlider chatBoxUnfocHeight;
+    public TCSettingSlider chatFadeTicks;
+    public TCSettingBool textIgnoreOpacity;
+    public TCSettingBool convertUnicodeText;
 
     public TCSettingsAdvanced(TabbyChat _tc) {
         super(_tc);
+        propertyPrefix = "settings.advanced";
+
+        chatScrollHistory = new TCSettingTextBox("100", "chatScrollHistory",
+                                                 propertyPrefix, CHAT_SCROLL_HISTORY_ID);
+        maxLengthChannelName = new TCSettingTextBox("10",
+                                                    "maxLengthChannelName", propertyPrefix, MAXLENGTH_CHANNEL_NAME_ID);
+        multiChatDelay = new TCSettingTextBox("500", "multiChatDelay",
+                                              propertyPrefix, MULTICHAT_DELAY_ID);
+        chatBoxUnfocHeight = new TCSettingSlider(50.0f, "chatBoxUnfocHeight",
+                                                 propertyPrefix, CHATBOX_UNFOC_HEIGHT_ID, 20.0f, 100.0f);
+        chatFadeTicks = new TCSettingSlider(200.0f, "chatFadeTicks",
+                                            propertyPrefix, CHAT_FADE_TICKS_ID, 10.0f, 2000.0f);
+
+        textIgnoreOpacity = new TCSettingBool(false, "textignoreopacity",
+                                              propertyPrefix, TEXT_IGNORE_OPACITY_ID);
+        convertUnicodeText = new TCSettingBool(false, "convertunicodetext",
+                                               propertyPrefix, CONVERT_UNICODE_TEXT_ID);
         this.name = I18n.format("settings.advanced.name");
         this.settingsFile = new File(tabbyChatDir, "advanced.cfg");
         this.bgcolor = 0x66802e94;
@@ -109,29 +121,50 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
 
     @Override
     public Properties loadSettingsFile() {
-        Properties result = super.loadSettingsFile();
-        ChatBox.current.x = TabbyChatUtils.parseInteger(result.getProperty("chatbox.x"),
-                ChatBox.absMinX, 10000, ChatBox.absMinX);
-        ChatBox.current.y = TabbyChatUtils.parseInteger(result.getProperty("chatbox.y"), -10000,
-                ChatBox.absMinY, ChatBox.absMinY);
-        ChatBox.current.width = TabbyChatUtils.parseInteger(result.getProperty("chatbox.width"),
-                ChatBox.absMinW, 10000, 320);
-        ChatBox.current.height = TabbyChatUtils.parseInteger(result.getProperty("chatbox.height"),
-                ChatBox.absMinH, 10000, 180);
-        ChatBox.anchoredTop = Boolean.parseBoolean(result.getProperty("chatbox.anchoredtop"));
-        ChatBox.pinned = Boolean.parseBoolean(result.getProperty("pinchatinterface"));
+        //Refreshes settings
+        settings.loadSettingsFile();
+
+        chatScrollHistory.setValue(Integer.toString(settings.chatScrollHistory));
+        maxLengthChannelName.setValue(Integer.toString(settings.maxLengthChannelName));
+        ChatBox.anchoredTop = settings.anchoredTop;
+        convertUnicodeText.setValue(settings.convertUnicodeText);
+        multiChatDelay.setValue(Integer.toString(settings.multiChatDelay));
+        ChatBox.current.height = TabbyChatUtils.parseInteger(String.valueOf(settings.chatBoxHeight),
+                                                             ChatBox.absMinH, 10000, 180);
+        chatBoxUnfocHeight.setValue(settings.chatBoxUnfocHeight);
+        ChatBox.current.y = TabbyChatUtils.parseInteger(String.valueOf(settings.chatBoxY), -10000,
+                                                        ChatBox.absMinY, ChatBox.absMinY);
+        ChatBox.current.x = TabbyChatUtils.parseInteger(String.valueOf(settings.chatBoxX),
+                                                        ChatBox.absMinX, 10000, ChatBox.absMinX);
+        textIgnoreOpacity.setValue(settings.textIgnoreOpacity);
+        ChatBox.current.width = TabbyChatUtils.parseInteger(String.valueOf(settings.chatBoxWidth),
+                                                            ChatBox.absMinW, 10000, 320);
+        chatFadeTicks.setValue(settings.chatFadeTicks);
+        ChatBox.pinned = settings.pinned;
         return null;
     }
 
     @Override
     public void saveSettingsFile() {
-        Properties settingsTable = new Properties();
-        settingsTable.put("chatbox.x", Integer.toString(ChatBox.current.x));
-        settingsTable.put("chatbox.y", Integer.toString(ChatBox.current.y));
-        settingsTable.put("chatbox.width", Integer.toString(ChatBox.current.width));
-        settingsTable.put("chatbox.height", Integer.toString(ChatBox.current.height));
-        settingsTable.put("chatbox.anchoredtop", Boolean.toString(ChatBox.anchoredTop));
-        settingsTable.put("pinchatinterface", Boolean.toString(ChatBox.pinned));
-        super.saveSettingsFile(settingsTable);
+        try {
+            settings.anchoredTop = ChatBox.anchoredTop;
+            settings.convertUnicodeText = convertUnicodeText.getValue();
+            settings.chatBoxHeight = ChatBox.current.height;
+            settings.chatBoxUnfocHeight = chatBoxUnfocHeight.getValue();
+            settings.chatBoxY = ChatBox.current.y;
+            settings.chatBoxX = ChatBox.current.x;
+            settings.textIgnoreOpacity = textIgnoreOpacity.getValue();
+            settings.chatBoxWidth = ChatBox.current.width;
+            settings.chatFadeTicks = chatFadeTicks.getValue();
+            settings.pinned = ChatBox.pinned;
+            //Save last to prevent information from getting lost if one of these values is invalid
+            settings.chatScrollHistory = Integer.parseInt(chatScrollHistory.getValue());
+            settings.maxLengthChannelName = Integer.parseInt(maxLengthChannelName.getValue());
+            settings.multiChatDelay = Integer.parseInt(multiChatDelay.getValue());
+        }
+        catch (NumberFormatException e) {
+            TabbyChatUtils.log.warn("Invalid format in advanced settings");
+        }
+        settings.saveSettingsFile();
     }
 }

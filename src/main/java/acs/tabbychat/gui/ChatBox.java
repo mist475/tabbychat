@@ -17,10 +17,10 @@ import java.util.LinkedHashMap;
 public class ChatBox {
     public static Rectangle current = new Rectangle(0, -36, 320, 180);
     public static Rectangle desired = new Rectangle(current);
-    protected static int absMinX = 0;
-    protected static int absMinY = -36;
-    protected static int absMinW = 200;
-    protected static int absMinH = 24;
+    public static int absMinX = 0;
+    public static int absMinY = -36;
+    public static int absMinW = 200;
+    public static int absMinH = 24;
     private static int tabHeight = 14;
     protected static int tabTrayHeight = 14;
     private static int chatHeight = 165;

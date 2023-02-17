@@ -1,35 +1,5 @@
 package acs.tabbychat.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.zip.GZIPOutputStream;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiSleepMP;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.util.StringUtils;
-
-import org.apache.commons.compress.compressors.gzip.GzipUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import acs.tabbychat.api.TCExtensionManager;
 import acs.tabbychat.compat.MacroKeybindCompat;
 import acs.tabbychat.core.ChatChannel;
@@ -50,8 +20,38 @@ import acs.tabbychat.settings.FormatCodeEnum;
 import acs.tabbychat.settings.NotificationSoundEnum;
 import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.threads.BackgroundChatThread;
-
 import com.google.common.collect.Lists;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiSleepMP;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.util.StringUtils;
+import org.apache.commons.compress.compressors.gzip.GzipUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Properties;
+import java.util.zip.GZIPOutputStream;
 
 public class TabbyChatUtils {
     private static Calendar logDay = Calendar.getInstance();
@@ -432,7 +432,7 @@ public class TabbyChatUtils {
 
     /**
      * Converts strings to unicode. Essentially replaces \\uabcd with \uabcd.
-     * 
+     *
      * @param chat
      * @return
      */
@@ -449,5 +449,30 @@ public class TabbyChatUtils {
                 newChat += s;
         }
         return newChat;
+    }
+
+    /**
+     * Saves the given properties into the provided file
+     *
+     * @param parentDirLogMessage success/ failure of parent dir creation
+     */
+    public static void saveProperties(Properties settingsTable, File settingsFile, Pair<String, String> parentDirLogMessage, String propertyPrefix) {
+        Logger log = TabbyChatUtils.log;
+        if (!settingsFile.getParentFile().exists()) {
+            if (settingsFile.getParentFile().mkdirs()) {
+                log.warn(parentDirLogMessage.getRight());
+            }
+            else {
+                log.info(parentDirLogMessage.getLeft());
+            }
+        }
+
+        try (FileOutputStream fOutStream = new FileOutputStream(settingsFile); BufferedOutputStream bOutStream = new BufferedOutputStream(fOutStream)) {
+            settingsTable.store(bOutStream, propertyPrefix);
+        }
+        catch (Exception e) {
+            TabbyChat.printException("Error while writing settings to file '" + settingsFile
+                                             + "'", e);
+        }
     }
 }
