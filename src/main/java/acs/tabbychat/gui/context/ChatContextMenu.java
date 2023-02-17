@@ -2,28 +2,25 @@ package acs.tabbychat.gui.context;
 
 import acs.tabbychat.core.GuiChatTC;
 import acs.tabbychat.gui.ChatBox;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.List;
 
 public class ChatContextMenu extends Gui {
 
-    private static List<ChatContext> registered = Lists.newArrayList();
-    private Minecraft mc = Minecraft.getMinecraft();
-    private ScaledResolution sr;
-    protected List<ChatContext> items;
+    private static final List<ChatContext> registered = Lists.newArrayList();
     public ChatContext parent;
     public GuiChatTC screen;
     public int xPos;
     public int yPos;
     public int width;
     public int height;
+    protected List<ChatContext> items;
+    private final Minecraft mc = Minecraft.getMinecraft();
 
     public ChatContextMenu(GuiChatTC chat, int x, int y) {
         this.items = registered;
@@ -39,8 +36,28 @@ public class ChatContextMenu extends Gui {
         setup(screen, x, y);
     }
 
+    public static void addContext(ChatContext item) {
+        registered.add(item);
+    }
+
+    public static void insertContextAtPos(int pos, ChatContext item) {
+        registered.add(pos, item);
+    }
+
+    public static void removeContext(ChatContext item) {
+        registered.remove(item);
+    }
+
+    public static void removeContext(int pos) {
+        registered.remove(pos);
+    }
+
+    public static List<ChatContext> getRegisteredMenus() {
+        return registered;
+    }
+
     private void setup(GuiChatTC chat, int x, int y) {
-        sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         this.xPos = x;
         this.yPos = y;
         this.width = 100;
@@ -102,10 +119,6 @@ public class ChatContextMenu extends Gui {
         item.onClicked();
     }
 
-    public static void addContext(ChatContext item) {
-        registered.add(item);
-    }
-
     public boolean isCursorOver(int x, int y) {
         boolean children = false;
         for (ChatContext cont : this.items) {
@@ -116,21 +129,5 @@ public class ChatContextMenu extends Gui {
                 break;
         }
         return (x > xPos && x < xPos + width && y > yPos && y < yPos + height) || children;
-    }
-
-    public static void insertContextAtPos(int pos, ChatContext item) {
-        registered.add(pos, item);
-    }
-
-    public static void removeContext(ChatContext item) {
-        registered.remove(item);
-    }
-
-    public static void removeContext(int pos) {
-        registered.remove(pos);
-    }
-
-    public static List<ChatContext> getRegisteredMenus() {
-        return registered;
     }
 }

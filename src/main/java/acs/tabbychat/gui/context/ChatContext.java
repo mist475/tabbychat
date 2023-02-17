@@ -5,7 +5,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -17,9 +16,9 @@ import java.util.List;
  */
 public abstract class ChatContext extends GuiButton {
 
-    ChatContextMenu menu;
     public ChatContextMenu children;
     protected boolean enabled;
+    ChatContextMenu menu;
 
     public ChatContext() {
         super(0, 0, 0, 100, 15, null);
@@ -36,23 +35,19 @@ public abstract class ChatContext extends GuiButton {
         if (!visible)
             return;
         Gui.drawRect(xPosition + 1, yPosition + 1, xPosition + width - 1, yPosition + height - 1,
-                getBackgroundColor(isHovered(x, y)));
+                     getBackgroundColor(isHovered(x, y)));
         drawBorders();
         if (getDisplayIcon() != null)
             drawIcon();
         this.drawString(mc.fontRenderer, this.displayString, xPosition + 18, yPosition + 4,
-                getStringColor());
+                        getStringColor());
         if (this.getChildren() != null) {
             // This has children.
             int length = mc.fontRenderer.getCharWidth('>');
             this.drawString(mc.fontRenderer, ">", xPosition + width - length, yPosition + 4,
-                    getStringColor());
+                            getStringColor());
             for (ChatContext chat : children.items) {
-                if (isHoveredWithChildren(x, y)) {
-                    chat.visible = true;
-                } else {
-                    chat.visible = false;
-                }
+                chat.visible = isHoveredWithChildren(x, y);
             }
             children.drawMenu(x, y);
         }
@@ -92,12 +87,12 @@ public abstract class ChatContext extends GuiButton {
         Gui.drawRect(xPosition, yPosition, xPosition + width, yPosition + 1, -0xffffff);
         Gui.drawRect(xPosition, yPosition, xPosition + 1, yPosition + height, -0xffffff);
         Gui.drawRect(xPosition, yPosition + height, xPosition + width, yPosition + height - 1,
-                -0xffffff);
+                     -0xffffff);
         Gui.drawRect(xPosition + width, yPosition, xPosition + width - 1, yPosition + height,
-                -0xffffff);
+                     -0xffffff);
 
         Gui.drawRect(xPosition + height, yPosition, xPosition + height + 1, yPosition + height,
-                -0xffffff);
+                     -0xffffff);
     }
 
     private int getStringColor() {
@@ -118,7 +113,8 @@ public abstract class ChatContext extends GuiButton {
         if (getChildren() == null) {
             this.onClicked();
             return true;
-        } else {
+        }
+        else {
             return children.mouseClicked(x, y);
         }
     }
@@ -144,12 +140,10 @@ public abstract class ChatContext extends GuiButton {
     public abstract List<ChatContext> getChildren();
 
     /**
-     * Checks if the clicked location is vaild to place this menu.
-     * 
-     * @param x
-     *            Mouse X position
-     * @param y
-     *            Mouse Y position
+     * Checks if the clicked location is valid to place this menu.
+     *
+     * @param x Mouse X position
+     * @param y Mouse Y position
      */
     public abstract boolean isPositionValid(int x, int y);
 
@@ -163,7 +157,7 @@ public abstract class ChatContext extends GuiButton {
         return this.menu;
     }
 
-    public static enum Behavior {
+    public enum Behavior {
         HIDE,
         GRAY;
     }

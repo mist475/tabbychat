@@ -1,10 +1,10 @@
 package acs.tabbychat.gui.context;
 
-import java.util.List;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.List;
 
 public class ContextCut extends ChatContext {
 

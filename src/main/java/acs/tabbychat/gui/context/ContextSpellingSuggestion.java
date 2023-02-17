@@ -1,9 +1,7 @@
 package acs.tabbychat.gui.context;
 
 import acs.tabbychat.core.TabbyChat;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
 
@@ -48,7 +46,7 @@ public class ContextSpellingSuggestion extends ChatContext {
         int start = text.getNthWordFromCursor(-1);
         int end = text.getNthWordFromCursor(1);
         String word = text.getText().substring(start, end);
-        if (word != null && !word.isEmpty()) {
+        if (!word.isEmpty()) {
             if (!TabbyChat.spellChecker.isSpelledCorrectly(word)) {
                 List<String> suggs = TabbyChat.spellChecker.getSuggestions(word, 0);
                 suggestions = objectToStringArray(suggs.toArray());
@@ -65,8 +63,9 @@ public class ContextSpellingSuggestion extends ChatContext {
 
     private String[] objectToStringArray(Object[] object) {
         String[] array = new String[object.length];
-        for (int i = 0; i < array.length; i++)
+        for (int i = 0; i < array.length; i++) {
             array[i] = object[i].toString();
+        }
         return array;
     }
 

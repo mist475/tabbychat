@@ -1,12 +1,12 @@
 package acs.tabbychat.gui.context;
 
-import java.util.List;
-
+import acs.tabbychat.core.GuiChatTC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
-import acs.tabbychat.core.GuiChatTC;
+
+import java.util.List;
 
 public class ContextCopy extends ChatContext {
 
