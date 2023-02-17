@@ -2,11 +2,9 @@ package acs.tabbychat.jazzy;
 
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.gui.ITCSettingsGUI;
-
 import com.swabunga.spell.event.SpellCheckEvent;
 import com.swabunga.spell.event.SpellChecker;
 import com.swabunga.spell.event.StringWordTokenizer;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -21,27 +19,32 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class TCSpellCheckManager {
     private static TCSpellCheckManager instance = null;
-
-    private TCSpellCheckListener listener;
-    private HashMap<Integer, String> errorCache = new HashMap<Integer, String>();
     private final ReentrantReadWriteLock errorLock = new ReentrantReadWriteLock();
     private final Lock errorReadLock = errorLock.readLock();
     private final Lock errorWriteLock = errorLock.writeLock();
+    private final HashMap<Integer, String> errorCache = new HashMap<>();
+    private TCSpellCheckListener listener;
     private String lastAttemptedLocale;
 
     private TCSpellCheckManager() {
         this.reloadDictionaries();
     }
 
+    public static TCSpellCheckManager getInstance() {
+        if (instance == null) {
+            instance = new TCSpellCheckManager();
+        }
+        return instance;
+    }
+
     /**
      * Add word to ignore list
-     * 
-     * @param word
      */
     public void addToIgnoredWords(String word) {
         if (!listener.spellCheck.isIgnored(word))
@@ -49,7 +52,7 @@ public class TCSpellCheckManager {
     }
 
     public void drawErrors(GuiScreen screen, List<GuiTextField> inputFields) {
-        List<String> inputCache = new ArrayList<String>();
+        List<String> inputCache = new ArrayList<>();
         int activeFields = 0;
         for (GuiTextField field : inputFields) {
             if (field.getVisible())
@@ -76,7 +79,7 @@ public class TCSpellCheckManager {
 
                 int y = screen.height - 4 - 12 * (activeFields - 1);
                 int x = 4;
-                int width = 0;
+                int width;
                 int wordIndex = error.getKey();
                 int errLength = error.getValue().length();
 
@@ -92,9 +95,9 @@ public class TCSpellCheckManager {
                 if (wordIndex + errLength > input.length()) {
                     // Misspelled word spans line break
                     x += Minecraft.getMinecraft().fontRenderer.getStringWidth(input.substring(0,
-                            wordIndex));
+                                                                                              wordIndex));
                     width = Minecraft.getMinecraft().fontRenderer.getStringWidth(input.substring(
-                            wordIndex, input.length()));
+                            wordIndex));
                     this.drawUnderline(screen, x, y, width);
 
                     if (inputs.hasPrevious()) {
@@ -107,28 +110,25 @@ public class TCSpellCheckManager {
                         y += 12;
                         x = 4;
                         width = Minecraft.getMinecraft().fontRenderer.getStringWidth(input
-                                .substring(0, remainder));
+                                                                                             .substring(0, remainder));
                     }
-                } else {
+                }
+                else {
                     x += Minecraft.getMinecraft().fontRenderer.getStringWidth(input.substring(0,
-                            wordIndex));
+                                                                                              wordIndex));
                     width = Minecraft.getMinecraft().fontRenderer.getStringWidth(error.getValue());
                 }
 
                 this.drawUnderline(screen, x, y, width);
             }
-        } finally {
+        }
+        finally {
             errorReadLock.unlock();
         }
     }
 
     /**
      * Marks word as misspelled
-     * 
-     * @param screen
-     * @param x
-     * @param y
-     * @param width
      */
     private void drawUnderline(GuiScreen screen, int x, int y, int width) {
         int next = x + 1;
@@ -138,34 +138,27 @@ public class TCSpellCheckManager {
         }
     }
 
-    public static TCSpellCheckManager getInstance() {
-        if (instance == null) {
-            instance = new TCSpellCheckManager();
-        }
-        return instance;
-    }
-
     protected void handleListenerEvent(SpellCheckEvent event) {
         errorWriteLock.lock();
         try {
             errorCache.put(event.getWordContextPosition(), event.getInvalidWord());
-        } finally {
+        }
+        finally {
             errorWriteLock.unlock();
         }
     }
 
     /**
      * Loads dictionary
-     * 
-     * @return
      */
     public boolean loadLocaleDictionary() {
         File localeDict = new File(ITCSettingsGUI.tabbyChatDir,
-                Minecraft.getMinecraft().gameSettings.language + ".dic");
+                                   Minecraft.getMinecraft().gameSettings.language + ".dic");
         if (localeDict.canRead()) {
             listener = new TCSpellCheckListener(localeDict);
             return true;
-        } else
+        }
+        else
             return false;
     }
 
@@ -182,13 +175,16 @@ public class TCSpellCheckManager {
                 while ((word = in.readLine()) != null) {
                     listener.spellCheck.ignoreAll(word);
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 TabbyChat.printException("Unable to load user dictionary for spell checking", e);
-            } finally {
+            }
+            finally {
                 try {
                     if (in != null)
                         in.close();
-                } catch (Exception ignored) {
+                }
+                catch (Exception ignored) {
                 }
             }
         }
@@ -205,24 +201,25 @@ public class TCSpellCheckManager {
     }
 
     public void update(List<GuiTextField> inputFields) {
-        if (lastAttemptedLocale != Minecraft.getMinecraft().gameSettings.language)
+        if (!Objects.equals(lastAttemptedLocale, Minecraft.getMinecraft().gameSettings.language))
             this.reloadDictionaries();
         // Clear stored error words and locations
         errorWriteLock.lock();
         try {
             errorCache.clear();
-        } finally {
+        }
+        finally {
             errorWriteLock.unlock();
         }
         // Clear and re-populate contents of input fields, initiate spell
         // checker
-        String inputCache = "";
+        StringBuilder inputCache = new StringBuilder();
         for (GuiTextField inputField : inputFields) {
             if (inputField.getVisible()) {
-                inputCache = inputField.getText() + inputCache;
+                inputCache.insert(0, inputField.getText());
             }
         }
-        listener.checkSpelling(inputCache);
+        listener.checkSpelling(inputCache.toString());
     }
 
     @SuppressWarnings("unchecked")

@@ -10,7 +10,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import net.minecraft.client.Minecraft;
 
-public class ClientProxy extends CommonProxy{
+public class ClientProxy extends CommonProxy {
     @Override
     public void load(FMLInitializationEvent event) {
         TabbyChatUtils.startup();

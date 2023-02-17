@@ -1,7 +1,6 @@
 package acs.tabbychat.jazzy;
 
 import acs.tabbychat.core.TabbyChat;
-
 import com.swabunga.spell.engine.SpellDictionary;
 import com.swabunga.spell.engine.SpellDictionaryHashMap;
 import com.swabunga.spell.event.SpellCheckEvent;
@@ -22,7 +21,8 @@ public class TCSpellCheckListener implements SpellCheckListener {
             SpellDictionary dictionary = new SpellDictionaryHashMap(new InputStreamReader(in));
             this.spellCheck = new SpellChecker(dictionary);
             this.spellCheck.addSpellCheckListener(this);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             TabbyChat.printException("", e);
         }
 
@@ -33,7 +33,8 @@ public class TCSpellCheckListener implements SpellCheckListener {
             SpellDictionary dictionary = new SpellDictionaryHashMap(dict);
             this.spellCheck = new SpellChecker(dictionary);
             this.spellCheck.addSpellCheckListener(this);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             TabbyChat.printException("Error instantiating spell checker", e);
         }
     }
