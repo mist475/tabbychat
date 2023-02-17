@@ -43,6 +43,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -50,18 +51,19 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.zip.GZIPOutputStream;
 
 public class TabbyChatUtils {
-    private static Calendar logDay = Calendar.getInstance();
-    private static File logDir = new File(new File(Minecraft.getMinecraft().mcDataDir, "logs"),
-            "TabbyChat");
-    private static SimpleDateFormat logNameFormat = new SimpleDateFormat("'_'yyyy-MM-dd'.log'");
     public final static String version = "GRADLETOKEN_VERSION";
     public final static String name = "GRADLETOKEN_MODNAME";
     public final static String modid = "GRADLETOKEN_MODID";
     public static Logger log = LogManager.getLogger(name);
+    private static Calendar logDay = Calendar.getInstance();
+    private static final File logDir = new File(new File(Minecraft.getMinecraft().mcDataDir, "logs"),
+                                                "TabbyChat");
+    private static final SimpleDateFormat logNameFormat = new SimpleDateFormat("'_'yyyy-MM-dd'.log'");
 
     public static void startup() {
         // check if forge is installed.
@@ -69,7 +71,8 @@ public class TabbyChatUtils {
             Class.forName("net.minecraftforge.common.MinecraftForge");
             TabbyChat.forgePresent = true;
             log.info("MinecraftForge detected.  Will check for client-commands.");
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
             TabbyChat.forgePresent = false;
         }
 
@@ -87,14 +90,15 @@ public class TabbyChatUtils {
     private static void compressLogs() {
         if (!logDir.exists())
             return;
-        Collection<File> logs = FileUtils.listFiles(logDir, new String[] { "txt", "log" }, true);
+        Collection<File> logs = FileUtils.listFiles(logDir, new String[]{"txt", "log"}, true);
         for (File file : logs) {
             String name = file.getName();
             if (name.contains(logNameFormat.format(logDay.getTime())))
                 continue; // This is today's log.
             try {
                 gzipFile(file);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -102,17 +106,13 @@ public class TabbyChatUtils {
 
     private static void gzipFile(File file) throws IOException {
         File dest = new File(file.getParentFile(), GzipUtils.getCompressedFilename(file.getName()));
-        FileOutputStream os = new FileOutputStream(dest);
-        try {
-            OutputStreamWriter writer = new OutputStreamWriter(new GZIPOutputStream(os), "UTF-8");
-            try {
+        try (FileOutputStream os = new FileOutputStream(dest)) {
+            try (OutputStreamWriter writer = new OutputStreamWriter(new GZIPOutputStream(os), StandardCharsets.UTF_8)) {
                 writer.write(FileUtils.readFileToString(file, "UTF-8"));
-            } finally {
-                writer.close();
+            }
+            finally {
                 file.delete();
             }
-        } finally {
-            os.close();
         }
     }
 
@@ -140,7 +140,8 @@ public class TabbyChatUtils {
                     ind++;
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             TabbyChat.printException("Unable to display chat interface", e);
         }
         if (screen instanceof GuiSleepMP)
@@ -157,7 +158,8 @@ public class TabbyChatUtils {
                 field.setAccessible(true);
                 try {
                     serverData = (ServerData) field.get(mc);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     TabbyChat.printException("Unable to find server information", e);
                 }
                 break;
@@ -178,19 +180,21 @@ public class TabbyChatUtils {
         String ip;
         if (Minecraft.getMinecraft().isSingleplayer()) {
             ip = "singleplayer";
-        } else if (getServerData() == null) {
+        }
+        else if (getServerData() == null) {
             ip = "unknown";
-        } else {
+        }
+        else {
             ip = getServerData().serverIP;
         }
         return ip;
     }
 
     /**
-     * Returns the directory the the configs are stored.
+     * Returns the directory where the configs are stored.
      */
     public static File getTabbyChatDir() {
-            return new File(new File(Minecraft.getMinecraft().mcDataDir, "config"), "tabbychat");
+        return new File(new File(Minecraft.getMinecraft().mcDataDir, "config"), "tabbychat");
     }
 
     @SuppressWarnings("unchecked")
@@ -208,16 +212,19 @@ public class TabbyChatUtils {
                         fields.setAccessible(true);
                         if (tmp == 0) {
                             _gnc.sentMessages = (List<String>) fields.get(_gnc);
-                        } else if (tmp == 1) {
+                        }
+                        else if (tmp == 1) {
                             _gnc.backupLines = (List<TCChatLine>) fields.get(_gnc);
-                        } else if (tmp == 2) {
+                        }
+                        else if (tmp == 2) {
                             _gnc.chatLines = (List<TCChatLine>) fields.get(_gnc);
                             break;
                         }
                         tmp++;
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 TabbyChat.printException("Error loading chat hook.", e);
             }
         }
@@ -237,16 +244,18 @@ public class TabbyChatUtils {
             theChannel = new ChatChannel("*");
         }
         // Set log file directory.
-        if (getServerIp() == "singleplayer") {
+        if (Objects.equals(getServerIp(), "singleplayer")) {
             IntegratedServer ms = Minecraft.getMinecraft().getIntegratedServer();
             fileDir = new File(new File(logDir, "singleplayer"), ms.getWorldName());
-        } else {
+        }
+        else {
             fileDir = new File(logDir, new IPResolver(getServerIp()).getSafeAddress());
         }
         if (!theChannel.getTitle().equals("*")) {
             fileDir = new File(fileDir, theChannel.getTitle());
             basename = theChannel.getTitle();
-        } else {
+        }
+        else {
             basename = "all";
         }
         // Set log file
@@ -261,20 +270,21 @@ public class TabbyChatUtils {
             try {
                 fileDir.mkdirs();
                 theChannel.getLogFile().createNewFile();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 TabbyChat.printErr("Cannot create log file : '" + e.getLocalizedMessage() + "' : "
-                        + e.toString());
+                                           + e);
                 return;
             }
         }
         // If all good, log it
         try {
             FileUtils.writeLines(theChannel.getLogFile(), "UTF-8",
-                    Lists.newArrayList(theChat.trim()), true);
-        } catch (IOException e) {
+                                 Lists.newArrayList(theChat.trim()), true);
+        }
+        catch (IOException e) {
             TabbyChat.printErr("Cannot write to log file : '" + e.getLocalizedMessage() + "' : "
-                    + e.toString());
-            return;
+                                       + e);
         }
     }
 
@@ -293,7 +303,8 @@ public class TabbyChatUtils {
         String input = _input.toString();
         try {
             return ColorCodeEnum.valueOf(input);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             return null;
         }
     }
@@ -304,7 +315,8 @@ public class TabbyChatUtils {
         String input = _input.toString();
         try {
             return ChannelDelimEnum.valueOf(input);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             return null;
         }
     }
@@ -315,18 +327,20 @@ public class TabbyChatUtils {
         String input = _input.toString();
         try {
             return FormatCodeEnum.valueOf(input);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             return null;
         }
     }
 
     public static Integer parseInteger(String _input, int min, int max, int fallback) {
-        Integer result;
+        int result;
         try {
             result = Integer.parseInt(_input);
             result = Math.max(min, result);
             result = Math.min(max, result);
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             result = fallback;
         }
         return result;
@@ -351,7 +365,8 @@ public class TabbyChatUtils {
         String input = _input.toString();
         try {
             return NotificationSoundEnum.valueOf(input);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             return NotificationSoundEnum.ORB;
         }
     }
@@ -369,7 +384,8 @@ public class TabbyChatUtils {
         String input = _input.toString();
         try {
             return TimeStampEnum.valueOf(input);
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             return null;
         }
     }
@@ -396,9 +412,9 @@ public class TabbyChatUtils {
         arrayCopy[_right] = tmp;
         // Create new map and populate
         int n = arrayCopy.length;
-        LinkedHashMap<String, ChatChannel> returnMap = new LinkedHashMap<String, ChatChannel>(n);
-        for (int i = 0; i < n; i++) {
-            returnMap.put(arrayCopy[i], currentMap.get(arrayCopy[i]));
+        LinkedHashMap<String, ChatChannel> returnMap = new LinkedHashMap<>(n);
+        for (String s : arrayCopy) {
+            returnMap.put(s, currentMap.get(s));
         }
         return returnMap;
     }
@@ -424,7 +440,8 @@ public class TabbyChatUtils {
                     sendProc = new BackgroundChatThread(tabPrefix + " " + toSend, tabPrefix);
                 else
                     sendProc = new BackgroundChatThread(toSend);
-            } else
+            }
+            else
                 sendProc = new BackgroundChatThread(toSend);
         }
         sendProc.start();
@@ -432,23 +449,22 @@ public class TabbyChatUtils {
 
     /**
      * Converts strings to unicode. Essentially replaces \\uabcd with \uabcd.
-     *
-     * @param chat
-     * @return
      */
     public static String convertUnicode(String chat) {
-        String newChat = "";
+        StringBuilder newChat = new StringBuilder();
         for (String s : chat.split("\\\u0000")) {
             if (s.contains("u")) {
                 try {
-                    newChat += StringEscapeUtils.unescapeJava(s);
-                } catch (IllegalArgumentException e) {
-                    newChat += s;
+                    newChat.append(StringEscapeUtils.unescapeJava(s));
                 }
-            } else
-                newChat += s;
+                catch (IllegalArgumentException e) {
+                    newChat.append(s);
+                }
+            }
+            else
+                newChat.append(s);
         }
-        return newChat;
+        return newChat.toString();
     }
 
     /**

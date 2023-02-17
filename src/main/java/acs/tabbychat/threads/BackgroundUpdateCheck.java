@@ -1,8 +1,8 @@
 package acs.tabbychat.threads;
 
-import net.minecraft.client.resources.I18n;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.util.TabbyChatUtils;
+import net.minecraft.client.resources.I18n;
 
 public class BackgroundUpdateCheck extends Thread {
 
@@ -27,19 +27,20 @@ public class BackgroundUpdateCheck extends Thread {
         int i;
         for (i = 0; i < newVersion.length; i++) {
             newVersion[i] = TabbyChatUtils.parseInteger(newVersionString[i], Integer.MIN_VALUE,
-                    Integer.MAX_VALUE, 0);
+                                                        Integer.MAX_VALUE, 0);
         }
 
         for (i = 0; i < version.length; i++) {
             version[i] = TabbyChatUtils.parseInteger(versionString[i], Integer.MIN_VALUE,
-                    Integer.MAX_VALUE, 0);
+                                                     Integer.MAX_VALUE, 0);
         }
 
         for (i = 0; i < Math.min(version.length, newVersion.length); i++) {
             if (version[i] < newVersion[i]) {
                 updateFound = true;
                 break;
-            } else if (version[i] > newVersion[i]) {
+            }
+            else if (version[i] > newVersion[i]) {
                 break;
             }
 
@@ -47,14 +48,13 @@ public class BackgroundUpdateCheck extends Thread {
 
         if (updateFound) {
             TabbyChatUtils.log.info("Update Found!");
-            StringBuilder updateReport = new StringBuilder("\u00A77");
-            updateReport.append(I18n.format("messages.update1") + ' ');
-            updateReport.append(current);
-            updateReport.append(I18n.format("messages.update2") + ' ');
-            updateReport.append(newest + ") ");
-            updateReport.append(I18n.format("messages.update3"));
-            updateReport.append("\u00A7r");
-            TabbyChat.printMessageToChat(updateReport.toString());
+            String updateReport = "\u00A77" + I18n.format("messages.update1") + ' ' +
+                    current +
+                    I18n.format("messages.update2") + ' ' +
+                    newest + ") " +
+                    I18n.format("messages.update3") +
+                    "\u00A7r";
+            TabbyChat.printMessageToChat(updateReport);
         }
     }
 }

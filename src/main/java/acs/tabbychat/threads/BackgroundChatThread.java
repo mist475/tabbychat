@@ -33,14 +33,16 @@ public class BackgroundChatThread extends Thread {
             this.sendChat = this.sendChat.substring(this.knownPrefix.length()).trim();
             toSplit = this.sendChat.split(" ");
             start = 0;
-        } else {
+        }
+        else {
             toSplit = this.sendChat.split(" ");
             start = 0;
             if (toSplit.length > 0 && toSplit[0].startsWith("/")) {
                 if (toSplit[0].startsWith("/msg")) {
                     cmdPrefix = toSplit[0] + " " + toSplit[1] + " ";
                     start = 2;
-                } else if (!toSplit[0].trim().equals("/")) {
+                }
+                else if (!toSplit[0].trim().equals("/")) {
                     cmdPrefix = toSplit[0] + " ";
                     start = 1;
                 }
@@ -53,22 +55,23 @@ public class BackgroundChatThread extends Thread {
                 mc.thePlayer.sendChatMessage(cmdPrefix + sendPart.toString().trim());
                 try {
                     Thread.sleep(Integer.parseInt(TabbyChat.advancedSettings.multiChatDelay
-                            .getValue()));
-                } catch (InterruptedException e) {
+                                                          .getValue()));
+                }
+                catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 sendPart = new StringBuilder(119);
                 if (toSplit[word].startsWith("/"))
                     sendPart.append("_");
             }
-            sendPart.append(toSplit[word] + " ");
+            sendPart.append(toSplit[word]).append(" ");
         }
         if (sendPart.length() > 0 || cmdPrefix.length() > 0) {
             String message = cmdPrefix + sendPart.toString().trim();
             message = ChatAllowedCharacters.filerAllowedCharacters(message);
 
             // Check for client commands.
-            // Use reflection so we don't have to import Forge.
+            // Use reflection, so we don't have to import Forge.
             if (TabbyChat.forgePresent) {
                 try {
                     Class<?> clntCmdHndlr = Class
@@ -76,16 +79,18 @@ public class BackgroundChatThread extends Thread {
                     Method exeCmd;
                     try {
                         exeCmd = clntCmdHndlr.getMethod("func_71556_a", ICommandSender.class,
-                                String.class);
-                    } catch (NoSuchMethodException e) {
+                                                        String.class);
+                    }
+                    catch (NoSuchMethodException e) {
                         exeCmd = clntCmdHndlr.getMethod("executeCommand", ICommandSender.class,
-                                String.class);
+                                                        String.class);
                     }
                     Object instance = clntCmdHndlr.getField("instance").get(null);
                     int value = (Integer) exeCmd.invoke(instance, mc.thePlayer, message);
                     if (value == 1)
                         return;
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     TabbyChatUtils.log
                             .warn("Oops, something went wrong while checking the message for Client Commands");
                     e.printStackTrace();

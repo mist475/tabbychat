@@ -1,35 +1,29 @@
 package acs.tabbychat.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import acs.tabbychat.core.TCChatLine;
+import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import acs.tabbychat.core.TCChatLine;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A library for modifying Chat Components.
- * 
+ *
  * @author Matthew Messinger
  */
 public class ChatComponentUtils {
 
-    private static FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+    private static final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 
     /**
      * Replaces all instances of the given word.
-     * 
-     * @param chat
-     * @param regex
-     * @param replacement
-     * @return
      */
     @SuppressWarnings("unchecked")
     public static IChatComponent replaceText(IChatComponent chat, String regex, String replacement) {
@@ -37,7 +31,7 @@ public class ChatComponentUtils {
         IChatComponent newChat = new ChatComponentText("");
         for (IChatComponent next : iter) {
             IChatComponent comp = new ChatComponentText(next.getUnformattedText().replaceAll(regex,
-                    replacement));
+                                                                                             replacement));
             comp.setChatStyle(next.getChatStyle().createShallowCopy());
             newChat.appendSibling(comp);
         }
@@ -67,12 +61,8 @@ public class ChatComponentUtils {
     }
 
     /**
-     * Splits a ChatComponent into multiple lines so it will fit within a width.
+     * Splits a ChatComponent into multiple lines, so it will fit within a width.
      * Adapted from Minecraft 1.8's GuiUtilRenderComponents
-     *
-     * @param chat
-     * @param limit
-     * @return
      */
     @SuppressWarnings("unchecked")
     public static List<IChatComponent> split(IChatComponent chat, int limit) {
@@ -122,14 +112,15 @@ public class ChatComponentUtils {
                         s2 = s4.substring(0, i1);
                         ++i1; // first boolean
                         s3 = s4.substring(i1);
-                    } else if (j > 0 && !s4.contains(" ")) {
+                    }
+                    else if (j > 0 && !s4.contains(" ")) {
                         s2 = "";
                         s3 = s4;
                     }
 
                     ChatComponentText chatcomponenttext3 = new ChatComponentText(s3);
                     chatcomponenttext3.setChatStyle(ichatcomponent1.getChatStyle()
-                            .createShallowCopy());
+                                                            .createShallowCopy());
                     arraylist1.add(k + 1, chatcomponenttext3);
                 }
 
@@ -142,7 +133,8 @@ public class ChatComponentUtils {
             if (j + j1 <= limit) {
                 j += j1;
                 chatcomponenttext.appendSibling(chatcomponenttext2);
-            } else {
+            }
+            else {
                 flag2 = true;
             }
 
@@ -159,9 +151,6 @@ public class ChatComponentUtils {
 
     /**
      * Convert legacy formatting
-     * 
-     * @param chat
-     * @return
      */
     public static IChatComponent formattedStringToChat(String chat) {
 
@@ -191,7 +180,8 @@ public class ChatComponentUtils {
                     chat1.getChatStyle().setObfuscated(false);
                     chat1.getChatStyle().setStrikethrough(false);
                     chat1.getChatStyle().setUnderlined(false);
-                } else {
+                }
+                else {
                     chat1.setChatStyle(last.getChatStyle().createDeepCopy());
                 }
                 if (format.isColor())
@@ -209,7 +199,8 @@ public class ChatComponentUtils {
 
                 newChat.appendSibling(chat1);
 
-            } else {
+            }
+            else {
                 last.appendText("\u00a7" + part);
             }
 
@@ -223,9 +214,7 @@ public class ChatComponentUtils {
 
         int pos = 0;
         boolean found = false;
-        Iterator<IChatComponent> iter = chat.iterator();
-        while (iter.hasNext()) {
-            IChatComponent ichat = iter.next();
+        for (IChatComponent ichat : (Iterable<IChatComponent>) chat) {
             if (!ichat.getSiblings().isEmpty()) {
                 continue;
             }
@@ -263,7 +252,8 @@ public class ChatComponentUtils {
                 local.getChatStyle().setParentStyle(chat.getChatStyle().createDeepCopy());
                 result.appendSibling(local);
                 break;
-            } else {
+            }
+            else {
                 result.appendSibling(ichat);
             }
             pos += text.length();

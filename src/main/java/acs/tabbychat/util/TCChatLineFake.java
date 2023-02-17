@@ -1,10 +1,9 @@
 package acs.tabbychat.util;
 
+import com.google.gson.annotations.Expose;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
-
-import com.google.gson.annotations.Expose;
 
 public class TCChatLineFake extends ChatLine {
     protected int updateCounterCreated = -1;

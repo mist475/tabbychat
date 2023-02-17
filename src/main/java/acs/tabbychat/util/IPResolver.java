@@ -11,36 +11,30 @@ public class IPResolver {
         ipaddress = ipaddress.trim();
         EnumConnection type = getType(ipaddress);
         switch (type) {
-        case DOMAIN:
-        case IPv4:
-            if (ipaddress.contains(":")) {
-                this.host = ipaddress.substring(0, ipaddress.lastIndexOf(':'));
-                this.port = Integer.parseInt(ipaddress.substring(ipaddress.lastIndexOf(':') + 1));
-            } else {
-                this.host = ipaddress;
-                this.port = 25565;
-            }
-            break;
-        case IPv6:
-            if (ipaddress.startsWith("[") && ipaddress.contains("]:")) {
-                this.host = ipaddress.substring(0, ipaddress.lastIndexOf(':'));
-                this.port = Integer.parseInt(ipaddress.substring(ipaddress.lastIndexOf(':') + 1));
-            } else {
-                this.host = ipaddress;
-                this.port = 25565;
-            }
-            break;
+            case DOMAIN:
+            case IPv4:
+                if (ipaddress.contains(":")) {
+                    this.host = ipaddress.substring(0, ipaddress.lastIndexOf(':'));
+                    this.port = Integer.parseInt(ipaddress.substring(ipaddress.lastIndexOf(':') + 1));
+                }
+                else {
+                    this.host = ipaddress;
+                    this.port = 25565;
+                }
+                break;
+            case IPv6:
+                if (ipaddress.startsWith("[") && ipaddress.contains("]:")) {
+                    this.host = ipaddress.substring(0, ipaddress.lastIndexOf(':'));
+                    this.port = Integer.parseInt(ipaddress.substring(ipaddress.lastIndexOf(':') + 1));
+                }
+                else {
+                    this.host = ipaddress;
+                    this.port = 25565;
+                }
+                break;
         }
         if (this.host.isEmpty())
             this.host = "localhost";
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
     }
 
     private static EnumConnection getType(String ipaddress) {
@@ -50,6 +44,14 @@ public class IPResolver {
         if (NetUtil.isValidIpV6Address(ipaddress))
             return EnumConnection.IPv6;
         return EnumConnection.DOMAIN;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
     }
 
     public boolean hasPort() {

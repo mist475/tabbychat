@@ -1,14 +1,13 @@
 package acs.tabbychat.util;
 
-import java.util.List;
-
 import acs.tabbychat.api.IChatExtension;
-
 import com.google.common.collect.Lists;
+
+import java.util.List;
 
 public class ChatExtensions {
 
-    private List<IChatExtension> list = Lists.newArrayList();
+    private final List<IChatExtension> list = Lists.newArrayList();
 
     public ChatExtensions(List<Class<? extends IChatExtension>> list) {
         for (Class<? extends IChatExtension> ext : list) {
@@ -16,7 +15,8 @@ public class ChatExtensions {
                 IChatExtension exten = ext.newInstance();
                 exten.load();
                 this.list.add(exten);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 TabbyChatUtils.log.error("Unable to initialize " + ext.getName(), e);
             }
         }
@@ -25,9 +25,10 @@ public class ChatExtensions {
     @SuppressWarnings("unchecked")
     public <T extends IChatExtension> List<T> getListOf(Class<T> extClass) {
         List<T> t = Lists.newArrayList();
-        for (IChatExtension ext : list)
+        for (IChatExtension ext : list) {
             if (extClass.isInstance(ext))
                 t.add((T) ext);
+        }
         return t;
     }
 
