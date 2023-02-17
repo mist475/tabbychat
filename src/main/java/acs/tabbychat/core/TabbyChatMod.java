@@ -12,6 +12,7 @@ public class TabbyChatMod {
 
     @SidedProxy(serverSide = "acs.tabbychat.proxy.ServerProxy", clientSide = "acs.tabbychat.proxy.ClientProxy")
     public static CommonProxy proxy;
+
     @EventHandler
     public void load(FMLInitializationEvent event) {
         proxy.load(event);

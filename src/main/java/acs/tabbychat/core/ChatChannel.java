@@ -1,43 +1,30 @@
 package acs.tabbychat.core;
 
+import acs.tabbychat.gui.ChatBox;
+import acs.tabbychat.gui.ChatButton;
+import acs.tabbychat.util.ChatComponentUtils;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.gson.annotations.Expose;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
+import org.lwjgl.opengl.GL11;
+
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-
-import org.lwjgl.opengl.GL11;
-
-import acs.tabbychat.gui.ChatBox;
-import acs.tabbychat.gui.ChatButton;
-import acs.tabbychat.util.ChatComponentUtils;
-
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
-import com.google.gson.annotations.Expose;
-
 public class ChatChannel {
     protected static int nextID = 3600;
-    public ChatButton tab;
     private final ReentrantReadWriteLock chatListLock = new ReentrantReadWriteLock(true);
     private final Lock chatReadLock = this.chatListLock.readLock();
     private final Lock chatWriteLock = this.chatListLock.writeLock();
+    public ChatButton tab;
     public boolean unread = false;
-    protected boolean hasSpam = false;
-    protected int spamCount = 1;
-    private File logFile;
-    @Expose
-    protected int chanID = nextID + 1;
-    @Expose
-    private String title;
-    @Expose
-    private String alias;
     @Expose
     public boolean active = false;
     @Expose
@@ -46,25 +33,27 @@ public class ChatChannel {
     public boolean hidePrefix = false;
     @Expose
     public String cmdPrefix = "";
+    protected boolean hasSpam = false;
+    protected int spamCount = 1;
+    @Expose
+    protected int chanID = nextID + 1;
+    private File logFile;
+    @Expose
+    private String title;
+    @Expose
+    private String alias;
     @Expose
     private ArrayList<TCChatLine> chatLog;
-
-    // Caches the split chat. Has a short expiration so we update when we need
-    // to. If problems persist, increase expiration.
-    private Supplier<List<TCChatLine>> supplier = Suppliers.memoizeWithExpiration(
-            new Supplier<List<TCChatLine>>() {
-                @Override
-                public List<TCChatLine> get() {
-                    return ChatChannel.this.getSplitChat(true);
-                }
-            }, 50, TimeUnit.MILLISECONDS);
 
     public ChatChannel() {
         this.chanID = nextID;
         nextID++;
-        this.chatLog = new ArrayList<TCChatLine>();
+        this.chatLog = new ArrayList<>();
         this.notificationsOn = TabbyChat.generalSettings.unreadFlashing.getValue();
-    }
+    }    // Caches the split chat. Has a short expiration so we update when we need
+    // to. If problems persist, increase expiration.
+    private final Supplier<List<TCChatLine>> supplier = Suppliers.memoizeWithExpiration(
+            () -> ChatChannel.this.getSplitChat(true), 50, TimeUnit.MILLISECONDS);
 
     public ChatChannel(int _x, int _y, int _w, int _h, String _title) {
         this();
@@ -77,19 +66,18 @@ public class ChatChannel {
 
     /**
      * Constructor to create new channel with title "_title"
-     * 
-     * @param _title
      */
     public ChatChannel(String _title) {
         this(3, 3, Minecraft.getMinecraft().fontRenderer.getStringWidth("<" + _title + ">") + 8,
-                14, _title);
+             14, _title);
     }
 
     public void addChat(TCChatLine newChat, boolean visible) {
         this.chatWriteLock.lock();
         try {
             this.chatLog.add(0, newChat);
-        } finally {
+        }
+        finally {
             this.chatWriteLock.unlock();
         }
         if (!this.title.equals("*") && this.notificationsOn && !visible)
@@ -99,14 +87,9 @@ public class ChatChannel {
     public void deleteChatLines(int id) {
         this.chatReadLock.lock();
         try {
-            Iterator<TCChatLine> iter = this.chatLog.iterator();
-            while (iter.hasNext()) {
-                TCChatLine line = iter.next();
-                if (line.getChatLineID() == id) {
-                    iter.remove();
-                }
-            }
-        } finally {
+            this.chatLog.removeIf(line -> line.getChatLineID() == id);
+        }
+        finally {
             this.chatReadLock.unlock();
         }
     }
@@ -119,17 +102,26 @@ public class ChatChannel {
         return this.alias;
     }
 
+    /**
+     * Sets alias
+     */
+    public void setAlias(String _alias) {
+        this.alias = _alias;
+        this.tab.width(TabbyChat.mc.fontRenderer.getStringWidth(_alias + "<>") + 8);
+    }
+
     public int getButtonEnd() {
         return this.tab.x() + this.tab.width();
     }
 
     public TCChatLine getChatLine(int index) {
-        TCChatLine retVal = null;
+        TCChatLine retVal;
         this.chatReadLock.lock();
         List<TCChatLine> lines = getSplitChat(false);
         try {
             retVal = lines.get(index);
-        } finally {
+        }
+        finally {
             this.chatReadLock.unlock();
         }
         return retVal;
@@ -137,15 +129,14 @@ public class ChatChannel {
 
     /**
      * Returns the size of the log
-     * 
-     * @return
      */
     public int getChatLogSize() {
-        int mySize = 0;
+        int mySize;
         this.chatReadLock.lock();
         try {
             mySize = getSplitChat(false).size();
-        } finally {
+        }
+        finally {
             this.chatReadLock.unlock();
         }
         return mySize;
@@ -164,8 +155,6 @@ public class ChatChannel {
 
     /**
      * Returns display title
-     * 
-     * @return
      */
     public String getDisplayTitle() {
         if (this.active)
@@ -178,8 +167,6 @@ public class ChatChannel {
 
     /**
      * Returns title
-     * 
-     * @return
      */
     public String getTitle() {
         return this.title;
@@ -187,8 +174,6 @@ public class ChatChannel {
 
     /**
      * Returns the log file for the channel
-     * 
-     * @return
      */
     public File getLogFile() {
         return this.logFile;
@@ -196,8 +181,6 @@ public class ChatChannel {
 
     /**
      * Sets the log file for the channel.
-     * 
-     * @param file
      */
     public void setLogFile(File file) {
         logFile = file;
@@ -205,22 +188,10 @@ public class ChatChannel {
 
     /**
      * Sets the button type
-     * 
-     * @param btnObj
      */
     public void setButtonObj(ChatButton btnObj) {
         this.tab = btnObj;
         this.tab.channel = this;
-    }
-
-    /**
-     * Sets alias
-     * 
-     * @param _alias
-     */
-    public void setAlias(String _alias) {
-        this.alias = _alias;
-        this.tab.width(TabbyChat.mc.fontRenderer.getStringWidth(_alias + "<>") + 8);
     }
 
     @Override
@@ -235,7 +206,8 @@ public class ChatChannel {
         this.chatWriteLock.lock();
         try {
             this.chatLog.clear();
-        } finally {
+        }
+        finally {
             this.chatWriteLock.unlock();
         }
         this.tab = null;
@@ -243,9 +215,6 @@ public class ChatChannel {
 
     /**
      * Sets button location
-     * 
-     * @param _x
-     * @param _y
      */
     public void setButtonLoc(int _x, int _y) {
         this.tab.x(_x);
@@ -254,9 +223,6 @@ public class ChatChannel {
 
     /**
      * Logs to chat
-     * 
-     * @param ind
-     * @param newLine
      */
     protected void setChatLogLine(int ind, TCChatLine newLine) {
         this.chatWriteLock.lock();
@@ -265,7 +231,8 @@ public class ChatChannel {
                 this.chatLog.set(ind, newLine);
             else
                 this.chatLog.add(newLine);
-        } finally {
+        }
+        finally {
             this.chatWriteLock.unlock();
         }
         GuiNewChatTC.getInstance().refreshChat();
@@ -277,7 +244,8 @@ public class ChatChannel {
             if (pos < this.chatLog.size() && pos >= 0) {
                 this.chatLog.remove(pos);
             }
-        } finally {
+        }
+        finally {
             this.chatWriteLock.unlock();
         }
         GuiNewChatTC.getInstance().refreshChat();
@@ -291,41 +259,37 @@ public class ChatChannel {
         if (tc == null || tc.serverDataLock.availablePermits() < 1)
             return;
         int maxChats = tc.enabled() ? Integer.parseInt(TabbyChat.advancedSettings.chatScrollHistory
-                .getValue()) : 100;
+                                                               .getValue()) : 100;
         this.chatWriteLock.lock();
         try {
             while (this.chatLog.size() > maxChats) {
                 this.chatLog.remove(this.chatLog.size() - 1);
             }
-        } finally {
+        }
+        finally {
             this.chatWriteLock.unlock();
         }
     }
 
     /**
      * Notify the user of unread chat messages.
-     * 
-     * @param _gui
-     * @param _opacity
      */
     public void unreadNotify(Gui _gui, int _opacity) {
         Minecraft mc = Minecraft.getMinecraft();
         GuiNewChatTC gnc = GuiNewChatTC.getInstance();
         int tabY = this.tab.y() - gnc.sr.getScaledHeight() - ChatBox.current.y;
         tabY = ChatBox.anchoredTop ? tabY - ChatBox.getChatHeight() + ChatBox.getUnfocusedHeight()
-                : tabY + ChatBox.getChatHeight() - ChatBox.getUnfocusedHeight() + 1;
+                                   : tabY + ChatBox.getChatHeight() - ChatBox.getUnfocusedHeight() + 1;
 
         Gui.drawRect(this.tab.x(), tabY, this.tab.x() + this.tab.width(), tabY + this.tab.height(),
-                0x720000 + (_opacity / 2 << 24));
+                     0x720000 + (_opacity / 2 << 24));
         GL11.glEnable(GL11.GL_BLEND);
         mc.ingameGUI.getChatGUI().drawCenteredString(mc.fontRenderer, this.getDisplayTitle(),
-                this.tab.x() + this.tab.width() / 2, tabY + 4, 16711680 + (_opacity << 24));
+                                                     this.tab.x() + this.tab.width() / 2, tabY + 4, 16711680 + (_opacity << 24));
     }
 
     /**
      * Imports old channels
-     * 
-     * @param oldChan
      */
     protected void importOldChat(ChatChannel oldChan) {
         if (oldChan == null || oldChan.chatLog.isEmpty())
@@ -337,9 +301,12 @@ public class ChatChannel {
                     continue;
                 this.chatLog.add(oldChat);
             }
-        } finally {
+        }
+        finally {
             this.chatWriteLock.unlock();
         }
         this.trimLog();
     }
+
+
 }

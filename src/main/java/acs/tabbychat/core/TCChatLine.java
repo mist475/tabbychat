@@ -1,19 +1,18 @@
 package acs.tabbychat.core;
 
-import java.util.Date;
-
+import acs.tabbychat.util.TCChatLineFake;
+import com.google.gson.annotations.Expose;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
-import acs.tabbychat.util.TCChatLineFake;
 
-import com.google.gson.annotations.Expose;
+import java.util.Date;
 
 public class TCChatLine extends TCChatLineFake {
     @Expose
-    protected boolean statusMsg = false;
-    @Expose
     public Date timeStamp;
+    @Expose
+    protected boolean statusMsg = false;
 
     public TCChatLine(int _counter, IChatComponent _string, int _id) {
         super(_counter, _string, _id);
