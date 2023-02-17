@@ -10,20 +10,12 @@ import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-
 import org.lwjgl.input.Keyboard;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 public class ChatChannelGUI extends GuiScreen {
-    protected ChatChannel channel;
-    public final int displayWidth = 255;
-    public final int displayHeight = 120;
-    private String title;
-    private int position;
-    private TabbyChat tc;
-
     private static final int SAVE_ID = 8981;
     private static final int CANCEL_ID = 8982;
     private static final int NOTIFICATIONS_ON_ID = 8983;
@@ -32,14 +24,19 @@ public class ChatChannelGUI extends GuiScreen {
     private static final int PREV_ID = 8986;
     private static final int NEXT_ID = 8987;
     private static final int HIDE_PREFIX = 8988;
-
-    private TCSettingBool hidePrefix = new TCSettingBool(false, "hidePrefix", "settings.channel",
-            HIDE_PREFIX);
-    private TCSettingBool notificationsOn = new TCSettingBool(false, "notificationsOn",
-            "settings.channel", NOTIFICATIONS_ON_ID);
-    private TCSettingTextBox alias = new TCSettingTextBox("", "alias", "settings.channel", ALIAS_ID);
-    private TCSettingTextBox cmdPrefix = new TCSettingTextBox("", "cmdPrefix", "settings.channel",
-            CMD_PREFIX_ID);
+    public final int displayWidth = 255;
+    public final int displayHeight = 120;
+    private final String title;
+    private final TabbyChat tc;
+    private final TCSettingBool hidePrefix = new TCSettingBool(false, "hidePrefix", "settings.channel",
+                                                               HIDE_PREFIX);
+    private final TCSettingBool notificationsOn = new TCSettingBool(false, "notificationsOn",
+                                                                    "settings.channel", NOTIFICATIONS_ON_ID);
+    private final TCSettingTextBox alias = new TCSettingTextBox("", "alias", "settings.channel", ALIAS_ID);
+    private final TCSettingTextBox cmdPrefix = new TCSettingTextBox("", "cmdPrefix", "settings.channel",
+                                                                    CMD_PREFIX_ID);
+    protected ChatChannel channel;
+    private int position;
 
     public ChatChannelGUI(ChatChannel _c) {
         this.tc = GuiNewChatTC.tc;
@@ -57,38 +54,38 @@ public class ChatChannelGUI extends GuiScreen {
     @Override
     public void actionPerformed(GuiButton _button) {
         switch (_button.id) {
-        case SAVE_ID:
-            this.channel.notificationsOn = this.notificationsOn.getTempValue();
-            this.channel.setAlias(this.alias.getTempValue().trim());
-            this.channel.cmdPrefix = this.cmdPrefix.getTempValue().trim();
-            this.channel.hidePrefix = this.hidePrefix.getTempValue();
-            this.tc.storeChannelData();
-        case CANCEL_ID:
-            mc.displayGuiScreen((GuiScreen) null);
-            break;
-        case NOTIFICATIONS_ON_ID:
-            this.notificationsOn.actionPerformed();
-            break;
-        case PREV_ID:
-            if (this.position <= 2)
-                return;
-            LinkedHashMap<String, ChatChannel> newMap = TabbyChatUtils.swapChannels(
-                    this.tc.channelMap, this.position - 2, this.position - 1);
-            this.tc.channelMap.clear();
-            this.tc.channelMap = newMap;
-            this.position--;
-            break;
-        case NEXT_ID:
-            if (this.position >= this.tc.channelMap.size())
-                return;
-            LinkedHashMap<String, ChatChannel> newMap2 = TabbyChatUtils.swapChannels(
-                    this.tc.channelMap, this.position - 1, this.position);
-            this.tc.channelMap.clear();
-            this.tc.channelMap = newMap2;
-            this.position++;
-            break;
-        case HIDE_PREFIX:
-            this.hidePrefix.actionPerformed();
+            case SAVE_ID:
+                this.channel.notificationsOn = this.notificationsOn.getTempValue();
+                this.channel.setAlias(this.alias.getTempValue().trim());
+                this.channel.cmdPrefix = this.cmdPrefix.getTempValue().trim();
+                this.channel.hidePrefix = this.hidePrefix.getTempValue();
+                this.tc.storeChannelData();
+            case CANCEL_ID:
+                mc.displayGuiScreen((GuiScreen) null);
+                break;
+            case NOTIFICATIONS_ON_ID:
+                this.notificationsOn.actionPerformed();
+                break;
+            case PREV_ID:
+                if (this.position <= 2)
+                    return;
+                LinkedHashMap<String, ChatChannel> newMap = TabbyChatUtils.swapChannels(
+                        this.tc.channelMap, this.position - 2, this.position - 1);
+                this.tc.channelMap.clear();
+                this.tc.channelMap = newMap;
+                this.position--;
+                break;
+            case NEXT_ID:
+                if (this.position >= this.tc.channelMap.size())
+                    return;
+                LinkedHashMap<String, ChatChannel> newMap2 = TabbyChatUtils.swapChannels(
+                        this.tc.channelMap, this.position - 1, this.position);
+                this.tc.channelMap.clear();
+                this.tc.channelMap = newMap2;
+                this.position++;
+                break;
+            case HIDE_PREFIX:
+                this.hidePrefix.actionPerformed();
         }
     }
 
@@ -105,16 +102,16 @@ public class ChatChannelGUI extends GuiScreen {
 
         // Draw tab position info
         this.drawString(mc.fontRenderer, Integer.toString(this.position), rightX - 34, topY + 22,
-                0xffffff);
+                        0xffffff);
         this.drawString(mc.fontRenderer, I18n.format("settings.channel.position"), rightX - 55
-                - mc.fontRenderer.getStringWidth(I18n.format("settings.channel.position")),
-                topY + 22, 0xffffff);
+                                - mc.fontRenderer.getStringWidth(I18n.format("settings.channel.position")),
+                        topY + 22, 0xffffff);
         this.drawString(mc.fontRenderer, I18n.format("settings.channel.of") + " "
                 + this.tc.channelMap.size(), rightX - 34, topY + 35, 0xffffff);
 
         // Draw buttons
-        for (int i = 0; i < this.buttonList.size(); i++) {
-            ((GuiButton) this.buttonList.get(i)).drawButton(mc, _x, _y);
+        for (Object o : this.buttonList) {
+            ((GuiButton) o).drawButton(mc, _x, _y);
         }
     }
 
@@ -130,10 +127,10 @@ public class ChatChannelGUI extends GuiScreen {
 
         // Define generic buttons
         PrefsButton savePrefs = new PrefsButton(SAVE_ID, rightX - 45, botY - 19, 40, 14,
-                I18n.format("settings.save"));
+                                                I18n.format("settings.save"));
         this.buttonList.add(savePrefs);
         PrefsButton cancelPrefs = new PrefsButton(CANCEL_ID, rightX - 90, botY - 19, 40, 14,
-                I18n.format("settings.cancel"));
+                                                  I18n.format("settings.cancel"));
         this.buttonList.add(cancelPrefs);
         PrefsButton nextButton = new PrefsButton(NEXT_ID, rightX - 20, topY + 20, 15, 14, ">>");
         this.buttonList.add(nextButton);
@@ -163,9 +160,8 @@ public class ChatChannelGUI extends GuiScreen {
 
         // Determine tab position
         position = 1;
-        Iterator<?> _chanPtr = this.tc.channelMap.keySet().iterator();
-        while (_chanPtr.hasNext()) {
-            if (this.channel.getTitle().equals(_chanPtr.next()))
+        for (String s : this.tc.channelMap.keySet()) {
+            if (this.channel.getTitle().equals(s))
                 break;
             position++;
         }
@@ -177,10 +173,10 @@ public class ChatChannelGUI extends GuiScreen {
 
     @Override
     protected void keyTyped(char par1, int par2) {
-        for (int i = 0; i < this.buttonList.size(); i++) {
-            if (ITCSetting.class.isInstance(this.buttonList.get(i))) {
-                ITCSetting tmp = (ITCSetting) this.buttonList.get(i);
-                if (tmp.getType() == "textbox") {
+        for (Object o : this.buttonList) {
+            if (ITCSetting.class.isInstance(o)) {
+                ITCSetting tmp = (ITCSetting) o;
+                if (Objects.equals(tmp.getType(), "textbox")) {
                     ((TCSettingTextBox) tmp).keyTyped(par1, par2);
                 }
             }
@@ -190,10 +186,10 @@ public class ChatChannelGUI extends GuiScreen {
 
     @Override
     public void mouseClicked(int par1, int par2, int par3) {
-        for (int i = 0; i < this.buttonList.size(); i++) {
-            if (ITCSetting.class.isInstance(this.buttonList.get(i))) {
-                ITCSetting tmp = (ITCSetting) this.buttonList.get(i);
-                if (tmp.getType() == "textbox") {
+        for (Object o : this.buttonList) {
+            if (ITCSetting.class.isInstance(o)) {
+                ITCSetting tmp = (ITCSetting) o;
+                if (Objects.equals(tmp.getType(), "textbox")) {
                     tmp.mouseClicked(par1, par2, par3);
                 }
             }

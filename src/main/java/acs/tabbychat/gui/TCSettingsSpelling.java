@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
-import java.awt.Desktop;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -30,17 +30,16 @@ public class TCSettingsSpelling extends TCSettingsGUI {
     }
 
     public TCSettingBool spellCheckEnable = new TCSettingBool(true, "spellCheckEnable",
-            this.propertyPrefix, SPELL_CHECK_ENABLE);
+                                                              this.propertyPrefix, SPELL_CHECK_ENABLE);
     private GuiTextField wordInput;
-    private PrefsButton addWord = new PrefsButton(ADD_WORD, 0, 0, 15, 12, ">");
-    private PrefsButton removeWords = new PrefsButton(REMOVE_WORD, 0, 0, 15, 12, "<");
-    private PrefsButton clearWords = new PrefsButton(CLEAR_WORDS, 0, 0, 15, 12, "<<");
-    private PrefsButton next = new PrefsButton(NEXT, 0, 0, 15, 12, "->");
-    private PrefsButton prev = new PrefsButton(PREV, 0, 0, 15, 12, "<-");
-    private PrefsButton open = new PrefsButton(OPEN, 0, 0, 85, 15, "");
-    private PrefsButton reload = new PrefsButton(RELOAD, 0, 0, 85, 15, "");
-
-    private File dictionary = new File(tabbyChatDir, "dictionary.txt");
+    private final PrefsButton addWord = new PrefsButton(ADD_WORD, 0, 0, 15, 12, ">");
+    private final PrefsButton removeWords = new PrefsButton(REMOVE_WORD, 0, 0, 15, 12, "<");
+    private final PrefsButton clearWords = new PrefsButton(CLEAR_WORDS, 0, 0, 15, 12, "<<");
+    private final PrefsButton next = new PrefsButton(NEXT, 0, 0, 15, 12, "->");
+    private final PrefsButton prev = new PrefsButton(PREV, 0, 0, 15, 12, "<-");
+    private final PrefsButton open = new PrefsButton(OPEN, 0, 0, 85, 15, "");
+    private final PrefsButton reload = new PrefsButton(RELOAD, 0, 0, 85, 15, "");
+    private final File dictionary = new File(tabbyChatDir, "dictionary.txt");
     public TCSettingList spellingList = new TCSettingList(dictionary);
 
     public TCSettingsSpelling(TabbyChat _tc) {
@@ -55,7 +54,8 @@ public class TCSettingsSpelling extends TCSettingsGUI {
     public void saveSettingsFile() {
         try {
             this.spellingList.saveEntries();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         super.saveSettingsFile();
@@ -68,7 +68,8 @@ public class TCSettingsSpelling extends TCSettingsGUI {
             dictionary.getParentFile().mkdirs();
             dictionary.createNewFile();
             spellingList.loadEntries();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -139,11 +140,11 @@ public class TCSettingsSpelling extends TCSettingsGUI {
         this.wordInput.drawTextBox();
         this.spellingList.drawList(mc, x, y);
         this.drawString(fontRendererObj, I18n.format("settings.spelling.userdictionary"), col1x,
-                rowY(3), 0xffffff);
+                        rowY(3), 0xffffff);
         this.drawString(
                 fontRendererObj,
                 I18n.format("book.pageIndicator", this.spellingList.getPageNum(),
-                        this.spellingList.getTotalPages()), col2x, rowY(3), 0xffffff);
+                            this.spellingList.getTotalPages()), col2x, rowY(3), 0xffffff);
     }
 
     @Override
@@ -151,7 +152,8 @@ public class TCSettingsSpelling extends TCSettingsGUI {
         super.initGui();
         try {
             spellingList.loadEntries();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -172,38 +174,40 @@ public class TCSettingsSpelling extends TCSettingsGUI {
     @Override
     public void actionPerformed(GuiButton button) {
         switch (button.id) {
-        case ADD_WORD:
-            this.spellingList.addToList(this.wordInput.getText());
-            this.wordInput.setText("");
-            break;
-        case REMOVE_WORD:
-            for (Entry entry : this.spellingList.getSelected()) {
-                entry.remove();
-            }
-            break;
-        case CLEAR_WORDS:
-            this.spellingList.clearList();
-            break;
-        case NEXT:
-            this.spellingList.nextPage();
-            break;
-        case PREV:
-            this.spellingList.previousPage();
-            break;
-        case OPEN:
-            try {
-                if (Desktop.isDesktopSupported())
-                    Desktop.getDesktop().open(dictionary);
-            } catch (IOException e) {
-            }
-            break;
-        case RELOAD:
-            try {
-                this.spellingList.loadEntries();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            break;
+            case ADD_WORD:
+                this.spellingList.addToList(this.wordInput.getText());
+                this.wordInput.setText("");
+                break;
+            case REMOVE_WORD:
+                for (Entry entry : this.spellingList.getSelected()) {
+                    entry.remove();
+                }
+                break;
+            case CLEAR_WORDS:
+                this.spellingList.clearList();
+                break;
+            case NEXT:
+                this.spellingList.nextPage();
+                break;
+            case PREV:
+                this.spellingList.previousPage();
+                break;
+            case OPEN:
+                try {
+                    if (Desktop.isDesktopSupported())
+                        Desktop.getDesktop().open(dictionary);
+                }
+                catch (IOException e) {
+                }
+                break;
+            case RELOAD:
+                try {
+                    this.spellingList.loadEntries();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
         super.actionPerformed(button);
     }

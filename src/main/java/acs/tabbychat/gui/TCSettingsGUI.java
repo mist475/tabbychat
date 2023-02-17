@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-
 import org.lwjgl.input.Keyboard;
 
 import java.io.BufferedInputStream;
@@ -18,17 +17,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
     protected static TabbyChat tc;
+    protected static List<TCSettingsGUI> ScreenList = new ArrayList<>();
     protected Minecraft mc;
     protected int lastOpened = 0;
     protected String name;
     protected String propertyPrefix;
     protected int bgcolor = 0x66a5e7e4;
     protected int id = 9000;
-    protected static List<TCSettingsGUI> ScreenList = new ArrayList<TCSettingsGUI>();
     protected File settingsFile;
 
     private TCSettingsGUI() {
@@ -43,9 +43,10 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 
     @Override
     public void actionPerformed(GuiButton button) {
-        if (button instanceof ITCSetting && ((ITCSetting) button).getType() != "textbox") {
+        if (button instanceof ITCSetting && !Objects.equals(((ITCSetting) button).getType(), "textbox")) {
             ((ITCSetting) button).actionPerformed();
-        } else if (button.id == SAVEBUTTON) {
+        }
+        else if (button.id == SAVEBUTTON) {
             for (TCSettingsGUI screen : ScreenList) {
                 screen.storeTempVars();
                 screen.saveSettingsFile();
@@ -54,16 +55,19 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
             mc.displayGuiScreen((GuiScreen) null);
             if (TabbyChat.generalSettings.tabbyChatEnable.getValue())
                 tc.resetDisplayedChat();
-        } else if (button.id == CANCELBUTTON) {
-            for (TCSettingsGUI screen : ScreenList)
+        }
+        else if (button.id == CANCELBUTTON) {
+            for (TCSettingsGUI screen : ScreenList) {
                 screen.resetTempVars();
+            }
             mc.displayGuiScreen((GuiScreen) null);
             if (TabbyChat.generalSettings.tabbyChatEnable.getValue())
                 tc.resetDisplayedChat();
-        } else {
-            for (int i = 0; i < ScreenList.size(); i++) {
-                if (button.id == ScreenList.get(i).id) {
-                    mc.displayGuiScreen(ScreenList.get(i));
+        }
+        else {
+            for (TCSettingsGUI tcSettingsGUI : ScreenList) {
+                if (button.id == tcSettingsGUI.id) {
+                    mc.displayGuiScreen(tcSettingsGUI);
                 }
             }
         }
@@ -74,7 +78,8 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
      * Define buttons to draw
      */
     @Override
-    public void defineDrawableSettings() {}
+    public void defineDrawableSettings() {
+    }
 
     @Override
     public void drawScreen(int x, int y, float f) {
@@ -91,35 +96,37 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
             if (ScreenList.get(i) == this) {
                 int curWidth;
                 int tabDist = Math.max(mc.fontRenderer.getStringWidth(ScreenList.get(i).name)
-                        + MARGIN - 40, 25);
+                                               + MARGIN - 40, 25);
                 if (0 <= this.lastOpened && this.lastOpened <= 5) {
                     curWidth = 45 + (this.lastOpened * tabDist) / 5;
                     this.lastOpened++;
-                } else {
+                }
+                else {
                     curWidth = tabDist + 45;
                 }
                 drawRect(absLeft - curWidth + 45, effTop + 30 * i, absLeft + 45, effTop + 30 * i
                         + 20, ScreenList.get(i).bgcolor);
                 this.drawString(mc.fontRenderer,
-                        mc.fontRenderer.trimStringToWidth(ScreenList.get(i).name, curWidth - 5),
-                        effLeft - curWidth + 45, effTop + 6 + 30 * i, 0xffffff);
-            } else {
+                                mc.fontRenderer.trimStringToWidth(ScreenList.get(i).name, curWidth - 5),
+                                effLeft - curWidth + 45, effTop + 6 + 30 * i, 0xffffff);
+            }
+            else {
                 drawRect(absLeft, effTop + 30 * i, absLeft + 45, effTop + 30 * i + 20,
-                        ScreenList.get(i).bgcolor);
+                         ScreenList.get(i).bgcolor);
             }
         }
-        for (int i = 0; i < this.buttonList.size(); i++) {
-            ((GuiButton) this.buttonList.get(i)).drawButton(mc, x, y);
+        for (Object o : this.buttonList) {
+            ((GuiButton) o).drawButton(mc, x, y);
         }
     }
 
     @Override
     public void handleMouseInput() {
         super.handleMouseInput();
-        for (int i = 0; i < this.buttonList.size(); i++) {
-            if (this.buttonList.get(i) instanceof ITCSetting) {
-                ITCSetting tmp = (ITCSetting) this.buttonList.get(i);
-                if (tmp.getType() == "slider") {
+        for (Object o : this.buttonList) {
+            if (o instanceof ITCSetting) {
+                ITCSetting tmp = (ITCSetting) o;
+                if (Objects.equals(tmp.getType(), "slider")) {
                     ((TCSettingSlider) tmp).handleMouseInput();
                 }
             }
@@ -130,7 +137,8 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
      * Defines various button properties
      */
     @Override
-    public void initDrawableSettings() {}
+    public void initDrawableSettings() {
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -145,11 +153,11 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
         int bW = 40;
         int bH = LINE_HEIGHT;
         PrefsButton savePrefs = new PrefsButton(SAVEBUTTON, effRight + 10,
-                (this.height + DISPLAY_HEIGHT) / 2 - bH, bW, bH, I18n.format("settings.save"));
+                                                (this.height + DISPLAY_HEIGHT) / 2 - bH, bW, bH, I18n.format("settings.save"));
         this.buttonList.add(savePrefs);
         PrefsButton cancelPrefs = new PrefsButton(CANCELBUTTON, effRight + 10,
-                (this.height + DISPLAY_HEIGHT) / 2 - 2 * bH - 2, bW, bH,
-                I18n.format("settings.cancel"));
+                                                  (this.height + DISPLAY_HEIGHT) / 2 - 2 * bH - 2, bW, bH,
+                                                  I18n.format("settings.cancel"));
         this.buttonList.add(cancelPrefs);
 
         for (int i = 0; i < ScreenList.size(); i++) {
@@ -157,8 +165,8 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
             ScreenList.get(i).name = I18n.format(ScreenList.get(i).propertyPrefix + ".name");
             if (ScreenList.get(i) != this) {
                 this.buttonList.add(new PrefsButton(ScreenList.get(i).id, effLeft, effTop + 30 * i,
-                        45, 20, mc.fontRenderer.trimStringToWidth(ScreenList.get(i).name, 35)
-                                + "..."));
+                                                    45, 20, mc.fontRenderer.trimStringToWidth(ScreenList.get(i).name, 35)
+                                                            + "..."));
                 ((PrefsButton) this.buttonList.get(this.buttonList.size() - 1)).bgcolor = 0x00000000;
             }
         }
@@ -173,10 +181,10 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 
     @Override
     public void keyTyped(char par1, int par2) {
-        for (int i = 0; i < this.buttonList.size(); i++) {
-            if (ITCSetting.class.isInstance(this.buttonList.get(i))) {
-                ITCSetting tmp = (ITCSetting) this.buttonList.get(i);
-                if (tmp.getType() == "textbox") {
+        for (Object o : this.buttonList) {
+            if (ITCSetting.class.isInstance(o)) {
+                ITCSetting tmp = (ITCSetting) o;
+                if (Objects.equals(tmp.getType(), "textbox")) {
                     ((TCSettingTextBox) tmp).keyTyped(par1, par2);
                 }
             }
@@ -192,23 +200,12 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
         if (!this.settingsFile.exists())
             return settingsTable;
 
-        FileInputStream fInStream = null;
-        BufferedInputStream bInStream = null;
-        try {
-            fInStream = new FileInputStream(this.settingsFile);
-            bInStream = new BufferedInputStream(fInStream);
+        try (FileInputStream fInStream = new FileInputStream(this.settingsFile); BufferedInputStream bInStream = new BufferedInputStream(fInStream)) {
             settingsTable.load(bInStream);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             TabbyChat.printException("Error while reading settings from file '" + this.settingsFile
-                    + "'", e);
-        } finally {
-            try {
-                if (bInStream != null)
-                    bInStream.close();
-                if (fInStream != null)
-                    fInStream.close();
-            } catch (Exception ignored) {
-            }
+                                             + "'", e);
         }
         for (Object drawable : this.buttonList) {
             if (drawable instanceof ITCSetting) {
@@ -221,11 +218,11 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 
     @Override
     public void mouseClicked(int par1, int par2, int par3) {
-        for (int i = 0; i < this.buttonList.size(); i++) {
-            if (this.buttonList.get(i) instanceof ITCSetting) {
-                ITCSetting tmp = (ITCSetting) this.buttonList.get(i);
-                if (tmp.getType() == "textbox" || tmp.getType() == "enum"
-                        || tmp.getType() == "slider") {
+        for (Object o : this.buttonList) {
+            if (o instanceof ITCSetting) {
+                ITCSetting tmp = (ITCSetting) o;
+                if (Objects.equals(tmp.getType(), "textbox") || Objects.equals(tmp.getType(), "enum")
+                        || Objects.equals(tmp.getType(), "slider")) {
                     tmp.mouseClicked(par1, par2, par3);
                 }
             }
@@ -266,23 +263,12 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
             }
         }
 
-        FileOutputStream fOutStream = null;
-        BufferedOutputStream bOutStream = null;
-        try {
-            fOutStream = new FileOutputStream(this.settingsFile);
-            bOutStream = new BufferedOutputStream(fOutStream);
+        try (FileOutputStream fOutStream = new FileOutputStream(this.settingsFile); BufferedOutputStream bOutStream = new BufferedOutputStream(fOutStream)) {
             settingsTable.store(bOutStream, this.propertyPrefix);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             TabbyChat.printException("Error while writing settings to file '" + this.settingsFile
-                    + "'", e);
-        } finally {
-            try {
-                if (bOutStream != null)
-                    bOutStream.close();
-                if (fOutStream != null)
-                    fOutStream.close();
-            } catch (Exception ignored) {
-            }
+                                             + "'", e);
         }
     }
 
@@ -304,5 +290,6 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
     }
 
     @Override
-    public void validateButtonStates() {}
+    public void validateButtonStates() {
+    }
 }

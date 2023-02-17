@@ -14,8 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Properties;
 
 public class TCSettingsGeneral extends TCSettingsGUI {
-    public SimpleDateFormat timeStamp = new SimpleDateFormat();
-
     private static final int TABBYCHAT_ENABLE_ID = 9101;
     private static final int SAVE_CHATLOG_ID = 9102;
     private static final int TIMESTAMP_ENABLE_ID = 9103;
@@ -30,24 +28,25 @@ public class TCSettingsGeneral extends TCSettingsGUI {
         this.propertyPrefix = "settings.general";
     }
 
+    public SimpleDateFormat timeStamp = new SimpleDateFormat();
     public TCSettingBool tabbyChatEnable = new TCSettingBool(true, "tabbyChatEnable",
-            this.propertyPrefix, TABBYCHAT_ENABLE_ID);
+                                                             this.propertyPrefix, TABBYCHAT_ENABLE_ID);
     public TCSettingBool saveChatLog = new TCSettingBool(false, "saveChatLog", this.propertyPrefix,
-            SAVE_CHATLOG_ID);
+                                                         SAVE_CHATLOG_ID);
     public TCSettingBool timeStampEnable = new TCSettingBool(false, "timeStampEnable",
-            this.propertyPrefix, TIMESTAMP_ENABLE_ID);
+                                                             this.propertyPrefix, TIMESTAMP_ENABLE_ID);
     public TCSettingEnum timeStampStyle = new TCSettingEnum(TimeStampEnum.MILITARY,
-            "timeStampStyle", this.propertyPrefix, TIMESTAMP_STYLE_ID, FormatCodeEnum.ITALIC);
+                                                            "timeStampStyle", this.propertyPrefix, TIMESTAMP_STYLE_ID, FormatCodeEnum.ITALIC);
     public TCSettingEnum timeStampColor = new TCSettingEnum(ColorCodeEnum.DEFAULT,
-            "timeStampColor", this.propertyPrefix, TIMESTAMP_COLOR_ID, FormatCodeEnum.ITALIC);
+                                                            "timeStampColor", this.propertyPrefix, TIMESTAMP_COLOR_ID, FormatCodeEnum.ITALIC);
     public TCSettingBool groupSpam = new TCSettingBool(false, "groupSpam", this.propertyPrefix,
-            GROUP_SPAM_ID);
+                                                       GROUP_SPAM_ID);
     public TCSettingBool unreadFlashing = new TCSettingBool(true, "unreadFlashing",
-            this.propertyPrefix, UNREAD_FLASHING_ID);
+                                                            this.propertyPrefix, UNREAD_FLASHING_ID);
     public TCSettingBool updateCheckEnable = new TCSettingBool(true, "updateCheckEnable",
-            this.propertyPrefix, UPDATE_CHECK_ENABLE);
+                                                               this.propertyPrefix, UPDATE_CHECK_ENABLE);
     public TCSettingBool splitChatLog = new TCSettingBool(false, "splitChatLog",
-            this.propertyPrefix, SPLIT_CHATLOG);
+                                                          this.propertyPrefix, SPLIT_CHATLOG);
 
     public TCSettingsGeneral(TabbyChat _tc) {
         super(_tc);
@@ -59,27 +58,25 @@ public class TCSettingsGeneral extends TCSettingsGUI {
 
     @Override
     public void actionPerformed(GuiButton button) {
-        switch (button.id) {
-        case TABBYCHAT_ENABLE_ID:
+        if (button.id == TABBYCHAT_ENABLE_ID) {
             if (tc.enabled())
                 tc.disable();
             else {
                 tc.enable();
             }
-            break;
         }
         super.actionPerformed(button);
     }
 
     private void applyTimestampPattern() {
         if (((ColorCodeEnum) this.timeStampColor.getValue()).toCode().length() > 0) {
-            StringBuilder tsPattern = new StringBuilder();
-            tsPattern.append("'").append(((ColorCodeEnum) this.timeStampColor.getValue()).toCode())
-                    .append("'");
-            tsPattern.append(((TimeStampEnum) this.timeStampStyle.getValue()).toCode());
-            tsPattern.append("'\u00A7r'");
-            this.timeStamp.applyPattern(tsPattern.toString());
-        } else {
+            String tsPattern = "'" + ((ColorCodeEnum) this.timeStampColor.getValue()).toCode() +
+                    "'" +
+                    ((TimeStampEnum) this.timeStampStyle.getValue()).toCode() +
+                    "'\u00A7r'";
+            this.timeStamp.applyPattern(tsPattern);
+        }
+        else {
             this.timeStamp.applyPattern(((TimeStampEnum) this.timeStampStyle.getValue()).toCode());
         }
     }
@@ -125,12 +122,12 @@ public class TCSettingsGeneral extends TCSettingsGUI {
         this.timeStampStyle.setButtonDims(80, 11);
         this.timeStampStyle.setButtonLoc(effRight - 80, this.rowY(4));
         this.timeStampStyle.setLabelLoc(this.timeStampStyle.x() - 10
-                - mc.fontRenderer.getStringWidth(this.timeStampStyle.description));
+                                                - mc.fontRenderer.getStringWidth(this.timeStampStyle.description));
 
         this.timeStampColor.setButtonDims(80, 11);
         this.timeStampColor.setButtonLoc(effRight - 80, this.rowY(5));
         this.timeStampColor.setLabelLoc(this.timeStampColor.x() - 10
-                - mc.fontRenderer.getStringWidth(this.timeStampColor.description));
+                                                - mc.fontRenderer.getStringWidth(this.timeStampColor.description));
 
         this.groupSpam.setButtonLoc(col1x, this.rowY(6));
         this.groupSpam.setLabelLoc(col1x + 19);

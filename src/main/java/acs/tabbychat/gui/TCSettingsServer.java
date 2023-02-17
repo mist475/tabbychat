@@ -1,16 +1,5 @@
 package acs.tabbychat.gui;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.regex.Pattern;
-
-import net.minecraft.client.resources.I18n;
-
-import org.apache.commons.lang3.StringUtils;
-
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.settings.ChannelDelimEnum;
 import acs.tabbychat.settings.ColorCodeEnum;
@@ -19,8 +8,18 @@ import acs.tabbychat.settings.TCSettingBool;
 import acs.tabbychat.settings.TCSettingEnum;
 import acs.tabbychat.settings.TCSettingTextBox;
 import acs.tabbychat.util.TabbyChatUtils;
+import net.minecraft.client.resources.I18n;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+import java.util.regex.Pattern;
 
 public class TCSettingsServer extends TCSettingsGUI {
+    public static final Pattern SPLIT_PATTERN = Pattern.compile("[ ]?,[ ]?");
     private static final int AUTO_CHANNEL_SEARCH_ID = 9201;
     private static final int CHATCHANNEL_DELIMS_ID = 9202;
     private static final int DELIM_COLOR_BOOL_ID = 9203;
@@ -38,40 +37,37 @@ public class TCSettingsServer extends TCSettingsGUI {
         this.propertyPrefix = "settings.server";
     }
 
-    public static final Pattern SPLIT_PATTERN = Pattern.compile("[ ]?,[ ]?");
-
     public TCSettingBool autoChannelSearch = new TCSettingBool(true, "autoChannelSearch",
-            this.propertyPrefix, AUTO_CHANNEL_SEARCH_ID);
+                                                               this.propertyPrefix, AUTO_CHANNEL_SEARCH_ID);
     public TCSettingBool autoPMSearch = new TCSettingBool(true, "autoPMSearch",
-            this.propertyPrefix, AUTO_PM_SEARCH_ID);
+                                                          this.propertyPrefix, AUTO_PM_SEARCH_ID);
     public TCSettingEnum delimiterChars = new TCSettingEnum(ChannelDelimEnum.BRACKETS,
-            "delimiterChars", this.propertyPrefix, CHATCHANNEL_DELIMS_ID);
+                                                            "delimiterChars", this.propertyPrefix, CHATCHANNEL_DELIMS_ID);
     public TCSettingBool delimColorBool = new TCSettingBool(false, "delimColorBool",
-            this.propertyPrefix, DELIM_COLOR_BOOL_ID, FormatCodeEnum.ITALIC);
+                                                            this.propertyPrefix, DELIM_COLOR_BOOL_ID, FormatCodeEnum.ITALIC);
     public TCSettingEnum delimColorCode = new TCSettingEnum(ColorCodeEnum.DEFAULT,
-            "delimColorCode", "", DELIM_COLOR_ENUM_ID);
+                                                            "delimColorCode", "", DELIM_COLOR_ENUM_ID);
     public TCSettingBool delimFormatBool = new TCSettingBool(false, "delimFormatBool",
-            this.propertyPrefix, DELIM_FORMAT_BOOL_ID, FormatCodeEnum.ITALIC);
+                                                             this.propertyPrefix, DELIM_FORMAT_BOOL_ID, FormatCodeEnum.ITALIC);
     public TCSettingEnum delimFormatCode = new TCSettingEnum(FormatCodeEnum.DEFAULT,
-            "delimFormatCode", "", DELIM_FORMAT_ENUM_ID);
+                                                             "delimFormatCode", "", DELIM_FORMAT_ENUM_ID);
     public TCSettingTextBox defaultChannels = new TCSettingTextBox("", "defaultChannels",
-            this.propertyPrefix, DEFAULT_CHANNELS_ID);
+                                                                   this.propertyPrefix, DEFAULT_CHANNELS_ID);
     public TCSettingTextBox ignoredChannels = new TCSettingTextBox("", "ignoredChannels",
-            this.propertyPrefix, IGNORED_CHANNELS_ID);
+                                                                   this.propertyPrefix, IGNORED_CHANNELS_ID);
     public TCSettingBool regexIgnoreBool = new TCSettingBool(false, "regexIgnoreBool",
-            this.propertyPrefix, REGEX_IGNORE_ID);
+                                                             this.propertyPrefix, REGEX_IGNORE_ID);
     public TCSettingTextBox pmTabRegexToMe = new TCSettingTextBox("", "pmTabRegex.toMe",
-            this.propertyPrefix, PM_TAB_REGEX_TO_ID);
+                                                                  this.propertyPrefix, PM_TAB_REGEX_TO_ID);
     public TCSettingTextBox pmTabRegexFromMe = new TCSettingTextBox("", "pmTabRegex.fromMe",
-            this.propertyPrefix, PM_TAB_REGEX_FROM_ID);
-
-    public List<String> defaultChanList = new ArrayList<String>();
+                                                                    this.propertyPrefix, PM_TAB_REGEX_FROM_ID);
+    public List<String> defaultChanList = new ArrayList<>();
     public Pattern ignoredChanPattern = Pattern.compile("a^"); // Initialize
-                                                               // with
-                                                               // impossible
-                                                               // match
-
     public String serverIP = "";
+    // with
+    // impossible
+    // match
+
 
     public TCSettingsServer(TabbyChat _tc) {
         super(_tc);
@@ -149,7 +145,7 @@ public class TCSettingsServer extends TCSettingsGUI {
                 col1x + 5 + mc.fontRenderer.getStringWidth(this.ignoredChannels.description),
                 this.rowY(8));
         this.regexIgnoreBool.setLabelLoc(col1x + 5
-                + mc.fontRenderer.getStringWidth(this.ignoredChannels.description) + 19);
+                                                 + mc.fontRenderer.getStringWidth(this.ignoredChannels.description) + 19);
         this.regexIgnoreBool.buttonColor = buttonColor;
 
         this.pmTabRegexToMe.setLabelLoc(col1x);
@@ -187,7 +183,7 @@ public class TCSettingsServer extends TCSettingsGUI {
             }
         }
         this.ignoredChanPattern = Pattern.compile("^(" + StringUtils.join(splitChannels, "|")
-                + ")$");
+                                                          + ")$");
     }
 
     public void updateForServer() {
