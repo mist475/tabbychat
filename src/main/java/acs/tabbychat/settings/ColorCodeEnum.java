@@ -22,14 +22,23 @@ public enum ColorCodeEnum {
     YELLOW(I18n.format("colors.yellow"), "\u00A7e", EnumChatFormatting.YELLOW),
     WHITE(I18n.format("colors.white"), "\u00A7f", EnumChatFormatting.WHITE);
 
-    private String title;
-    private String code;
-    private EnumChatFormatting vanilla;
+    private final String title;
+    private final String code;
+    private final EnumChatFormatting vanilla;
 
-    private ColorCodeEnum(String _name, String _code, EnumChatFormatting _vanilla) {
+    ColorCodeEnum(String _name, String _code, EnumChatFormatting _vanilla) {
         this.title = _name;
         this.code = _code;
         this.vanilla = _vanilla;
+    }
+
+    public static ColorCodeEnum cleanValueOf(String name) {
+        try {
+            return ColorCodeEnum.valueOf(name);
+        }
+        catch (Exception e) {
+            return ColorCodeEnum.YELLOW;
+        }
     }
 
     @Override
@@ -47,14 +56,6 @@ public enum ColorCodeEnum {
 
     public EnumChatFormatting toVanilla() {
         return this.vanilla;
-    }
-
-    public static ColorCodeEnum cleanValueOf(String name) {
-        try {
-            return ColorCodeEnum.valueOf(name);
-        } catch (Exception e) {
-            return ColorCodeEnum.YELLOW;
-        }
     }
 
 }

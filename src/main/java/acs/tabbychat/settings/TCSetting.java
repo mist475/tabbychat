@@ -1,22 +1,22 @@
 package acs.tabbychat.settings;
 
-import java.util.Properties;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
+import java.util.Properties;
+
 abstract class TCSetting extends GuiButton implements ITCSetting {
-    public int buttonColor = 0xbba5e7e4;
-    protected int labelX;
-    public String description;
-    protected String type;
+    protected static Minecraft mc = Minecraft.getMinecraft();
     public final String categoryName;
     public final String propertyName;
+    public int buttonColor = 0xbba5e7e4;
+    public String description;
+    protected int labelX;
+    protected String type;
     protected Object value;
     protected Object tempValue;
     protected Object theDefault;
-    protected static Minecraft mc = Minecraft.getMinecraft();
 
     public TCSetting(Object theSetting, String theProperty, String theCategory, int theID) {
         super(theID, 0, 0, "");
@@ -30,13 +30,14 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
     }
 
     public TCSetting(Object theSetting, String theProperty, String theCategory, int theID,
-            FormatCodeEnum theFormat) {
+                     FormatCodeEnum theFormat) {
         this(theSetting, theProperty, theCategory, theID);
         this.description = theFormat.toCode() + this.description + "\u00A7r";
     }
 
     @Override
-    public void actionPerformed() {}
+    public void actionPerformed() {
+    }
 
     public int width() {
         return this.width;
@@ -82,7 +83,8 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
     }
 
     @Override
-    public void drawButton(Minecraft mc, int cursorX, int cursorY) {}
+    public void drawButton(Minecraft mc, int cursorX, int cursorY) {
+    }
 
     @Override
     public void enable() {
@@ -110,12 +112,22 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
     }
 
     @Override
+    public void setTempValue(Object updateVal) {
+        this.tempValue = updateVal;
+    }
+
+    @Override
     public String getType() {
         return this.type;
     }
 
     protected Object getValue() {
         return this.value;
+    }
+
+    @Override
+    public void setValue(Object updateVal) {
+        this.value = updateVal;
     }
 
     @Override
@@ -130,7 +142,8 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
     }
 
     @Override
-    public void mouseClicked(int par1, int par2, int par3) {}
+    public void mouseClicked(int par1, int par2, int par3) {
+    }
 
     @Override
     public void reset() {
@@ -140,7 +153,7 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
     @Override
     public void resetDescription() {
         this.description = this.categoryName.isEmpty() ? "" : I18n.format(this.categoryName + "."
-                + this.propertyName.toLowerCase());
+                                                                                  + this.propertyName.toLowerCase());
     }
 
     @Override
@@ -174,21 +187,11 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
     }
 
     @Override
-    public void setTempValue(Object updateVal) {
-        this.tempValue = updateVal;
-    }
-
-    @Override
     public void setCleanValue(Object updateVal) {
         if (updateVal == null)
             this.clear();
         else
             this.value = updateVal;
-    }
-
-    @Override
-    public void setValue(Object updateVal) {
-        this.value = updateVal;
     }
 
 }

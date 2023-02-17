@@ -17,7 +17,7 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
     }
 
     public TCSettingEnum(Object theSetting, String theProperty, String theCategory, int theID,
-            FormatCodeEnum theFormat) {
+                         FormatCodeEnum theFormat) {
         super(theSetting, theProperty, theCategory, theID, theFormat);
     }
 
@@ -27,7 +27,8 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
         int fgcolor = 0x99a0a0a0;
         if (!this.enabled) {
             fgcolor = -0x995f5f60;
-        } else if (this.hovered(cursorX, cursorY)) {
+        }
+        else if (this.hovered(cursorX, cursorY)) {
             fgcolor = 0x99ffffa0;
         }
 
@@ -43,11 +44,11 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
                 - 1, 0xff000000);
 
         this.drawCenteredString(mc.fontRenderer, this.tempValue.toString(), centerX, this.y() + 2,
-                labelColor);
+                                labelColor);
 
         this.drawCenteredString(mc.fontRenderer, this.description,
-                this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
-                        + (this.height() - 6) / 2, labelColor);
+                                this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
+                                        + (this.height() - 6) / 2, labelColor);
     }
 
     @Override
@@ -69,13 +70,17 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
         }
         if (this.propertyName.contains("Color")) {
             this.value = TabbyChatUtils.parseColor(found);
-        } else if (this.propertyName.contains("Format")) {
+        }
+        else if (this.propertyName.contains("Format")) {
             this.value = TabbyChatUtils.parseFormat(found);
-        } else if (this.propertyName.contains("Sound")) {
+        }
+        else if (this.propertyName.contains("Sound")) {
             this.value = TabbyChatUtils.parseSound(found);
-        } else if (this.propertyName.contains("delim")) {
+        }
+        else if (this.propertyName.contains("delim")) {
             this.value = TabbyChatUtils.parseDelimiters(found);
-        } else if (this.propertyName.contains("Stamp")) {
+        }
+        else if (this.propertyName.contains("Stamp")) {
             this.value = TabbyChatUtils.parseTimestamp(found);
         }
     }
@@ -106,7 +111,7 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
     @SuppressWarnings("unchecked")
     public void previous() {
         Enum<?> eCast = (Enum<?>) this.tempValue;
-        Enum<?> E[] = eCast.getClass().getEnumConstants();
+        Enum<?>[] E = eCast.getClass().getEnumConstants();
         if (eCast.ordinal() == 0)
             this.tempValue = Enum.valueOf(eCast.getClass(), E[E.length - 1].name());
         else {
@@ -122,13 +127,17 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
         }
         if (this.propertyName.contains("Color")) {
             this.tempValue = TabbyChatUtils.parseColor(found);
-        } else if (this.propertyName.contains("Format")) {
+        }
+        else if (this.propertyName.contains("Format")) {
             this.tempValue = TabbyChatUtils.parseFormat(found);
-        } else if (this.propertyName.contains("Sound")) {
+        }
+        else if (this.propertyName.contains("Sound")) {
             this.tempValue = TabbyChatUtils.parseSound(found);
-        } else if (this.propertyName.contains("delim")) {
+        }
+        else if (this.propertyName.contains("delim")) {
             this.tempValue = TabbyChatUtils.parseDelimiters(found);
-        } else if (this.propertyName.contains("Stamp")) {
+        }
+        else if (this.propertyName.contains("Stamp")) {
             this.tempValue = TabbyChatUtils.parseTimestamp(found);
         }
     }

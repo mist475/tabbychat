@@ -1,21 +1,20 @@
 package acs.tabbychat.settings;
 
+import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import acs.tabbychat.util.TabbyChatUtils;
-
 public class TCSettingSlider extends TCSetting implements ITCSetting {
+    public String units = "%";
     protected float minValue;
     protected float maxValue;
     protected float sliderValue;
     private int sliderX;
-    private int buttonOffColor = 0x44ffffff;
-    public String units = "%";
+    private final int buttonOffColor = 0x44ffffff;
     private boolean dragging = false;
+
     {
         this.type = "slider";
     }
@@ -29,7 +28,7 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
     }
 
     public TCSettingSlider(Float theSetting, String theProperty, String theCategory, int theID,
-            float minVal, float maxVal) {
+                           float minVal, float maxVal) {
         this(theSetting, theProperty, theCategory, theID);
         this.minValue = minVal;
         this.maxValue = maxVal;
@@ -49,7 +48,8 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
         int fgcolor = 0x99a0a0a0;
         if (!this.enabled) {
             fgcolor = -0x995f5f60;
-        } else if (this.hovered(cursorX, cursorY)) {
+        }
+        else if (this.hovered(cursorX, cursorY)) {
             fgcolor = 0x99ffffa0;
             if (this.dragging) {
                 this.sliderX = cursorX - 1;
@@ -66,52 +66,59 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
         Gui.drawRect(this.x(), this.y() + 1, this.x() + 1, this.y() + this.height() - 1, fgcolor);
         Gui.drawRect(this.x() + 1, this.y(), this.x() + this.width() - 1, this.y() + 1, fgcolor);
         Gui.drawRect(this.x() + 1, this.y() + this.height() - 1, this.x() + this.width() - 1,
-                this.y() + this.height(), fgcolor);
+                     this.y() + this.height(), fgcolor);
         Gui.drawRect(this.x() + this.width() - 1, this.y() + 1, this.x() + this.width(), this.y()
                 + this.height() - 1, fgcolor);
         Gui.drawRect(this.x() + 1, this.y() + 1, this.x() + this.width() - 1,
-                this.y() + this.height() - 1, 0xff000000);
+                     this.y() + this.height() - 1, 0xff000000);
 
         this.sliderX = Math.round(this.sliderValue * (this.width() - 5)) + this.x() + 1;
         Gui.drawRect(this.sliderX, this.y() + 1, this.sliderX + 1, this.y() + 2,
-                buttonColor & 0x88ffffff);
+                     buttonColor & 0x88ffffff);
         Gui.drawRect(this.sliderX + 1, this.y() + 1, this.sliderX + 2, this.y() + 2, buttonColor);
         Gui.drawRect(this.sliderX + 2, this.y() + 1, this.sliderX + 3, this.y() + 2,
-                buttonColor & 0x88ffffff);
+                     buttonColor & 0x88ffffff);
         Gui.drawRect(this.sliderX, this.y() + 2, this.sliderX + 1, this.y() + this.height() - 2,
-                buttonColor);
+                     buttonColor);
         Gui.drawRect(this.sliderX + 1, this.y() + 2, this.sliderX + 2,
-                this.y() + this.height() - 2, buttonColor & 0x88ffffff);
+                     this.y() + this.height() - 2, buttonColor & 0x88ffffff);
         Gui.drawRect(this.sliderX + 2, this.y() + 2, this.sliderX + 3,
-                this.y() + this.height() - 2, buttonColor);
+                     this.y() + this.height() - 2, buttonColor);
         Gui.drawRect(this.sliderX, this.y() + this.height() - 2, this.sliderX + 1,
-                this.y() + this.height() - 1, buttonColor & 0x88ffffff);
+                     this.y() + this.height() - 1, buttonColor & 0x88ffffff);
         Gui.drawRect(this.sliderX + 1, this.y() + this.height() - 2, this.sliderX + 2, this.y()
                 + this.height() - 1, buttonColor);
         Gui.drawRect(this.sliderX + 2, this.y() + this.height() - 2, this.sliderX + 3, this.y()
                 + this.height() - 1, buttonColor & 0x88ffffff);
 
-        int valCenter = 0;
+        int valCenter;
         if (this.sliderValue < 0.5f)
             valCenter = Math.round(0.7f * this.width());
         else
             valCenter = Math.round(0.2f * this.width());
 
         String valLabel = Integer.toString(Math.round(this.sliderValue
-                * (this.maxValue - this.minValue) + this.minValue))
+                                                              * (this.maxValue - this.minValue) + this.minValue))
                 + this.units;
         this.drawCenteredString(mc.fontRenderer, valLabel, valCenter + this.x(), this.y() + 2,
-                buttonColor);
+                                buttonColor);
 
         this.drawCenteredString(mc.fontRenderer, this.description,
-                this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
-                        + (this.height() - 6) / 2, labelColor);
+                                this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
+                                        + (this.height() - 6) / 2, labelColor);
     }
 
     @Override
     public Float getTempValue() {
         this.tempValue = this.sliderValue * (this.maxValue - this.minValue) + this.minValue;
         return (Float) this.tempValue;
+    }
+
+    @Override
+    public void setTempValue(Object theVal) {
+        super.setTempValue(theVal);
+        this.sliderValue = ((Float) this.tempValue - this.minValue)
+                / (this.maxValue - this.minValue);
     }
 
     @Override
@@ -189,19 +196,12 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
             this.clear();
         else
             this.value = TabbyChatUtils.median(this.minValue, this.maxValue,
-                    Float.valueOf((String) updateVal));
+                                               Float.valueOf((String) updateVal));
     }
 
     public void setRange(float theMin, float theMax) {
         this.minValue = theMin;
         this.maxValue = theMax;
-        this.sliderValue = ((Float) this.tempValue - this.minValue)
-                / (this.maxValue - this.minValue);
-    }
-
-    @Override
-    public void setTempValue(Object theVal) {
-        super.setTempValue(theVal);
         this.sliderValue = ((Float) this.tempValue - this.minValue)
                 / (this.maxValue - this.minValue);
     }

@@ -10,11 +10,11 @@ public enum TimeStampEnum {
     STANDARDSECONDS("[hh:mm:ss]", "[12:00:01]", "\\[[0-9]{2}:[0-9]{2}:[0-9]{2}\\]"),
     STANDARDSECONDSMARKER("[hh:mm:ssa]", "[12:00:01PM]", "\\[[0-9]{2}:[0-9]{2}:[0-9]{2}(AM|PM)\\]");
 
-    private String code;
-    public String maxTime;
-    public String regEx;
+    public final String maxTime;
+    public final String regEx;
+    private final String code;
 
-    private TimeStampEnum(String _code, String _maxTime, String _regex) {
+    TimeStampEnum(String _code, String _maxTime, String _regex) {
         this.code = _code;
         this.maxTime = _maxTime;
         this.regEx = _regex;

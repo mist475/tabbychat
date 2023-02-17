@@ -1,54 +1,54 @@
 package acs.tabbychat.settings;
 
-import java.util.Properties;
-
 import net.minecraft.client.Minecraft;
+
+import java.util.Properties;
 
 public interface ITCSetting {
 
-    public void actionPerformed();
+    void actionPerformed();
 
-    public void clear();
+    void clear();
 
-    public void disable();
+    void disable();
 
-    public void drawButton(Minecraft mc, int cursorX, int cursorY);
+    void drawButton(Minecraft mc, int cursorX, int cursorY);
 
-    public void enable();
+    void enable();
 
-    public boolean enabled();
+    boolean enabled();
 
-    public Object getDefault();
+    Object getDefault();
 
-    public String getProperty();
+    String getProperty();
 
-    public Object getTempValue();
+    Object getTempValue();
 
-    public String getType();
+    void setTempValue(Object updateVal);
 
-    public Boolean hovered(int cursorX, int cursorY);
+    String getType();
 
-    public void loadSelfFromProps(Properties readProps);
+    Boolean hovered(int cursorX, int cursorY);
 
-    public void mouseClicked(int par1, int par2, int par3);
+    void loadSelfFromProps(Properties readProps);
 
-    public void reset();
+    void mouseClicked(int par1, int par2, int par3);
 
-    public void resetDescription();
+    void reset();
 
-    public void save();
+    void resetDescription();
 
-    public void saveSelfToProps(Properties writeProps);
+    void save();
 
-    public void setButtonDims(int wide, int tall);
+    void saveSelfToProps(Properties writeProps);
 
-    public void setButtonLoc(int bx, int by);
+    void setButtonDims(int wide, int tall);
 
-    public void setLabelLoc(int lx);
+    void setButtonLoc(int bx, int by);
 
-    public void setTempValue(Object updateVal);
+    void setLabelLoc(int lx);
 
-    public void setCleanValue(Object uncleanVal);
+    void setCleanValue(Object uncleanVal);
 
-    public void setValue(Object updateVal);
+    void setValue(Object updateVal);
 }

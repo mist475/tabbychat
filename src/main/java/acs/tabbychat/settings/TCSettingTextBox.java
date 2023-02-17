@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiTextField;
 public class TCSettingTextBox extends TCSetting implements ITCSetting {
     protected GuiTextField textBox;
     protected int charLimit = 32;
+
     {
         this.type = "textbox";
     }
@@ -36,8 +37,8 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
 
         this.textBox.drawTextBox();
         this.drawCenteredString(mc.fontRenderer, this.description,
-                this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
-                        + (this.height() - 6) / 2, labelColor);
+                                this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
+                                        + (this.height() - 6) / 2, labelColor);
     }
 
     @Override
@@ -57,6 +58,11 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
     }
 
     @Override
+    public void setTempValue(Object theVal) {
+        this.textBox.setText((String) theVal);
+    }
+
+    @Override
     public String getValue() {
         return (String) this.value;
     }
@@ -73,7 +79,7 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
     private void reassignField() {
         String tmp = this.textBox.getText();
         this.textBox = new GuiTextField(mc.fontRenderer, this.x(), this.y() + 1, this.width(),
-                this.height() + 1);
+                                        this.height() + 1);
         this.textBox.setMaxStringLength(this.charLimit);
         this.textBox.setText(tmp);
     }
@@ -109,10 +115,5 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
 
     public void setDefault(Object newDefault) {
         this.theDefault = newDefault;
-    }
-
-    @Override
-    public void setTempValue(Object theVal) {
-        this.textBox.setText((String) theVal);
     }
 }

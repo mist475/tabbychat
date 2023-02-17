@@ -10,12 +10,21 @@ public enum FormatCodeEnum {
     ITALIC(I18n.format("formats.italic"), "\u00A7o"),
     MAGIC(I18n.format("formats.magic"), "\u00A7k");
 
-    private String title;
-    private String code;
+    private final String title;
+    private final String code;
 
-    private FormatCodeEnum(String _name, String _code) {
+    FormatCodeEnum(String _name, String _code) {
         this.title = _name;
         this.code = _code;
+    }
+
+    public static FormatCodeEnum cleanValueOf(String name) {
+        try {
+            return FormatCodeEnum.valueOf(name);
+        }
+        catch (Exception e) {
+            return FormatCodeEnum.DEFAULT;
+        }
     }
 
     @Override
@@ -29,13 +38,5 @@ public enum FormatCodeEnum {
 
     public String color() {
         return this.title;
-    }
-
-    public static FormatCodeEnum cleanValueOf(String name) {
-        try {
-            return FormatCodeEnum.valueOf(name);
-        } catch (Exception e) {
-            return FormatCodeEnum.DEFAULT;
-        }
     }
 }

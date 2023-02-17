@@ -8,15 +8,15 @@ public enum ChannelDelimEnum {
     BRACKETS(I18n.format("delims.brackets"), "[", "]"),
     PARENTHESIS(I18n.format("delims.parenthesis"), "(", ")"),
     ANGLESPARENSCOMBO(I18n.format("delims.anglesparenscombo"), "<\\(",
-            ")(?: |\u00A7r)?[A-Za-z0-9_]{1,16}>"),
+                      ")(?: |\u00A7r)?[A-Za-z0-9_]{1,16}>"),
     ANGLESBRACKETSCOMBO(I18n.format("delims.anglesbracketscombo"), "<\\[",
-            "](?: |\u00A7r)?[A-Za-z0-9_]{1,16}>");
+                        "](?: |\u00A7r)?[A-Za-z0-9_]{1,16}>");
 
     private String title;
     private String open;
     private String close;
 
-    private ChannelDelimEnum(String title, String open, String close) {
+    ChannelDelimEnum(String title, String open, String close) {
         this.title = title;
         this.open = open;
         this.close = close;

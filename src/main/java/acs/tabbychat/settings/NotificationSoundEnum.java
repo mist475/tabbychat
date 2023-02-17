@@ -26,10 +26,10 @@ public enum NotificationSoundEnum {
     PIG(I18n.format("sounds.pig"), "mob.pig.say"),
     WOLF(I18n.format("sounds.wolf"), "mob.wolf.bark");
 
-    private String title;
-    private String file;
+    private final String title;
+    private final String file;
 
-    private NotificationSoundEnum(String _title, String _file) {
+    NotificationSoundEnum(String _title, String _file) {
         this.title = _title;
         this.file = _file;
     }

@@ -14,7 +14,7 @@ public class TCSettingBool extends TCSetting implements ITCSetting {
     }
 
     public TCSettingBool(Object theSetting, String theProperty, String theCategory, int theID,
-            FormatCodeEnum theFormat) {
+                         FormatCodeEnum theFormat) {
         super(theSetting, theProperty, theCategory, theID, theFormat);
         this.width(9);
         this.height(9);
@@ -36,7 +36,8 @@ public class TCSettingBool extends TCSetting implements ITCSetting {
         int fgcolor = 0x99a0a0a0;
         if (!this.enabled) {
             fgcolor = -0x995f5f60;
-        } else if (this.hovered(cursorX, cursorY)) {
+        }
+        else if (this.hovered(cursorX, cursorY)) {
             fgcolor = 0x99ffffa0;
         }
 
@@ -57,8 +58,8 @@ public class TCSettingBool extends TCSetting implements ITCSetting {
         }
 
         this.drawCenteredString(mc.fontRenderer, this.description,
-                this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
-                        + (this.height() - 6) / 2, labelColor);
+                                this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
+                                        + (this.height() - 6) / 2, labelColor);
     }
 
     @Override

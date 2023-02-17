@@ -2,13 +2,10 @@ package acs.tabbychat.settings;
 
 import acs.tabbychat.gui.PrefsButton;
 import acs.tabbychat.jazzy.TCSpellCheckManager;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.MathHelper;
-
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -20,9 +17,9 @@ import java.util.List;
 
 public class TCSettingList extends Gui {
 
-    private List<Entry> list = Lists.newArrayList();
-    private List<Entry> selected = Lists.newArrayList();
     private final File dictionary;
+    private final List<Entry> list = Lists.newArrayList();
+    private final List<Entry> selected = Lists.newArrayList();
     private int currentPage = 1;
     private int id = 0;
     private int xPosition, yPosition;
@@ -39,7 +36,7 @@ public class TCSettingList extends Gui {
         Gui.drawRect(xPosition - 1, yPosition + height, xPosition + width + 1, yPosition + height
                 + 1, -0xffffff);
         Gui.drawRect(xPosition + width, yPosition + height + 1, xPosition + width + 1,
-                yPosition - 1, -0xffffff);
+                     yPosition - 1, -0xffffff);
         Gui.drawRect(xPosition - 1, yPosition - 1, xPosition + width + 1, yPosition, -0xffffff);
 
         int i = 0;
@@ -51,9 +48,10 @@ public class TCSettingList extends Gui {
     }
 
     public boolean contains(String srt) {
-        for (Entry entry : list)
+        for (Entry entry : list) {
             if (srt.equals(entry.displayString))
                 return true;
+        }
         return false;
     }
 
@@ -63,7 +61,8 @@ public class TCSettingList extends Gui {
         if (!contains(str)) {
             char[] chararray = str.toCharArray();
             int j = 0;
-            label_1: for (Entry entry : list) {
+            label_1:
+            for (Entry entry : list) {
                 char[] chararray1 = entry.displayString.toCharArray();
                 for (int i = 0; i < Math.min(chararray.length, chararray1.length); i++) {
                     char c = chararray[i], c1 = chararray1[i];
@@ -71,10 +70,8 @@ public class TCSettingList extends Gui {
                         break;
                     if (c == c1)
                         continue;
-                    if (c < c1) {
-                        list.add(j, new Entry(id, str));
-                        break label_1;
-                    }
+                    list.add(j, new Entry(id, str));
+                    break label_1;
                 }
                 j++;
             }
@@ -98,7 +95,7 @@ public class TCSettingList extends Gui {
     }
 
     public List<Entry> getEntries() {
-        return new ArrayList<Entry>(list);
+        return new ArrayList<>(list);
     }
 
     public List<Entry> getVisible() {
@@ -121,7 +118,7 @@ public class TCSettingList extends Gui {
     }
 
     public List<Entry> getSelected() {
-        return new ArrayList<Entry>(this.selected);
+        return new ArrayList<>(this.selected);
     }
 
     public void selectEntry(Entry entry) {
@@ -224,7 +221,7 @@ public class TCSettingList extends Gui {
 
     public class Entry extends PrefsButton {
 
-        private TCSettingList list = TCSettingList.this;
+        private final TCSettingList list = TCSettingList.this;
         private int pos;
 
         public Entry(int id, String value) {

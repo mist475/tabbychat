@@ -2,13 +2,10 @@ package acs.tabbychat.settings;
 
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.util.TabbyChatUtils;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.List;
@@ -35,7 +32,6 @@ public class TCChatFilter {
 
     public String sendToTabName = "";
     public String expressionString = ".*";
-
     public Pattern expressionPattern = Pattern.compile(this.expressionString);
     // private static final Pattern allFormatCodes =
     // Pattern.compile("(?i)(\\u00A7[0-9A-FK-OR])+");
@@ -56,7 +52,7 @@ public class TCChatFilter {
 
         // Apply filter
         Matcher findFilterMatches = this.expressionPattern.matcher(EnumChatFormatting
-                .getTextWithoutFormattingCodes(input.getUnformattedText()));
+                                                                           .getTextWithoutFormattingCodes(input.getUnformattedText()));
         boolean foundMatch = false;
         List<Integer> list = Lists.newArrayList();
         while (findFilterMatches.find()) {
@@ -66,7 +62,8 @@ public class TCChatFilter {
             if (this.highlightBool) {
                 list.add(findFilterMatches.start());
                 list.add(findFilterMatches.end());
-            } else
+            }
+            else
                 break;
         }
         this.lastMatch = ArrayUtils.toPrimitive(list.toArray(new Integer[list.size()]));
@@ -81,13 +78,16 @@ public class TCChatFilter {
                     this.tabName = findFilterMatches.group(group);
                     if (this.tabName == null)
                         this.tabName = this.filterName;
-                } else {
+                }
+                else {
                     this.tabName = this.filterName;
                 }
-            } else {
+            }
+            else {
                 this.tabName = this.sendToTabName;
             }
-        } else {
+        }
+        else {
             this.tabName = null;
         }
 
@@ -107,10 +107,11 @@ public class TCChatFilter {
                 this.expressionPattern = Pattern.compile(this.expressionString);
             else
                 this.expressionPattern = Pattern.compile(this.expressionString,
-                        Pattern.CASE_INSENSITIVE);
-        } catch (PatternSyntaxException e) {
+                                                         Pattern.CASE_INSENSITIVE);
+        }
+        catch (PatternSyntaxException e) {
             TabbyChat.printMessageToChat("Invalid expression entered for filter '"
-                    + this.filterName + "', resetting to default.");
+                                                 + this.filterName + "', resetting to default.");
             this.expressionString = ".*";
             this.expressionPattern = Pattern.compile(this.expressionString);
         }
