@@ -25,12 +25,7 @@ public class TCSettingsSpelling extends TCSettingsGUI {
     private static final int OPEN = 9508;
     private static final int RELOAD = 9509;
 
-    {
-        this.propertyPrefix = "settings.spelling";
-    }
-
-    public TCSettingBool spellCheckEnable = new TCSettingBool(true, "spellCheckEnable",
-                                                              this.propertyPrefix, SPELL_CHECK_ENABLE);
+    public TCSettingBool spellCheckEnable;
     private GuiTextField wordInput;
     private final PrefsButton addWord = new PrefsButton(ADD_WORD, 0, 0, 15, 12, ">");
     private final PrefsButton removeWords = new PrefsButton(REMOVE_WORD, 0, 0, 15, 12, "<");
@@ -44,6 +39,9 @@ public class TCSettingsSpelling extends TCSettingsGUI {
 
     public TCSettingsSpelling(TabbyChat _tc) {
         super(_tc);
+        this.propertyPrefix = "settings.spelling";
+        spellCheckEnable = new TCSettingBool(true, "spellCheckEnable",
+                                             this.propertyPrefix, SPELL_CHECK_ENABLE);
         this.name = I18n.format("settings.spelling.name");
         this.settingsFile = new File(tabbyChatDir, "spellcheck.cfg");
         this.bgcolor = 0x66ffb62f;

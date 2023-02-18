@@ -39,44 +39,53 @@ public class TCSettingsFilters extends TCSettingsGUI {
     private static final int EXPRESSION_ID = 9315;
     private static final int ADD_ID = 9316;
     private static final int DEL_ID = 9317;
-
-    {
-        this.propertyPrefix = "settings.filters";
-    }
-
-    public TCSettingBool inverseMatch = new TCSettingBool(false, "inverseMatch",
-                                                          this.propertyPrefix, INVERSE_MATCH_ID);
-    public TCSettingBool caseSensitive = new TCSettingBool(false, "caseSensitive",
-                                                           this.propertyPrefix, CASE_SENSE_ID);
-    public TCSettingBool highlightBool = new TCSettingBool(true, "highlightBool",
-                                                           this.propertyPrefix, HIGHLIGHT_BOOL_ID);
-    public TCSettingEnum highlightColor = new TCSettingEnum(ColorCodeEnum.YELLOW, "highlightColor",
-                                                            this.propertyPrefix, HIGHLIGHT_COLOR_ID, FormatCodeEnum.ITALIC);
-    public TCSettingEnum highlightFormat = new TCSettingEnum(FormatCodeEnum.BOLD,
-                                                             "highlightFormat", this.propertyPrefix, HIGHLIGHT_FORMAT_ID, FormatCodeEnum.ITALIC);
-    public TCSettingBool audioNotificationBool = new TCSettingBool(false, "audioNotificationBool",
-                                                                   this.propertyPrefix, AUDIO_NOTIFICATION_BOOL_ID);
-    public TCSettingEnum audioNotificationSound = new TCSettingEnum(NotificationSoundEnum.ORB,
-                                                                    "audioNotificationSound", this.propertyPrefix, AUDIO_NOTIFICATION_ENUM_ID,
-                                                                    FormatCodeEnum.ITALIC);
-    public TCSettingTextBox filterName = new TCSettingTextBox("New", "filterName",
-                                                              this.propertyPrefix, FILTER_NAME_ID);
-    public TCSettingBool sendToTabBool = new TCSettingBool(false, "sendToTabBool",
-                                                           this.propertyPrefix, SEND_TO_TAB_BOOL_ID);
-    public TCSettingTextBox sendToTabName = new TCSettingTextBox("", "sendToTabName",
-                                                                 this.propertyPrefix, SEND_TO_TAB_NAME_ID);
-    public TCSettingBool sendToAllTabs = new TCSettingBool(false, "sendToAllTabs",
-                                                           this.propertyPrefix, SEND_TO_ALL_TABS_ID);
-    public TCSettingBool removeMatches = new TCSettingBool(false, "removeMatches",
-                                                           this.propertyPrefix, REMOVE_MATCHES_ID);
-    public TCSettingTextBox expressionString = new TCSettingTextBox(".*", "expressionString",
-                                                                    this.propertyPrefix, EXPRESSION_ID);
+    public TCSettingBool inverseMatch;
+    public TCSettingBool caseSensitive;
+    public TCSettingBool highlightBool;
+    public TCSettingEnum highlightColor;
+    public TCSettingEnum highlightFormat;
+    public TCSettingBool audioNotificationBool;
+    public TCSettingEnum audioNotificationSound;
+    public TCSettingTextBox filterName;
+    public TCSettingBool sendToTabBool;
+    public TCSettingTextBox sendToTabName;
+    public TCSettingBool sendToAllTabs;
+    public TCSettingBool removeMatches;
+    public TCSettingTextBox expressionString;
     public TreeMap<Integer, TCChatFilter> filterMap = new TreeMap<>();
     protected int curFilterId = 0;
     protected TreeMap<Integer, TCChatFilter> tempFilterMap = new TreeMap<>();
 
     public TCSettingsFilters(TabbyChat _tc) {
         super(_tc);
+        this.propertyPrefix = "settings.filters";
+        inverseMatch = new TCSettingBool(false, "inverseMatch",
+                                         this.propertyPrefix, INVERSE_MATCH_ID);
+        caseSensitive = new TCSettingBool(false, "caseSensitive",
+                                          this.propertyPrefix, CASE_SENSE_ID);
+        highlightBool = new TCSettingBool(true, "highlightBool",
+                                          this.propertyPrefix, HIGHLIGHT_BOOL_ID);
+        highlightColor = new TCSettingEnum(ColorCodeEnum.YELLOW, "highlightColor",
+                                           this.propertyPrefix, HIGHLIGHT_COLOR_ID, FormatCodeEnum.ITALIC);
+        highlightFormat = new TCSettingEnum(FormatCodeEnum.BOLD,
+                                            "highlightFormat", this.propertyPrefix, HIGHLIGHT_FORMAT_ID, FormatCodeEnum.ITALIC);
+        audioNotificationBool = new TCSettingBool(false, "audioNotificationBool",
+                                                  this.propertyPrefix, AUDIO_NOTIFICATION_BOOL_ID);
+        audioNotificationSound = new TCSettingEnum(NotificationSoundEnum.ORB,
+                                                   "audioNotificationSound", this.propertyPrefix, AUDIO_NOTIFICATION_ENUM_ID);
+        filterName = new TCSettingTextBox("New", "filterName",
+                                          this.propertyPrefix, FILTER_NAME_ID);
+        sendToTabBool = new TCSettingBool(false, "sendToTabBool",
+                                          this.propertyPrefix, SEND_TO_TAB_BOOL_ID);
+        sendToTabName = new TCSettingTextBox("", "sendToTabName",
+                                             this.propertyPrefix, SEND_TO_TAB_NAME_ID);
+        sendToAllTabs = new TCSettingBool(false, "sendToAllTabs",
+                                          this.propertyPrefix, SEND_TO_ALL_TABS_ID);
+        removeMatches = new TCSettingBool(false, "removeMatches",
+                                          this.propertyPrefix, REMOVE_MATCHES_ID);
+        expressionString = new TCSettingTextBox(".*", "expressionString",
+                                                this.propertyPrefix, EXPRESSION_ID);
+
         this.name = I18n.format("settings.filters.name");
         this.settingsFile = new File(TabbyChatUtils.getServerDir(), "filters.cfg");
         this.bgcolor = 0x66289f28;

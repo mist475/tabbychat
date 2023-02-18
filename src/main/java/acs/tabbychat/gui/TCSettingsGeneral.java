@@ -24,32 +24,39 @@ public class TCSettingsGeneral extends TCSettingsGUI {
     private static final int UPDATE_CHECK_ENABLE = 9109;
     private static final int SPLIT_CHATLOG = 9110;
 
-    {
-        this.propertyPrefix = "settings.general";
-    }
-
     public SimpleDateFormat timeStamp = new SimpleDateFormat();
-    public TCSettingBool tabbyChatEnable = new TCSettingBool(true, "tabbyChatEnable",
-                                                             this.propertyPrefix, TABBYCHAT_ENABLE_ID);
-    public TCSettingBool saveChatLog = new TCSettingBool(false, "saveChatLog", this.propertyPrefix,
-                                                         SAVE_CHATLOG_ID);
-    public TCSettingBool timeStampEnable = new TCSettingBool(false, "timeStampEnable",
-                                                             this.propertyPrefix, TIMESTAMP_ENABLE_ID);
-    public TCSettingEnum timeStampStyle = new TCSettingEnum(TimeStampEnum.MILITARY,
-                                                            "timeStampStyle", this.propertyPrefix, TIMESTAMP_STYLE_ID, FormatCodeEnum.ITALIC);
-    public TCSettingEnum timeStampColor = new TCSettingEnum(ColorCodeEnum.DEFAULT,
-                                                            "timeStampColor", this.propertyPrefix, TIMESTAMP_COLOR_ID, FormatCodeEnum.ITALIC);
-    public TCSettingBool groupSpam = new TCSettingBool(false, "groupSpam", this.propertyPrefix,
-                                                       GROUP_SPAM_ID);
-    public TCSettingBool unreadFlashing = new TCSettingBool(true, "unreadFlashing",
-                                                            this.propertyPrefix, UNREAD_FLASHING_ID);
-    public TCSettingBool updateCheckEnable = new TCSettingBool(true, "updateCheckEnable",
-                                                               this.propertyPrefix, UPDATE_CHECK_ENABLE);
-    public TCSettingBool splitChatLog = new TCSettingBool(false, "splitChatLog",
-                                                          this.propertyPrefix, SPLIT_CHATLOG);
+    public TCSettingBool tabbyChatEnable;
+    public TCSettingBool saveChatLog;
+    public TCSettingBool timeStampEnable;
+    public TCSettingEnum timeStampStyle;
+    public TCSettingEnum timeStampColor;
+    public TCSettingBool groupSpam;
+    public TCSettingBool unreadFlashing;
+    public TCSettingBool updateCheckEnable;
+    public TCSettingBool splitChatLog;
 
     public TCSettingsGeneral(TabbyChat _tc) {
         super(_tc);
+        this.propertyPrefix = "settings.general";
+        tabbyChatEnable = new TCSettingBool(true, "tabbyChatEnable",
+                                            this.propertyPrefix, TABBYCHAT_ENABLE_ID);
+        saveChatLog = new TCSettingBool(false, "saveChatLog", this.propertyPrefix,
+                                        SAVE_CHATLOG_ID);
+        timeStampEnable = new TCSettingBool(false, "timeStampEnable",
+                                            this.propertyPrefix, TIMESTAMP_ENABLE_ID);
+        timeStampStyle = new TCSettingEnum(TimeStampEnum.MILITARY,
+                                           "timeStampStyle", this.propertyPrefix, TIMESTAMP_STYLE_ID, FormatCodeEnum.ITALIC);
+        timeStampColor = new TCSettingEnum(ColorCodeEnum.DEFAULT,
+                                           "timeStampColor", this.propertyPrefix, TIMESTAMP_COLOR_ID, FormatCodeEnum.ITALIC);
+        groupSpam = new TCSettingBool(false, "groupSpam", this.propertyPrefix,
+                                      GROUP_SPAM_ID);
+        unreadFlashing = new TCSettingBool(true, "unreadFlashing",
+                                           this.propertyPrefix, UNREAD_FLASHING_ID);
+        updateCheckEnable = new TCSettingBool(true, "updateCheckEnable",
+                                              this.propertyPrefix, UPDATE_CHECK_ENABLE);
+        splitChatLog = new TCSettingBool(false, "splitChatLog",
+                                         this.propertyPrefix, SPLIT_CHATLOG);
+
         this.name = I18n.format("settings.general.name");
         this.settingsFile = new File(tabbyChatDir, "general.cfg");
         this.bgcolor = 0x664782be;
