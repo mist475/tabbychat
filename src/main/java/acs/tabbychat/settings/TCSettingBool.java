@@ -3,19 +3,20 @@ package acs.tabbychat.settings;
 import net.minecraft.client.Minecraft;
 
 public class TCSettingBool extends TCSetting implements ITCSetting {
-    {
-        this.type = "bool";
-    }
 
     public TCSettingBool(Object theSetting, String theProperty, String theCategory, int theID) {
         super(theSetting, theProperty, theCategory, theID);
-        this.width(9);
-        this.height(9);
+        setCommon();
     }
 
     public TCSettingBool(Object theSetting, String theProperty, String theCategory, int theID,
                          FormatCodeEnum theFormat) {
         super(theSetting, theProperty, theCategory, theID, theFormat);
+        setCommon();
+    }
+
+    public void setCommon() {
+        this.type = "bool";
         this.width(9);
         this.height(9);
     }

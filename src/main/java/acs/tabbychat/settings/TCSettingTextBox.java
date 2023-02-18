@@ -7,14 +7,11 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
     protected GuiTextField textBox;
     protected int charLimit = 32;
 
-    {
-        this.type = "textbox";
-    }
-
     public TCSettingTextBox(Object theSetting, String theProperty, String theCategory, int theID) {
         super(theSetting, theProperty, theCategory, theID);
         this.width(50);
         this.height(11);
+        this.type = "textbox";
         this.textBox = new GuiTextField(mc.fontRenderer, 0, 0, this.width(), this.height());
         this.textBox.setText((String) this.value);
     }

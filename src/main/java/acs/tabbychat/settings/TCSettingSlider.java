@@ -7,24 +7,20 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 public class TCSettingSlider extends TCSetting implements ITCSetting {
+    private final int buttonOffColor = 0x44ffffff;
     public String units = "%";
     protected float minValue;
     protected float maxValue;
     protected float sliderValue;
     private int sliderX;
-    private final int buttonOffColor = 0x44ffffff;
     private boolean dragging = false;
-
-    {
-        this.type = "slider";
-    }
 
     private TCSettingSlider(Object theSetting, String theProperty, String theCategory, int theID) {
         super(theSetting, theProperty, theCategory, theID);
+        this.type = "slider";
+        setSliderValue();
         this.width(100);
         this.height(11);
-        this.sliderValue = ((Float) this.tempValue - this.minValue)
-                / (this.maxValue - this.minValue);
     }
 
     public TCSettingSlider(Float theSetting, String theProperty, String theCategory, int theID,
@@ -32,13 +28,15 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
         this(theSetting, theProperty, theCategory, theID);
         this.minValue = minVal;
         this.maxValue = maxVal;
-        this.sliderValue = ((Float) this.tempValue - this.minValue)
-                / (this.maxValue - this.minValue);
     }
 
     @Override
     public void clear() {
         super.clear();
+        setSliderValue();
+    }
+
+    public void setSliderValue() {
         this.sliderValue = ((Float) this.tempValue - this.minValue)
                 / (this.maxValue - this.minValue);
     }
@@ -97,8 +95,8 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
         else
             valCenter = Math.round(0.2f * this.width());
 
-        String valLabel = Integer.toString(Math.round(this.sliderValue
-                                                              * (this.maxValue - this.minValue) + this.minValue))
+        String valLabel = Math.round(this.sliderValue
+                                             * (this.maxValue - this.minValue) + this.minValue)
                 + this.units;
         this.drawCenteredString(mc.fontRenderer, valLabel, valCenter + this.x(), this.y() + 2,
                                 buttonColor);
@@ -117,8 +115,7 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
     @Override
     public void setTempValue(Object theVal) {
         super.setTempValue(theVal);
-        this.sliderValue = ((Float) this.tempValue - this.minValue)
-                / (this.maxValue - this.minValue);
+        setSliderValue();
     }
 
     @Override
@@ -180,8 +177,7 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
     @Override
     public void reset() {
         super.reset();
-        this.sliderValue = ((Float) this.tempValue - this.minValue)
-                / (this.maxValue - this.minValue);
+        setSliderValue();
     }
 
     @Override
@@ -196,13 +192,12 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
             this.clear();
         else
             this.value = TabbyChatUtils.median(this.minValue, this.maxValue,
-                                               Float.valueOf((String) updateVal));
+                                               Float.parseFloat((String) updateVal));
     }
 
     public void setRange(float theMin, float theMax) {
         this.minValue = theMin;
         this.maxValue = theMax;
-        this.sliderValue = ((Float) this.tempValue - this.minValue)
-                / (this.maxValue - this.minValue);
+        setSliderValue();
     }
 }
