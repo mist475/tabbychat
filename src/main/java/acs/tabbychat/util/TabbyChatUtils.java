@@ -66,15 +66,6 @@ public class TabbyChatUtils {
     private static final SimpleDateFormat logNameFormat = new SimpleDateFormat("'_'yyyy-MM-dd'.log'");
 
     public static void startup() {
-        // check if forge is installed.
-        try {
-            Class.forName("net.minecraftforge.common.MinecraftForge");
-            TabbyChat.forgePresent = true;
-            log.info("MinecraftForge detected.  Will check for client-commands.");
-        }
-        catch (ClassNotFoundException e) {
-            TabbyChat.forgePresent = false;
-        }
 
         compressLogs();
 

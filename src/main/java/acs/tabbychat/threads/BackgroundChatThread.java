@@ -1,12 +1,9 @@
 package acs.tabbychat.threads;
 
 import acs.tabbychat.core.TabbyChat;
-import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatAllowedCharacters;
-
-import java.lang.reflect.Method;
+import net.minecraftforge.client.ClientCommandHandler;
 
 public class BackgroundChatThread extends Thread {
     String sendChat = "";
@@ -70,33 +67,11 @@ public class BackgroundChatThread extends Thread {
             String message = cmdPrefix + sendPart.toString().trim();
             message = ChatAllowedCharacters.filerAllowedCharacters(message);
 
-            // Check for client commands.
-            // Use reflection, so we don't have to import Forge.
-            if (TabbyChat.forgePresent) {
-                try {
-                    Class<?> clntCmdHndlr = Class
-                            .forName("net.minecraftforge.client.ClientCommandHandler");
-                    Method exeCmd;
-                    try {
-                        exeCmd = clntCmdHndlr.getMethod("func_71556_a", ICommandSender.class,
-                                                        String.class);
-                    }
-                    catch (NoSuchMethodException e) {
-                        exeCmd = clntCmdHndlr.getMethod("executeCommand", ICommandSender.class,
-                                                        String.class);
-                    }
-                    Object instance = clntCmdHndlr.getField("instance").get(null);
-                    int value = (Integer) exeCmd.invoke(instance, mc.thePlayer, message);
-                    if (value == 1)
-                        return;
-                }
-                catch (Exception e) {
-                    TabbyChatUtils.log
-                            .warn("Oops, something went wrong while checking the message for Client Commands");
-                    e.printStackTrace();
-                }
-
+            //Check if command is client side
+            if (ClientCommandHandler.instance.executeCommand(mc.thePlayer, message) == 1) {
+                return;
             }
+
             mc.thePlayer.sendChatMessage(message);
         }
     }

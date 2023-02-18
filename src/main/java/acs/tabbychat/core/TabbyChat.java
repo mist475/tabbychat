@@ -79,7 +79,6 @@ public class TabbyChat {
             // Create
             .create();
     public static boolean modLoaded = false;
-    public static boolean forgePresent = false;
     public static boolean defaultUnicode;
     public static String version = TabbyChatUtils.version;
     public static Minecraft mc;
