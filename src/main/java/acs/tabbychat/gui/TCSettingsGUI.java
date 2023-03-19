@@ -115,8 +115,8 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
                          ScreenList.get(i).bgcolor);
             }
         }
-        for (Object o : this.buttonList) {
-            ((GuiButton) o).drawButton(mc, x, y);
+        for (GuiButton guiButton : this.buttonList) {
+            guiButton.drawButton(mc, x, y);
         }
     }
 
@@ -124,8 +124,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
     public void handleMouseInput() {
         super.handleMouseInput();
         for (Object o : this.buttonList) {
-            if (o instanceof ITCSetting) {
-                ITCSetting tmp = (ITCSetting) o;
+            if (o instanceof ITCSetting tmp) {
                 if (Objects.equals(tmp.getType(), "slider")) {
                     ((TCSettingSlider) tmp).handleMouseInput();
                 }
@@ -141,7 +140,6 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void initGui() {
         Keyboard.enableRepeatEvents(true);
         this.buttonList.clear();
@@ -219,8 +217,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
     @Override
     public void mouseClicked(int par1, int par2, int par3) {
         for (Object o : this.buttonList) {
-            if (o instanceof ITCSetting) {
-                ITCSetting tmp = (ITCSetting) o;
+            if (o instanceof ITCSetting tmp) {
                 if (Objects.equals(tmp.getType(), "textbox") || Objects.equals(tmp.getType(), "enum")
                         || Objects.equals(tmp.getType(), "slider")) {
                     tmp.mouseClicked(par1, par2, par3);

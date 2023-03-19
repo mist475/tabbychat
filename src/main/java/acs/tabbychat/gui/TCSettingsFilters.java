@@ -99,31 +99,31 @@ public class TCSettingsFilters extends TCSettingsGUI {
     public void actionPerformed(GuiButton button) {
         this.storeTempFilter();
         switch (button.id) {
-            case ADD_ID:
+            case ADD_ID -> {
                 if (this.tempFilterMap.size() == 0)
                     this.curFilterId = 1;
                 else
                     this.curFilterId = this.tempFilterMap.lastKey() + 1;
                 this.tempFilterMap.put(this.curFilterId, new TCChatFilter("New" + this.curFilterId));
                 this.displayCurrentFilter();
-                break;
-            case DEL_ID:
+            }
+            case DEL_ID -> {
                 this.tempFilterMap.remove(this.curFilterId);
                 if (!this.displayNextFilter())
                     this.displayPreviousFilter();
-                break;
-            case PREV_ID:
+            }
+            case PREV_ID -> {
                 if (this.tempFilterMap.size() > 0 && !this.displayPreviousFilter()) {
                     this.curFilterId = this.tempFilterMap.lastKey();
                     this.displayCurrentFilter();
                 }
-                break;
-            case NEXT_ID:
+            }
+            case NEXT_ID -> {
                 if (this.tempFilterMap.size() > 0 && !this.displayNextFilter()) {
                     this.curFilterId = this.tempFilterMap.firstKey();
                     this.displayCurrentFilter();
                 }
-                break;
+            }
         }
         super.actionPerformed(button);
     }
@@ -137,7 +137,6 @@ public class TCSettingsFilters extends TCSettingsGUI {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void defineDrawableSettings() {
         this.buttonList.add(this.filterName);
         this.buttonList.add(this.sendToTabBool);
@@ -162,8 +161,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         else {
             Properties displayMe = this.tempFilterMap.get(this.curFilterId).getProperties();
             for (Object drawable : this.buttonList) {
-                if (drawable instanceof ITCSetting) {
-                    ITCSetting tcDrawable = (ITCSetting) drawable;
+                if (drawable instanceof ITCSetting tcDrawable) {
                     if (tcDrawable.getType().equals("enum")) {
                         ((TCSettingEnum) tcDrawable).setTempValueFromProps(displayMe);
                     }
@@ -203,8 +201,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         else {
             Properties displayMe = next.getValue().getProperties();
             for (Object drawable : this.buttonList) {
-                if (drawable instanceof ITCSetting) {
-                    ITCSetting tcDrawable = (ITCSetting) drawable;
+                if (drawable instanceof ITCSetting tcDrawable) {
                     if (tcDrawable.getType().equals("enum")) {
                         ((TCSettingEnum) tcDrawable).setTempValueFromProps(displayMe);
                     }
@@ -219,7 +216,6 @@ public class TCSettingsFilters extends TCSettingsGUI {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void initDrawableSettings() {
         int effRight = (this.width + DISPLAY_WIDTH) / 2;
         int col1x = (this.width - DISPLAY_WIDTH) / 2 + 55;
@@ -382,7 +378,6 @@ public class TCSettingsFilters extends TCSettingsGUI {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void saveSettingsFile() {
         Properties settingsTable = new Properties();
 
@@ -417,7 +412,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
             saveFilter = this.filterMap.higherEntry(saveFilter.getKey());
         }
 
-        List<GuiButton> tmpList = new ArrayList<GuiButton>(this.buttonList);
+        List<GuiButton> tmpList = new ArrayList<>(this.buttonList);
         this.buttonList.clear();
         super.saveSettingsFile(settingsTable);
         this.buttonList = tmpList;
@@ -479,8 +474,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.sendToAllTabs.enabled = this.sendToTabBool.getTempValue();
 
         for (Object o : this.buttonList) {
-            if (o instanceof ITCSetting) {
-                ITCSetting tmp = (ITCSetting) o;
+            if (o instanceof ITCSetting tmp) {
                 if (this.tempFilterMap.size() == 0)
                     tmp.disable();
                 else if (Objects.equals(tmp.getType(), "textbox"))

@@ -62,7 +62,6 @@ public class TCSettingsAdvanced extends TCSettingsGUI {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void defineDrawableSettings() {
         this.buttonList.add(this.chatScrollHistory);
         this.buttonList.add(this.maxLengthChannelName);

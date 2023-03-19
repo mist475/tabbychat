@@ -73,7 +73,6 @@ public class TCSettingsSpelling extends TCSettingsGUI {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void defineDrawableSettings() {
         this.buttonList.add(this.spellCheckEnable);
@@ -172,40 +171,34 @@ public class TCSettingsSpelling extends TCSettingsGUI {
     @Override
     public void actionPerformed(GuiButton button) {
         switch (button.id) {
-            case ADD_WORD:
+            case ADD_WORD -> {
                 this.spellingList.addToList(this.wordInput.getText());
                 this.wordInput.setText("");
-                break;
-            case REMOVE_WORD:
+            }
+            case REMOVE_WORD -> {
                 for (Entry entry : this.spellingList.getSelected()) {
                     entry.remove();
                 }
-                break;
-            case CLEAR_WORDS:
-                this.spellingList.clearList();
-                break;
-            case NEXT:
-                this.spellingList.nextPage();
-                break;
-            case PREV:
-                this.spellingList.previousPage();
-                break;
-            case OPEN:
+            }
+            case CLEAR_WORDS -> this.spellingList.clearList();
+            case NEXT -> this.spellingList.nextPage();
+            case PREV -> this.spellingList.previousPage();
+            case OPEN -> {
                 try {
                     if (Desktop.isDesktopSupported())
                         Desktop.getDesktop().open(dictionary);
                 }
-                catch (IOException e) {
+                catch (IOException ignored) {
                 }
-                break;
-            case RELOAD:
+            }
+            case RELOAD -> {
                 try {
                     this.spellingList.loadEntries();
                 }
                 catch (IOException e) {
                     e.printStackTrace();
                 }
-                break;
+            }
         }
         super.actionPerformed(button);
     }

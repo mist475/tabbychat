@@ -257,7 +257,6 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
         catch (Exception e) {
             present = false;
         }
-        return;
     }
 
     @Override
@@ -280,9 +279,7 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
 
     @Override
     public boolean mouseClicked(int x, int y, int button) {
-        if (controlClicked(x, y, button))
-            return true;
-        return false;
+        return controlClicked(x, y, button);
     }
 
     @Override

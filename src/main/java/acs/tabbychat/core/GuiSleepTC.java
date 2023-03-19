@@ -8,7 +8,6 @@ import org.lwjgl.input.Keyboard;
 
 public class GuiSleepTC extends GuiChatTC {
 
-    @SuppressWarnings("unchecked")
     @Override
     public void initGui() {
         super.initGui();

@@ -17,16 +17,12 @@ public class MacrosContext extends ChatContext {
     public MacrosContext(int name) {
         this.id = name;
         switch (name) {
-            case 0:
-                this.displayString = "Execute Macro";
-                break;
-            case 1:
-                this.displayString = "Edit Macro";
-                break;
-            case 2:
+            case 0 -> this.displayString = "Execute Macro";
+            case 1 -> this.displayString = "Edit Macro";
+            case 2 -> {
                 try {
                     Class<?> loc = Class
-                            .forName("net.eq2online.macros.compatibility.LocalisationProvider");
+                        .forName("net.eq2online.macros.compatibility.LocalisationProvider");
                     Method locStr = loc.getMethod("getLocalisedString", String.class);
                     this.displayString = "\u0A7e" + locStr.invoke(null, "tooltip.guiedit");
                     // this.setIconUV(26, 16);
@@ -34,7 +30,7 @@ public class MacrosContext extends ChatContext {
                 catch (Exception e) {
                     e.printStackTrace();
                 }
-                break;
+            }
         }
     }
 
@@ -58,24 +54,24 @@ public class MacrosContext extends ChatContext {
             if (control != null)
                 isBindable = (Boolean) bindable.invoke(control, new Object[0]);
             switch (id) {
-                case 0:
+                case 0 -> {
                     if (isBindable && control != null) {
                         playMacro.invoke(MacroKeybindCompat.getChatHook(), new Object[0]);
                     }
-                    break;
-                case 1:
+                }
+                case 1 -> {
                     if (isBindable && control != null) {
                         int id = controlId.getInt(control);
                         GuiScreen screen = (GuiScreen) editConst.newInstance(id,
                                                                              Minecraft.getMinecraft().currentScreen);
                         Minecraft.getMinecraft().displayGuiScreen(screen);
                     }
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     GuiScreen screen = (GuiScreen) designerConst.newInstance("inchat",
                                                                              Minecraft.getMinecraft().currentScreen, true);
                     Minecraft.getMinecraft().displayGuiScreen(screen);
-                    break;
+                }
             }
         }
         catch (Exception e) {

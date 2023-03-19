@@ -101,9 +101,8 @@ public class GuiChatTC extends GuiChat {
                 return;
         }
 
-        if (!(par1GuiButton instanceof ChatButton))
+        if (!(par1GuiButton instanceof ChatButton _button))
             return;
-        ChatButton _button = (ChatButton) par1GuiButton;
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && tc.channelMap.get("*") == _button.channel) {
             this.mc.displayGuiScreen(TabbyChat.generalSettings);
             return;
@@ -148,7 +147,6 @@ public class GuiChatTC extends GuiChat {
         }
     }
 
-    @SuppressWarnings("unchecked")
     protected void addChannelLive(ChatChannel brandNewChan) {
         if (!this.buttonList.contains(brandNewChan.tab)) {
             this.buttonList.add(brandNewChan.tab);
@@ -265,7 +263,6 @@ public class GuiChatTC extends GuiChat {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void drawScreen(int cursorX, int cursorY, float pointless) {
         sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
@@ -332,7 +329,7 @@ public class GuiChatTC extends GuiChat {
                     if (nbtbase != null && nbtbase instanceof NBTTagCompound)
                         itemstack = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbtbase);
                 }
-                catch (Exception e) {
+                catch (Exception ignored) {
                 }
                 if (itemstack != null)
                     this.renderToolTip(itemstack, cursorX, cursorY);
@@ -373,7 +370,7 @@ public class GuiChatTC extends GuiChat {
         // Draw chat tabs
         GuiButton _button;
         for (int i = 0; i < this.buttonList.size(); i++) {
-            _button = (GuiButton) this.buttonList.get(i);
+            _button = this.buttonList.get(i);
             if (_button instanceof PrefsButton && _button.id == 1) {
                 if (mc.thePlayer != null && !mc.thePlayer.isPlayerSleeping()) {
                     this.buttonList.remove(_button);
@@ -544,7 +541,6 @@ public class GuiChatTC extends GuiChat {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void initGui() {
         Keyboard.enableRepeatEvents(true);
@@ -653,7 +649,7 @@ public class GuiChatTC extends GuiChat {
             this.playerNamesFound = false;
         switch (_code) {
             // TAB: execute vanilla name completion
-            case Keyboard.KEY_TAB:
+            case Keyboard.KEY_TAB -> {
                 if (GuiScreen.isCtrlKeyDown()) {
                     // CTRL+SHIFT+TAB: switch active tab to previous
                     if (GuiScreen.isShiftKeyDown()) {
@@ -665,19 +661,16 @@ public class GuiChatTC extends GuiChat {
                     break;
                 }
                 this.func_146404_p_();
-                break;
+            }
             // ESCAPE: close the chat interface
-            case Keyboard.KEY_ESCAPE:
-                this.mc.displayGuiScreen((GuiScreen) null);
-                break;
+            case Keyboard.KEY_ESCAPE -> this.mc.displayGuiScreen((GuiScreen) null);
+
             // RETURN: send chat to server
-            case Keyboard.KEY_NUMPADENTER:
-            case Keyboard.KEY_RETURN:
-                this.sendChat(ChatBox.pinned);
-                break;
+            case Keyboard.KEY_NUMPADENTER, Keyboard.KEY_RETURN -> this.sendChat(ChatBox.pinned);
+
             // UP: if currently in multi-line chat, move into the above textbox.
             // Otherwise, go back one in the sent history (forced by Ctrl)
-            case Keyboard.KEY_UP:
+            case Keyboard.KEY_UP -> {
                 if (GuiScreen.isCtrlKeyDown())
                     this.getSentHistory(-1);
                 else {
@@ -693,10 +686,10 @@ public class GuiChatTC extends GuiChat {
                     else
                         this.getSentHistory(-1);
                 }
-                break;
+            }
             // DOWN: if currently in multi-line chat, move into the below textbox.
             // Otherwise, go forward one in the sent history (force by Ctrl)
-            case Keyboard.KEY_DOWN:
+            case Keyboard.KEY_DOWN -> {
                 if (GuiScreen.isCtrlKeyDown())
                     this.getSentHistory(1);
                 else {
@@ -712,62 +705,62 @@ public class GuiChatTC extends GuiChat {
                     else
                         this.getSentHistory(1);
                 }
-                break;
+            }
             // PAGE UP: scroll up through chat
-            case Keyboard.KEY_PRIOR:
+            case Keyboard.KEY_PRIOR -> {
                 this.gnc.scroll(19);
                 if (this.tc.enabled())
                     ChatScrollBar.scrollBarMouseWheel();
-                break;
+            }
             // PAGE DOWN: scroll down through chat
-            case Keyboard.KEY_NEXT:
+            case Keyboard.KEY_NEXT -> {
                 this.gnc.scroll(-19);
                 if (this.tc.enabled())
                     ChatScrollBar.scrollBarMouseWheel();
-                break;
+            }
             // BACKSPACE: delete previous character, minding potential contents of
             // other input fields
-            case Keyboard.KEY_BACK:
+            case Keyboard.KEY_BACK -> {
                 if (this.inputField2.isFocused() && this.inputField2.getCursorPosition() > 0)
                     this.inputField2.textboxKeyTyped(_char, _code);
                 else
                     this.removeCharsAtCursor(-1);
-                break;
+            }
             // DELETE: delete next character, minding potential contents of other
             // input fields
-            case Keyboard.KEY_DELETE:
+            case Keyboard.KEY_DELETE -> {
                 if (this.inputField2.isFocused())
                     this.inputField2.textboxKeyTyped(_char, _code);
                 else
                     this.removeCharsAtCursor(1);
-                break;
+            }
             // LEFT/RIGHT: move the cursor
-            case Keyboard.KEY_LEFT:
+            case Keyboard.KEY_LEFT -> {
                 int foc = this.getFocusedFieldIndex();
                 if (foc < this.getInputListSize() - 1
-                        && this.inputList.get(foc).getCursorPosition() == 0) {
+                    && this.inputList.get(foc).getCursorPosition() == 0) {
                     this.inputList.get(foc).setFocused(false);
                     this.inputList.get(foc + 1).setFocused(true);
                     this.inputList.get(foc + 1).setCursorPosition(
-                            inputList.get(foc + 1).getText().length());
+                        inputList.get(foc + 1).getText().length());
                 }
                 this.inputList.get(this.getFocusedFieldIndex()).textboxKeyTyped(_char, _code);
-                break;
-            case Keyboard.KEY_RIGHT:
+            }
+            case Keyboard.KEY_RIGHT -> {
                 int foc1 = this.getFocusedFieldIndex();
                 if (foc1 > 0
-                        && this.inputList.get(foc1).getCursorPosition() >= this.inputList.get(foc1)
-                        .getText().length()) {
+                    && this.inputList.get(foc1).getCursorPosition() >= this.inputList.get(foc1)
+                    .getText().length()) {
                     this.inputList.get(foc1).setFocused(false);
                     this.inputList.get(foc1 - 1).setFocused(true);
                     this.inputList.get(foc1 - 1).setCursorPosition(0);
                 }
                 this.inputList.get(this.getFocusedFieldIndex()).textboxKeyTyped(_char, _code);
-                break;
-            default:
+            }
+            default -> {
                 // CTRL + NUM1-9: Make the numbered tab active
                 if (GuiScreen.isCtrlKeyDown() && !Keyboard.isKeyDown(Keyboard.KEY_LMENU)
-                        && !Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
+                    && !Keyboard.isKeyDown(Keyboard.KEY_RMENU)) {
                     if (_code > 1 && _code < 12) {
                         tc.activateIndex(_code - 1);
                         // CTRL+O: open options
@@ -782,15 +775,15 @@ public class GuiChatTC extends GuiChat {
                     // field
                 }
                 else if (this.inputField2.isFocused()
-                        && this.fontRendererObj.getStringWidth(this.inputField2.getText()) < sr
-                        .getScaledWidth() - 20) {
+                    && this.fontRendererObj.getStringWidth(this.inputField2.getText()) < sr
+                    .getScaledWidth() - 20) {
                     this.inputField2.textboxKeyTyped(_char, _code);
                     // Keypress will trigger overflow, send through helper function
                 }
                 else {
                     this.insertCharsAtCursor(Character.toString(_char));
                 }
-
+            }
         }
 
         // pass keyTyped to extensions
@@ -819,7 +812,6 @@ public class GuiChatTC extends GuiChat {
         this.sentHistoryCursor2 = this.gnc.getSentMessages().size() + 1;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void mouseClicked(int _x, int _y, int _button) {
         Point scaled = ChatBox.scaleMouseCoords(Mouse.getX(), Mouse.getY(), true);
@@ -892,9 +884,7 @@ public class GuiChatTC extends GuiChat {
                             this.func_146407_a(url.toURI());
                         }
                     }
-                    catch (MalformedURLException e) {
-                    }
-                    catch (URISyntaxException e) {
+                    catch (MalformedURLException | URISyntaxException ignored) {
                     }
                 }
             }
@@ -932,7 +922,7 @@ public class GuiChatTC extends GuiChat {
                     return;
             }
         // Replicating GuiScreen's mouseClicked method since 'super' won't work
-        for (GuiButton _guibutton : (List<GuiButton>) this.buttonList) {
+        for (GuiButton _guibutton : this.buttonList) {
             if (_guibutton instanceof ChatButton) {
                 if (_guibutton.mousePressed(this.mc, _x, _y)) {
                     if (_button == 0) {

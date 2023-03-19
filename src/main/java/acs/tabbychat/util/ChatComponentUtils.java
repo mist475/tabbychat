@@ -25,7 +25,6 @@ public class ChatComponentUtils {
     /**
      * Replaces all instances of the given word.
      */
-    @SuppressWarnings("unchecked")
     public static IChatComponent replaceText(IChatComponent chat, String regex, String replacement) {
         List<IChatComponent> iter = chat.getSiblings();
         IChatComponent newChat = new ChatComponentText("");
@@ -235,7 +234,6 @@ public class ChatComponentUtils {
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     public static IChatComponent subComponent(IChatComponent chat, int start, int end) {
         IChatComponent result = new ChatComponentText("");
         int pos = start;

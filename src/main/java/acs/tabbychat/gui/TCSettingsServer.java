@@ -90,7 +90,6 @@ public class TCSettingsServer extends TCSettingsGUI {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void defineDrawableSettings() {
         this.buttonList.add(this.autoChannelSearch);
         this.buttonList.add(this.autoPMSearch);

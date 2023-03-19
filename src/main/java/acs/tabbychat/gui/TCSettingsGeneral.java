@@ -89,7 +89,6 @@ public class TCSettingsGeneral extends TCSettingsGUI {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void defineDrawableSettings() {
         this.buttonList.add(this.tabbyChatEnable);
         this.buttonList.add(this.saveChatLog);

@@ -6,8 +6,8 @@ import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraftforge.client.ClientCommandHandler;
 
 public class BackgroundChatThread extends Thread {
-    String sendChat = "";
-    String knownPrefix = null;
+    String sendChat;
+    String knownPrefix;
 
     public BackgroundChatThread(String _send) {
         this.sendChat = _send;

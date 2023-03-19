@@ -163,7 +163,6 @@ public class TabbyChat {
         log.warn("[TABBYCHAT] " + err, e);
     }
 
-    @SuppressWarnings("unchecked")
     public static void printMessageToChat(String msg) {
         if (TabbyChat.instance == null)
             return;

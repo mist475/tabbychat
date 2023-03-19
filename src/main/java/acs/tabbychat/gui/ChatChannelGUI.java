@@ -110,13 +110,12 @@ public class ChatChannelGUI extends GuiScreen {
                 + this.tc.channelMap.size(), rightX - 34, topY + 35, 0xffffff);
 
         // Draw buttons
-        for (Object o : this.buttonList) {
-            ((GuiButton) o).drawButton(mc, _x, _y);
+        for (GuiButton guiButton : this.buttonList) {
+            guiButton.drawButton(mc, _x, _y);
         }
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void initGui() {
         int leftX = (this.width - this.displayWidth) / 2;
         int topY = (this.height - this.displayHeight) / 2;
