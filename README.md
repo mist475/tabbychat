@@ -2,10 +2,11 @@ TabbyChat
 =========
 TabbyChat chat mod for Minecraft
 
-Fork of TabbyChat with the following changes:
-- Modern build script (Compiling works again)
+Fork of 1.7.10 TabbyChat with the following changes:
+- Modern build script
 - No LiteLoader support
 - No server side crashes but logged warning instead
+- Fixes crash with Botania's Corporea Index
 
 Future plans:
 - Fix some incompatibilities with mods
