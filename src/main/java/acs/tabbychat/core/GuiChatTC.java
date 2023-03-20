@@ -570,6 +570,8 @@ public class GuiChatTC extends GuiChat {
             text = inputField2.getText();
         this.inputField2 = new GuiTextField(this.fontRendererObj, 4, this.height - 12,
                                             textFieldWidth, 12);
+        //Fixes Botania crash as CorporeaAutoCompleteHandler.buildAutoCompletes doesn't do a null check
+        this.inputField = inputField2;
         this.inputField2.setMaxStringLength(500);
         this.inputField2.setCanLoseFocus(false);
         this.inputField2.setFocused(true);
