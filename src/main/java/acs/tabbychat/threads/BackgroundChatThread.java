@@ -35,7 +35,8 @@ public class BackgroundChatThread extends Thread {
             toSplit = this.sendChat.split(" ");
             start = 0;
             if (toSplit.length > 0 && toSplit[0].startsWith("/")) {
-                if (toSplit[0].startsWith("/msg")) {
+                // /fmsg is added by lotr to message groups of players
+                if (toSplit[0].startsWith("/msg") || toSplit[0].startsWith("/fmsg")) {
                     cmdPrefix = toSplit[0] + " " + toSplit[1] + " ";
                     start = 2;
                 }
