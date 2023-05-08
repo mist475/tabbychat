@@ -4,6 +4,7 @@ import acs.tabbychat.core.TabbyChat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraftforge.client.ClientCommandHandler;
+import org.apache.commons.lang3.StringUtils;
 
 public class BackgroundChatThread extends Thread {
     String sendChat;
@@ -35,10 +36,19 @@ public class BackgroundChatThread extends Thread {
             toSplit = this.sendChat.split(" ");
             start = 0;
             if (toSplit.length > 0 && toSplit[0].startsWith("/")) {
-                // /fmsg is added by lotr to message groups of players
-                if (toSplit[0].startsWith("/msg") || toSplit[0].startsWith("/fmsg")) {
+                if (toSplit[0].startsWith("/msg")) {
                     cmdPrefix = toSplit[0] + " " + toSplit[1] + " ";
                     start = 2;
+                }
+                // /fmsg is added by lotr to message groups of players
+                else if (toSplit[0].startsWith("/fmsg")) {
+                    //targeted name is contained with double quotes
+                    String[] fShipNameArray = this.sendChat.split("\"");
+                    if (fShipNameArray.length > 1) {
+                        cmdPrefix = toSplit[0] + " \"" + fShipNameArray[1] + "\" ";
+                        //count number of spaces in fShipNameArray and set start accordingly
+                        start = 2 + StringUtils.countMatches(fShipNameArray[1], " ");
+                    }
                 }
                 else if (!toSplit[0].trim().equals("/")) {
                     cmdPrefix = toSplit[0] + " ";
