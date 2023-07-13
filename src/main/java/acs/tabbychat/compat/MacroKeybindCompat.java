@@ -16,7 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExtension,
-        IChatRenderExtension {
+    IChatRenderExtension {
     public static final ResourceLocation ICONS_MAIN = new ResourceLocation("macros",
                                                                            "textures/gui/macrosGuiMain.png");
     public static boolean present = true;
@@ -60,7 +60,7 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
 
     public static Object getChatHook() {
         try {
-            return chatGuiHook.get(coreInstance.invoke(null, new Object[0]));
+            return chatGuiHook.get(coreInstance.invoke(null));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -72,74 +72,66 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
     public void load() {
         if (present) {
             if (inChatLayout == null || inChatGUI == null || btnGui == null || dropDownMenu == null
-                    || guiCustomGui == null || createDesignerScreen == null || draw == null
-                    || controlClicked == null || drawBtnGui == null || layoutTick == null
-                    || drawDropDown == null || dropDownSize == null || menuLocation == null
-                    || dropDownVisible == null || clickedControl == null || mousePressed == null
-                    || onControlClicked == null || displayScreen == null || macroEdit == null
-                    || macroDesign == null || boundingBox == null) {
+                || guiCustomGui == null || createDesignerScreen == null || draw == null
+                || controlClicked == null || drawBtnGui == null || layoutTick == null
+                || drawDropDown == null || dropDownSize == null || menuLocation == null
+                || dropDownVisible == null || clickedControl == null || mousePressed == null
+                || onControlClicked == null || displayScreen == null || macroEdit == null
+                || macroDesign == null || boundingBox == null) {
                 try {
                     // Classes
                     Class<?> layoutManager = Class
-                            .forName("net.eq2online.macros.gui.designable.LayoutManager");
+                        .forName("net.eq2online.macros.gui.designable.LayoutManager");
                     Class<?> designableGuiLayout = Class
-                            .forName("net.eq2online.macros.gui.designable.DesignableGuiLayout");
+                        .forName("net.eq2online.macros.gui.designable.DesignableGuiLayout");
                     Class<?> buttonClass = Class
-                            .forName("net.eq2online.macros.gui.controls.GuiMiniToolbarButton");
+                        .forName("net.eq2online.macros.gui.controls.GuiMiniToolbarButton");
                     Class<?> guiDesigner = Class
-                            .forName("net.eq2online.macros.gui.screens.GuiDesigner");
+                        .forName("net.eq2online.macros.gui.screens.GuiDesigner");
                     Class<?> guiDropDownMenu = Class
-                            .forName("net.eq2online.macros.gui.controls.GuiDropDownMenu");
+                        .forName("net.eq2online.macros.gui.controls.GuiDropDownMenu");
                     Class<?> guiControl = Class
-                            .forName("net.eq2online.macros.gui.designable.DesignableGuiControl");
+                        .forName("net.eq2online.macros.gui.designable.DesignableGuiControl");
                     Class<?> abstractionLayer = Class
-                            .forName("net.eq2online.macros.compatibility.AbstractionLayer");
+                        .forName("net.eq2online.macros.compatibility.AbstractionLayer");
                     Class<?> guiMacroEdit = Class
-                            .forName("net.eq2online.macros.gui.screens.GuiMacroEdit");
+                        .forName("net.eq2online.macros.gui.screens.GuiMacroEdit");
                     // Class guiMacroBind =
                     // Class.forName("net.eq2online.macros.gui.screens.GuiMacroBind");
                     guiCustomGui = Class.forName("net.eq2online.macros.gui.screens.GuiCustomGui");
                     Class<?> localisationProvider = Class
-                            .forName("net.eq2online.macros.compatibility.LocalisationProvider");
+                        .forName("net.eq2online.macros.compatibility.LocalisationProvider");
                     Class<?> macroModCore = Class.forName("net.eq2online.macros.core.MacroModCore");
 
                     // Constructors
                     Constructor<?> mkButtonConstructor = buttonClass
-                            .getDeclaredConstructor(new Class[]{Minecraft.class, int.class,
-                                    int.class, int.class});
-                    Constructor<?> guiConstructor = guiCustomGui.getConstructor(new Class[]{
-                            designableGuiLayout, GuiScreen.class});
-                    createDesignerScreen = guiDesigner.getDeclaredConstructor(new Class[]{
-                            String.class, GuiScreen.class, boolean.class});
-                    macroEdit = guiMacroEdit.getDeclaredConstructor(new Class[]{int.class,
-                            GuiScreen.class});
-                    macroDesign = guiDesigner.getDeclaredConstructor(new Class[]{String.class,
-                            GuiScreen.class, boolean.class});
+                        .getDeclaredConstructor(Minecraft.class, int.class,
+                                                int.class, int.class);
+                    Constructor<?> guiConstructor = guiCustomGui.getConstructor(designableGuiLayout, GuiScreen.class);
+                    createDesignerScreen = guiDesigner.getDeclaredConstructor(String.class, GuiScreen.class, boolean.class);
+                    macroEdit = guiMacroEdit.getDeclaredConstructor(int.class,
+                                                                    GuiScreen.class);
+                    macroDesign = guiDesigner.getDeclaredConstructor(String.class,
+                                                                     GuiScreen.class, boolean.class);
 
                     mkgetBoundLayout = layoutManager.getDeclaredMethod("getBoundLayout",
-                                                                       new Class[]{String.class, boolean.class});
+                                                                       String.class, boolean.class);
                     layoutTick = designableGuiLayout.getDeclaredMethod("onTick", (Class[]) null);
-                    drawBtnGui = buttonClass.getDeclaredMethod("drawControlAt", new Class[]{
-                            Minecraft.class, int.class, int.class, int.class, int.class, int.class,
-                            int.class});
-                    drawDropDown = guiDropDownMenu.getDeclaredMethod("drawControlAt", new Class[]{
-                            int.class, int.class, int.class, int.class});
-                    draw = designableGuiLayout.getDeclaredMethod("draw", new Class[]{
-                            Rectangle.class, int.class, int.class});
-                    controlClicked = guiCustomGui.getDeclaredMethod("controlClicked", new Class[]{
-                            int.class, int.class, int.class});
+                    drawBtnGui = buttonClass.getDeclaredMethod("drawControlAt", Minecraft.class, int.class, int.class, int.class, int.class, int.class,
+                                                               int.class);
+                    drawDropDown = guiDropDownMenu.getDeclaredMethod("drawControlAt", int.class, int.class, int.class, int.class);
+                    draw = designableGuiLayout.getDeclaredMethod("draw", Rectangle.class, int.class, int.class);
+                    controlClicked = guiCustomGui.getDeclaredMethod("controlClicked", int.class, int.class, int.class);
                     dropDownSize = guiDropDownMenu.getDeclaredMethod("getSize", (Class[]) null);
-                    mousePressed = guiDropDownMenu.getDeclaredMethod("mousePressed", new Class[]{
-                            int.class, int.class});
+                    mousePressed = guiDropDownMenu.getDeclaredMethod("mousePressed", int.class, int.class);
                     onControlClicked = guiCustomGui.getDeclaredMethod("onControlClicked",
-                                                                      new Class[]{guiControl});
+                                                                      guiControl);
                     displayScreen = abstractionLayer.getDeclaredMethod("displayGuiScreen",
-                                                                       new Class[]{GuiScreen.class});
-                    Method dropDownAdd = guiDropDownMenu.getDeclaredMethod("addItem", new Class[]{
-                            String.class, String.class, int.class, int.class});
+                                                                       GuiScreen.class);
+                    Method dropDownAdd = guiDropDownMenu.getDeclaredMethod("addItem", String.class, String.class, int.class, int.class);
                     Method getLocalisedString = localisationProvider.getDeclaredMethod(
-                            "getLocalisedString", new Class[]{String.class});
-                    coreInstance = macroModCore.getMethod("getInstance", new Class[0]);
+                        "getLocalisedString", String.class);
+                    coreInstance = macroModCore.getMethod("getInstance");
                     controlClicked.setAccessible(true);
                     onControlClicked.setAccessible(true);
 
@@ -158,18 +150,16 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
                     chatGuiHook.setAccessible(true);
 
                     // Objects
-                    inChatLayout = mkgetBoundLayout.invoke(null, new Object[]{"inchat", false});
-                    btnGui = mkButtonConstructor.newInstance(new Object[]{
-                            Minecraft.getMinecraft(), 4, 104, 64});
-                    inChatGUI = guiConstructor.newInstance(new Object[]{inChatLayout, null});
+                    inChatLayout = mkgetBoundLayout.invoke(null, "inchat", false);
+                    btnGui = mkButtonConstructor.newInstance(Minecraft.getMinecraft(), 4, 104, 64);
+                    inChatGUI = guiConstructor.newInstance(inChatLayout, null);
                     dropDownMenu = mkContextMenu.get(inChatGUI);
                     dropDownAdd.invoke(
-                            dropDownMenu,
-                            new Object[]{
-                                    "design",
-                                    "\247e"
-                                            + getLocalisedString.invoke(null,
-                                                                        new Object[]{"tooltip.guiedit"}), 26, 16});
+                        dropDownMenu,
+                        "design",
+                        "\247e"
+                            + getLocalisedString.invoke(null,
+                                                        "tooltip.guiedit"), 26, 16);
 
                     // Add context menus in reverse order.
                     // ChatContextMenu.insertContextAtPos(0, new
@@ -186,10 +176,9 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
             else {
                 try {
                     Class<?> designableGuiLayout = Class
-                            .forName("net.eq2online.macros.gui.designable.DesignableGuiLayout");
-                    Constructor<?> guiConstructor = guiCustomGui.getConstructor(new Class[]{
-                            designableGuiLayout, GuiScreen.class});
-                    inChatGUI = guiConstructor.newInstance(new Object[]{inChatLayout, null});
+                        .forName("net.eq2online.macros.gui.designable.DesignableGuiLayout");
+                    Constructor<?> guiConstructor = guiCustomGui.getConstructor(designableGuiLayout, GuiScreen.class);
+                    inChatGUI = guiConstructor.newInstance(inChatLayout, null);
                 }
                 catch (Exception e) {
                     present = false;
@@ -205,21 +194,21 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
         try {
             boundingBox.set(inChatGUI, new Rectangle(0, 0, screen.width, screen.height - 14));
             clicked = ((Boolean) controlClicked
-                    .invoke(inChatGUI, new Object[]{par1, par2, par3})).booleanValue();
+                .invoke(inChatGUI, new Object[]{par1, par2, par3})).booleanValue();
             if (clicked && par3 == 1) {
                 dropDownVisible.set(dropDownMenu, true);
                 Dimension contextMenuSize = (Dimension) dropDownSize.invoke(dropDownMenu,
                                                                             (Object[]) null);
                 menuLocation.set(
-                        inChatGUI,
-                        new Point(Math.min(par1, screen.width - contextMenuSize.width), Math.min(
-                                par2 - 8, screen.height - contextMenuSize.height)));
+                    inChatGUI,
+                    new Point(Math.min(par1, screen.width - contextMenuSize.width), Math.min(
+                        par2 - 8, screen.height - contextMenuSize.height)));
             }
             if (clicked)
                 return true;
             if (hovered) {
                 GuiScreen designerScreen = (GuiScreen) createDesignerScreen
-                        .newInstance(new Object[]{"inchat", screen, true});
+                    .newInstance(new Object[]{"inchat", screen, true});
                 Minecraft.getMinecraft().displayGuiScreen(designerScreen);
                 return true;
             }
@@ -264,7 +253,7 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
         this.screen = screen;
         if (present) {
             try {
-                inChatLayout = mkgetBoundLayout.invoke(null, new Object[]{"inchat", false});
+                inChatLayout = mkgetBoundLayout.invoke(null, "inchat", false);
             }
             catch (Exception e) {
                 e.printStackTrace();

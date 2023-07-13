@@ -52,7 +52,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
                 screen.saveSettingsFile();
             }
             tc.reloadSettingsData(true);
-            mc.displayGuiScreen((GuiScreen) null);
+            mc.displayGuiScreen(null);
             if (TabbyChat.generalSettings.tabbyChatEnable.getValue())
                 tc.resetDisplayedChat();
         }
@@ -60,7 +60,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
             for (TCSettingsGUI screen : ScreenList) {
                 screen.resetTempVars();
             }
-            mc.displayGuiScreen((GuiScreen) null);
+            mc.displayGuiScreen(null);
             if (TabbyChat.generalSettings.tabbyChatEnable.getValue())
                 tc.resetDisplayedChat();
         }
@@ -89,14 +89,14 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
         int absTop = effTop - MARGIN;
 
         drawRect(absLeft, absTop, absLeft + DISPLAY_WIDTH + 2 * MARGIN, absTop + DISPLAY_HEIGHT + 2
-                * MARGIN, 0x88000000);
+            * MARGIN, 0x88000000);
         drawRect(absLeft + 45, absTop, absLeft + 46, absTop + DISPLAY_HEIGHT, 0x66ffffff);
 
         for (int i = 0; i < ScreenList.size(); i++) {
             if (ScreenList.get(i) == this) {
                 int curWidth;
                 int tabDist = Math.max(mc.fontRenderer.getStringWidth(ScreenList.get(i).name)
-                                               + MARGIN - 40, 25);
+                                           + MARGIN - 40, 25);
                 if (0 <= this.lastOpened && this.lastOpened <= 5) {
                     curWidth = 45 + (this.lastOpened * tabDist) / 5;
                     this.lastOpened++;
@@ -105,7 +105,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
                     curWidth = tabDist + 45;
                 }
                 drawRect(absLeft - curWidth + 45, effTop + 30 * i, absLeft + 45, effTop + 30 * i
-                        + 20, ScreenList.get(i).bgcolor);
+                    + 20, ScreenList.get(i).bgcolor);
                 this.drawString(mc.fontRenderer,
                                 mc.fontRenderer.trimStringToWidth(ScreenList.get(i).name, curWidth - 5),
                                 effLeft - curWidth + 45, effTop + 6 + 30 * i, 0xffffff);
@@ -164,7 +164,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
             if (ScreenList.get(i) != this) {
                 this.buttonList.add(new PrefsButton(ScreenList.get(i).id, effLeft, effTop + 30 * i,
                                                     45, 20, mc.fontRenderer.trimStringToWidth(ScreenList.get(i).name, 35)
-                                                            + "..."));
+                                                        + "..."));
                 ((PrefsButton) this.buttonList.get(this.buttonList.size() - 1)).bgcolor = 0x00000000;
             }
         }
@@ -203,7 +203,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
         }
         catch (Exception e) {
             TabbyChat.printException("Error while reading settings from file '" + this.settingsFile
-                                             + "'", e);
+                                         + "'", e);
         }
         for (Object drawable : this.buttonList) {
             if (drawable instanceof ITCSetting) {
@@ -219,7 +219,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
         for (Object o : this.buttonList) {
             if (o instanceof ITCSetting tmp) {
                 if (Objects.equals(tmp.getType(), "textbox") || Objects.equals(tmp.getType(), "enum")
-                        || Objects.equals(tmp.getType(), "slider")) {
+                    || Objects.equals(tmp.getType(), "slider")) {
                     tmp.mouseClicked(par1, par2, par3);
                 }
             }
@@ -265,7 +265,7 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
         }
         catch (Exception e) {
             TabbyChat.printException("Error while writing settings to file '" + this.settingsFile
-                                             + "'", e);
+                                         + "'", e);
         }
     }
 

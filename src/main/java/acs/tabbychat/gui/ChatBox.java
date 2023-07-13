@@ -68,8 +68,8 @@ public class ChatBox {
      * Draws the chat box border
      */
     public static void drawChatBoxBorder(Gui overlay, boolean chatOpen, int opacity) {
-        int borderColor = 0x000000 + (2 * opacity / 3 << 24);
-        int trayColor = 0x000000 + (opacity / 3 << 24);
+        int borderColor = (2 * opacity / 3 << 24);
+        int trayColor = (opacity / 3 << 24);
         int highlightColor = 0xffffa0 + (2 * opacity / 3 << 24);
         int handleColor = resizeHovered() ? highlightColor : borderColor;
         int pinColor = pinHovered() ? highlightColor : borderColor;
@@ -85,7 +85,7 @@ public class ChatBox {
 
                 // Draw border between focused chatbox and tab tray
                 Gui.drawRect(0, -current.height + tabTrayHeight, current.width, -current.height
-                        + tabTrayHeight + 1, borderColor);
+                    + tabTrayHeight + 1, borderColor);
 
                 // Add shading to tab tray
                 Gui.drawRect(0, -current.height, current.width, -current.height + tabTrayHeight,
@@ -93,7 +93,7 @@ public class ChatBox {
 
                 // Draw filler for extra chat space
                 Gui.drawRect(0, -current.height + tabTrayHeight + 1, current.width
-                        - ChatScrollBar.barWidth - 2, -chatHeight, opacity / 2 << 24);
+                    - ChatScrollBar.barWidth - 2, -chatHeight, opacity / 2 << 24);
 
                 // Draw handle for mouse drag
                 Gui.drawRect(current.width - 7, -current.height + 2, current.width - 2,
@@ -117,7 +117,7 @@ public class ChatBox {
 
                 // Draw border between focused chatbox and tab tray
                 Gui.drawRect(0, current.height - tabTrayHeight, current.width, current.height
-                        - tabTrayHeight - 1, borderColor);
+                    - tabTrayHeight - 1, borderColor);
 
                 // Add shading to tab tray
                 Gui.drawRect(0, current.height, current.width, current.height - tabTrayHeight,
@@ -125,7 +125,7 @@ public class ChatBox {
 
                 // Draw filler for extra chat space
                 Gui.drawRect(0, current.height - tabTrayHeight - chatHeight - 1, current.width
-                        - ChatScrollBar.barWidth - 2, 0, opacity / 2 << 24);
+                    - ChatScrollBar.barWidth - 2, 0, opacity / 2 << 24);
 
                 // Draw handle for mouse drag
                 Gui.drawRect(current.width - 7, current.height - 2, current.width - 2,
@@ -178,9 +178,9 @@ public class ChatBox {
         // scaling
         float scaleSetting = gnc.getScaleSetting();
         int scaledWidth = Math.round((gnc.sr.getScaledWidth() - current.x) / scaleSetting
-                                             + current.x);
+                                         + current.x);
         int scaledHeight = Math.round((gnc.sr.getScaledHeight() + current.y) / scaleSetting
-                                              - current.y);
+                                          - current.y);
 
         current.setBounds(newBounds);
         if (gnc.sr.getScaledHeight() < -current.y)
@@ -288,7 +288,7 @@ public class ChatBox {
      */
     public static void setUnfocusedHeight(int uHeight) {
         unfocusedHeight = Math.min(uHeight, (int) (TabbyChat.advancedSettings.chatBoxUnfocHeight
-                .getValue() * getChatHeight() / 100.0f));
+            .getValue() * getChatHeight() / 100.0f));
     }
 
     /**
@@ -304,7 +304,7 @@ public class ChatBox {
 
         float scaleSetting = gnc.getScaleSetting();
         int scaledHeight = Math.round((gnc.sr.getScaledHeight() + current.y) / scaleSetting
-                                              - current.y);
+                                          - current.y);
 
         desired.x = current.x + click.x - dragStart.x;
         desired.y = current.y + click.y - dragStart.y;
@@ -421,13 +421,13 @@ public class ChatBox {
 
         if (!anchoredTop) {
             return (click.x > current.x && click.x < current.x + current.width
-                    && click.y > current.y - current.height && click.y < current.y - current.height
-                    + tabTrayHeight);
+                && click.y > current.y - current.height && click.y < current.y - current.height
+                + tabTrayHeight);
         }
         else {
             return (click.x > current.x && click.x < current.x + current.width
-                    && click.y > current.y + current.height - tabTrayHeight && click.y < current.y
-                    + current.height);
+                && click.y > current.y + current.height - tabTrayHeight && click.y < current.y
+                + current.height);
         }
     }
 
@@ -484,7 +484,7 @@ public class ChatBox {
         int tabWidth;
         int tabX = current.x;
         int tabY = gnc.sr.getScaledHeight() + current.y
-                + (anchoredTop ? current.height - tabTrayHeight : -current.height);
+            + (anchoredTop ? current.height - tabTrayHeight : -current.height);
         int tabDx = 0;
         int rows = 0;
 
@@ -512,7 +512,7 @@ public class ChatBox {
 
             if (chan.tab == null) {
                 chan.setButtonObj(new ChatButton(chan.getID(), tabX + tabDx, gnc.sr
-                        .getScaledHeight() + current.y, tabWidth, tabHeight, chan.getDisplayTitle()));
+                    .getScaledHeight() + current.y, tabWidth, tabHeight, chan.getDisplayTitle()));
             }
             else {
                 chan.tab.id = chan.getID();

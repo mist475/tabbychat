@@ -39,14 +39,14 @@ public class MacrosContext extends ChatContext {
         try {
             Class<?> guiChatAdapter = Class.forName("net.eq2online.macros.gui.ext.GuiChatAdapter");
             Class<?> guiControl = Class
-                    .forName("net.eq2online.macros.gui.designable.DesignableGuiControl");
+                .forName("net.eq2online.macros.gui.designable.DesignableGuiControl");
             Class<?> guiMacroEdit = Class.forName("net.eq2online.macros.gui.screens.GuiMacroEdit");
             Class<?> guiDesigner = Class.forName("net.eq2online.macros.gui.screens.GuiDesigner");
             Constructor<?> editConst = guiMacroEdit.getConstructor(int.class, GuiScreen.class);
             Constructor<?> designerConst = guiDesigner.getConstructor(String.class,
                                                                       GuiScreen.class, boolean.class);
-            Method bindable = guiControl.getMethod("getWidgetIsBindable", new Class[0]);
-            Method playMacro = guiChatAdapter.getDeclaredMethod("playMacro", new Class[0]);
+            Method bindable = guiControl.getMethod("getWidgetIsBindable");
+            Method playMacro = guiChatAdapter.getDeclaredMethod("playMacro");
             playMacro.setAccessible(true);
             Field controlId = guiControl.getField("id");
             Object control = MacroKeybindCompat.getControl();
@@ -55,12 +55,12 @@ public class MacrosContext extends ChatContext {
                 isBindable = (Boolean) bindable.invoke(control, new Object[0]);
             switch (id) {
                 case 0 -> {
-                    if (isBindable && control != null) {
-                        playMacro.invoke(MacroKeybindCompat.getChatHook(), new Object[0]);
+                    if (isBindable) {
+                        playMacro.invoke(MacroKeybindCompat.getChatHook());
                     }
                 }
                 case 1 -> {
-                    if (isBindable && control != null) {
+                    if (isBindable) {
                         int id = controlId.getInt(control);
                         GuiScreen screen = (GuiScreen) editConst.newInstance(id,
                                                                              Minecraft.getMinecraft().currentScreen);

@@ -180,7 +180,7 @@ public class GuiChatTC extends GuiChat {
         if (this.playerNamesFound) {
             this.inputField2.deleteFromCursor(this.inputField2.func_146197_a(-1,
                                                                              this.inputField2.getCursorPosition(), false)
-                                                      - this.inputField2.getCursorPosition());
+                                                  - this.inputField2.getCursorPosition());
             if (this.playerNameIndex >= this.foundPlayerNames.size()) {
                 this.playerNameIndex = 0;
             }
@@ -228,8 +228,8 @@ public class GuiChatTC extends GuiChat {
             int counter = low;
             StringBuilder _sb = new StringBuilder();
             for (Iterator<String> _iter = newList.iterator(); _iter
-                    .hasNext(); _sb
-                         .append(textBuffer)) {
+                .hasNext(); _sb
+                     .append(textBuffer)) {
                 textBuffer = _iter.next();
                 if (counter == this.playerNameIndex + 1) {
                     _sb.append(EnumChatFormatting.RESET);
@@ -247,7 +247,7 @@ public class GuiChatTC extends GuiChat {
             }
 
             this.mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(
-                    new ChatComponentText(_sb.toString()), 1);
+                new ChatComponentText(_sb.toString()), 1);
         }
 
         this.inputField2.writeText(this.foundPlayerNames.get(this.playerNameIndex++));
@@ -291,12 +291,12 @@ public class GuiChatTC extends GuiChat {
             if (MacroKeybindCompat.present)
                 sendsX -= 22;
             this.fontRendererObj.drawStringWithShadow(requiredSends, sendsX, this.height
-                    - inputHeight, 0x707070);
+                - inputHeight, 0x707070);
         }
 
         // Update & draw spell check data
         if (TabbyChat.spellingSettings.spellCheckEnable.getValue()
-                && this.inputField2.getText().length() > 0) {
+            && this.inputField2.getText().length() > 0) {
             TabbyChat.spellChecker.drawErrors(this, this.inputList);
             if (this.spellCheckCounter == 200) {
                 TabbyChat.spellChecker.update(this.inputList);
@@ -313,7 +313,7 @@ public class GuiChatTC extends GuiChat {
         GL11.glPushMatrix();
         float scaleOffsetX = ChatBox.current.x * (1.0f - scaleSetting);
         float scaleOffsetY = (this.gnc.sr.getScaledHeight() + ChatBox.current.y)
-                * (1.0f - scaleSetting);
+            * (1.0f - scaleSetting);
         GL11.glTranslatef(scaleOffsetX, scaleOffsetY, 1.0f);
         GL11.glScalef(scaleSetting, scaleSetting, 1.0f);
 
@@ -325,7 +325,7 @@ public class GuiChatTC extends GuiChat {
                 ItemStack itemstack = null;
                 try {
                     NBTBase nbtbase = JsonToNBT.func_150315_a(hoverevent.getValue()
-                                                                      .getUnformattedText());
+                                                                  .getUnformattedText());
                     if (nbtbase != null && nbtbase instanceof NBTTagCompound)
                         itemstack = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbtbase);
                 }
@@ -342,19 +342,18 @@ public class GuiChatTC extends GuiChat {
                                                  cursorY);
             else if (hoverevent.getAction() == HoverEvent.Action.SHOW_ACHIEVEMENT) {
                 StatBase statbase = StatList.func_151177_a(hoverevent.getValue()
-                                                                   .getUnformattedText());
+                                                               .getUnformattedText());
 
                 if (statbase != null) {
                     IChatComponent icc1 = statbase.func_150951_e();
                     ChatComponentTranslation cct = new ChatComponentTranslation(
-                            "stats.tooltip.type."
-                                    + (statbase.isAchievement() ? "achievement" : "statistics"),
-                            new Object[0]);
+                        "stats.tooltip.type."
+                            + (statbase.isAchievement() ? "achievement" : "statistics")
+                    );
                     cct.getChatStyle().setItalic(Boolean.valueOf(true));
                     String s = statbase instanceof Achievement ? ((Achievement) statbase)
-                            .getDescription() : null;
-                    ArrayList<String> arraylist = Lists.newArrayList(new String[]{
-                            icc1.getFormattedText(), cct.getFormattedText()});
+                        .getDescription() : null;
+                    ArrayList<String> arraylist = Lists.newArrayList(icc1.getFormattedText(), cct.getFormattedText());
 
                     if (s != null)
                         arraylist.addAll(this.fontRendererObj.listFormattedStringToWidth(s, 150));
@@ -362,7 +361,7 @@ public class GuiChatTC extends GuiChat {
                 }
                 else
                     this.drawCreativeTabHoveringText(EnumChatFormatting.RED
-                                                             + "Invalid statistic/achievement!", cursorX, cursorY);
+                                                         + "Invalid statistic/achievement!", cursorX, cursorY);
             }
             GL11.glDisable(GL11.GL_LIGHTING);
         }
@@ -425,10 +424,10 @@ public class GuiChatTC extends GuiChat {
     private void func_146407_a(URI _uri) {
         try {
             Class<?> desktop = Class.forName("java.awt.Desktop");
-            Object theDesktop = desktop.getMethod("getDesktop", new Class[0]).invoke((Object) null,
-                                                                                     new Object[0]);
-            desktop.getMethod("browse", new Class[]{URI.class}).invoke(theDesktop,
-                                                                       new Object[]{_uri});
+            Object theDesktop = desktop.getMethod("getDesktop").invoke((Object) null
+            );
+            desktop.getMethod("browse", URI.class).invoke(theDesktop,
+                                                          _uri);
         }
         catch (Throwable t) {
             log.error("Couldn\'t open link", t);
@@ -513,7 +512,7 @@ public class GuiChatTC extends GuiChat {
                 ChatBox.pinned = !ChatBox.pinned;
             }
             else if (ChatBox.tabTrayHovered(Mouse.getEventX(), Mouse.getEventY())
-                    && !ChatBox.resizing) {
+                && !ChatBox.resizing) {
                 ChatBox.startDragging(Mouse.getEventX(), Mouse.getEventY());
             }
         }
@@ -605,7 +604,7 @@ public class GuiChatTC extends GuiChat {
                 boolean prefixHidden = this.tc.channelMap.get(activeTabs.get(0)).hidePrefix;
                 if (thePrefix.length() > 0 && !prefixHidden && this.inputField2.getText().isEmpty())
                     this.inputField2.setText(this.tc.channelMap.get(activeTabs.get(0)).cmdPrefix
-                                                     .trim() + " ");
+                                                 .trim() + " ");
             }
             ChatBox.enforceScreenBoundary(ChatBox.current);
         }
@@ -636,8 +635,8 @@ public class GuiChatTC extends GuiChat {
             }
         }
         if (this.fontRendererObj.getStringWidth(msg.toString())
-                + this.fontRendererObj.getStringWidth(_chars) < (sr.getScaledWidth() - 20)
-                * this.inputList.size()) {
+            + this.fontRendererObj.getStringWidth(_chars) < (sr.getScaledWidth() - 20)
+            * this.inputList.size()) {
             msg.insert(cPos, _chars);
             this.setText(msg, cPos + _chars.length());
         }
@@ -819,14 +818,14 @@ public class GuiChatTC extends GuiChat {
         Point scaled = ChatBox.scaleMouseCoords(Mouse.getX(), Mouse.getY(), true);
         boolean clicked = false;
         if (_button == 0 && this.mc.gameSettings.chatLinks
-                && (this.contextMenu == null || !contextMenu.isCursorOver(scaled.x, scaled.y))) {
+            && (this.contextMenu == null || !contextMenu.isCursorOver(scaled.x, scaled.y))) {
             IChatComponent ccd = this.gnc.func_146236_a(Mouse.getX(), Mouse.getY());
             if (ccd != null) {
                 ClickEvent clickEvent = ccd.getChatStyle().getChatClickEvent();
                 if (clickEvent != null) {
                     if (isShiftKeyDown()) {
                         this.inputField2.writeText(ccd.getChatStyle().getChatClickEvent()
-                                                           .getValue());
+                                                       .getValue());
                     }
                     else {
                         URI url;
@@ -859,10 +858,10 @@ public class GuiChatTC extends GuiChat {
                         }
                         else if (clickEvent.getAction() == ClickEvent.Action.TWITCH_USER_INFO) {
                             ChatUserInfo var8 = this.mc.func_152346_Z().func_152926_a(
-                                    clickEvent.getValue());
+                                clickEvent.getValue());
                             if (var8 != null) {
                                 this.mc.displayGuiScreen(new GuiTwitchUserMode(this.mc
-                                                                                       .func_152346_Z(), var8));
+                                                                                   .func_152346_Z(), var8));
                             }
                             else {
                                 log.error("Tried to handle twitch user but couldn\'t find them!");
@@ -880,7 +879,7 @@ public class GuiChatTC extends GuiChat {
                         if (this.mc.gameSettings.chatLinksPrompt) {
                             this.clickedURI2 = url.toURI();
                             this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, ccd
-                                    .getUnformattedText(), 0, false));
+                                .getUnformattedText(), 0, false));
                         }
                         else {
                             this.func_146407_a(url.toURI());
@@ -896,8 +895,8 @@ public class GuiChatTC extends GuiChat {
         }
         if (!clicked)
             if (_button == 1
-                    && (this.contextMenu == null || !this.contextMenu.isCursorOver(scaled.x,
-                                                                                   scaled.y))) {
+                && (this.contextMenu == null || !this.contextMenu.isCursorOver(scaled.x,
+                                                                               scaled.y))) {
                 this.contextMenu = new ChatContextMenu(this, scaled.x, scaled.y);
             }
             else {
@@ -919,7 +918,7 @@ public class GuiChatTC extends GuiChat {
         // Pass click info to extensions
         if (!clicked)
             for (IChatMouseExtension extension : this.extensions
-                    .getListOf(IChatMouseExtension.class)) {
+                .getListOf(IChatMouseExtension.class)) {
                 if (extension.mouseClicked(_x, _y, _button))
                     return;
             }

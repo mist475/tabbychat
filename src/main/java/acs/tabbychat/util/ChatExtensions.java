@@ -12,7 +12,7 @@ public class ChatExtensions {
     public ChatExtensions(List<Class<? extends IChatExtension>> list) {
         for (Class<? extends IChatExtension> ext : list) {
             try {
-                IChatExtension exten = ext.newInstance();
+                IChatExtension exten = ext.getDeclaredConstructor().newInstance();
                 exten.load();
                 this.list.add(exten);
             }

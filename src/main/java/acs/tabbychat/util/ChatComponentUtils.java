@@ -39,7 +39,7 @@ public class ChatComponentUtils {
 
     public static String formatString(String text, boolean force) {
         return !force && !Minecraft.getMinecraft().gameSettings.chatColours ? EnumChatFormatting
-                .getTextWithoutFormattingCodes(text) : text;
+            .getTextWithoutFormattingCodes(text) : text;
     }
 
     public static List<TCChatLine> split(List<TCChatLine> lines, int width) {
@@ -119,7 +119,7 @@ public class ChatComponentUtils {
 
                     ChatComponentText chatcomponenttext3 = new ChatComponentText(s3);
                     chatcomponenttext3.setChatStyle(ichatcomponent1.getChatStyle()
-                                                            .createShallowCopy());
+                                                        .createShallowCopy());
                     arraylist1.add(k + 1, chatcomponenttext3);
                 }
 
@@ -162,8 +162,8 @@ public class ChatComponentUtils {
                 newChat.appendText(part);
                 continue;
             }
-            IChatComponent last = (IChatComponent) newChat.getSiblings().get(
-                    newChat.getSiblings().size() - 1);
+            IChatComponent last = newChat.getSiblings().get(
+                newChat.getSiblings().size() - 1);
             EnumChatFormatting format = null;
             for (EnumChatFormatting formats : EnumChatFormatting.values()) {
                 if (String.valueOf(formats.getFormattingCode()).equals(part.substring(0, 1)))
@@ -238,7 +238,7 @@ public class ChatComponentUtils {
         IChatComponent result = new ChatComponentText("");
         int pos = start;
         Iterator<IChatComponent> iter = ChatComponentStyle.createDeepCopyIterator(subComponent(
-                chat, start).getSiblings());
+            chat, start).getSiblings());
         while (iter.hasNext()) {
             IChatComponent ichat = iter.next();
             if (!ichat.getSiblings().isEmpty()) {

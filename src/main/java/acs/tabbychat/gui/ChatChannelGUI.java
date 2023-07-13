@@ -61,7 +61,7 @@ public class ChatChannelGUI extends GuiScreen {
                 this.channel.hidePrefix = this.hidePrefix.getTempValue();
                 this.tc.storeChannelData();
             case CANCEL_ID:
-                mc.displayGuiScreen((GuiScreen) null);
+                mc.displayGuiScreen(null);
                 break;
             case NOTIFICATIONS_ON_ID:
                 this.notificationsOn.actionPerformed();
@@ -70,7 +70,7 @@ public class ChatChannelGUI extends GuiScreen {
                 if (this.position <= 2)
                     return;
                 LinkedHashMap<String, ChatChannel> newMap = TabbyChatUtils.swapChannels(
-                        this.tc.channelMap, this.position - 2, this.position - 1);
+                    this.tc.channelMap, this.position - 2, this.position - 1);
                 this.tc.channelMap.clear();
                 this.tc.channelMap = newMap;
                 this.position--;
@@ -79,7 +79,7 @@ public class ChatChannelGUI extends GuiScreen {
                 if (this.position >= this.tc.channelMap.size())
                     return;
                 LinkedHashMap<String, ChatChannel> newMap2 = TabbyChatUtils.swapChannels(
-                        this.tc.channelMap, this.position - 1, this.position);
+                    this.tc.channelMap, this.position - 1, this.position);
                 this.tc.channelMap.clear();
                 this.tc.channelMap = newMap2;
                 this.position++;
@@ -104,10 +104,10 @@ public class ChatChannelGUI extends GuiScreen {
         this.drawString(mc.fontRenderer, Integer.toString(this.position), rightX - 34, topY + 22,
                         0xffffff);
         this.drawString(mc.fontRenderer, I18n.format("settings.channel.position"), rightX - 55
-                                - mc.fontRenderer.getStringWidth(I18n.format("settings.channel.position")),
+                            - mc.fontRenderer.getStringWidth(I18n.format("settings.channel.position")),
                         topY + 22, 0xffffff);
         this.drawString(mc.fontRenderer, I18n.format("settings.channel.of") + " "
-                + this.tc.channelMap.size(), rightX - 34, topY + 35, 0xffffff);
+            + this.tc.channelMap.size(), rightX - 34, topY + 35, 0xffffff);
 
         // Draw buttons
         for (GuiButton guiButton : this.buttonList) {
@@ -139,7 +139,7 @@ public class ChatChannelGUI extends GuiScreen {
         // Define settings buttons
         this.alias.setLabelLoc(leftX + 15);
         this.alias.setButtonLoc(
-                leftX + 20 + mc.fontRenderer.getStringWidth(this.alias.description), topY + 20);
+            leftX + 20 + mc.fontRenderer.getStringWidth(this.alias.description), topY + 20);
         this.alias.setButtonDims(70, 11);
         this.buttonList.add(this.alias);
 
@@ -149,7 +149,7 @@ public class ChatChannelGUI extends GuiScreen {
 
         this.cmdPrefix.setLabelLoc(leftX + 15);
         this.cmdPrefix.setButtonLoc(
-                leftX + 20 + mc.fontRenderer.getStringWidth(this.cmdPrefix.description), topY + 57);
+            leftX + 20 + mc.fontRenderer.getStringWidth(this.cmdPrefix.description), topY + 57);
         this.cmdPrefix.setButtonDims(100, 11);
         this.buttonList.add(this.cmdPrefix);
 
@@ -172,9 +172,8 @@ public class ChatChannelGUI extends GuiScreen {
 
     @Override
     protected void keyTyped(char par1, int par2) {
-        for (Object o : this.buttonList) {
-            if (ITCSetting.class.isInstance(o)) {
-                ITCSetting tmp = (ITCSetting) o;
+        for (GuiButton o : this.buttonList) {
+            if (o instanceof ITCSetting tmp) {
                 if (Objects.equals(tmp.getType(), "textbox")) {
                     ((TCSettingTextBox) tmp).keyTyped(par1, par2);
                 }
@@ -185,9 +184,8 @@ public class ChatChannelGUI extends GuiScreen {
 
     @Override
     public void mouseClicked(int par1, int par2, int par3) {
-        for (Object o : this.buttonList) {
-            if (ITCSetting.class.isInstance(o)) {
-                ITCSetting tmp = (ITCSetting) o;
+        for (GuiButton o : this.buttonList) {
+            if (o instanceof ITCSetting tmp) {
                 if (Objects.equals(tmp.getType(), "textbox")) {
                     tmp.mouseClicked(par1, par2, par3);
                 }

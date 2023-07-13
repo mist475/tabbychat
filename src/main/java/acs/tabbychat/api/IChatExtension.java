@@ -1,8 +1,8 @@
 package acs.tabbychat.api;
 
 /**
- * Base interface for adding additional functionality to {@code GuiChatTC}.<br/>
- * See {@code GuiScreen} for more in-depth explanations OF methods.
+ * Base interface for adding additional functionality to {@link acs.tabbychat.core.GuiChatTC}.<br/>
+ * See {@link net.minecraft.client.gui.GuiScreen} for more in-depth explanations OF methods.
  */
 public interface IChatExtension {
 
