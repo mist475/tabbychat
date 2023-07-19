@@ -5,7 +5,6 @@ import acs.tabbychat.gui.ChatScrollBar;
 import acs.tabbychat.util.ChatComponentUtils;
 import acs.tabbychat.util.TabbyChatUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.gui.GuiIngameMenu;
@@ -23,7 +22,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -148,21 +146,8 @@ public class GuiNewChatTC extends GuiNewChat {
     public void deleteChatLine(int _id) {
         chatReadLock.lock();
         try {
-            Iterator<TCChatLine> _iter = this.chatLines.iterator();
-            ChatLine _cl;
-            while (_iter.hasNext()) {
-                _cl = _iter.next();
-                if (_cl.getChatLineID() == _id) {
-                    _iter.remove();
-                }
-            }
-            _iter = this.backupLines.iterator();
-            while (_iter.hasNext()) {
-                _cl = _iter.next();
-                if (_cl.getChatLineID() == _id) {
-                    _iter.remove();
-                }
-            }
+            this.chatLines.removeIf(chatLine -> chatLine.getChatLineID() == _id);
+            this.backupLines.removeIf(chatLine -> chatLine.getChatLineID() == _id);
             tc.deleteChatLines(_id);
         }
         finally {
