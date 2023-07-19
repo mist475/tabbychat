@@ -42,7 +42,7 @@ public class ContextSpellingSuggestion extends ChatContext {
     @Override
     public boolean isPositionValid(int x, int y) {
         this.title = "Spelling";
-        GuiTextField text = getMenu().screen.inputField2;
+        GuiTextField text = getMenu().screen.inputField;
         int start = text.getNthWordFromCursor(-1);
         int end = text.getNthWordFromCursor(1);
         String word = text.getText().substring(start, end);
@@ -83,7 +83,7 @@ public class ContextSpellingSuggestion extends ChatContext {
 
             @Override
             public void onClicked() {
-                GuiTextField field = getMenu().screen.inputField2;
+                GuiTextField field = getMenu().screen.inputField;
                 int start = field.getNthWordFromCursor(-1);
                 int end = field.getNthWordFromCursor(1);
                 field.setCursorPosition(start);
@@ -95,7 +95,7 @@ public class ContextSpellingSuggestion extends ChatContext {
                     pref = 0;
                 if (Character.isLetter(suff))
                     suff = ' ';
-                this.getMenu().screen.inputField2.writeText((pref != 0 ? pref : "") + word + suff);
+                this.getMenu().screen.inputField.writeText((pref != 0 ? pref : "") + word + suff);
             }
 
             @Override

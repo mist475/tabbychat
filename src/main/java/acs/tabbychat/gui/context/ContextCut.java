@@ -10,7 +10,7 @@ public class ContextCut extends ChatContext {
 
     @Override
     public void onClicked() {
-        GuiTextField chat = getMenu().screen.inputField2;
+        GuiTextField chat = getMenu().screen.inputField;
         GuiScreen.setClipboardString(chat.getSelectedText());
         String text = chat.getText().replace(chat.getSelectedText(), "");
         chat.setText(text);
@@ -28,7 +28,7 @@ public class ContextCut extends ChatContext {
 
     @Override
     public boolean isPositionValid(int x, int y) {
-        GuiTextField text = getMenu().screen.inputField2;
+        GuiTextField text = getMenu().screen.inputField;
         return text != null && !text.getSelectedText().isEmpty();
     }
 

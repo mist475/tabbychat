@@ -26,6 +26,9 @@ public class TCChatLineFake extends ChatLine {
         this.chatLineID = _id;
     }
 
+    /**
+     * Only used by vanilla, tabbychat itself should use {@link #getChatComponent()} instead
+     */
     @Override
     @Deprecated
     public IChatComponent func_151461_a() {

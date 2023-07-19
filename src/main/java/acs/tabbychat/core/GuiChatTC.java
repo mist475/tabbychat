@@ -59,21 +59,13 @@ public class GuiChatTC extends GuiChat {
     private final List<String> foundPlayerNames = Lists.newArrayList();
     public String historyBuffer = "";
     public String defaultInputFieldText = "";
-    public int sentHistoryCursor2 = -1;
-    public GuiTextField inputField2;
     public List<GuiTextField> inputList = new ArrayList<>(3);
     public ChatScrollBar scrollBar;
-    public GuiButton selectedButton2 = null;
-    public int eventButton2 = 0;
-    public long field_85043_c2 = 0L;
-    public int field_92018_d2 = 0;
-    public float zLevel2 = 0.0F;
     public TabbyChat tc;
     public GuiNewChatTC gnc;
     private boolean playerNamesFound = false;
     private boolean waitingOnPlayerNames = false;
     private int playerNameIndex = 0;
-    private URI clickedURI2 = null;
     private int spellCheckCounter = 0;
     private ChatContextMenu contextMenu;
     private ChatExtensions extensions;
@@ -158,13 +150,13 @@ public class GuiChatTC extends GuiChat {
      */
     public void checkCommandPrefixChange(ChatChannel oldChan, ChatChannel newChan) {
         String oldPrefix = oldChan.cmdPrefix.trim();
-        String currentInput = this.inputField2.getText().trim();
+        String currentInput = this.inputField.getText().trim();
         if (currentInput.equals(oldPrefix) || currentInput.length() == 0) {
             String newPrefix = newChan.cmdPrefix.trim();
             if (newPrefix.length() > 0 && !newChan.hidePrefix)
-                this.inputField2.setText(newPrefix + " ");
+                this.inputField.setText(newPrefix + " ");
             else
-                this.inputField2.setText("");
+                this.inputField.setText("");
         }
         oldChan.active = false;
         newChan.active = true;
@@ -178,28 +170,28 @@ public class GuiChatTC extends GuiChat {
     public void func_146404_p_() {
         String textBuffer;
         if (this.playerNamesFound) {
-            this.inputField2.deleteFromCursor(this.inputField2.func_146197_a(-1,
-                                                                             this.inputField2.getCursorPosition(), false)
-                                                  - this.inputField2.getCursorPosition());
+            this.inputField.deleteFromCursor(this.inputField.func_146197_a(-1,
+                                                                           this.inputField.getCursorPosition(), false)
+                                                 - this.inputField.getCursorPosition());
             if (this.playerNameIndex >= this.foundPlayerNames.size()) {
                 this.playerNameIndex = 0;
             }
         }
         else {
-            int prevWordIndex = this.inputField2.func_146197_a(-1,
-                                                               this.inputField2.getCursorPosition(), false);
+            int prevWordIndex = this.inputField.func_146197_a(-1,
+                                                              this.inputField.getCursorPosition(), false);
             this.foundPlayerNames.clear();
             this.playerNameIndex = 0;
-            String nameStart = this.inputField2.getText().substring(prevWordIndex).toLowerCase();
-            textBuffer = this.inputField2.getText().substring(0,
-                                                              this.inputField2.getCursorPosition());
+            String nameStart = this.inputField.getText().substring(prevWordIndex).toLowerCase();
+            textBuffer = this.inputField.getText().substring(0,
+                                                             this.inputField.getCursorPosition());
             this.func_73893_a(textBuffer, nameStart);
             if (this.foundPlayerNames.isEmpty()) {
                 return;
             }
 
             this.playerNamesFound = true;
-            this.inputField2.deleteFromCursor(prevWordIndex - this.inputField2.getCursorPosition());
+            this.inputField.deleteFromCursor(prevWordIndex - this.inputField.getCursorPosition());
 
         }
 
@@ -250,15 +242,15 @@ public class GuiChatTC extends GuiChat {
                 new ChatComponentText(_sb.toString()), 1);
         }
 
-        this.inputField2.writeText(this.foundPlayerNames.get(this.playerNameIndex++));
+        this.inputField.writeText(this.foundPlayerNames.get(this.playerNameIndex++));
     }
 
     @Override
     public void confirmClicked(boolean zeroId, int worldNum) {
         if (worldNum == 0) {
             if (zeroId)
-                this.func_146407_a(this.clickedURI2);
-            this.clickedURI2 = null;
+                this.func_146407_a(this.clickedURI);
+            this.clickedURI = null;
             this.mc.displayGuiScreen(this);
         }
     }
@@ -296,7 +288,7 @@ public class GuiChatTC extends GuiChat {
 
         // Update & draw spell check data
         if (TabbyChat.spellingSettings.spellCheckEnable.getValue()
-            && this.inputField2.getText().length() > 0) {
+            && this.inputField.getText().length() > 0) {
             TabbyChat.spellChecker.drawErrors(this, this.inputList);
             if (this.spellCheckCounter == 200) {
                 TabbyChat.spellChecker.update(this.inputList);
@@ -366,17 +358,14 @@ public class GuiChatTC extends GuiChat {
             GL11.glDisable(GL11.GL_LIGHTING);
         }
 
-        // Draw chat tabs
-        GuiButton _button;
-        for (int i = 0; i < this.buttonList.size(); i++) {
-            _button = this.buttonList.get(i);
-            if (_button instanceof PrefsButton && _button.id == 1) {
+        for (GuiButton buttonTemp : this.buttonList) {
+            if (buttonTemp instanceof PrefsButton && buttonTemp.id == 1) {
                 if (mc.thePlayer != null && !mc.thePlayer.isPlayerSleeping()) {
-                    this.buttonList.remove(_button);
+                    this.buttonList.remove(buttonTemp);
                     continue;
                 }
             }
-            _button.drawButton(this.mc, cursorX, cursorY);
+            buttonTemp.drawButton(this.mc, cursorX, cursorY);
         }
 
         // Draw context menus
@@ -467,22 +456,22 @@ public class GuiChatTC extends GuiChat {
 
     @Override
     public void getSentHistory(int _dir) {
-        int loc = this.sentHistoryCursor2 + _dir;
+        int loc = this.sentHistoryCursor + _dir;
         int historyLength = this.gnc.getSentMessages().size();
         loc = Math.max(0, loc);
         loc = Math.min(historyLength, loc);
-        if (loc == this.sentHistoryCursor2)
+        if (loc == this.sentHistoryCursor)
             return;
         if (loc == historyLength) {
-            this.sentHistoryCursor2 = historyLength;
+            this.sentHistoryCursor = historyLength;
             this.setText(new StringBuilder(historyBuffer), 1);
         }
         else {
-            if (this.sentHistoryCursor2 == historyLength)
-                this.historyBuffer = this.inputField2.getText();
+            if (this.sentHistoryCursor == historyLength)
+                this.historyBuffer = this.inputField.getText();
             StringBuilder _sb = new StringBuilder(this.gnc.getSentMessages().get(loc));
             this.setText(_sb, _sb.length());
-            this.sentHistoryCursor2 = loc;
+            this.sentHistoryCursor = loc;
         }
     }
 
@@ -562,22 +551,20 @@ public class GuiChatTC extends GuiChat {
             this.buttonList.add(this.tc.channelMap.get("*").tab);
         }
 
-        this.sentHistoryCursor2 = this.gnc.getSentMessages().size();
+        this.sentHistoryCursor = this.gnc.getSentMessages().size();
         int textFieldWidth = (MacroKeybindCompat.present) ? this.width - 26 : this.width - 4;
         String text = this.defaultInputFieldText;
-        if (this.inputField2 != null)
-            text = inputField2.getText();
-        this.inputField2 = new GuiTextField(this.fontRendererObj, 4, this.height - 12,
-                                            textFieldWidth, 12);
-        //Fixes Botania crash as CorporeaAutoCompleteHandler.buildAutoCompletes doesn't do a null check
-        this.inputField = inputField2;
-        this.inputField2.setMaxStringLength(500);
-        this.inputField2.setCanLoseFocus(false);
-        this.inputField2.setFocused(true);
-        this.inputField2.setText(text);
-        this.inputField2.setVisible(true);
-        this.inputField2.setEnableBackgroundDrawing(false);
-        this.inputList.add(0, this.inputField2);
+        if (this.inputField != null)
+            text = inputField.getText();
+        this.inputField = new GuiTextField(this.fontRendererObj, 4, this.height - 12,
+                                           textFieldWidth, 12);
+        this.inputField.setMaxStringLength(500);
+        this.inputField.setCanLoseFocus(false);
+        this.inputField.setFocused(true);
+        this.inputField.setText(text);
+        this.inputField.setVisible(true);
+        this.inputField.setEnableBackgroundDrawing(false);
+        this.inputList.add(0, this.inputField);
         if (!tc.enabled())
             return;
 
@@ -597,14 +584,14 @@ public class GuiChatTC extends GuiChat {
         if (this.tc.enabled()) {
             List<String> activeTabs = this.tc.getActive();
             if (activeTabs.size() != 1) {
-                this.inputField2.setText("");
+                this.inputField.setText("");
             }
             else {
                 String thePrefix = this.tc.channelMap.get(activeTabs.get(0)).cmdPrefix.trim();
                 boolean prefixHidden = this.tc.channelMap.get(activeTabs.get(0)).hidePrefix;
-                if (thePrefix.length() > 0 && !prefixHidden && this.inputField2.getText().isEmpty())
-                    this.inputField2.setText(this.tc.channelMap.get(activeTabs.get(0)).cmdPrefix
-                                                 .trim() + " ");
+                if (thePrefix.length() > 0 && !prefixHidden && this.inputField.getText().isEmpty())
+                    this.inputField.setText(this.tc.channelMap.get(activeTabs.get(0)).cmdPrefix
+                                                .trim() + " ");
             }
             ChatBox.enforceScreenBoundary(ChatBox.current);
         }
@@ -720,16 +707,16 @@ public class GuiChatTC extends GuiChat {
             // BACKSPACE: delete previous character, minding potential contents of
             // other input fields
             case Keyboard.KEY_BACK -> {
-                if (this.inputField2.isFocused() && this.inputField2.getCursorPosition() > 0)
-                    this.inputField2.textboxKeyTyped(_char, _code);
+                if (this.inputField.isFocused() && this.inputField.getCursorPosition() > 0)
+                    this.inputField.textboxKeyTyped(_char, _code);
                 else
                     this.removeCharsAtCursor(-1);
             }
             // DELETE: delete next character, minding potential contents of other
             // input fields
             case Keyboard.KEY_DELETE -> {
-                if (this.inputField2.isFocused())
-                    this.inputField2.textboxKeyTyped(_char, _code);
+                if (this.inputField.isFocused())
+                    this.inputField.textboxKeyTyped(_char, _code);
                 else
                     this.removeCharsAtCursor(1);
             }
@@ -768,15 +755,15 @@ public class GuiChatTC extends GuiChat {
                         this.mc.displayGuiScreen(TabbyChat.generalSettings);
                     }
                     else {
-                        this.inputField2.textboxKeyTyped(_char, _code);
+                        this.inputField.textboxKeyTyped(_char, _code);
                     }
                     // Keypress will not trigger overflow, send to default input
                     // field
                 }
-                else if (this.inputField2.isFocused()
-                    && this.fontRendererObj.getStringWidth(this.inputField2.getText()) < sr
+                else if (this.inputField.isFocused()
+                    && this.fontRendererObj.getStringWidth(this.inputField.getText()) < sr
                     .getScaledWidth() - 20) {
-                    this.inputField2.textboxKeyTyped(_char, _code);
+                    this.inputField.textboxKeyTyped(_char, _code);
                     // Keypress will trigger overflow, send through helper function
                 }
                 else {
@@ -808,7 +795,7 @@ public class GuiChatTC extends GuiChat {
         else {
             this.resetInputFields();
         }
-        this.sentHistoryCursor2 = this.gnc.getSentMessages().size() + 1;
+        this.sentHistoryCursor = this.gnc.getSentMessages().size() + 1;
     }
 
     @Override
@@ -822,8 +809,8 @@ public class GuiChatTC extends GuiChat {
                 ClickEvent clickEvent = ccd.getChatStyle().getChatClickEvent();
                 if (clickEvent != null) {
                     if (isShiftKeyDown()) {
-                        this.inputField2.writeText(ccd.getChatStyle().getChatClickEvent()
-                                                       .getValue());
+                        this.inputField.writeText(ccd.getChatStyle().getChatClickEvent()
+                                                      .getValue());
                     }
                     else {
                         URI url;
@@ -832,7 +819,7 @@ public class GuiChatTC extends GuiChat {
                                 url = new URI(clickEvent.getValue());
 
                                 if (this.mc.gameSettings.chatLinksPrompt) {
-                                    this.clickedURI2 = url;
+                                    this.clickedURI = url;
                                     this.mc.displayGuiScreen(new GuiConfirmOpenLink(this,
                                                                                     clickEvent.getValue(), 0, false));
                                 }
@@ -849,7 +836,7 @@ public class GuiChatTC extends GuiChat {
                             this.func_146407_a(url);
                         }
                         else if (clickEvent.getAction() == ClickEvent.Action.SUGGEST_COMMAND) {
-                            this.inputField2.setText(clickEvent.getValue());
+                            this.inputField.setText(clickEvent.getValue());
                         }
                         else if (clickEvent.getAction() == ClickEvent.Action.RUN_COMMAND) {
                             this.func_146403_a(clickEvent.getValue());
@@ -875,7 +862,7 @@ public class GuiChatTC extends GuiChat {
                     try {
                         url = new URL(ccd.getUnformattedText());
                         if (this.mc.gameSettings.chatLinksPrompt) {
-                            this.clickedURI2 = url.toURI();
+                            this.clickedURI = url.toURI();
                             this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, ccd
                                 .getUnformattedText(), 0, false));
                         }
@@ -925,7 +912,7 @@ public class GuiChatTC extends GuiChat {
             if (_guibutton instanceof ChatButton guiButton) {
                 if (guiButton.mousePressed(this.mc, _x, _y)) {
                     if (_button == 0) {
-                        this.selectedButton2 = guiButton;
+                        this.selectedButton = guiButton;
                         this.mc.thePlayer.playSound("random.click", 1.0F, 1.0F);
                         this.actionPerformed(guiButton);
                         return;
@@ -942,9 +929,9 @@ public class GuiChatTC extends GuiChat {
 
     @Override
     public void mouseMovedOrUp(int _x, int _y, int _button) {
-        if (this.selectedButton2 != null && _button == 0) {
-            this.selectedButton2.mouseReleased(_x, _y);
-            this.selectedButton2 = null;
+        if (this.selectedButton != null && _button == 0) {
+            this.selectedButton.mouseReleased(_x, _y);
+            this.selectedButton = null;
         }
     }
 
@@ -999,8 +986,8 @@ public class GuiChatTC extends GuiChat {
             gtf.setFocused(false);
             gtf.setVisible(false);
         }
-        this.inputField2.setFocused(true);
-        this.inputField2.setVisible(true);
+        this.inputField.setFocused(true);
+        this.inputField.setVisible(true);
 
         List<String> actives = tc.getActive();
         if (actives.size() == 1) {
@@ -1008,11 +995,11 @@ public class GuiChatTC extends GuiChat {
             String pre = current.cmdPrefix.trim();
             boolean hidden = current.hidePrefix;
             if (pre.length() > 0 && !hidden) {
-                this.inputField2.setText(pre + " ");
+                this.inputField.setText(pre + " ");
             }
         }
-        this.inputField2.setCursorPositionEnd();
-        this.sentHistoryCursor2 = this.gnc.getSentMessages().size();
+        this.inputField.setCursorPositionEnd();
+        this.sentHistoryCursor = this.gnc.getSentMessages().size();
     }
 
     public void setText(StringBuilder txt, int pos) {
@@ -1038,7 +1025,7 @@ public class GuiChatTC extends GuiChat {
             }
         }
         if (pos > 0) {
-            this.inputField2.setCursorPositionEnd();
+            this.inputField.setCursorPositionEnd();
         }
         if (this.inputList.size() > txtList.size()) {
             for (int j = txtList.size(); j < this.inputList.size(); j++) {
@@ -1047,9 +1034,9 @@ public class GuiChatTC extends GuiChat {
                 this.inputList.get(j).setVisible(false);
             }
         }
-        if (!this.inputField2.getVisible()) {
-            this.inputField2.setFocused(true);
-            this.inputField2.setVisible(true);
+        if (!this.inputField.getVisible()) {
+            this.inputField.setFocused(true);
+            this.inputField.setVisible(true);
         }
     }
 
@@ -1075,7 +1062,7 @@ public class GuiChatTC extends GuiChat {
 
     @Override
     public void updateScreen() {
-        this.inputField2.updateCursorCounter();
+        this.inputField.updateCursorCounter();
 
         // Update screen for extensions
         for (IChatUpdateExtension ext : extensions.getListOf(IChatUpdateExtension.class)) {

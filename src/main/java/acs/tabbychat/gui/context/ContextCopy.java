@@ -13,7 +13,7 @@ public class ContextCopy extends ChatContext {
     @Override
     public void onClicked() {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiChatTC screen) {
-            GuiScreen.setClipboardString(screen.inputField2.getSelectedText());
+            GuiScreen.setClipboardString(screen.inputField.getSelectedText());
         }
     }
 
@@ -29,7 +29,7 @@ public class ContextCopy extends ChatContext {
 
     @Override
     public boolean isPositionValid(int x, int y) {
-        GuiTextField text = menu.screen.inputField2;
+        GuiTextField text = menu.screen.inputField;
         return text != null && !text.getSelectedText().isEmpty();
     }
 

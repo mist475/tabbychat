@@ -9,7 +9,7 @@ public class ContextPaste extends ChatContext {
 
     @Override
     public void onClicked() {
-        getMenu().screen.inputField2.writeText(GuiScreen.getClipboardString());
+        getMenu().screen.inputField.writeText(GuiScreen.getClipboardString());
     }
 
     @Override
