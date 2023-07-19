@@ -1,4 +1,4 @@
-//version: 1689101527
+//version: 1689409577
 /*
  DO NOT CHANGE THIS FILE!
  Also, you may replace this file at any time if there is an update available.
@@ -363,9 +363,12 @@ try {
     if (versionOverride == null) {
         def gitDetails = versionDetails()
         def isDirty = gitVersion().endsWith(".dirty") // No public API for this, isCleanTag has a different meaning
-        String branchName = gitDetails.branchName
+        String branchName = gitDetails.branchName ?: (System.getenv('GIT_BRANCH') ?: 'git')
+        if (branchName.startsWith('origin/')) {
+            branchName = branchName.minus('origin/')
+        }
         branchName = branchName.replaceAll("[^a-zA-Z0-9-]+", "-") // sanitize branch names for semver
-        identifiedVersion = gitDetails.lastTag
+        identifiedVersion = gitDetails.lastTag ?: '${gitDetails.gitHash}'
         if (gitDetails.commitDistance > 0) {
             identifiedVersion += "-${branchName}.${gitDetails.commitDistance}+${gitDetails.gitHash}"
             if (isDirty) {
