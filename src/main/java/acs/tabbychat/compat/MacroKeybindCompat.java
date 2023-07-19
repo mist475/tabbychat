@@ -116,13 +116,13 @@ public class MacroKeybindCompat implements IChatMouseExtension, IChatUpdateExten
 
                     mkgetBoundLayout = layoutManager.getDeclaredMethod("getBoundLayout",
                                                                        String.class, boolean.class);
-                    layoutTick = designableGuiLayout.getDeclaredMethod("onTick", (Class[]) null);
+                    layoutTick = designableGuiLayout.getDeclaredMethod("onTick", (Class<?>[]) null);
                     drawBtnGui = buttonClass.getDeclaredMethod("drawControlAt", Minecraft.class, int.class, int.class, int.class, int.class, int.class,
                                                                int.class);
                     drawDropDown = guiDropDownMenu.getDeclaredMethod("drawControlAt", int.class, int.class, int.class, int.class);
                     draw = designableGuiLayout.getDeclaredMethod("draw", Rectangle.class, int.class, int.class);
                     controlClicked = guiCustomGui.getDeclaredMethod("controlClicked", int.class, int.class, int.class);
-                    dropDownSize = guiDropDownMenu.getDeclaredMethod("getSize", (Class[]) null);
+                    dropDownSize = guiDropDownMenu.getDeclaredMethod("getSize", (Class<?>[]) null);
                     mousePressed = guiDropDownMenu.getDeclaredMethod("mousePressed", int.class, int.class);
                     onControlClicked = guiCustomGui.getDeclaredMethod("onControlClicked",
                                                                       guiControl);

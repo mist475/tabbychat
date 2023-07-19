@@ -326,8 +326,8 @@ public class GuiChatTC extends GuiChat {
                 try {
                     NBTBase nbtbase = JsonToNBT.func_150315_a(hoverevent.getValue()
                                                                   .getUnformattedText());
-                    if (nbtbase != null && nbtbase instanceof NBTTagCompound)
-                        itemstack = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbtbase);
+                    if (nbtbase instanceof NBTTagCompound nbt)
+                        itemstack = ItemStack.loadItemStackFromNBT(nbt);
                 }
                 catch (Exception ignored) {
                 }
@@ -424,7 +424,7 @@ public class GuiChatTC extends GuiChat {
     private void func_146407_a(URI _uri) {
         try {
             Class<?> desktop = Class.forName("java.awt.Desktop");
-            Object theDesktop = desktop.getMethod("getDesktop").invoke((Object) null
+            Object theDesktop = desktop.getMethod("getDesktop").invoke(null
             );
             desktop.getMethod("browse", URI.class).invoke(theDesktop,
                                                           _uri);
@@ -617,8 +617,6 @@ public class GuiChatTC extends GuiChat {
 
     /**
      * Inserts characters at cursor
-     *
-     * @param _chars
      */
     public void insertCharsAtCursor(String _chars) {
         StringBuilder msg = new StringBuilder();
@@ -664,7 +662,7 @@ public class GuiChatTC extends GuiChat {
                 this.func_146404_p_();
             }
             // ESCAPE: close the chat interface
-            case Keyboard.KEY_ESCAPE -> this.mc.displayGuiScreen((GuiScreen) null);
+            case Keyboard.KEY_ESCAPE -> this.mc.displayGuiScreen(null);
 
             // RETURN: send chat to server
             case Keyboard.KEY_NUMPADENTER, Keyboard.KEY_RETURN -> this.sendChat(ChatBox.pinned);
@@ -806,7 +804,7 @@ public class GuiChatTC extends GuiChat {
             }
         }
         if (!tc.enabled() || !keepopen)
-            this.mc.displayGuiScreen((GuiScreen) null);
+            this.mc.displayGuiScreen(null);
         else {
             this.resetInputFields();
         }
@@ -817,7 +815,7 @@ public class GuiChatTC extends GuiChat {
     public void mouseClicked(int _x, int _y, int _button) {
         Point scaled = ChatBox.scaleMouseCoords(Mouse.getX(), Mouse.getY(), true);
         boolean clicked = false;
-        if (_button == 0 && this.mc.gameSettings.chatLinks
+        if (scaled != null && _button == 0 && this.mc.gameSettings.chatLinks
             && (this.contextMenu == null || !contextMenu.isCursorOver(scaled.x, scaled.y))) {
             IChatComponent ccd = this.gnc.func_146236_a(Mouse.getX(), Mouse.getY());
             if (ccd != null) {
@@ -890,11 +888,11 @@ public class GuiChatTC extends GuiChat {
                 }
             }
         }
-        else if (contextMenu != null && contextMenu.isCursorOver(scaled.x, scaled.y)) {
+        else if (scaled != null && contextMenu != null && contextMenu.isCursorOver(scaled.x, scaled.y)) {
             clicked = !contextMenu.mouseClicked(scaled.x, scaled.y);
         }
         if (!clicked)
-            if (_button == 1
+            if (scaled != null && _button == 1
                 && (this.contextMenu == null || !this.contextMenu.isCursorOver(scaled.x,
                                                                                scaled.y))) {
                 this.contextMenu = new ChatContextMenu(this, scaled.x, scaled.y);
@@ -924,19 +922,18 @@ public class GuiChatTC extends GuiChat {
             }
         // Replicating GuiScreen's mouseClicked method since 'super' won't work
         for (GuiButton _guibutton : this.buttonList) {
-            if (_guibutton instanceof ChatButton) {
-                if (_guibutton.mousePressed(this.mc, _x, _y)) {
+            if (_guibutton instanceof ChatButton guiButton) {
+                if (guiButton.mousePressed(this.mc, _x, _y)) {
                     if (_button == 0) {
-                        this.selectedButton2 = _guibutton;
+                        this.selectedButton2 = guiButton;
                         this.mc.thePlayer.playSound("random.click", 1.0F, 1.0F);
-                        this.actionPerformed(_guibutton);
+                        this.actionPerformed(guiButton);
                         return;
                     }
                     else if (_button == 1) {
-                        ChatButton _cb = (ChatButton) _guibutton;
-                        if (_cb.channel == this.tc.channelMap.get("*"))
+                        if (guiButton.channel == this.tc.channelMap.get("*"))
                             return;
-                        this.mc.displayGuiScreen(new ChatChannelGUI(_cb.channel));
+                        this.mc.displayGuiScreen(new ChatChannelGUI(guiButton.channel));
                     }
                 }
             }

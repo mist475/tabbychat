@@ -9,6 +9,7 @@ import com.swabunga.spell.event.SpellChecker;
 import com.swabunga.spell.event.StringWordTokenizer;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -18,11 +19,13 @@ public class TCSpellCheckListener implements SpellCheckListener {
     public TCSpellCheckListener() {
         try {
             InputStream in = TCSpellCheckListener.class.getResourceAsStream("/english.0");
-            SpellDictionary dictionary = new SpellDictionaryHashMap(new InputStreamReader(in));
-            this.spellCheck = new SpellChecker(dictionary);
-            this.spellCheck.addSpellCheckListener(this);
+            if (in != null) {
+                SpellDictionary dictionary = new SpellDictionaryHashMap(new InputStreamReader(in));
+                this.spellCheck = new SpellChecker(dictionary);
+                this.spellCheck.addSpellCheckListener(this);
+            }
         }
-        catch (Exception e) {
+        catch (IOException e) {
             TabbyChat.printException("", e);
         }
 

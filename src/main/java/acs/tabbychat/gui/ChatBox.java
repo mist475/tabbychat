@@ -299,31 +299,34 @@ public class ChatBox {
             return;
 
         Point click = scaleMouseCoords(_curX, _curY, true);
-        if (Math.abs(click.x - dragStart.x) < 3 && Math.abs(click.y - dragStart.y) < 3)
-            return;
+        if (click != null) {
+            if (Math.abs(click.x - dragStart.x) < 3 && Math.abs(click.y - dragStart.y) < 3)
+                return;
 
-        float scaleSetting = gnc.getScaleSetting();
-        int scaledHeight = Math.round((gnc.sr.getScaledHeight() + current.y) / scaleSetting
-                                          - current.y);
+            float scaleSetting = gnc.getScaleSetting();
+            int scaledHeight = Math.round((gnc.sr.getScaledHeight() + current.y) / scaleSetting
+                                              - current.y);
 
-        desired.x = current.x + click.x - dragStart.x;
-        desired.y = current.y + click.y - dragStart.y;
+            desired.x = current.x + click.x - dragStart.x;
+            desired.y = current.y + click.y - dragStart.y;
 
-        // look for snapping to top
-        if (desired.y - current.height < -scaledHeight + 1 && !anchoredTop) {
-            anchoredTop = true;
-            desired.y -= current.height;
+            // look for snapping to top
+            if (desired.y - current.height < -scaledHeight + 1 && !anchoredTop) {
+                anchoredTop = true;
+                desired.y -= current.height;
+            }
+            // look for snapping to bottom
+            else if (desired.y + current.height + 1 > absMinY && anchoredTop) {
+                anchoredTop = false;
+                desired.y += current.height;
+            }
+
+            desired.setSize(current.width, current.height);
+            enforceScreenBoundary(desired);
+
+            dragStart = click;
         }
-        // look for snapping to bottom
-        else if (desired.y + current.height + 1 > absMinY && anchoredTop) {
-            anchoredTop = false;
-            desired.y += current.height;
-        }
 
-        desired.setSize(current.width, current.height);
-        enforceScreenBoundary(desired);
-
-        dragStart = click;
     }
 
     /**
@@ -334,22 +337,25 @@ public class ChatBox {
             return;
 
         Point click = scaleMouseCoords(_curX, _curY, true);
-        if (Math.abs(click.x - dragStart.x) < 3 && Math.abs(click.y - dragStart.y) < 3)
-            return;
+        if (click != null) {
+            if (Math.abs(click.x - dragStart.x) < 3 && Math.abs(click.y - dragStart.y) < 3)
+                return;
 
-        desired.width = current.width + click.x - dragStart.x;
-        desired.x = current.x;
-        desired.y = current.y;
-        if (!anchoredTop) {
-            desired.height = current.height - click.y + dragStart.y;
-        }
-        else {
-            desired.height = current.height + click.y - dragStart.y;
+            desired.width = current.width + click.x - dragStart.x;
+            desired.x = current.x;
+            desired.y = current.y;
+            if (!anchoredTop) {
+                desired.height = current.height - click.y + dragStart.y;
+            }
+            else {
+                desired.height = current.height + click.y - dragStart.y;
+            }
+
+            enforceScreenBoundary(desired);
+            GuiNewChatTC.getInstance().refreshChat();
+            dragStart = click;
         }
 
-        enforceScreenBoundary(desired);
-        GuiNewChatTC.getInstance().refreshChat();
-        dragStart = click;
     }
 
     /**

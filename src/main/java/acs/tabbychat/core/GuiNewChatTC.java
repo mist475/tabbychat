@@ -106,7 +106,7 @@ public class GuiNewChatTC extends GuiNewChat {
     @Override
     public void addToSentMessages(String _msg) {
         if (this.sentMessages.isEmpty()
-                || !(this.sentMessages.get(this.sentMessages.size() - 1)).equals(_msg)) {
+            || !(this.sentMessages.get(this.sentMessages.size() - 1)).equals(_msg)) {
             this.sentMessages.add(_msg);
         }
     }
@@ -179,7 +179,7 @@ public class GuiNewChatTC extends GuiNewChat {
         // it's only saved once
         if (mc.currentScreen != null) {
             if (this.mc.currentScreen instanceof GuiDisconnected
-                    || this.mc.currentScreen instanceof GuiIngameMenu) {
+                || this.mc.currentScreen instanceof GuiIngameMenu) {
                 if (this.saveNeeded) {
                     tc.storeChannelData();
                     TabbyChat.advancedSettings.saveSettingsFile();
@@ -222,8 +222,8 @@ public class GuiNewChatTC extends GuiNewChat {
                 maxDisplayedLines = MathHelper.floor_float(ChatBox.getChatHeight() / 9.0f);
                 if (!chatOpen)
                     maxDisplayedLines = MathHelper
-                            .floor_float(TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue()
-                                                 * ChatBox.getChatHeight() / 900.0f);
+                        .floor_float(TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue()
+                                         * ChatBox.getChatHeight() / 900.0f);
                 this.chatWidth = ChatBox.getChatWidth();
                 fadeTicks = TabbyChat.advancedSettings.chatFadeTicks.getValue().intValue();
             }
@@ -258,24 +258,24 @@ public class GuiNewChatTC extends GuiNewChat {
 
             // Display valid chat lines
             for (lineCounter = 0; lineCounter + this.scrollOffset < numLinesTotal
-                    && lineCounter < maxDisplayedLines; ++lineCounter) {
+                && lineCounter < maxDisplayedLines; ++lineCounter) {
                 msgList = new ArrayList<>();
                 chatReadLock.lock();
                 try {
                     msgList.add(this.chatLines.get(lineCounter + this.scrollOffset));
                     if (msgList.get(0) != null
-                            && msgList.get(0).getChatComponentWithTimestamp().getFormattedText()
-                            .startsWith(" ")) {
+                        && msgList.get(0).getChatComponentWithTimestamp().getFormattedText()
+                        .startsWith(" ")) {
                         for (int sameMsgCounter = 1; lineCounter + sameMsgCounter
-                                + this.scrollOffset < numLinesTotal
-                                && lineCounter + sameMsgCounter < maxDisplayedLines; ++sameMsgCounter) {
+                            + this.scrollOffset < numLinesTotal
+                            && lineCounter + sameMsgCounter < maxDisplayedLines; ++sameMsgCounter) {
                             TCChatLine checkLine = this.chatLines.get(lineCounter + sameMsgCounter
-                                                                              + this.scrollOffset);
+                                                                          + this.scrollOffset);
                             if (checkLine.getUpdatedCounter() != msgList.get(0).getUpdatedCounter())
                                 break;
                             msgList.add(checkLine);
                             if (!checkLine.getChatComponentWithTimestamp().getFormattedText()
-                                    .startsWith(" "))
+                                .startsWith(" "))
                                 break;
                         }
                     }
@@ -307,7 +307,7 @@ public class GuiNewChatTC extends GuiNewChat {
                             visLineCounter++;
                             byte xOrigin = 0;
                             int yOrigin = ChatBox.anchoredTop && tc.enabled() ? -(visLineCounter * 9)
-                                    + ChatBox.getChatHeight()
+                                + ChatBox.getChatHeight()
                                                                               : -visLineCounter * 9;
                             drawRect(xOrigin, yOrigin, xOrigin + this.chatWidth, yOrigin + 9,
                                      currentOpacity / 2 << 24);
@@ -315,12 +315,12 @@ public class GuiNewChatTC extends GuiNewChat {
                             int idx = ChatBox.anchoredTop && tc.enabled() ? msgList.size() - i - 1
                                                                           : i;
                             String _chat = msgList.get(idx).getChatComponentWithTimestamp()
-                                    .getFormattedText();
+                                .getFormattedText();
 
                             if (!this.mc.gameSettings.chatColours)
                                 _chat = StringUtils.stripControlCodes(_chat);
                             int textOpacity = (TabbyChat.advancedSettings.textIgnoreOpacity
-                                                       .getValue() ? 255 : currentOpacity);
+                                                   .getValue() ? 255 : currentOpacity);
                             if (msgList.get(i).getUpdatedCounter() < 0) {
                                 this.mc.fontRenderer.drawStringWithShadow(_chat, xOrigin,
                                                                           yOrigin + 1, 0x888888 + (textOpacity << 24));
@@ -360,31 +360,31 @@ public class GuiNewChatTC extends GuiNewChat {
             int clickXRel = Math.abs(adjClick.x - ChatBox.current.x);
             int clickYRel = Math.abs(adjClick.y - ChatBox.current.y);
             if (clickXRel >= 0 && clickYRel >= 0 && clickXRel < this.chatWidth
-                    && clickYRel < this.chatHeight) {
+                && clickYRel < this.chatHeight) {
                 chatReadLock.lock();
                 try {
                     int displayedLines = Math.min(this.getHeightSetting() / 9,
                                                   this.chatLines.size());
                     if (clickXRel <= ChatBox.getChatWidth()
-                            && clickYRel < this.mc.fontRenderer.FONT_HEIGHT * displayedLines
-                            + displayedLines) {
+                        && clickYRel < this.mc.fontRenderer.FONT_HEIGHT * displayedLines
+                        + displayedLines) {
                         int lineIndex = clickYRel / this.mc.fontRenderer.FONT_HEIGHT
-                                + this.scrollOffset;
+                            + this.scrollOffset;
                         if (lineIndex < displayedLines + this.scrollOffset
-                                && this.chatLines.get(lineIndex) != null) {
+                            && this.chatLines.get(lineIndex) != null) {
                             TCChatLine chatline = this.chatLines.get(lineIndex);
 
                             clickYRel = 0;
 
                             for (Object o : chatline.getChatComponentWithTimestamp()) {
                                 returnMe = (IChatComponent) o;
-                                if (returnMe instanceof ChatComponentText) {
+                                if (returnMe instanceof ChatComponentText toReturn) {
                                     clickYRel += this.mc.fontRenderer.getStringWidth(this
-                                                                                             .func_146235_b(((ChatComponentText) returnMe)
-                                                                                                                    .getChatComponentText_TextValue()));
+                                                                                         .func_146235_b(toReturn
+                                                                                                            .getChatComponentText_TextValue()));
 
                                     if (clickYRel > clickXRel)
-                                        return returnMe;
+                                        return toReturn;
                                 }
 
                             }
@@ -401,7 +401,7 @@ public class GuiNewChatTC extends GuiNewChat {
 
     private String func_146235_b(String p_146235_1_) {
         return Minecraft.getMinecraft().gameSettings.chatColours ? p_146235_1_ : EnumChatFormatting
-                .getTextWithoutFormattingCodes(p_146235_1_);
+            .getTextWithoutFormattingCodes(p_146235_1_);
     }
 
     private void func_146237_a(IChatComponent _msg, int id, int tick, boolean backupFlag) {
@@ -423,7 +423,7 @@ public class GuiNewChatTC extends GuiNewChat {
         }
         if (TabbyChat.generalSettings.timeStampEnable.getValue())
             mc.fontRenderer.getStringWidth(TabbyChat.generalSettings.timeStampStyle.getValue()
-                                                   .toString());
+                                               .toString());
 
         // Add chatlines to appropriate lists
         if (tc.enabled() && !optionalDeletion && !backupFlag) {
@@ -439,7 +439,7 @@ public class GuiNewChatTC extends GuiNewChat {
         if (tc.serverDataLock.availablePermits() < 1)
             return;
         int maxChats = tc.enabled() ? Integer.parseInt(TabbyChat.advancedSettings.chatScrollHistory
-                                                               .getValue()) : 100;
+                                                           .getValue()) : 100;
         int numChats = 0;
         chatReadLock.lock();
         try {
@@ -490,7 +490,7 @@ public class GuiNewChatTC extends GuiNewChat {
 
     @Override
     public boolean getChatOpen() {
-        return (this.mc.currentScreen instanceof GuiChat || this.mc.currentScreen instanceof GuiChatTC);
+        return this.mc.currentScreen instanceof GuiChat;
     }
 
     /**
@@ -533,15 +533,15 @@ public class GuiNewChatTC extends GuiNewChat {
             int dt = 0;
             while (_n < newSize && _c < _current.size()) {
                 dt = _new.getChatLine(_n).getUpdatedCounter()
-                        - _current.get(_c).getUpdatedCounter();
+                    - _current.get(_c).getUpdatedCounter();
                 if (dt > 0) {
                     _current.add(_c, _new.getChatLine(_n));
                     _n++;
                 }
                 else if (dt == 0) {
                     if (_current.get(_c).equals(_new.getChatLine(_n))
-                            || _current.get(_c).getChatComponent()
-                            .equals(_new.getChatLine(_n).getChatComponent())) {
+                        || _current.get(_c).getChatComponent()
+                        .equals(_new.getChatLine(_n).getChatComponent())) {
                         _c++;
                         _n++;
                     }
@@ -586,7 +586,7 @@ public class GuiNewChatTC extends GuiNewChat {
             maxLineDisplay = Math.round(ChatBox.getChatHeight() / 9.0f);
             if (!this.getChatOpen())
                 maxLineDisplay = Math.round(maxLineDisplay
-                                                    * TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue() / 100.0f);
+                                                * TabbyChat.advancedSettings.chatBoxUnfocHeight.getValue() / 100.0f);
         }
         else
             maxLineDisplay = this.func_146232_i();

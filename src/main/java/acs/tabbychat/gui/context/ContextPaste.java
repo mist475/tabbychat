@@ -25,7 +25,7 @@ public class ContextPaste extends ChatContext {
     @Override
     public boolean isPositionValid(int x, int y) {
         String clipboard = GuiScreen.getClipboardString();
-        return clipboard != null && !clipboard.isEmpty();
+        return !clipboard.isEmpty();
     }
 
     @Override

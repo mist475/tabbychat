@@ -100,7 +100,9 @@ public class ChatContextMenu extends Gui {
         for (ChatContext item : items) {
             if (!item.enabled && item.getDisabledBehavior() == ChatContext.Behavior.HIDE)
                 continue;
-            item.drawButton(mc, scaled.x, scaled.y);
+            if (scaled != null) {
+                item.drawButton(mc, scaled.x, scaled.y);
+            }
         }
     }
 

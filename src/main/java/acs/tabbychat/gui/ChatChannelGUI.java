@@ -164,9 +164,9 @@ public class ChatChannelGUI extends GuiScreen {
                 break;
             position++;
         }
-        for (Object drawable : this.buttonList) {
-            if (drawable instanceof ITCSetting)
-                ((ITCSetting) drawable).resetDescription();
+        for (GuiButton drawable : this.buttonList) {
+            if (drawable instanceof ITCSetting setting)
+                setting.resetDescription();
         }
     }
 

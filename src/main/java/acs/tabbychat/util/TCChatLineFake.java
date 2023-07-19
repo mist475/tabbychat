@@ -5,8 +5,6 @@ import net.minecraft.client.gui.ChatLine;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
-import java.util.Objects;
-
 public class TCChatLineFake extends ChatLine {
     protected int updateCounterCreated = -1;
     @Expose
@@ -20,7 +18,11 @@ public class TCChatLineFake extends ChatLine {
     public TCChatLineFake(int _counter, IChatComponent _string, int _id) {
         super(_counter, _string, _id);
         this.updateCounterCreated = _counter;
-        this.chatComponent = Objects.requireNonNullElseGet(_string, () -> new ChatComponentText(""));
+        if (_string == null) {
+            _string = new ChatComponentText("");
+        }
+
+        this.chatComponent = _string;
         this.chatLineID = _id;
     }
 

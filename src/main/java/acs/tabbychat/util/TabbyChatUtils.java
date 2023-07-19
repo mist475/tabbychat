@@ -102,7 +102,9 @@ public class TabbyChatUtils {
                 writer.write(FileUtils.readFileToString(file, "UTF-8"));
             }
             finally {
-                file.delete();
+                if (!file.delete()) {
+                    TabbyChat.printErr("Failed to delete " + file.getName() + " after zipping");
+                }
             }
         }
     }
@@ -251,20 +253,22 @@ public class TabbyChatUtils {
         }
         // Set log file
         if (theChannel.getLogFile() == null
-                || tmpcal.get(Calendar.DAY_OF_YEAR) != logDay.get(Calendar.DAY_OF_YEAR)) {
+            || tmpcal.get(Calendar.DAY_OF_YEAR) != logDay.get(Calendar.DAY_OF_YEAR)) {
             logDay = tmpcal;
             theChannel.setLogFile(new File(fileDir, basename
-                    + logNameFormat.format(logDay.getTime())));
+                + logNameFormat.format(logDay.getTime())));
         }
         // Create the file
         if (!theChannel.getLogFile().exists()) {
             try {
-                fileDir.mkdirs();
-                theChannel.getLogFile().createNewFile();
+                if (fileDir.mkdirs()) {
+                    //noinspection ResultOfMethodCallIgnored
+                    theChannel.getLogFile().createNewFile();
+                }
             }
             catch (IOException e) {
                 TabbyChat.printErr("Cannot create log file : '" + e.getLocalizedMessage() + "' : "
-                                           + e);
+                                       + e);
                 return;
             }
         }
@@ -275,7 +279,7 @@ public class TabbyChatUtils {
         }
         catch (IOException e) {
             TabbyChat.printErr("Cannot write to log file : '" + e.getLocalizedMessage() + "' : "
-                                       + e);
+                                   + e);
         }
     }
 
@@ -288,36 +292,33 @@ public class TabbyChatUtils {
             return val1;
     }
 
-    public static ColorCodeEnum parseColor(Object _input) {
+    public static ColorCodeEnum parseColor(String _input) {
         if (_input == null)
             return null;
-        String input = _input.toString();
         try {
-            return ColorCodeEnum.valueOf(input);
+            return ColorCodeEnum.valueOf(_input);
         }
         catch (IllegalArgumentException e) {
             return null;
         }
     }
 
-    public static ChannelDelimEnum parseDelimiters(Object _input) {
+    public static ChannelDelimEnum parseDelimiters(String _input) {
         if (_input == null)
             return null;
-        String input = _input.toString();
         try {
-            return ChannelDelimEnum.valueOf(input);
+            return ChannelDelimEnum.valueOf(_input);
         }
         catch (IllegalArgumentException e) {
             return null;
         }
     }
 
-    public static FormatCodeEnum parseFormat(Object _input) {
+    public static FormatCodeEnum parseFormat(String _input) {
         if (_input == null)
             return null;
-        String input = _input.toString();
         try {
-            return FormatCodeEnum.valueOf(input);
+            return FormatCodeEnum.valueOf(_input);
         }
         catch (IllegalArgumentException e) {
             return null;
@@ -350,31 +351,26 @@ public class TabbyChatUtils {
             return -1;
     }
 
-    public static NotificationSoundEnum parseSound(Object _input) {
+    public static NotificationSoundEnum parseSound(String _input) {
         if (_input == null)
             return NotificationSoundEnum.ORB;
-        String input = _input.toString();
         try {
-            return NotificationSoundEnum.valueOf(input);
+            return NotificationSoundEnum.valueOf(_input);
         }
         catch (IllegalArgumentException e) {
             return NotificationSoundEnum.ORB;
         }
     }
 
-    public static String parseString(Object _input) {
-        if (_input == null)
-            return " ";
-        else
-            return _input.toString();
+    public static String parseString(String _input) {
+        return _input == null ? " " : _input;
     }
 
-    public static TimeStampEnum parseTimestamp(Object _input) {
+    public static TimeStampEnum parseTimestamp(String _input) {
         if (_input == null)
             return null;
-        String input = _input.toString();
         try {
-            return TimeStampEnum.valueOf(input);
+            return TimeStampEnum.valueOf(_input);
         }
         catch (IllegalArgumentException e) {
             return null;
@@ -382,7 +378,7 @@ public class TabbyChatUtils {
     }
 
     public static LinkedHashMap<String, ChatChannel> swapChannels(
-            LinkedHashMap<String, ChatChannel> currentMap, int _left, int _right) {
+        LinkedHashMap<String, ChatChannel> currentMap, int _left, int _right) {
         // Ensure ordering of 'indices' is 0<=_left<_right<=end
         if (_left == _right)
             return currentMap;
@@ -479,7 +475,7 @@ public class TabbyChatUtils {
         }
         catch (Exception e) {
             TabbyChat.printException("Error while writing settings to file '" + settingsFile
-                                             + "'", e);
+                                         + "'", e);
         }
     }
 }

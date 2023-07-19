@@ -129,9 +129,9 @@ public class TCSettingsFilters extends TCSettingsGUI {
     }
 
     private void clearDisplay() {
-        for (Object drawable : this.buttonList) {
-            if (drawable instanceof ITCSetting) {
-                ((ITCSetting) drawable).clear();
+        for (GuiButton drawable : this.buttonList) {
+            if (drawable instanceof ITCSetting setting) {
+                setting.clear();
             }
         }
     }
@@ -160,7 +160,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         }
         else {
             Properties displayMe = this.tempFilterMap.get(this.curFilterId).getProperties();
-            for (Object drawable : this.buttonList) {
+            for (GuiButton drawable : this.buttonList) {
                 if (drawable instanceof ITCSetting tcDrawable) {
                     if (tcDrawable.getType().equals("enum")) {
                         ((TCSettingEnum) tcDrawable).setTempValueFromProps(displayMe);
@@ -200,7 +200,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         }
         else {
             Properties displayMe = next.getValue().getProperties();
-            for (Object drawable : this.buttonList) {
+            for (GuiButton drawable : this.buttonList) {
                 if (drawable instanceof ITCSetting tcDrawable) {
                     if (tcDrawable.getType().equals("enum")) {
                         ((TCSettingEnum) tcDrawable).setTempValueFromProps(displayMe);
@@ -223,9 +223,9 @@ public class TCSettingsFilters extends TCSettingsGUI {
         int buttonColor = (this.bgcolor & 0x00ffffff) + 0xff000000;
 
         PrefsButton newButton = new PrefsButton(ADD_ID, col1x, (this.height + DISPLAY_HEIGHT) / 2
-                - LINE_HEIGHT, 45, LINE_HEIGHT, I18n.format("settings.new"));
+            - LINE_HEIGHT, 45, LINE_HEIGHT, I18n.format("settings.new"));
         PrefsButton delButton = new PrefsButton(DEL_ID, col1x + 50, (this.height + DISPLAY_HEIGHT)
-                / 2 - LINE_HEIGHT, 45, LINE_HEIGHT, I18n.format("settings.delete"));
+            / 2 - LINE_HEIGHT, 45, LINE_HEIGHT, I18n.format("settings.delete"));
         newButton.bgcolor = this.bgcolor;
         delButton.bgcolor = this.bgcolor;
         this.buttonList.add(newButton);
@@ -234,8 +234,8 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.filterName.setButtonDims(100, 11);
         this.filterName.setLabelLoc(col1x);
         this.filterName.setButtonLoc(
-                col1x + 33 + mc.fontRenderer.getStringWidth(this.filterName.description),
-                this.rowY(1));
+            col1x + 33 + mc.fontRenderer.getStringWidth(this.filterName.description),
+            this.rowY(1));
 
         PrefsButton prevButton = new PrefsButton(PREV_ID, this.filterName.x() - 23, this.rowY(1),
                                                  20, LINE_HEIGHT, "<<");
@@ -253,7 +253,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.sendToAllTabs.buttonColor = buttonColor;
 
         this.sendToTabName.setLabelLoc(effRight
-                                               - mc.fontRenderer.getStringWidth(this.sendToTabName.description) - 55);
+                                           - mc.fontRenderer.getStringWidth(this.sendToTabName.description) - 55);
         this.sendToTabName.setButtonLoc(effRight - 50, this.rowY(3));
         this.sendToTabName.setButtonDims(50, 11);
 
@@ -267,14 +267,14 @@ public class TCSettingsFilters extends TCSettingsGUI {
 
         this.highlightColor.setButtonDims(70, 11);
         this.highlightColor.setButtonLoc(
-                col1x + 15 + mc.fontRenderer.getStringWidth(this.highlightColor.description),
-                this.rowY(6));
+            col1x + 15 + mc.fontRenderer.getStringWidth(this.highlightColor.description),
+            this.rowY(6));
         this.highlightColor.setLabelLoc(col1x + 10);
 
         this.highlightFormat.setButtonDims(60, 11);
         this.highlightFormat.setButtonLoc(effRight - 60, this.rowY(6));
         this.highlightFormat.setLabelLoc(this.highlightFormat.x() - 5
-                                                 - mc.fontRenderer.getStringWidth(this.highlightFormat.description));
+                                             - mc.fontRenderer.getStringWidth(this.highlightFormat.description));
 
         this.audioNotificationBool.setButtonLoc(col1x, this.rowY(7));
         this.audioNotificationBool.setLabelLoc(col1x + 19);
@@ -283,23 +283,23 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.audioNotificationSound.setButtonDims(60, 11);
         this.audioNotificationSound.setButtonLoc(effRight - 60, this.rowY(7));
         this.audioNotificationSound.setLabelLoc(this.audioNotificationSound.x() - 5
-                                                        - mc.fontRenderer.getStringWidth(this.audioNotificationSound.description));
+                                                    - mc.fontRenderer.getStringWidth(this.audioNotificationSound.description));
 
         this.inverseMatch.setButtonLoc(col1x, this.rowY(8));
         this.inverseMatch.setLabelLoc(col1x + 19);
         this.inverseMatch.buttonColor = buttonColor;
 
         this.caseSensitive.setLabelLoc(effRight
-                                               - mc.fontRenderer.getStringWidth(this.caseSensitive.description));
+                                           - mc.fontRenderer.getStringWidth(this.caseSensitive.description));
         this.caseSensitive.setButtonLoc(
-                effRight - mc.fontRenderer.getStringWidth(this.caseSensitive.description) - 19,
-                this.rowY(8));
+            effRight - mc.fontRenderer.getStringWidth(this.caseSensitive.description) - 19,
+            this.rowY(8));
         this.caseSensitive.buttonColor = buttonColor;
 
         this.expressionString.setLabelLoc(col1x);
         this.expressionString.setButtonLoc(
-                col1x + 5 + mc.fontRenderer.getStringWidth(this.expressionString.description),
-                this.rowY(9));
+            col1x + 5 + mc.fontRenderer.getStringWidth(this.expressionString.description),
+            this.rowY(9));
         this.expressionString.setButtonDims(effRight - this.expressionString.x(), 11);
         this.resetTempVars();
         this.displayCurrentFilter();
@@ -319,30 +319,30 @@ public class TCSettingsFilters extends TCSettingsGUI {
             TCChatFilter loaded = new TCChatFilter(loadName);
 
             loaded.inverseMatch = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                         + ".inverseMatch"));
+                                                                                     + ".inverseMatch"));
             loaded.caseSensitive = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                          + ".caseSensitive"));
+                                                                                      + ".caseSensitive"));
             loaded.highlightBool = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                          + ".highlightBool"));
+                                                                                      + ".highlightBool"));
             loaded.highlightColor = ColorCodeEnum.cleanValueOf(settingsTable.getProperty(loadId
-                                                                                                 + ".highlightColor"));
+                                                                                             + ".highlightColor"));
             loaded.highlightFormat = FormatCodeEnum.cleanValueOf(settingsTable.getProperty(loadId
-                                                                                                   + ".highlightFormat"));
+                                                                                               + ".highlightFormat"));
             loaded.audioNotificationBool = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                                  + ".audioNotificationBool"));
+                                                                                              + ".audioNotificationBool"));
             loaded.audioNotificationSound = TabbyChatUtils.parseSound(settingsTable
-                                                                              .getProperty(loadId + ".audioNotificationSound"));
+                                                                          .getProperty(loadId + ".audioNotificationSound"));
             loaded.sendToTabBool = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                          + ".sendToTabBool"));
+                                                                                      + ".sendToTabBool"));
             loaded.sendToTabName = TabbyChatUtils.parseString(settingsTable.getProperty(loadId
-                                                                                                + ".sendToTabName"));
+                                                                                            + ".sendToTabName"));
             loaded.sendToAllTabs = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                          + ".sendToAllTabs"));
+                                                                                      + ".sendToAllTabs"));
             loaded.removeMatches = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                          + ".removeMatches"));
+                                                                                      + ".removeMatches"));
 
             loaded.compilePattern(TabbyChatUtils.parseString(settingsTable.getProperty(loadId
-                                                                                               + ".expressionString")));
+                                                                                           + ".expressionString")));
             this.filterMap.put(loadId, loaded);
 
             loadId++;
@@ -358,8 +358,8 @@ public class TCSettingsFilters extends TCSettingsGUI {
         if (this.audioNotificationSound.hovered(par1, par2)) {
             this.audioNotificationSound.mouseClicked(par1, par2, par3);
             mc.thePlayer.playSound(
-                    ((NotificationSoundEnum) audioNotificationSound.getTempValue()).file(), 1.0F,
-                    1.0F);
+                ((NotificationSoundEnum) audioNotificationSound.getTempValue()).file(), 1.0F,
+                1.0F);
         }
         else
             super.mouseClicked(par1, par2, par3);
@@ -426,12 +426,12 @@ public class TCSettingsFilters extends TCSettingsGUI {
             storeMe.caseSensitive = this.caseSensitive.getTempValue();
             storeMe.highlightBool = this.highlightBool.getTempValue();
             storeMe.highlightColor = ColorCodeEnum.valueOf(this.highlightColor.getTempValue()
-                                                                   .name());
+                                                               .name());
             storeMe.highlightFormat = FormatCodeEnum.valueOf(this.highlightFormat.getTempValue()
-                                                                     .name());
+                                                                 .name());
             storeMe.audioNotificationBool = this.audioNotificationBool.getTempValue();
             storeMe.audioNotificationSound = NotificationSoundEnum
-                    .valueOf(this.audioNotificationSound.getTempValue().name());
+                .valueOf(this.audioNotificationSound.getTempValue().name());
             storeMe.sendToTabBool = this.sendToTabBool.getTempValue();
             storeMe.sendToAllTabs = this.sendToAllTabs.getTempValue();
             storeMe.sendToTabName = this.sendToTabName.getTempValue();
@@ -462,10 +462,10 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.caseSensitive.enabled = true;
 
         this.highlightBool.enabled = !this.removeMatches.getTempValue()
-                && !this.inverseMatch.getTempValue();
+            && !this.inverseMatch.getTempValue();
         this.audioNotificationBool.enabled = !this.removeMatches.getTempValue();
         this.removeMatches.enabled = !this.sendToTabBool.getTempValue()
-                && !this.highlightBool.getTempValue() && !this.audioNotificationBool.getTempValue();
+            && !this.highlightBool.getTempValue() && !this.audioNotificationBool.getTempValue();
         this.sendToTabBool.enabled = !this.removeMatches.getTempValue();
 
         this.highlightColor.enabled = this.highlightBool.getTempValue();
@@ -473,7 +473,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.audioNotificationSound.enabled = this.audioNotificationBool.getTempValue();
         this.sendToAllTabs.enabled = this.sendToTabBool.getTempValue();
 
-        for (Object o : this.buttonList) {
+        for (GuiButton o : this.buttonList) {
             if (o instanceof ITCSetting tmp) {
                 if (this.tempFilterMap.size() == 0)
                     tmp.disable();
@@ -481,11 +481,11 @@ public class TCSettingsFilters extends TCSettingsGUI {
                     tmp.enable();
                 else if (Objects.equals(tmp.getType(), "bool"))
                     tmp.setTempValue(((TCSettingBool) tmp).getTempValue()
-                                             && tmp.enabled());
+                                         && tmp.enabled());
             }
         }
         this.sendToTabName.func_146184_c(this.sendToTabBool.getTempValue()
-                                                 && !this.sendToAllTabs.getTempValue());
+                                             && !this.sendToAllTabs.getTempValue());
     }
 
 }

@@ -72,12 +72,12 @@ import java.util.zip.GZIPOutputStream;
 public class TabbyChat {
     private static final Logger log = TabbyChatUtils.log;
     private static final Gson gson = new GsonBuilder()
-            .excludeFieldsWithoutExposeAnnotation()
-            .enableComplexMapKeySerialization()
-            // Register chat
-            .registerTypeAdapter(IChatComponent.class, new IChatComponent.Serializer())
-            // Create
-            .create();
+        .excludeFieldsWithoutExposeAnnotation()
+        .enableComplexMapKeySerialization()
+        // Register chat
+        .registerTypeAdapter(IChatComponent.class, new IChatComponent.Serializer())
+        // Create
+        .create();
     public static boolean modLoaded = false;
     public static boolean defaultUnicode;
     public static String version = TabbyChatUtils.version;
@@ -176,17 +176,17 @@ public class TabbyChat {
             if (firstLine)
                 TabbyChat.instance.addToChannel("TabbyChat",
                                                 new TCChatLine(mc.ingameGUI.getUpdateCounter(), new ChatComponentText(
-                                                        splitMsg), 0, true), false);
+                                                    splitMsg), 0, true), false);
             else
                 TabbyChat.instance.addToChannel("TabbyChat",
                                                 new TCChatLine(mc.ingameGUI.getUpdateCounter(), new ChatComponentText(" "
-                                                                                                                              + splitMsg), 0, true), false);
+                                                                                                                          + splitMsg), 0, true), false);
             firstLine = false;
         }
     }
 
     public void activateIndex(int ind) {
-        List<?> actives = this.getActive();
+        List<String> actives = this.getActive();
         if (actives.size() == 1) {
             int i = 1;
             Iterator<ChatChannel> iter = this.channelMap.values().iterator();
@@ -194,9 +194,9 @@ public class TabbyChat {
             while (iter.hasNext()) {
                 chan = iter.next();
                 if (i == ind) {
-                    if (mc.currentScreen instanceof GuiChatTC)
-                        ((GuiChatTC) mc.currentScreen).checkCommandPrefixChange(
-                                this.channelMap.get(actives.get(0)), chan);
+                    if (mc.currentScreen instanceof GuiChatTC curScreen)
+                        curScreen.checkCommandPrefixChange(
+                            this.channelMap.get(actives.get(0)), chan);
                     this.resetDisplayedChat();
                     return;
                 }
@@ -206,14 +206,14 @@ public class TabbyChat {
     }
 
     public void activateNext() {
-        List<?> actives = this.getActive();
+        List<String> actives = this.getActive();
         if (actives.size() == 1) {
             Iterator<ChatChannel> iter = this.channelMap.values().iterator();
             ChatChannel chan = iter.next();
             while (iter.hasNext()) {
                 if (chan.getTitle().equals(actives.get(0))) {
-                    if (mc.currentScreen instanceof GuiChatTC)
-                        ((GuiChatTC) mc.currentScreen).checkCommandPrefixChange(chan, iter.next());
+                    if (mc.currentScreen instanceof GuiChatTC curScreen)
+                        curScreen.checkCommandPrefixChange(chan, iter.next());
                     this.resetDisplayedChat();
                     return;
                 }
@@ -221,24 +221,24 @@ public class TabbyChat {
             }
             if (chan.getTitle().equals(actives.get(0))) {
                 iter = this.channelMap.values().iterator();
-                if (iter.hasNext() && mc.currentScreen instanceof GuiChatTC)
-                    ((GuiChatTC) mc.currentScreen).checkCommandPrefixChange(chan, iter.next());
+                if (iter.hasNext() && mc.currentScreen instanceof GuiChatTC curScreen)
+                    curScreen.checkCommandPrefixChange(chan, iter.next());
                 this.resetDisplayedChat();
             }
         }
     }
 
     public void activatePrev() {
-        List<?> actives = this.getActive();
+        List<String> actives = this.getActive();
         if (actives.size() == 1) {
             ListIterator<ChatChannel> iter = Lists.newArrayList(this.channelMap.values())
-                    .listIterator(this.channelMap.size());
+                .listIterator(this.channelMap.size());
             ChatChannel chan = iter.previous();
             while (iter.hasPrevious()) {
                 if (chan.getTitle().equals(actives.get(0))) {
-                    if (mc.currentScreen instanceof GuiChatTC)
-                        ((GuiChatTC) mc.currentScreen).checkCommandPrefixChange(chan,
-                                                                                iter.previous());
+                    if (mc.currentScreen instanceof GuiChatTC curScreen)
+                        curScreen.checkCommandPrefixChange(chan,
+                                                           iter.previous());
                     this.resetDisplayedChat();
                     return;
                 }
@@ -247,9 +247,9 @@ public class TabbyChat {
             if (chan.getTitle().equals(actives.get(0))) {
                 chan.active = false;
                 iter = new ArrayList<>(this.channelMap.values())
-                        .listIterator(this.channelMap.size());
-                if (iter.hasPrevious() && mc.currentScreen instanceof GuiChatTC)
-                    ((GuiChatTC) mc.currentScreen).checkCommandPrefixChange(chan, iter.previous());
+                    .listIterator(this.channelMap.size());
+                if (iter.hasPrevious() && mc.currentScreen instanceof GuiChatTC curScreen)
+                    curScreen.checkCommandPrefixChange(chan, iter.previous());
                 this.resetDisplayedChat();
             }
         }
@@ -269,8 +269,8 @@ public class TabbyChat {
                 return;
             theChan = new ChatChannel(name);
             this.channelMap.put(name, theChan);
-            if (mc.currentScreen instanceof GuiChatTC) {
-                ((GuiChatTC) mc.currentScreen).addChannelLive(theChan);
+            if (mc.currentScreen instanceof GuiChatTC curScreen) {
+                curScreen.addChannelLive(theChan);
             }
         }
         if (generalSettings.groupSpam.getValue()) {
@@ -358,9 +358,9 @@ public class TabbyChat {
 
         if (generalSettings.saveChatLog.getValue() && serverSettings.serverIP != null) {
             TabbyChatUtils.logChat(
-                    "\nBEGIN CHAT LOGGING" + " -- "
-                            + (new SimpleDateFormat()).format(Calendar.getInstance().getTime()),
-                    null);
+                "\nBEGIN CHAT LOGGING" + " -- "
+                    + (new SimpleDateFormat()).format(Calendar.getInstance().getTime()),
+                null);
         }
     }
 
@@ -431,14 +431,14 @@ public class TabbyChat {
                 _new.importOldChat(chan.getValue());
                 this.addToChannel(chan.getKey(),
                                   new TCChatLine(-1, new ChatComponentText("-- chat history from "
-                                                                                   + (new SimpleDateFormat()).format(chanDataFile.lastModified())), 0,
+                                                                               + (new SimpleDateFormat()).format(chanDataFile.lastModified())), 0,
                                                  true), true);
                 oldIDs++;
             }
         }
         catch (ClassCastException e) {
             TabbyChat
-                    .printMessageToChat("Unable to load channel history data due to upgrade (sorry!)");
+                .printMessageToChat("Unable to load channel history data due to upgrade (sorry!)");
             TabbyChat.printException("Unable to load channel history", e);
         }
         ChatChannel.nextID = 3600 + oldIDs;
@@ -467,10 +467,10 @@ public class TabbyChat {
             frmt = "(?i:\u00A7[0-9A-FK-OR])*";
 
         this.chatChannelPatternDirty = Pattern.compile("^(\u00A7r)?" + frmt + "\\" + delims.open()
-                                                               + "([\\p{L}0-9_\u00A7]+)\\" + delims.close());
+                                                           + "([\\p{L}0-9_\u00A7]+)\\" + delims.close());
         this.chatChannelPatternClean = Pattern.compile("^" + "\\" + delims.open()
-                                                               + "([\\p{L}0-9_]{1," + TabbyChat.advancedSettings.maxLengthChannelName.getValue()
-                                                               + "})\\" + delims.close());
+                                                           + "([\\p{L}0-9_]{1," + TabbyChat.advancedSettings.maxLengthChannelName.getValue()
+                                                           + "})\\" + delims.close());
     }
 
     protected void loadPMPatterns() {
@@ -514,11 +514,11 @@ public class TabbyChat {
             TabbyChat.log.error("Error while setting 'To me' regex.", e);
             TabbyChat.serverSettings.pmTabRegexToMe.setValue("");
             TabbyChat.printMessageToChat(ColorCodeEnum.RED.toCode()
-                                                 + "Unable to set 'To me' pm regex. See console for details.");
+                                             + "Unable to set 'To me' pm regex. See console for details.");
         }
         try {
             String fromMe = TabbyChat.serverSettings.pmTabRegexFromMe.getValue().replace(
-                    "{$player}", "([\\p{L}\\p{N}_]{3,16})");
+                "{$player}", "([\\p{L}\\p{N}_]{3,16})");
             if (!fromMe.isEmpty()) {
                 Pattern.compile(fromMe);
                 fromMePM.append("|").append(fromMe);
@@ -528,7 +528,7 @@ public class TabbyChat {
             TabbyChat.log.error("Error while setting 'From me' regex.", e);
             TabbyChat.serverSettings.pmTabRegexFromMe.setValue("");
             TabbyChat.printMessageToChat(ColorCodeEnum.RED.toCode()
-                                                 + "Unable to set 'From me' pm regex. See console for details.");
+                                             + "Unable to set 'From me' pm regex. See console for details.");
         }
 
         this.chatPMtoMePattern = Pattern.compile(toMePM.toString());
@@ -605,7 +605,7 @@ public class TabbyChat {
                     if (pmTab != null) {
                         tab = new ChatChannel(pmTab);
                         if (generalSettings.saveChatLog.getValue()
-                                && generalSettings.splitChatLog.getValue())
+                            && generalSettings.splitChatLog.getValue())
                             TabbyChatUtils.logChat(raw.getUnformattedText(), tab);
                     }
                 }
@@ -614,7 +614,7 @@ public class TabbyChat {
                 toTabs.add(channelTab);
                 tab = new ChatChannel(channelTab);
                 if (generalSettings.saveChatLog.getValue()
-                        && generalSettings.splitChatLog.getValue())
+                    && generalSettings.splitChatLog.getValue())
                     TabbyChatUtils.logChat(raw.getUnformattedText(), tab);
             }
             toTabs.addAll(filterTabs);
@@ -638,8 +638,8 @@ public class TabbyChat {
                 pm.cmdPrefix = "/msg " + pmTab;
                 this.channelMap.put(pmTab, pm);
                 this.addToChannel(pmTab, resultChatLine, false);
-                if (mc.currentScreen instanceof GuiChatTC) {
-                    ((GuiChatTC) mc.currentScreen).addChannelLive(pm);
+                if (mc.currentScreen instanceof GuiChatTC curScreen) {
+                    curScreen.addChannelLive(pm);
                 }
             }
             else {
@@ -696,10 +696,10 @@ public class TabbyChat {
 
     private String processChatForChannels(IChatComponent raw) {
         Matcher findChannelClean = this.chatChannelPatternClean.matcher(EnumChatFormatting
-                                                                                .getTextWithoutFormattingCodes(raw.getUnformattedText()));
+                                                                            .getTextWithoutFormattingCodes(raw.getUnformattedText()));
         Matcher findChannelDirty = this.chatChannelPatternDirty.matcher(raw.getFormattedText());
-        boolean dirtyCheck = (!serverSettings.delimColorBool.getValue() && !serverSettings.delimFormatBool
-                .getValue()) ? true : findChannelDirty.find();
+        boolean dirtyCheck = !serverSettings.delimColorBool.getValue() && !serverSettings.delimFormatBool
+            .getValue() || findChannelDirty.find();
         if (findChannelClean.find() && dirtyCheck)
             return findChannelClean.group(1);
         return null;
@@ -764,7 +764,7 @@ public class TabbyChat {
                     else {
                         String destTab = iFilter.getValue().getTabName();
                         if (destTab != null && destTab.length() > 0
-                                && !destinations.contains(destTab)) {
+                            && !destinations.contains(destTab)) {
                             destinations.add(destTab);
                         }
                     }
@@ -870,6 +870,7 @@ public class TabbyChat {
         if (chanDataFile == null)
             return;
         if (!chanDataFile.getParentFile().exists())
+            //noinspection ResultOfMethodCallIgnored
             chanDataFile.getParentFile().mkdirs();
 
         OutputStream output = null;
@@ -880,7 +881,7 @@ public class TabbyChat {
         }
         catch (Exception e) {
             printErr("Unable to write channel data to file : '" + e.getLocalizedMessage() + "' : "
-                             + e);
+                         + e);
         }
         finally {
             IOUtils.closeQuietly(output);
@@ -893,6 +894,7 @@ public class TabbyChat {
             pName = mc.thePlayer.getCommandSenderName();
         File parentDir = TabbyChatUtils.getServerDir();
         if (make && !parentDir.exists())
+            //noinspection ResultOfMethodCallIgnored
             parentDir.mkdirs();
         chanDataFile = new File(parentDir, pName + "_chanData.ser");
     }
@@ -931,7 +933,7 @@ public class TabbyChat {
         while (iFilter != null) {
             newName = iFilter.getValue().sendToTabName;
             if (iFilter.getValue().sendToTabBool && !iFilter.getValue().sendToAllTabs
-                    && !this.channelMap.containsKey(newName) && !newName.startsWith("%")) {
+                && !this.channelMap.containsKey(newName) && !newName.startsWith("%")) {
                 this.channelMap.put(newName, new ChatChannel(newName));
             }
             iFilter = filterSettings.filterMap.higherEntry(iFilter.getKey());
