@@ -1,8 +1,9 @@
-#Language file for fr_FR
-#Samedi 29/11/2014 By/Par @Keodrop
+# Language file for fr_FR
+# Last Update: 21/07/2023
+# By @Keodrop
 colors.aqua=Bleu Ciel
-colors.brightgreen=Vert Clair
 colors.black=Noir
+colors.brightgreen=Vert Clair
 colors.darkaqua=Cyan
 colors.darkblue=Bleu Foncé
 colors.darkgray=Gris Foncé
@@ -34,7 +35,7 @@ formats.underline=Souligné
 
 messages.update1=Une mise à jour est disponible ! (Version actuelle:
 messages.update2=, la nouvelle:
-messages.update3=Allez sur le forum de TabbyChat sur minecraftforum.net pour le télécharger
+messages.update3=Allez sur la page de TabbyChat sur Modrinth ou Github pour la télécharger
 
 settings.advanced.chatboxunfocheight=Hauteur sans focus
 settings.advanced.chatfadeticks=Temps fondu du chat (ticks)
@@ -77,7 +78,7 @@ settings.general.groupspam=Renforcer le spam du chat
 settings.general.name=General
 settings.general.savechatlog=Stocker le chat
 settings.spelling.spellcheckenable=Activer la vérification orthographique
-settings.general.splichatlog=Diviser les logs par canal
+settings.general.splitchatlog=Diviser les logs par canal
 settings.general.tabbychatenable=TabbyChat Activé
 settings.general.timestampcolor=Couleur de l'heure
 settings.general.timestampenable=Heure dans le chat

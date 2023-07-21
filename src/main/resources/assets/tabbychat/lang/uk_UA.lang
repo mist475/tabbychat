@@ -1,6 +1,7 @@
-#Language file for uk_UA
-#Wed May 21 19:58:20 EDT 2014
+# Language file for uk_UA
+# Wed May 21 19:58:20 EDT 2014
 colors.aqua=Голубий
+colors.black=Black
 colors.brightgreen=Сітло Зелений
 colors.darkaqua=Темно Голубий
 colors.darkblue=Темно Синій
@@ -16,34 +17,47 @@ colors.purple=Фіолетовий
 colors.red=Червоний
 colors.white=Білий
 colors.yellow=Жовтий
+
 delims.angles=<Кути>
 delims.anglesbracketscombo=<(Комбо)Pl.>
 delims.anglesparenscombo=<(Комбо)Pl.>
 delims.braces={Фігурні}
 delims.brackets=[Квадратні]
 delims.parenthesis=(Круглі)
+
 formats.bold=Жирний
 formats.default=По замовч.
 formats.italic=Курсив
+formats.magic=Magic
 formats.striked=Закреслений
 formats.underline=Підскреслений
+
 messages.update1=Знайдено оновлення\! (Поточна версія
 messages.update2=, нова
 messages.update3=Відвідайте форум TabbyChat на minecraftforum.net для оновлення.
+
 settings.advanced.chatboxunfocheight=Висота неактивного чату
 settings.advanced.chatfadeticks=Час зникнення (тік)
 settings.advanced.chatscrollhistory=Історія чату (лінії)
+settings.advanced.convertunicodetext=Convert unicode syntax
 settings.advanced.forceunicode=Юнікод рендеринг
 settings.advanced.maxlengthchannelname=Макс. довжина імені каналу
 settings.advanced.multichatdelay=Затримка відправлення у мультичат (Мс)
 settings.advanced.name=Додатково
+settings.advanced.textignoreopacity=Text ignores opacity setting
+
 settings.cancel=Відміна
+settings.delete=Видалити
+settings.new=Новий
+settings.save=Зберегти
+
 settings.channel.alias=Аліаси
 settings.channel.cmdprefix=Префікс команд чату
+settings.channel.hideprefix=Hide prefix while typing
 settings.channel.notificationson=Непрочитані повідомлення
 settings.channel.of=з
 settings.channel.position=Позиція\:
-settings.delete=Видалити
+
 settings.filters.audionotificationbool=Аудіо сповіщення
 settings.filters.audionotificationsound=Звук
 settings.filters.casesensitive=Враховувати регістр
@@ -58,23 +72,36 @@ settings.filters.removematches=Ховати співпадання з чату
 settings.filters.sendtoalltabs=Всі вкладки
 settings.filters.sendtotabbool=Надсилати співпадання у вкладку
 settings.filters.sendtotabname=Ім'я Вкладки
+
 settings.general.groupspam=Групувати однакові повідомлення
 settings.general.name=Головне
 settings.general.savechatlog=Лог чату у файл
+settings.spelling.spellcheckenable=Enable Spell-checking
+settings.general.splitchatlog=Split log by channel
 settings.general.tabbychatenable=TabbyChat включений
 settings.general.timestampcolor=Колір відмітки часу
 settings.general.timestampenable=Відмітка часу чату
 settings.general.timestampstyle=Стиль відмітки часу
 settings.general.unreadflashing=Повідомлення про непрочитане
-settings.new=Новий
-settings.save=Зберегти
+settings.general.updatecheckenable=Check for Updates
+
 settings.server.autochannelsearch=Авто пошук нових каналів
+settings.server.autopmsearch=Enable PM tabs
 settings.server.defaultchannels=Канали по замовчуванні
 settings.server.delimcolorbool=Кольорові роздільники
 settings.server.delimformatbool=Форматовані роздільники
 settings.server.delimiterchars=Роздільник каналів
 settings.server.ignoredchannels=Канали, що ігноруються
 settings.server.name=Сервер
+settings.server.regexignorebool=Use patterns
+settings.server.pmtabregex.tome=PM Regex To Me
+settings.server.pmtabregex.fromme=PM Regex From Me
+
+settings.spelling.name=Spelling
+settings.spelling.userdictionary=User Dictionary
+settings.spelling.opendictionary=Open Dictionary
+settings.spelling.reloaddictionary=Reload
+
 sounds.anvil=Ковадло
 sounds.bass=Бас
 sounds.bat=Летюча Миша

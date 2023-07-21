@@ -1,6 +1,7 @@
-#Language file for fi_FI
-#Wed May 21 19:58:20 EDT 2014
+# Language file for fi_FI
+# Wed May 21 19:58:20 EDT 2014
 colors.aqua=Meriveden Sininen
+colors.black=Black
 colors.brightgreen=VaaleanvihreÃ¤
 colors.darkaqua=Meriveden Tumma
 colors.darkblue=Tummansininen
@@ -16,34 +17,47 @@ colors.purple=Purppura
 colors.red=Punainen
 colors.white=Valkoinen
 colors.yellow=Keltainen
+
 delims.angles=<Kulmat>
 delims.anglesbracketscombo=<[YhdistelmÃ¤]>
 delims.anglesparenscombo=<(YhdistelmÃ¤)>
 delims.braces={Aaltosulkeet}
 delims.brackets=[Sulkeet]
 delims.parenthesis=(Kaarisulkeet)
+
 formats.bold=Lihava
 formats.default=Tavallinen
 formats.italic=Kursivoitu
+formats.magic=Magic
 formats.striked=Yliviivattu
 formats.underline=Alleviivattu
+
 messages.update1=Uusi pÃ¤ivitys on saatavissa\! (TÃ¤mÃ¤n hetkinen versio on
 messages.update2=, uusin on
 messages.update3=KÃ¤y katsomassa TabbyChat forumi minecraftforum.net\:ssÃ¤ lataaksesi sen
+
 settings.advanced.chatboxunfocheight=Huomioimattomien korkeus (rivit)
 settings.advanced.chatfadeticks=Keskustelun haalistumis aika (tickit)
 settings.advanced.chatscrollhistory=Keskustelun sÃ¤ilytetty historia (rivit)
+settings.advanced.convertunicodetext=Convert unicode syntax
 settings.advanced.forceunicode=Pakota Unicode Keskustelun nÃ¤yttÃ¤minen
 settings.advanced.maxlengthchannelname=Kanavan nimen maksimi pituus
 settings.advanced.multichatdelay=Monen viestin vÃ¤lissÃ¤ oleva aika (ms)
 settings.advanced.name=Edistynyt
+settings.advanced.textignoreopacity=Text ignores opacity setting
+
 settings.cancel=Peruuta
+settings.delete=Poista
+settings.new=Uusi
+settings.save=Tallenna
+
 settings.channel.alias=Toiselta nimeltÃ¤Ã¤n
 settings.channel.cmdprefix=Keskustellun komennon etuliite
+settings.channel.hideprefix=Hide prefix while typing
 settings.channel.notificationson=Lukemattomat muistiinpanot
 settings.channel.of=
 settings.channel.position=Sijainti\:
-settings.delete=Poista
+
 settings.filters.audionotificationbool=Ã„Ã¤ni huomautus
 settings.filters.audionotificationsound=Ã„Ã¤ni
 settings.filters.casesensitive=Yhteensopiva
@@ -58,23 +72,36 @@ settings.filters.removematches=Piilota osumat keskustelusta
 settings.filters.sendtoalltabs=Kaikki vÃ¤lilehdet
 settings.filters.sendtotabbool=LÃ¤hetÃ¤ osumat vÃ¤lilehteen
 settings.filters.sendtotabname=VÃ¤lilehden nimi
+
 settings.general.groupspam=Tallenna spÃ¤mmÃ¤tty keskustelu
 settings.general.name=Yleiset
 settings.general.savechatlog=Merkitse keskustelu tiedostoon
+settings.spelling.spellcheckenable=Enable Spell-checking
+settings.general.splitchatlog=Split log by channel
 settings.general.tabbychatenable=TabbyChat pÃ¤Ã¤llÃ¤
 settings.general.timestampcolor=Aikaleiman vÃ¤ri
 settings.general.timestampenable=Aikaleima juttelussa
 settings.general.timestampstyle=Aikaleiman tyyli
 settings.general.unreadflashing=Tavallinen lukemattoman viestin vÃ¤lkkyminen
-settings.new=Uusi
-settings.save=Tallenna
+settings.general.updatecheckenable=Check for Updates
+
 settings.server.autochannelsearch=Etsi automaattisesti uusia kanavia
+settings.server.autopmsearch=Enable PM tabs
 settings.server.defaultchannels=Tavalliset kanavat
 settings.server.delimcolorbool=VÃ¤rilliset eroittimet
 settings.server.delimformatbool=Muotoillut eroittimet
 settings.server.delimiterchars=Keskustelu kanavien eroittelu
 settings.server.ignoredchannels=Sivuutetut kanavat
 settings.server.name=Palvelin
+settings.server.regexignorebool=Use patterns
+settings.server.pmtabregex.tome=PM Regex To Me
+settings.server.pmtabregex.fromme=PM Regex From Me
+
+settings.spelling.name=Spelling
+settings.spelling.userdictionary=User Dictionary
+settings.spelling.opendictionary=Open Dictionary
+settings.spelling.reloaddictionary=Reload
+
 sounds.anvil=Alasin
 sounds.bass=Basso
 sounds.bat=Lepakko

@@ -1,6 +1,7 @@
-#Language file for es_ES
-#Wed May 21 19:58:20 EDT 2014
+# Language file for es_ES
+# Wed May 21 19:58:20 EDT 2014
 colors.aqua=Agua
+colors.black=Black
 colors.brightgreen=Verde Claro
 colors.darkaqua=Agua Oscuro
 colors.darkblue=Azul Oscuro
@@ -16,34 +17,47 @@ colors.purple=Morado
 colors.red=Rojo
 colors.white=Blanco
 colors.yellow=Amarillo
+
 delims.angles=<Ángulos>
 delims.anglesbracketscombo=<[Combo]Y>
 delims.anglesparenscombo=<(Combo)Y>
 delims.braces={Llaves}
 delims.brackets=[Corchetes]
 delims.parenthesis=(Paréntesis)
+
 formats.bold=Negrita
 formats.default=Normal
 formats.italic=Cursiva
+formats.magic=Magic
 formats.striked=Tachado
 formats.underline=Subrayado
+
 messages.update1=¡Una nueva actualización\! (La versión actual es
 messages.update2=, la nueva es
 messages.update3=Visita el foro de TabbyChat en minecraftforum.net para descargar
+
 settings.advanced.chatboxunfocheight=Altura desenfocada
 settings.advanced.chatfadeticks=Tiempo de desaparición (ticks)
 settings.advanced.chatscrollhistory=Historial del chat (líneas)
+settings.advanced.convertunicodetext=Convert unicode syntax
 settings.advanced.forceunicode=Forzar renderizado Unicode
 settings.advanced.maxlengthchannelname=Maxima longitud de un canal
 settings.advanced.multichatdelay=Tiempo de espera para Multi-Chat (ms)
 settings.advanced.name=Avanzada
+settings.advanced.textignoreopacity=Text ignores opacity setting
+
 settings.cancel=Cancelar
+settings.delete=Borrar
+settings.new=Nuevo
+settings.save=Guardar
+
 settings.channel.alias=Alias
 settings.channel.cmdprefix=Prefijo del comando
+settings.channel.hideprefix=Hide prefix while typing
 settings.channel.notificationson=Notificaciones sin leer
 settings.channel.of=de
 settings.channel.position=Posición\:
-settings.delete=Borrar
+
 settings.filters.audionotificationbool=Notificacion de sonido
 settings.filters.audionotificationsound=Sonido
 settings.filters.casesensitive=Sensible a mayúsculas
@@ -58,23 +72,36 @@ settings.filters.removematches=Ocultar coincidencias del chat
 settings.filters.sendtoalltabs=Todas las pestañas
 settings.filters.sendtotabbool=Enviar coincidencias a la pestaña
 settings.filters.sendtotabname=Nombre de pestaña
+
 settings.general.groupspam=Juntar mensajes iguales
 settings.general.name=General
 settings.general.savechatlog=Copiar chat a un archivo
+settings.spelling.spellcheckenable=Enable Spell-checking
+settings.general.splitchatlog=Split log by channel
 settings.general.tabbychatenable=TabbyChat Activado
 settings.general.timestampcolor=Color de hora
 settings.general.timestampenable=Mostrar hora
 settings.general.timestampstyle=Estilo de hora
 settings.general.unreadflashing=Notificación de mensajes no leídos
-settings.new=Nuevo
-settings.save=Guardar
+settings.general.updatecheckenable=Check for Updates
+
 settings.server.autochannelsearch=Buscar canales automaticamente
+settings.server.autopmsearch=Enable PM tabs
 settings.server.defaultchannels=Canales Predeterminados
 settings.server.delimcolorbool=Separadores coloreados
 settings.server.delimformatbool=Separadores con formato
 settings.server.delimiterchars=Separadores de Chat-Canal
 settings.server.ignoredchannels=Canales Ignorados
 settings.server.name=Server
+settings.server.regexignorebool=Use patterns
+settings.server.pmtabregex.tome=PM Regex To Me
+settings.server.pmtabregex.fromme=PM Regex From Me
+
+settings.spelling.name=Spelling
+settings.spelling.userdictionary=User Dictionary
+settings.spelling.opendictionary=Open Dictionary
+settings.spelling.reloaddictionary=Reload
+
 sounds.anvil=Yunque
 sounds.bass=Bajo
 sounds.bat=Murciélago

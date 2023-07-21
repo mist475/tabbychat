@@ -1,6 +1,7 @@
-#Language file for ru_RU
-#Wed May 21 19:58:20 EDT 2014
+# Language file for ru_RU
+# Wed May 21 19:58:20 EDT 2014
 colors.aqua=Голубой
+colors.black=Black
 colors.brightgreen=Лаймовый
 colors.darkaqua=Темно-голубой
 colors.darkblue=Темно-синий
@@ -16,34 +17,47 @@ colors.purple=Фиолетовый
 colors.red=Красный
 colors.white=Белый
 colors.yellow=Желтый
+
 delims.angles=<Углы>
 delims.anglesbracketscombo=<[Комбо]Pl.>
 delims.anglesparenscombo=<(Комбо)Pl.>
 delims.braces={Фигурные}
 delims.brackets=[Квадратные]
 delims.parenthesis=(Круглые)
+
 formats.bold=Жирный
 formats.default=Обычный
 formats.italic=Курсив
+formats.magic=Magic
 formats.striked=Зачекрнутый
 formats.underline=Подчеркнутый
-messages.update1=Найдено обновление \! (Текущая версия
+
+messages.update1=Найдено обновление! (Текущая версия
 messages.update2=, новая
 messages.update3=Посетите тему на minecraftforum.net для скачки обновления.
+
 settings.advanced.chatboxunfocheight=Высота неактивного чата
 settings.advanced.chatfadeticks=Время исчезновения (Тик)
 settings.advanced.chatscrollhistory=История чата (линии)
+settings.advanced.convertunicodetext=Convert unicode syntax
 settings.advanced.forceunicode=Юникод рендеринг
 settings.advanced.maxlengthchannelname=Макс. длина имени канала
 settings.advanced.multichatdelay=Отправка сообщений, мультичат (Мс)
 settings.advanced.name=Дополнительно
+settings.advanced.textignoreopacity=Text ignores opacity setting
+
 settings.cancel=Отмена
+settings.delete=Удалить
+settings.new=Новый
+settings.save=Сохр.
+
 settings.channel.alias=Алиас
 settings.channel.cmdprefix=Префикс в чате
+settings.channel.hideprefix=Hide prefix while typing
 settings.channel.notificationson=Уведомления
 settings.channel.of=из
 settings.channel.position=Позиция\:
-settings.delete=Удалить
+
 settings.filters.audionotificationbool=Аудио уведомления
 settings.filters.audionotificationsound=Звук
 settings.filters.casesensitive=Учитывать регистр
@@ -58,23 +72,36 @@ settings.filters.removematches=Скрывать совпадения
 settings.filters.sendtoalltabs=Во всех
 settings.filters.sendtotabbool=Показывать во вкладках
 settings.filters.sendtotabname=Отдельная
+
 settings.general.groupspam=Группировать одинаковые сообщения
 settings.general.name=Главное
 settings.general.savechatlog=Логировать чат
+settings.spelling.spellcheckenable=Enable Spell-checking
+settings.general.splitchatlog=Split log by channel
 settings.general.tabbychatenable=TabbyChat включен
 settings.general.timestampcolor=Цвет
 settings.general.timestampenable=Пометка времени
 settings.general.timestampstyle=Стиль
 settings.general.unreadflashing=Уведомления по-умолчанию
-settings.new=Новый
-settings.save=Сохр.
+settings.general.updatecheckenable=Check for Updates
+
 settings.server.autochannelsearch=Авто-поиск новых каналов
+settings.server.autopmsearch=Enable PM tabs
 settings.server.defaultchannels=Каналы по-умолчанию
 settings.server.delimcolorbool=Цвет
 settings.server.delimformatbool=Формат
 settings.server.delimiterchars=Разделители каналов
 settings.server.ignoredchannels=Игнорируемые каналы
 settings.server.name=Сервер
+settings.server.regexignorebool=Use patterns
+settings.server.pmtabregex.tome=PM Regex To Me
+settings.server.pmtabregex.fromme=PM Regex From Me
+
+settings.spelling.name=Spelling
+settings.spelling.userdictionary=User Dictionary
+settings.spelling.opendictionary=Open Dictionary
+settings.spelling.reloaddictionary=Reload
+
 sounds.anvil=Наковальня
 sounds.bass=Басс
 sounds.bat=Летучая мышь
