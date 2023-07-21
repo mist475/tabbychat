@@ -1,5 +1,6 @@
 # Language file for fr_FR
-# Samedi 29/11/2014 By/Par @Keodrop
+# Last Update: 21/07/2023
+# By @Keodrop
 colors.aqua=Bleu Ciel
 colors.black=Noir
 colors.brightgreen=Vert Clair
@@ -34,7 +35,7 @@ formats.underline=Souligné
 
 messages.update1=Une mise à jour est disponible ! (Version actuelle:
 messages.update2=, la nouvelle:
-messages.update3=Allez sur le forum de TabbyChat sur minecraftforum.net pour le télécharger
+messages.update3=Allez sur la page de TabbyChat sur Modrinth ou Github pour la télécharger
 
 settings.advanced.chatboxunfocheight=Hauteur sans focus
 settings.advanced.chatfadeticks=Temps fondu du chat (ticks)

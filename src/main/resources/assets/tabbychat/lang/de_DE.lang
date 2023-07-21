@@ -1,7 +1,7 @@
 # Language file for de_DE
-# Wed May 21 19:58:20 EDT 2014
+# Last update: Fri July 21 2023 By @Laerorneth
 colors.aqua=Aquamarin
-colors.black=Black
+colors.black=Schwarz
 colors.brightgreen=Hellgrün
 colors.darkaqua=Dunkelaquamarin
 colors.darkblue=Dunkelblau
@@ -34,17 +34,17 @@ formats.underline=Unterstrichen
 
 messages.update1=Ein Update ist verfügbar (Momentane Version ist
 messages.update2=, neueste ist
-messages.update3=Besuche den TabbyChat Forum Thread unter minecraftforum.net zum Herunterladen des Updates
+messages.update3=Besuche die TabbyChat Seiten auf Modrinth oder Gihub zum Herunterladen des Updates
 
 settings.advanced.chatboxunfocheight=Höhe ohne Fokus
 settings.advanced.chatfadeticks=Anzeigezeit einer Nachricht (in Ticks)
 settings.advanced.chatscrollhistory=Chat Historie speichern (Zeilen)
-settings.advanced.convertunicodetext=Convert unicode syntax
+settings.advanced.convertunicodetext=Unicode syntax konvertieren
 settings.advanced.forceunicode=Erzwinge Unicode Chat Anzeige
 settings.advanced.maxlengthchannelname=Maximale Länge Channelname
 settings.advanced.multichatdelay=Multi-Chat Sendeverzögerung (ms)
 settings.advanced.name=Erweiterte
-settings.advanced.textignoreopacity=Text ignores opacity setting
+settings.advanced.textignoreopacity=Text ignoriert Opazitätseinstellungen
 
 settings.cancel=Abbrechen
 settings.delete=Löschen
@@ -53,8 +53,8 @@ settings.save=Speichern
 
 settings.channel.alias=Alias
 settings.channel.cmdprefix=Chat-Commando Prefix
-settings.channel.hideprefix=Hide prefix while typing
-settings.channel.notificationson=Unread Notificati
+settings.channel.hideprefix=Prefix während des Schreibens verbergen
+settings.channel.notificationson=Ungelesene Benachrichtigungen
 settings.channel.of=von
 settings.channel.position=Position
 
@@ -77,13 +77,13 @@ settings.general.groupspam=Spam zusammenfassen
 settings.general.name=Allgemeine
 settings.general.savechatlog=Chat in Logdatei speichern
 settings.spelling.spellcheckenable=Enable Spell-checking
-settings.general.splitchatlog=Split log by channel
+settings.general.splitchatlog=Log nach Channels aufteilen
 settings.general.tabbychatenable=TabbyChat aktiv
 settings.general.timestampcolor=Zeitstempel - Farbe
 settings.general.timestampenable=Zeitstempel aktivieren
 settings.general.timestampstyle=Zeitstempel - Stil
 settings.general.unreadflashing=Standardhinweis bei ungelesenen Benachrichtigungen
-settings.general.updatecheckenable=Check for Updates
+settings.general.updatecheckenable=Nach Updates suchen
 
 settings.server.autochannelsearch=Automatische Suche nach neuen Channels
 settings.server.autopmsearch=Enable PM tabs
@@ -100,7 +100,7 @@ settings.server.pmtabregex.fromme=PM Regex From Me
 settings.spelling.name=Spelling
 settings.spelling.userdictionary=User Dictionary
 settings.spelling.opendictionary=Open Dictionary
-settings.spelling.reloaddictionary=Reload
+settings.spelling.reloaddictionary=Neu laden
 
 sounds.anvil=Amboss
 sounds.bass=Bass
