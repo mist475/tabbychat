@@ -17,7 +17,6 @@ public class TCSettingSlider extends TCSetting<Float> {
 
     private TCSettingSlider(Float theSetting, String theProperty, String theCategory, int theID) {
         super(theSetting, theProperty, theCategory, theID);
-        this.type = "slider";
         setSliderValue();
         this.width(100);
         this.height(11);

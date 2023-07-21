@@ -11,7 +11,6 @@ public class TCSettingTextBox extends TCSetting<String> {
         super(theSetting, theProperty, theCategory, theID);
         this.width(50);
         this.height(11);
-        this.type = "textbox";
         this.textBox = new GuiTextField(mc.fontRenderer, 0, 0, this.width(), this.height());
         this.textBox.setText(this.value);
     }

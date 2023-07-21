@@ -8,7 +8,6 @@ import java.util.Properties;
 public class TCSettingEnum extends TCSetting<Enum<?>> {
     public TCSettingEnum(Enum<?> theSetting, String theProperty, String theCategory, int theID) {
         super(theSetting, theProperty, theCategory, theID);
-        setCommon();
         this.width(30);
         this.height(11);
     }
@@ -16,11 +15,6 @@ public class TCSettingEnum extends TCSetting<Enum<?>> {
     public TCSettingEnum(Enum<?> theSetting, String theProperty, String theCategory, int theID,
                          FormatCodeEnum theFormat) {
         super(theSetting, theProperty, theCategory, theID, theFormat);
-        setCommon();
-    }
-
-    public void setCommon() {
-        this.type = "enum";
     }
 
     @Override

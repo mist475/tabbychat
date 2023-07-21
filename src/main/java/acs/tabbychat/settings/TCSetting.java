@@ -13,7 +13,6 @@ abstract class TCSetting<T> extends GuiButton implements ITCSetting<T> {
     public int buttonColor = 0xbba5e7e4;
     public String description;
     protected int labelX;
-    protected String type;
     protected T value;
     protected T tempValue;
     protected T theDefault;

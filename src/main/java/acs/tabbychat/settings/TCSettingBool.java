@@ -18,7 +18,6 @@ public class TCSettingBool extends TCSetting<Boolean> {
     }
 
     public void setCommon() {
-        this.type = "bool";
         this.width(9);
         this.height(9);
     }
