@@ -2,12 +2,11 @@ package acs.tabbychat.settings;
 
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.util.TabbyChatUtils;
-import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -54,7 +53,7 @@ public class TCChatFilter {
         Matcher findFilterMatches = this.expressionPattern.matcher(EnumChatFormatting
                                                                            .getTextWithoutFormattingCodes(input.getUnformattedText()));
         boolean foundMatch = false;
-        List<Integer> list = Lists.newArrayList();
+        List<Integer> list = new ArrayList<>();
         while (findFilterMatches.find()) {
 
             foundMatch = true;
@@ -66,7 +65,7 @@ public class TCChatFilter {
             else
                 break;
         }
-        this.lastMatch = ArrayUtils.toPrimitive(list.toArray(new Integer[list.size()]));
+        this.lastMatch = list.stream().mapToInt(value -> value).toArray();
 
         // Pull name of destination tab
         if (this.sendToTabBool && !this.sendToAllTabs) {

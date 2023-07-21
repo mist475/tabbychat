@@ -185,7 +185,7 @@ public class GuiChatTC extends GuiChat {
             String nameStart = this.inputField.getText().substring(prevWordIndex).toLowerCase();
             textBuffer = this.inputField.getText().substring(0,
                                                              this.inputField.getCursorPosition());
-            this.func_73893_a(textBuffer, nameStart);
+            this.func_146405_a(textBuffer);
             if (this.foundPlayerNames.isEmpty()) {
                 return;
             }
@@ -342,7 +342,7 @@ public class GuiChatTC extends GuiChat {
                         "stats.tooltip.type."
                             + (statbase.isAchievement() ? "achievement" : "statistics")
                     );
-                    cct.getChatStyle().setItalic(Boolean.valueOf(true));
+                    cct.getChatStyle().setItalic(true);
                     String s = statbase instanceof Achievement ? ((Achievement) statbase)
                         .getDescription() : null;
                     ArrayList<String> arraylist = Lists.newArrayList(icc1.getFormattedText(), cct.getFormattedText());
@@ -381,7 +381,12 @@ public class GuiChatTC extends GuiChat {
 
     }
 
-    public void func_73893_a(String nameStart, String buffer) {
+
+    /**
+     * Adapted from GuiChat#func_146405_a(String,String)}
+     * Was still named func_73893_a from earlier versions
+     */
+    private void func_146405_a(String nameStart) {
         if (nameStart.length() >= 1) {
             this.mc.thePlayer.sendQueue.addToSendQueue(new C14PacketTabComplete(nameStart));
             this.waitingOnPlayerNames = true;
@@ -410,20 +415,7 @@ public class GuiChatTC extends GuiChat {
         }
     }
 
-    private void func_146407_a(URI _uri) {
-        try {
-            Class<?> desktop = Class.forName("java.awt.Desktop");
-            Object theDesktop = desktop.getMethod("getDesktop").invoke(null
-            );
-            desktop.getMethod("browse", URI.class).invoke(theDesktop,
-                                                          _uri);
-        }
-        catch (Throwable t) {
-            log.error("Couldn\'t open link", t);
-        }
-    }
-
-    public int getCurrentSends() {
+    private int getCurrentSends() {
         int lng = 0;
         int _s = this.inputList.size() - 1;
         for (int i = _s; i >= 0; i -= 1) {
@@ -435,7 +427,7 @@ public class GuiChatTC extends GuiChat {
             return (lng + 100 - 1) / 100;
     }
 
-    public int getFocusedFieldIndex() {
+    private int getFocusedFieldIndex() {
         int _s = this.inputList.size();
         for (int i = 0; i < _s; i++) {
             if (this.inputList.get(i).isFocused() && this.inputList.get(i).getVisible())
@@ -444,7 +436,7 @@ public class GuiChatTC extends GuiChat {
         return 0;
     }
 
-    public int getInputListSize() {
+    private int getInputListSize() {
         int size = 0;
         for (GuiTextField field : inputList) {
             if (!field.getText().isEmpty()) {
@@ -605,7 +597,7 @@ public class GuiChatTC extends GuiChat {
     /**
      * Inserts characters at cursor
      */
-    public void insertCharsAtCursor(String _chars) {
+    private void insertCharsAtCursor(String _chars) {
         StringBuilder msg = new StringBuilder();
         int cPos = 0;
         boolean cFound = false;
@@ -928,14 +920,6 @@ public class GuiChatTC extends GuiChat {
     }
 
     @Override
-    public void mouseMovedOrUp(int _x, int _y, int _button) {
-        if (this.selectedButton != null && _button == 0) {
-            this.selectedButton.mouseReleased(_x, _y);
-            this.selectedButton = null;
-        }
-    }
-
-    @Override
     public void onGuiClosed() {
         ChatBox.dragging = false;
         ChatBox.resizing = false;
@@ -950,7 +934,7 @@ public class GuiChatTC extends GuiChat {
     /**
      * Removes characters at cursor
      */
-    public void removeCharsAtCursor(int _del) {
+    private void removeCharsAtCursor(int _del) {
         StringBuilder msg = new StringBuilder();
         int cPos = 0;
         boolean cFound = false;
@@ -980,7 +964,7 @@ public class GuiChatTC extends GuiChat {
     /**
      * Resets input fields
      */
-    public void resetInputFields() {
+    private void resetInputFields() {
         for (GuiTextField gtf : this.inputList) {
             gtf.setText("");
             gtf.setFocused(false);
@@ -1002,7 +986,7 @@ public class GuiChatTC extends GuiChat {
         this.sentHistoryCursor = this.gnc.getSentMessages().size();
     }
 
-    public void setText(StringBuilder txt, int pos) {
+    private void setText(StringBuilder txt, int pos) {
         List<String> txtList = this.stringListByWidth(txt, sr.getScaledWidth() - 20);
 
         int strings = Math.min(txtList.size() - 1, this.inputList.size() - 1);
@@ -1040,7 +1024,7 @@ public class GuiChatTC extends GuiChat {
         }
     }
 
-    public List<String> stringListByWidth(StringBuilder _sb, int _w) {
+    private List<String> stringListByWidth(StringBuilder _sb, int _w) {
         List<String> result = new ArrayList<>(5);
         int _len = 0;
         int _cw;

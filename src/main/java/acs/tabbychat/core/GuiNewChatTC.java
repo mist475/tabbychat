@@ -13,7 +13,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StringUtils;
@@ -382,11 +381,6 @@ public class GuiNewChatTC extends GuiNewChat {
             }
             return returnMe;
         }
-    }
-
-    private String func_146235_b(String p_146235_1_) {
-        return Minecraft.getMinecraft().gameSettings.chatColours ? p_146235_1_ : EnumChatFormatting
-            .getTextWithoutFormattingCodes(p_146235_1_);
     }
 
     private void func_146237_a(IChatComponent _msg, int id, int tick, boolean backupFlag) {
