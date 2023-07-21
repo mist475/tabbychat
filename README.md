@@ -7,6 +7,9 @@ Fork of 1.7.10 TabbyChat with the following changes:
 - No LiteLoader support
 - No server side crashes but logged warning instead
 - Fixes crash with Botania's Corporea Index
+- Fix incompatability with lotr where lotr's /fmsg could send messages to the wrong fellowship
+- Cleaner & more optimized codebase
+- Some updated translations (thanks to those who helped)
 
 Future plans:
 - Fix some incompatibilities with mods
