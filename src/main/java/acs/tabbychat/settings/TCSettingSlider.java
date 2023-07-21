@@ -6,7 +6,7 @@ import net.minecraft.client.gui.Gui;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-public class TCSettingSlider extends TCSetting implements ITCSetting {
+public class TCSettingSlider extends TCSetting<Float> {
     private final int buttonOffColor = 0x44ffffff;
     public String units = "%";
     protected float minValue;
@@ -15,7 +15,7 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
     private int sliderX;
     private boolean dragging = false;
 
-    private TCSettingSlider(Object theSetting, String theProperty, String theCategory, int theID) {
+    private TCSettingSlider(Float theSetting, String theProperty, String theCategory, int theID) {
         super(theSetting, theProperty, theCategory, theID);
         this.type = "slider";
         setSliderValue();
@@ -37,8 +37,8 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
     }
 
     public void setSliderValue() {
-        this.sliderValue = ((Float) this.tempValue - this.minValue)
-                / (this.maxValue - this.minValue);
+        this.sliderValue = (this.tempValue - this.minValue)
+            / (this.maxValue - this.minValue);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
         Gui.drawRect(this.x() + 1, this.y() + this.height() - 1, this.x() + this.width() - 1,
                      this.y() + this.height(), fgcolor);
         Gui.drawRect(this.x() + this.width() - 1, this.y() + 1, this.x() + this.width(), this.y()
-                + this.height() - 1, fgcolor);
+            + this.height() - 1, fgcolor);
         Gui.drawRect(this.x() + 1, this.y() + 1, this.x() + this.width() - 1,
                      this.y() + this.height() - 1, 0xff000000);
 
@@ -85,9 +85,9 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
         Gui.drawRect(this.sliderX, this.y() + this.height() - 2, this.sliderX + 1,
                      this.y() + this.height() - 1, buttonColor & 0x88ffffff);
         Gui.drawRect(this.sliderX + 1, this.y() + this.height() - 2, this.sliderX + 2, this.y()
-                + this.height() - 1, buttonColor);
+            + this.height() - 1, buttonColor);
         Gui.drawRect(this.sliderX + 2, this.y() + this.height() - 2, this.sliderX + 3, this.y()
-                + this.height() - 1, buttonColor & 0x88ffffff);
+            + this.height() - 1, buttonColor & 0x88ffffff);
 
         int valCenter;
         if (this.sliderValue < 0.5f)
@@ -96,31 +96,31 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
             valCenter = Math.round(0.2f * this.width());
 
         String valLabel = Math.round(this.sliderValue
-                                             * (this.maxValue - this.minValue) + this.minValue)
-                + this.units;
+                                         * (this.maxValue - this.minValue) + this.minValue)
+            + this.units;
         this.drawCenteredString(mc.fontRenderer, valLabel, valCenter + this.x(), this.y() + 2,
                                 buttonColor);
 
         this.drawCenteredString(mc.fontRenderer, this.description,
                                 this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
-                                        + (this.height() - 6) / 2, labelColor);
+                                    + (this.height() - 6) / 2, labelColor);
     }
 
     @Override
     public Float getTempValue() {
         this.tempValue = this.sliderValue * (this.maxValue - this.minValue) + this.minValue;
-        return (Float) this.tempValue;
+        return this.tempValue;
     }
 
     @Override
-    public void setTempValue(Object theVal) {
+    public void setTempValue(Float theVal) {
         super.setTempValue(theVal);
         setSliderValue();
     }
 
     @Override
-    public Float getValue() {
-        return (Float) this.value;
+    public TCSettingType getType() {
+        return TCSettingType.SLIDER;
     }
 
     public void handleMouseInput() {
@@ -128,7 +128,7 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
             return;
         int mX = Mouse.getEventX() * mc.currentScreen.width / mc.displayWidth;
         int mY = mc.currentScreen.height - Mouse.getEventY() * mc.currentScreen.height
-                / mc.displayHeight - 1;
+            / mc.displayHeight - 1;
         if (!this.hovered(mX, mY))
             return;
 
@@ -187,12 +187,12 @@ public class TCSettingSlider extends TCSetting implements ITCSetting {
     }
 
     @Override
-    public void setCleanValue(Object updateVal) {
+    public void setCleanValue(Float updateVal) {
         if (updateVal == null)
             this.clear();
         else
             this.value = TabbyChatUtils.median(this.minValue, this.maxValue,
-                                               Float.parseFloat((String) updateVal));
+                                               updateVal);
     }
 
     public void setRange(float theMin, float theMax) {

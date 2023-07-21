@@ -2,14 +2,16 @@ package acs.tabbychat.settings;
 
 import net.minecraft.client.Minecraft;
 
-public class TCSettingBool extends TCSetting implements ITCSetting {
+import java.util.Properties;
 
-    public TCSettingBool(Object theSetting, String theProperty, String theCategory, int theID) {
+public class TCSettingBool extends TCSetting<Boolean> {
+
+    public TCSettingBool(Boolean theSetting, String theProperty, String theCategory, int theID) {
         super(theSetting, theProperty, theCategory, theID);
         setCommon();
     }
 
-    public TCSettingBool(Object theSetting, String theProperty, String theCategory, int theID,
+    public TCSettingBool(Boolean theSetting, String theProperty, String theCategory, int theID,
                          FormatCodeEnum theFormat) {
         super(theSetting, theProperty, theCategory, theID, theFormat);
         setCommon();
@@ -49,7 +51,7 @@ public class TCSettingBool extends TCSetting implements ITCSetting {
         drawRect(tmpX, tmpY + 1, tmpX + 1, tmpY + tmpHeight - 1, fgcolor);
         drawRect(tmpX + tmpWidth - 1, tmpY + 1, tmpX + tmpWidth, tmpY + tmpHeight - 1, fgcolor);
         drawRect(tmpX + 1, tmpY + 1, tmpX + tmpWidth - 1, tmpY + tmpHeight - 1, 0xff000000);
-        if ((Boolean) this.tempValue) {
+        if (this.tempValue) {
             drawRect(centerX - 2, centerY, centerX - 1, centerY + 1, this.buttonColor);
             drawRect(centerX - 1, centerY + 1, centerX, centerY + 2, this.buttonColor);
             drawRect(centerX, centerY + 2, centerX + 1, centerY + 3, this.buttonColor);
@@ -60,29 +62,27 @@ public class TCSettingBool extends TCSetting implements ITCSetting {
 
         this.drawCenteredString(mc.fontRenderer, this.description,
                                 this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
-                                        + (this.height() - 6) / 2, labelColor);
+                                    + (this.height() - 6) / 2, labelColor);
     }
 
     @Override
-    public Boolean getTempValue() {
-        return (Boolean) this.tempValue;
-    }
-
-    @Override
-    public Boolean getValue() {
-        return (Boolean) this.value;
-    }
-
-    @Override
-    public void setCleanValue(Object _input) {
-        if (_input == null)
-            this.clear();
-        else {
-            this.value = Boolean.parseBoolean(_input.toString());
-        }
+    public TCSettingType getType() {
+        return TCSettingType.BOOL;
     }
 
     public void toggle() {
         this.tempValue = !(Boolean) this.tempValue;
     }
+
+    @Override
+    public void loadSelfFromProps(Properties readProps) {
+        Object result = readProps.get(this.propertyName);
+        if (result != null) {
+            this.setCleanValue(Boolean.parseBoolean(result.toString()));
+        }
+        else {
+            this.setCleanValue(false);
+        }
+    }
+
 }

@@ -574,7 +574,6 @@ public class TabbyChat {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void processChat(TCChatLine theChat) {
         if (this.serverDataLock.availablePermits() == 0) {
             this.serverDataLock.acquireUninterruptibly();
@@ -650,6 +649,7 @@ public class TabbyChat {
         }
 
         if (!visible) {
+            @SuppressWarnings("unchecked")
             Set<String> tabUnion = (Set<String>) tabSet.clone();
             tabUnion.retainAll(activeTabs);
             if (tabUnion.size() > 0)

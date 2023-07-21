@@ -63,12 +63,12 @@ public class ChatComponentUtils {
      * Splits a ChatComponent into multiple lines, so it will fit within a width.
      * Adapted from Minecraft 1.8's GuiUtilRenderComponents
      */
-    @SuppressWarnings("unchecked")
     public static List<IChatComponent> split(IChatComponent chat, int limit) {
 
         int j = 0;
         ChatComponentText chatcomponenttext = new ChatComponentText("");
         List<IChatComponent> arraylist = Lists.newArrayList();
+        @SuppressWarnings("unchecked")
         ArrayList<IChatComponent> arraylist1 = Lists.newArrayList(chat);
 
         for (int k = 0; k < arraylist1.size(); ++k) {
@@ -207,13 +207,13 @@ public class ChatComponentUtils {
         return newChat;
     }
 
-    @SuppressWarnings("unchecked")
     public static IChatComponent subComponent(IChatComponent chat, int index) {
         IChatComponent result = new ChatComponentText("");
 
         int pos = 0;
         boolean found = false;
-        for (IChatComponent ichat : (Iterable<IChatComponent>) chat) {
+
+        for (IChatComponent ichat : getTypeSafeIterable(chat)) {
             if (!ichat.getSiblings().isEmpty()) {
                 continue;
             }
@@ -258,5 +258,13 @@ public class ChatComponentUtils {
 
         }
         return result;
+    }
+
+    /**
+     * Limitation of decompiled code, might be able to remove with RFG at some point
+     */
+    @SuppressWarnings("unchecked")
+    public static Iterable<IChatComponent> getTypeSafeIterable(IChatComponent component) {
+        return (Iterable<IChatComponent>) component;
     }
 }

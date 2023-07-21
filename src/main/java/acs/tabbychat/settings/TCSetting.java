@@ -6,7 +6,7 @@ import net.minecraft.client.resources.I18n;
 
 import java.util.Properties;
 
-abstract class TCSetting extends GuiButton implements ITCSetting {
+abstract class TCSetting<T> extends GuiButton implements ITCSetting<T> {
     protected static Minecraft mc = Minecraft.getMinecraft();
     public final String categoryName;
     public final String propertyName;
@@ -14,11 +14,11 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
     public String description;
     protected int labelX;
     protected String type;
-    protected Object value;
-    protected Object tempValue;
-    protected Object theDefault;
+    protected T value;
+    protected T tempValue;
+    protected T theDefault;
 
-    public TCSetting(Object theSetting, String theProperty, String theCategory, int theID) {
+    public TCSetting(T theSetting, String theProperty, String theCategory, int theID) {
         super(theID, 0, 0, "");
         this.labelX = 0;
         this.value = theSetting;
@@ -29,7 +29,7 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
         this.description = I18n.format(theCategory + "." + theProperty.toLowerCase());
     }
 
-    public TCSetting(Object theSetting, String theProperty, String theCategory, int theID,
+    public TCSetting(T theSetting, String theProperty, String theCategory, int theID,
                      FormatCodeEnum theFormat) {
         this(theSetting, theProperty, theCategory, theID);
         this.description = theFormat.toCode() + this.description + "\u00A7r";
@@ -97,7 +97,7 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
     }
 
     @Override
-    public Object getDefault() {
+    public T getDefault() {
         return this.theDefault;
     }
 
@@ -107,38 +107,38 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
     }
 
     @Override
-    public Object getTempValue() {
+    public T getTempValue() {
         return this.tempValue;
     }
 
     @Override
-    public void setTempValue(Object updateVal) {
+    public void setTempValue(T updateVal) {
         this.tempValue = updateVal;
     }
 
     @Override
-    public String getType() {
-        return this.type;
-    }
+    public abstract TCSettingType getType();
 
-    protected Object getValue() {
+    @Override
+    public T getValue() {
         return this.value;
     }
 
     @Override
-    public void setValue(Object updateVal) {
+    public void setValue(T updateVal) {
         this.value = updateVal;
     }
 
     @Override
     public Boolean hovered(int cursorX, int cursorY) {
         return cursorX >= this.x() && cursorY >= this.y() && cursorX < this.x() + this.width()
-                && cursorY < this.y() + this.height();
+            && cursorY < this.y() + this.height();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void loadSelfFromProps(Properties readProps) {
-        this.setCleanValue(readProps.get(this.propertyName));
+        this.setCleanValue((T) readProps.get(this.propertyName));
     }
 
     @Override
@@ -153,7 +153,7 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
     @Override
     public void resetDescription() {
         this.description = this.categoryName.isEmpty() ? "" : I18n.format(this.categoryName + "."
-                                                                                  + this.propertyName.toLowerCase());
+                                                                              + this.propertyName.toLowerCase());
     }
 
     @Override
@@ -163,10 +163,7 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
 
     @Override
     public void saveSelfToProps(Properties writeProps) {
-        if (this.value instanceof Enum)
-            writeProps.put(this.propertyName, ((Enum<?>) this.value).name());
-        else
-            writeProps.put(this.propertyName, this.value.toString());
+        writeProps.put(this.propertyName, this.value.toString());
     }
 
     @Override
@@ -187,7 +184,7 @@ abstract class TCSetting extends GuiButton implements ITCSetting {
     }
 
     @Override
-    public void setCleanValue(Object updateVal) {
+    public void setCleanValue(T updateVal) {
         if (updateVal == null)
             this.clear();
         else

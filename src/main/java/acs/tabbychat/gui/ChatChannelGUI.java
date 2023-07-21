@@ -13,7 +13,6 @@ import net.minecraft.client.resources.I18n;
 import org.lwjgl.input.Keyboard;
 
 import java.util.LinkedHashMap;
-import java.util.Objects;
 
 public class ChatChannelGUI extends GuiScreen {
     private static final int SAVE_ID = 8981;
@@ -165,7 +164,7 @@ public class ChatChannelGUI extends GuiScreen {
             position++;
         }
         for (GuiButton drawable : this.buttonList) {
-            if (drawable instanceof ITCSetting setting)
+            if (drawable instanceof ITCSetting<?> setting)
                 setting.resetDescription();
         }
     }
@@ -173,10 +172,8 @@ public class ChatChannelGUI extends GuiScreen {
     @Override
     protected void keyTyped(char par1, int par2) {
         for (GuiButton o : this.buttonList) {
-            if (o instanceof ITCSetting tmp) {
-                if (Objects.equals(tmp.getType(), "textbox")) {
-                    ((TCSettingTextBox) tmp).keyTyped(par1, par2);
-                }
+            if (o instanceof TCSettingTextBox tmp) {
+                tmp.keyTyped(par1, par2);
             }
         }
         super.keyTyped(par1, par2);
@@ -185,10 +182,8 @@ public class ChatChannelGUI extends GuiScreen {
     @Override
     public void mouseClicked(int par1, int par2, int par3) {
         for (GuiButton o : this.buttonList) {
-            if (o instanceof ITCSetting tmp) {
-                if (Objects.equals(tmp.getType(), "textbox")) {
-                    tmp.mouseClicked(par1, par2, par3);
-                }
+            if (o instanceof TCSettingTextBox tmp) {
+                tmp.mouseClicked(par1, par2, par3);
             }
         }
         super.mouseClicked(par1, par2, par3);

@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 
 import java.util.Properties;
 
-public interface ITCSetting {
+public interface ITCSetting<T> {
 
     void actionPerformed();
 
@@ -18,15 +18,17 @@ public interface ITCSetting {
 
     boolean enabled();
 
-    Object getDefault();
+    T getDefault();
 
     String getProperty();
 
-    Object getTempValue();
+    T getTempValue();
 
-    void setTempValue(Object updateVal);
+    T getValue();
 
-    String getType();
+    void setTempValue(T updateVal);
+
+    TCSettingType getType();
 
     Boolean hovered(int cursorX, int cursorY);
 
@@ -48,7 +50,14 @@ public interface ITCSetting {
 
     void setLabelLoc(int lx);
 
-    void setCleanValue(Object uncleanVal);
+    void setCleanValue(T uncleanVal);
 
-    void setValue(Object updateVal);
+    void setValue(T updateVal);
+
+    enum TCSettingType {
+        BOOL,
+        ENUM,
+        SLIDER,
+        TEXTBOX,
+    }
 }

@@ -3,23 +3,23 @@ package acs.tabbychat.settings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 
-public class TCSettingTextBox extends TCSetting implements ITCSetting {
+public class TCSettingTextBox extends TCSetting<String> {
     protected GuiTextField textBox;
     protected int charLimit = 32;
 
-    public TCSettingTextBox(Object theSetting, String theProperty, String theCategory, int theID) {
+    public TCSettingTextBox(String theSetting, String theProperty, String theCategory, int theID) {
         super(theSetting, theProperty, theCategory, theID);
         this.width(50);
         this.height(11);
         this.type = "textbox";
         this.textBox = new GuiTextField(mc.fontRenderer, 0, 0, this.width(), this.height());
-        this.textBox.setText((String) this.value);
+        this.textBox.setText(this.value);
     }
 
     @Override
     public void clear() {
         super.clear();
-        this.textBox.setText((String) this.theDefault);
+        this.textBox.setText(this.theDefault);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
         this.textBox.drawTextBox();
         this.drawCenteredString(mc.fontRenderer, this.description,
                                 this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
-                                        + (this.height() - 6) / 2, labelColor);
+                                    + (this.height() - 6) / 2, labelColor);
     }
 
     @Override
@@ -55,13 +55,13 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
     }
 
     @Override
-    public void setTempValue(Object theVal) {
-        this.textBox.setText((String) theVal);
+    public void setTempValue(String theVal) {
+        this.textBox.setText(theVal);
     }
 
     @Override
-    public String getValue() {
-        return (String) this.value;
+    public TCSettingType getType() {
+        return TCSettingType.TEXTBOX;
     }
 
     public void keyTyped(char par1, int par2) {
@@ -85,7 +85,7 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
     public void reset() {
         if (this.value == null)
             this.value = "";
-        this.textBox.setText((String) this.value);
+        this.textBox.setText(this.value);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class TCSettingTextBox extends TCSetting implements ITCSetting {
         this.textBox.setMaxStringLength(newLimit);
     }
 
-    public void setDefault(Object newDefault) {
+    public void setDefault(String newDefault) {
         this.theDefault = newDefault;
     }
 }

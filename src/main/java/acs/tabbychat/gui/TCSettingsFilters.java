@@ -130,7 +130,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
 
     private void clearDisplay() {
         for (GuiButton drawable : this.buttonList) {
-            if (drawable instanceof ITCSetting setting) {
+            if (drawable instanceof ITCSetting<?> setting) {
                 setting.clear();
             }
         }
@@ -162,8 +162,8 @@ public class TCSettingsFilters extends TCSettingsGUI {
             Properties displayMe = this.tempFilterMap.get(this.curFilterId).getProperties();
             for (GuiButton drawable : this.buttonList) {
                 if (drawable instanceof ITCSetting tcDrawable) {
-                    if (tcDrawable.getType().equals("enum")) {
-                        ((TCSettingEnum) tcDrawable).setTempValueFromProps(displayMe);
+                    if (tcDrawable instanceof TCSettingEnum tcDrawableEnum) {
+                        tcDrawableEnum.setTempValueFromProps(displayMe);
                     }
                     else {
                         tcDrawable.setTempValue(displayMe.get(tcDrawable.getProperty()));
@@ -201,9 +201,10 @@ public class TCSettingsFilters extends TCSettingsGUI {
         else {
             Properties displayMe = next.getValue().getProperties();
             for (GuiButton drawable : this.buttonList) {
+                //TODO: figure out way to get type safe properties to prevent unchecked cast here
                 if (drawable instanceof ITCSetting tcDrawable) {
-                    if (tcDrawable.getType().equals("enum")) {
-                        ((TCSettingEnum) tcDrawable).setTempValueFromProps(displayMe);
+                    if (tcDrawable instanceof TCSettingEnum tcEnum) {
+                        tcEnum.setTempValueFromProps(displayMe);
                     }
                     else {
                         tcDrawable.setTempValue(displayMe.get(tcDrawable.getProperty()));
@@ -474,14 +475,15 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.sendToAllTabs.enabled = this.sendToTabBool.getTempValue();
 
         for (GuiButton o : this.buttonList) {
-            if (o instanceof ITCSetting tmp) {
+            if (o instanceof ITCSetting<?> tmp) {
                 if (this.tempFilterMap.size() == 0)
                     tmp.disable();
-                else if (Objects.equals(tmp.getType(), "textbox"))
+                else if (tmp.getType() == ITCSetting.TCSettingType.TEXTBOX)
                     tmp.enable();
-                else if (Objects.equals(tmp.getType(), "bool"))
-                    tmp.setTempValue(((TCSettingBool) tmp).getTempValue()
-                                         && tmp.enabled());
+                else if (tmp instanceof TCSettingBool tmpBool) {
+                    tmpBool.setTempValue(tmpBool.getTempValue()
+                                             && tmpBool.enabled());
+                }
             }
         }
         this.sendToTabName.func_146184_c(this.sendToTabBool.getTempValue()

@@ -5,15 +5,15 @@ import net.minecraft.client.Minecraft;
 
 import java.util.Properties;
 
-public class TCSettingEnum extends TCSetting implements ITCSetting {
-    public TCSettingEnum(Object theSetting, String theProperty, String theCategory, int theID) {
+public class TCSettingEnum extends TCSetting<Enum<?>> {
+    public TCSettingEnum(Enum<?> theSetting, String theProperty, String theCategory, int theID) {
         super(theSetting, theProperty, theCategory, theID);
         setCommon();
         this.width(30);
         this.height(11);
     }
 
-    public TCSettingEnum(Object theSetting, String theProperty, String theCategory, int theID,
+    public TCSettingEnum(Enum<?> theSetting, String theProperty, String theCategory, int theID,
                          FormatCodeEnum theFormat) {
         super(theSetting, theProperty, theCategory, theID, theFormat);
         setCommon();
@@ -38,29 +38,24 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
 
         drawRect(this.x() + 1, this.y(), this.x() + this.width() - 1, this.y() + 1, fgcolor);
         drawRect(this.x() + 1, this.y() + this.height() - 1, this.x() + this.width() - 1, this.y()
-                + this.height(), fgcolor);
+            + this.height(), fgcolor);
         drawRect(this.x(), this.y() + 1, this.x() + 1, this.y() + this.height() - 1, fgcolor);
         drawRect(this.x() + this.width() - 1, this.y() + 1, this.x() + this.width(), this.y()
-                + this.height() - 1, fgcolor);
+            + this.height() - 1, fgcolor);
         drawRect(this.x() + 1, this.y() + 1, this.x() + this.width() - 1, this.y() + this.height()
-                - 1, 0xff000000);
+            - 1, 0xff000000);
 
         this.drawCenteredString(mc.fontRenderer, this.tempValue.toString(), centerX, this.y() + 2,
                                 labelColor);
 
         this.drawCenteredString(mc.fontRenderer, this.description,
                                 this.labelX + mc.fontRenderer.getStringWidth(this.description) / 2, this.y()
-                                        + (this.height() - 6) / 2, labelColor);
+                                    + (this.height() - 6) / 2, labelColor);
     }
 
     @Override
-    public Enum<?> getTempValue() {
-        return (Enum<?>) this.tempValue;
-    }
-
-    @Override
-    public Enum<?> getValue() {
-        return (Enum<?>) this.value;
+    public TCSettingType getType() {
+        return TCSettingType.ENUM;
     }
 
     @Override
@@ -99,7 +94,7 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
 
     @SuppressWarnings("unchecked")
     public void next() {
-        Enum<?> eCast = (Enum<?>) this.tempValue;
+        Enum<?> eCast = this.tempValue;
         Enum<?>[] E = eCast.getClass().getEnumConstants();
         Enum<?> tmp;
         if (eCast.ordinal() == E.length - 1)
@@ -112,7 +107,7 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
 
     @SuppressWarnings("unchecked")
     public void previous() {
-        Enum<?> eCast = (Enum<?>) this.tempValue;
+        Enum<?> eCast = this.tempValue;
         Enum<?>[] E = eCast.getClass().getEnumConstants();
         if (eCast.ordinal() == 0)
             this.tempValue = Enum.valueOf(eCast.getClass(), E[E.length - 1].name());
@@ -142,5 +137,10 @@ public class TCSettingEnum extends TCSetting implements ITCSetting {
         else if (this.propertyName.contains("Stamp")) {
             this.tempValue = TabbyChatUtils.parseTimestamp(found);
         }
+    }
+
+    @Override
+    public void saveSelfToProps(Properties writeProps) {
+        writeProps.put(this.propertyName, this.value.name());
     }
 }
