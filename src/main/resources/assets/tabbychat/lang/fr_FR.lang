@@ -1,8 +1,8 @@
-#Language file for fr_FR
-#Samedi 29/11/2014 By/Par @Keodrop
+# Language file for fr_FR
+# Samedi 29/11/2014 By/Par @Keodrop
 colors.aqua=Bleu Ciel
-colors.brightgreen=Vert Clair
 colors.black=Noir
+colors.brightgreen=Vert Clair
 colors.darkaqua=Cyan
 colors.darkblue=Bleu Foncé
 colors.darkgray=Gris Foncé
@@ -77,7 +77,7 @@ settings.general.groupspam=Renforcer le spam du chat
 settings.general.name=General
 settings.general.savechatlog=Stocker le chat
 settings.spelling.spellcheckenable=Activer la vérification orthographique
-settings.general.splichatlog=Diviser les logs par canal
+settings.general.splitchatlog=Diviser les logs par canal
 settings.general.tabbychatenable=TabbyChat Activé
 settings.general.timestampcolor=Couleur de l'heure
 settings.general.timestampenable=Heure dans le chat

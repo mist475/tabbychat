@@ -1,6 +1,7 @@
-#Language file for et_EE
-#Wed May 21 19:58:20 EDT 2014
+# Language file for et_EE
+# Wed May 21 19:58:20 EDT 2014
 colors.aqua=Meresinine
+colors.black=Black
 colors.brightgreen=Erkroheline
 colors.darkaqua=Tume meresinine
 colors.darkblue=Tumesinine
@@ -16,35 +17,47 @@ colors.purple=Lilla
 colors.red=Punane
 colors.white=Valge
 colors.yellow=Kollane
+
 delims.angles=<Nurksulud>
 delims.anglesbracketscombo=<[Kombinatsioon]Mä.>
 delims.anglesparenscombo=<(Kombinatsioon)Mä.>
 delims.braces={Looksulud}
 delims.brackets=[Kantsulud]
 delims.parenthesis=(Ümarsulud)
+
 formats.bold=Paks
 formats.default=Tavaline
 formats.italic=Kursiiv
+formats.magic=Magic
 formats.striked=Läbikriipsutus
 formats.underline=Allakriipsutus
+
 messages.update1=Uuendus on saadaval\! (Praegune versioon on
 messages.update2=, uusim on
 messages.update3=Külasta TabbyChat'i foorumi teemat aadressil minecraftforum.net, et alla laadida.
+
 settings.advanced.chatboxunfocheight=Fokuseerimata vestluse kõrgus
 settings.advanced.chatfadeticks=Vestluse hajumisaeg (tick'i)
 settings.advanced.chatscrollhistory=Säilitatav vestluse ajalugu (rida)
+settings.advanced.convertunicodetext=Convert unicode syntax
 settings.advanced.forceunicode=Sunni teksti kuvamine Unicode vormingus
 settings.advanced.maxlengthchannelname=Kanali nime maksimaalne pikkus (märki)
 settings.advanced.multichatdelay=Multisõnumi saatmise viivitus (ms)
 settings.advanced.name=Täpsemad sätted
+settings.advanced.textignoreopacity=Text ignores opacity setting
+
 settings.cancel=Loobu
+settings.delete=Kustuta
+settings.new=Uus
+settings.save=Salvesta
+
 settings.channel.alias=Hüüdnimi
 settings.channel.cmdprefix=Vestluse käsu eesliide
 settings.channel.hideprefix=Peida eesliide kirjutamise ajal
 settings.channel.notificationson=Lugemata sõnumite korral teata
 settings.channel.of=/
 settings.channel.position=Asukoht\:
-settings.delete=Kustuta
+
 settings.filters.audionotificationbool=Heliteade
 settings.filters.audionotificationsound=Heli
 settings.filters.casesensitive=Tõstutundlik
@@ -59,16 +72,19 @@ settings.filters.removematches=Peida tulemused vestlusest
 settings.filters.sendtoalltabs=Kõik vahekaardid
 settings.filters.sendtotabbool=Saada tulemused vahekaardile
 settings.filters.sendtotabname=Vahekaardi nimi
+
 settings.general.groupspam=Ühenda korratud sõnumid
 settings.general.name=Põhilised sätted
 settings.general.savechatlog=Logi vestlus faili
+settings.spelling.spellcheckenable=Enable Spell-checking
+settings.general.splitchatlog=Split log by channel
 settings.general.tabbychatenable=TabbyChat lubatud
 settings.general.timestampcolor=Ajatempli värv
 settings.general.timestampenable=Ajatembelda vestlus
 settings.general.timestampstyle=Ajatempli vorming
 settings.general.unreadflashing=Lugemata teadete korral vilguta
-settings.new=Uus
-settings.save=Salvesta
+settings.general.updatecheckenable=Check for Updates
+
 settings.server.autochannelsearch=Otsi automaatselt uusi kanaleid
 settings.server.autopmsearch=Otsi automaatselt uusi privaatsÃµnumeid
 settings.server.defaultchannels=Vaikimisi kanalid
@@ -77,6 +93,15 @@ settings.server.delimformatbool=Eraldajate vorming
 settings.server.delimiterchars=Vestluskanalite eraldajad
 settings.server.ignoredchannels=Ignoreeritud kanalid
 settings.server.name=Serveri sätted
+settings.server.regexignorebool=Use patterns
+settings.server.pmtabregex.tome=PM Regex To Me
+settings.server.pmtabregex.fromme=PM Regex From Me
+
+settings.spelling.name=Spelling
+settings.spelling.userdictionary=User Dictionary
+settings.spelling.opendictionary=Open Dictionary
+settings.spelling.reloaddictionary=Reload
+
 sounds.anvil=Alasi
 sounds.bass=Bass
 sounds.bat=Nahkhiir

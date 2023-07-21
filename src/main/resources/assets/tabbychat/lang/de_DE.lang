@@ -1,6 +1,7 @@
-#Language file for de_DE
-#Wed May 21 19:58:20 EDT 2014
+# Language file for de_DE
+# Wed May 21 19:58:20 EDT 2014
 colors.aqua=Aquamarin
+colors.black=Black
 colors.brightgreen=Hellgrün
 colors.darkaqua=Dunkelaquamarin
 colors.darkblue=Dunkelblau
@@ -16,34 +17,47 @@ colors.purple=Violett
 colors.red=Rot
 colors.white=Weiß
 colors.yellow=Gelb
+
 delims.angles=<Spitze Klammern>
 delims.anglesbracketscombo=<[Kombination]Pl.>
 delims.anglesparenscombo=<(Kombination)Pl.>
 delims.braces={Geschweifte Klammern}
 delims.brackets=[Eckige Klammern]
 delims.parenthesis=(Runde Klammern)
+
 formats.bold=Fett
 formats.default=Standard
 formats.italic=Kursiv
+formats.magic=Magic
 formats.striked=Durchgestrichen
 formats.underline=Unterstrichen
+
 messages.update1=Ein Update ist verfügbar (Momentane Version ist
 messages.update2=, neueste ist
 messages.update3=Besuche den TabbyChat Forum Thread unter minecraftforum.net zum Herunterladen des Updates
+
 settings.advanced.chatboxunfocheight=Höhe ohne Fokus
 settings.advanced.chatfadeticks=Anzeigezeit einer Nachricht (in Ticks)
 settings.advanced.chatscrollhistory=Chat Historie speichern (Zeilen)
+settings.advanced.convertunicodetext=Convert unicode syntax
 settings.advanced.forceunicode=Erzwinge Unicode Chat Anzeige
 settings.advanced.maxlengthchannelname=Maximale Länge Channelname
 settings.advanced.multichatdelay=Multi-Chat Sendeverzögerung (ms)
 settings.advanced.name=Erweiterte
+settings.advanced.textignoreopacity=Text ignores opacity setting
+
 settings.cancel=Abbrechen
+settings.delete=Löschen
+settings.new=Neu
+settings.save=Speichern
+
 settings.channel.alias=Alias
 settings.channel.cmdprefix=Chat-Commando Prefix
+settings.channel.hideprefix=Hide prefix while typing
 settings.channel.notificationson=Unread Notificati
 settings.channel.of=von
 settings.channel.position=Position
-settings.delete=Löschen
+
 settings.filters.audionotificationbool=Audio Benachrichtigung
 settings.filters.audionotificationsound=Ton
 settings.filters.casesensitive=Groß-/Kleinschreibung
@@ -58,23 +72,36 @@ settings.filters.removematches=Treffer verbergen
 settings.filters.sendtoalltabs=Alle Tabs
 settings.filters.sendtotabbool=Sende Treffer an Tabs
 settings.filters.sendtotabname=Tab Name
+
 settings.general.groupspam=Spam zusammenfassen
 settings.general.name=Allgemeine
 settings.general.savechatlog=Chat in Logdatei speichern
+settings.spelling.spellcheckenable=Enable Spell-checking
+settings.general.splitchatlog=Split log by channel
 settings.general.tabbychatenable=TabbyChat aktiv
 settings.general.timestampcolor=Zeitstempel - Farbe
 settings.general.timestampenable=Zeitstempel aktivieren
 settings.general.timestampstyle=Zeitstempel - Stil
 settings.general.unreadflashing=Standardhinweis bei ungelesenen Benachrichtigungen
-settings.new=Neu
-settings.save=Speichern
+settings.general.updatecheckenable=Check for Updates
+
 settings.server.autochannelsearch=Automatische Suche nach neuen Channels
+settings.server.autopmsearch=Enable PM tabs
 settings.server.defaultchannels=Standard Channel
 settings.server.delimcolorbool=Separator - Farbe
 settings.server.delimformatbool=Separator - Format
 settings.server.delimiterchars=Channel Separator
 settings.server.ignoredchannels=Ignorierte Channel
 settings.server.name=Server
+settings.server.regexignorebool=Use patterns
+settings.server.pmtabregex.tome=PM Regex To Me
+settings.server.pmtabregex.fromme=PM Regex From Me
+
+settings.spelling.name=Spelling
+settings.spelling.userdictionary=User Dictionary
+settings.spelling.opendictionary=Open Dictionary
+settings.spelling.reloaddictionary=Reload
+
 sounds.anvil=Amboss
 sounds.bass=Bass
 sounds.bat=Fledermaus
