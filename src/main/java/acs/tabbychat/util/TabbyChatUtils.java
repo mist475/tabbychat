@@ -6,7 +6,6 @@ import acs.tabbychat.core.ChatChannel;
 import acs.tabbychat.core.GuiChatTC;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.GuiSleepTC;
-import acs.tabbychat.core.TCChatLine;
 import acs.tabbychat.core.TabbyChat;
 import acs.tabbychat.gui.ITCSettingsGUI;
 import acs.tabbychat.gui.context.ChatContextMenu;
@@ -21,6 +20,7 @@ import acs.tabbychat.settings.NotificationSoundEnum;
 import acs.tabbychat.settings.TimeStampEnum;
 import acs.tabbychat.threads.BackgroundChatThread;
 import com.google.common.collect.Lists;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiIngame;
@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
@@ -112,52 +111,21 @@ public class TabbyChatUtils {
     public static void chatGuiTick(Minecraft mc) {
         GuiScreen screen = mc.currentScreen;
         //Also catches nulls
-        if (!(screen instanceof GuiChat))
+        if (!(screen instanceof GuiChat chat))
             return;
         if (screen.getClass() == GuiChatTC.class)
             return;
         if (screen.getClass() == GuiSleepTC.class)
             return;
 
-        String inputBuffer = "";
-        try {
-            int ind = 0;
-            for (Field fields : GuiChat.class.getDeclaredFields()) {
-                if (fields.getType() == String.class) {
-                    if (ind == 1) {
-                        fields.setAccessible(true);
-                        inputBuffer = (String) fields.get(mc.currentScreen);
-                        break;
-                    }
-                    ind++;
-                }
-            }
-        }
-        catch (Exception e) {
-            TabbyChat.printException("Unable to display chat interface", e);
-        }
         if (screen instanceof GuiSleepMP)
             mc.displayGuiScreen(new GuiSleepTC());
         else
-            mc.displayGuiScreen(new GuiChatTC(inputBuffer));
+            mc.displayGuiScreen(new GuiChatTC(chat.field_146410_g));
     }
 
     public static ServerData getServerData() {
-        Minecraft mc = Minecraft.getMinecraft();
-        ServerData serverData = null;
-        for (Field field : Minecraft.class.getDeclaredFields()) {
-            if (field.getType() == ServerData.class) {
-                field.setAccessible(true);
-                try {
-                    serverData = (ServerData) field.get(mc);
-                }
-                catch (Exception e) {
-                    TabbyChat.printException("Unable to find server information", e);
-                }
-                break;
-            }
-        }
-        return serverData;
+        return Minecraft.getMinecraft().func_147104_D();
     }
 
     public static File getServerDir() {
@@ -189,32 +157,14 @@ public class TabbyChatUtils {
         return new File(new File(Minecraft.getMinecraft().mcDataDir, "config"), "tabbychat");
     }
 
-    @SuppressWarnings("unchecked")
     public static void hookIntoChat(GuiNewChatTC _gnc) {
-        if (Minecraft.getMinecraft().ingameGUI.getChatGUI().getClass() != GuiNewChatTC.class) {
+        GuiNewChat chat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
+        if (chat.getClass() != GuiNewChatTC.class) {
             try {
-                Class<GuiIngame> IngameGui = GuiIngame.class;
-                Field persistantGuiField = IngameGui.getDeclaredFields()[6];
-                persistantGuiField.setAccessible(true);
-                persistantGuiField.set(Minecraft.getMinecraft().ingameGUI, _gnc);
-
-                int tmp = 0;
-                for (Field fields : GuiNewChat.class.getDeclaredFields()) {
-                    if (fields.getType() == List.class) {
-                        fields.setAccessible(true);
-                        if (tmp == 0) {
-                            _gnc.sentMessages = (List<String>) fields.get(_gnc);
-                        }
-                        else if (tmp == 1) {
-                            _gnc.backupLines = (List<TCChatLine>) fields.get(_gnc);
-                        }
-                        else if (tmp == 2) {
-                            _gnc.chatLines = (List<TCChatLine>) fields.get(_gnc);
-                            break;
-                        }
-                        tmp++;
-                    }
-                }
+                ReflectionHelper.setPrivateValue(GuiIngame.class, Minecraft.getMinecraft().ingameGUI, _gnc, 6);
+                _gnc.sentMessages = chat.getSentMessages();
+                _gnc.backupLines = ReflectionHelper.getPrivateValue(GuiNewChat.class, chat, 3);
+                _gnc.chatLines = ReflectionHelper.getPrivateValue(GuiNewChat.class, chat, 4);
             }
             catch (Exception e) {
                 TabbyChat.printException("Error loading chat hook.", e);
