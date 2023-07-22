@@ -1,10 +1,10 @@
 package acs.tabbychat.gui.context;
 
 import acs.tabbychat.core.TabbyChat;
-import com.google.common.collect.Lists;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContextSpellingSuggestion extends ChatContext {
@@ -29,7 +29,7 @@ public class ContextSpellingSuggestion extends ChatContext {
 
     @Override
     public List<ChatContext> getChildren() {
-        List<ChatContext> list = Lists.newArrayList();
+        List<ChatContext> list = new ArrayList<>();
         if (suggestions == null) {
             return null;
         }

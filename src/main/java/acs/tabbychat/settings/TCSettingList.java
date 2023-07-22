@@ -18,8 +18,8 @@ import java.util.List;
 public class TCSettingList extends Gui {
 
     private final File dictionary;
-    private final List<Entry> list = Lists.newArrayList();
-    private final List<Entry> selected = Lists.newArrayList();
+    private final List<Entry> list = new ArrayList<>();
+    private final List<Entry> selected = new ArrayList<>();
     private int currentPage = 1;
     private int id = 0;
     private int xPosition, yPosition;
@@ -34,7 +34,7 @@ public class TCSettingList extends Gui {
 
         Gui.drawRect(xPosition - 1, yPosition - 1, xPosition, yPosition + height, -0xffffff);
         Gui.drawRect(xPosition - 1, yPosition + height, xPosition + width + 1, yPosition + height
-                + 1, -0xffffff);
+            + 1, -0xffffff);
         Gui.drawRect(xPosition + width, yPosition + height + 1, xPosition + width + 1,
                      yPosition - 1, -0xffffff);
         Gui.drawRect(xPosition - 1, yPosition - 1, xPosition + width + 1, yPosition, -0xffffff);

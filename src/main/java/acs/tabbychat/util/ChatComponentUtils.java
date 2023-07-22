@@ -43,7 +43,7 @@ public class ChatComponentUtils {
     }
 
     public static List<TCChatLine> split(List<TCChatLine> lines, int width) {
-        List<TCChatLine> list = Lists.newArrayList();
+        List<TCChatLine> list = new ArrayList<>();
         for (TCChatLine line : lines) {
             list.addAll(split(line, width));
         }
@@ -51,7 +51,7 @@ public class ChatComponentUtils {
     }
 
     public static List<TCChatLine> split(TCChatLine line, int width) {
-        List<TCChatLine> list = Lists.newArrayList();
+        List<TCChatLine> list = new ArrayList<>();
         List<IChatComponent> ichat = split(line.getChatComponentWithTimestamp(), width);
         for (IChatComponent chat : ichat) {
             list.add(0, new TCChatLine(line.getUpdatedCounter(), chat, line.getChatLineID()));
@@ -67,9 +67,8 @@ public class ChatComponentUtils {
 
         int j = 0;
         ChatComponentText chatcomponenttext = new ChatComponentText("");
-        List<IChatComponent> arraylist = Lists.newArrayList();
-        @SuppressWarnings("unchecked")
-        ArrayList<IChatComponent> arraylist1 = Lists.newArrayList(chat);
+        List<IChatComponent> arraylist = new ArrayList<>();
+        ArrayList<IChatComponent> arraylist1 = Lists.newArrayList(getTypeSafeIterable(chat));
 
         for (int k = 0; k < arraylist1.size(); ++k) {
             if (chatcomponenttext == null) {

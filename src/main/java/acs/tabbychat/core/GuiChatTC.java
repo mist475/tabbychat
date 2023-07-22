@@ -56,7 +56,7 @@ import java.util.List;
 public class GuiChatTC extends GuiChat {
     private static ScaledResolution sr;
     private final Logger log = TabbyChatUtils.log;
-    private final List<String> foundPlayerNames = Lists.newArrayList();
+    private final List<String> foundPlayerNames = new ArrayList<>();
     public String historyBuffer = "";
     public String defaultInputFieldText = "";
     public List<GuiTextField> inputList = new ArrayList<>(3);
@@ -212,7 +212,7 @@ public class GuiChatTC extends GuiChat {
             if (high - low < 5) {
                 low = 0;
             }
-            List<String> newList = Lists.newArrayList();
+            List<String> newList = new ArrayList<>();
             for (int i = low; i < high; i++) {
                 newList.add(this.foundPlayerNames.get(i));
             }

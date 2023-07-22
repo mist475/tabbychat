@@ -2,17 +2,17 @@ package acs.tabbychat.gui.context;
 
 import acs.tabbychat.core.GuiChatTC;
 import acs.tabbychat.gui.ChatBox;
-import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatContextMenu extends Gui {
 
-    private static final List<ChatContext> registered = Lists.newArrayList();
+    private static final List<ChatContext> registered = new ArrayList<>();
     public ChatContext parent;
     public GuiChatTC screen;
     public int xPos;
@@ -67,7 +67,7 @@ public class ChatContextMenu extends Gui {
             else
                 xPos -= width * 2;
         }
-        List<ChatContext> visible = Lists.newArrayList();
+        List<ChatContext> visible = new ArrayList<>();
         for (ChatContext item : items) {
             item.menu = this;
             item.enabled = item.isPositionValid(xPos, yPos);

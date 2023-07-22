@@ -1,8 +1,8 @@
 package acs.tabbychat.api;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +11,7 @@ import java.util.List;
 public class TCExtensionManager {
 
     public static final TCExtensionManager INSTANCE = new TCExtensionManager();
-    private final List<Class<? extends IChatExtension>> list = Lists.newArrayList();
+    private final List<Class<? extends IChatExtension>> list = new ArrayList<>();
 
     private TCExtensionManager() {
     }
