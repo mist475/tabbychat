@@ -6,10 +6,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
 public class TCChatLineFake extends ChatLine {
-    protected int updateCounterCreated = -1;
+    //TODO: experiment with old chat messages to check if I can remove this without consequences
     @Expose
     protected IChatComponent chatComponent;
-    protected int chatLineID;
 
     public TCChatLineFake() {
         super(-1, new ChatComponentText(""), 0);
@@ -17,13 +16,11 @@ public class TCChatLineFake extends ChatLine {
 
     public TCChatLineFake(int _counter, IChatComponent _string, int _id) {
         super(_counter, _string, _id);
-        this.updateCounterCreated = _counter;
         if (_string == null) {
             _string = new ChatComponentText("");
         }
 
         this.chatComponent = _string;
-        this.chatLineID = _id;
     }
 
     /**
@@ -37,15 +34,5 @@ public class TCChatLineFake extends ChatLine {
 
     public IChatComponent getChatComponent() {
         return this.chatComponent;
-    }
-
-    @Override
-    public int getUpdatedCounter() {
-        return this.updateCounterCreated;
-    }
-
-    @Override
-    public int getChatLineID() {
-        return this.chatLineID;
     }
 }
