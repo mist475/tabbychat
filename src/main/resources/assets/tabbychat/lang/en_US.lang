@@ -72,6 +72,7 @@ settings.filters.removematches=Hide matches from chat
 settings.filters.sendtoalltabs=All tabs
 settings.filters.sendtotabbool=Send matches to tab
 settings.filters.sendtotabname=Tab Name
+settings.filters.globalfilter=Global filter
 
 settings.general.groupspam=Consolidate spammed chat
 settings.general.name=General

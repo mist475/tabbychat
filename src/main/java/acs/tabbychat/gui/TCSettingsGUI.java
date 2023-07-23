@@ -30,13 +30,9 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
     protected int id = 9000;
     protected File settingsFile;
 
-    private TCSettingsGUI() {
+    public TCSettingsGUI(TabbyChat _tc) {
         mc = Minecraft.getMinecraft();
         ScreenList.add(this);
-    }
-
-    public TCSettingsGUI(TabbyChat _tc) {
-        this();
         tc = _tc;
     }
 

@@ -38,6 +38,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
     private static final int EXPRESSION_ID = 9315;
     private static final int ADD_ID = 9316;
     private static final int DEL_ID = 9317;
+    private static final int GLOBAL_ID = 9318;
     public TCSettingBool inverseMatch;
     public TCSettingBool caseSensitive;
     public TCSettingBool highlightBool;
@@ -51,6 +52,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
     public TCSettingBool sendToAllTabs;
     public TCSettingBool removeMatches;
     public TCSettingTextBox expressionString;
+    public TCSettingBool globalFilter;
     public TreeMap<Integer, TCChatFilter> filterMap = new TreeMap<>();
     protected int curFilterId = 0;
     protected TreeMap<Integer, TCChatFilter> tempFilterMap = new TreeMap<>();
@@ -84,6 +86,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
                                           this.propertyPrefix, REMOVE_MATCHES_ID);
         expressionString = new TCSettingTextBox(".*", "expressionString",
                                                 this.propertyPrefix, EXPRESSION_ID);
+        globalFilter = new TCSettingBool(false, "globalFilter", this.propertyPrefix, GLOBAL_ID);
 
         this.name = I18n.format("settings.filters.name");
         this.settingsFile = new File(TabbyChatUtils.getServerDir(), "filters.cfg");
@@ -150,6 +153,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.buttonList.add(this.inverseMatch);
         this.buttonList.add(this.caseSensitive);
         this.buttonList.add(this.expressionString);
+        this.buttonList.add(this.globalFilter);
     }
 
     private boolean displayCurrentFilter() {
@@ -197,22 +201,20 @@ public class TCSettingsFilters extends TCSettingsGUI {
             this.clearDisplay();
             return false;
         }
-        else {
-            Properties displayMe = next.getValue().getProperties();
-            for (GuiButton drawable : this.buttonList) {
-                //TODO: figure out way to get type safe properties to prevent unchecked cast here
-                if (drawable instanceof ITCSetting tcDrawable) {
-                    if (tcDrawable instanceof TCSettingEnum tcEnum) {
-                        tcEnum.setTempValueFromProps(displayMe);
-                    }
-                    else {
-                        tcDrawable.setTempValue(displayMe.get(tcDrawable.getProperty()));
-                    }
+        Properties displayMe = next.getValue().getProperties();
+        for (GuiButton drawable : this.buttonList) {
+            //TODO: figure out way to get type safe properties to prevent unchecked cast here
+            if (drawable instanceof ITCSetting tcDrawable) {
+                if (tcDrawable instanceof TCSettingEnum tcEnum) {
+                    tcEnum.setTempValueFromProps(displayMe);
+                }
+                else {
+                    tcDrawable.setTempValue(displayMe.get(tcDrawable.getProperty()));
                 }
             }
-            this.curFilterId = next.getKey();
-            return true;
         }
+        this.curFilterId = next.getKey();
+        return true;
     }
 
     @Override
@@ -260,6 +262,13 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.removeMatches.setButtonLoc(col1x, this.rowY(4));
         this.removeMatches.setLabelLoc(col1x + 19);
         this.removeMatches.buttonColor = buttonColor;
+
+        this.globalFilter.setLabelLoc(effRight
+                                          - mc.fontRenderer.getStringWidth(this.globalFilter.description));
+        this.globalFilter.setButtonLoc(
+            effRight - mc.fontRenderer.getStringWidth(this.globalFilter.description) - 19,
+            this.rowY(4));
+        this.globalFilter.buttonColor = buttonColor;
 
         this.highlightBool.setButtonLoc(col1x, this.rowY(5));
         this.highlightBool.setLabelLoc(col1x + 19);
@@ -340,6 +349,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
                                                                                       + ".sendToAllTabs"));
             loaded.removeMatches = Boolean.parseBoolean(settingsTable.getProperty(loadId
                                                                                       + ".removeMatches"));
+            loaded.globalFilter = Boolean.parseBoolean(settingsTable.getProperty(loadId + ".globalFilter"));
 
             loaded.compilePattern(TabbyChatUtils.parseString(settingsTable.getProperty(loadId
                                                                                            + ".expressionString")));
@@ -407,6 +417,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
                               saveFilter.getValue().audioNotificationSound.name());
             settingsTable.put(saveId + ".sendToTabName", saveFilter.getValue().sendToTabName);
             settingsTable.put(saveId + ".expressionString", saveFilter.getValue().expressionString);
+            settingsTable.put(saveId + ".globalFilter", Boolean.toString(saveFilter.getValue().globalFilter));
 
             saveId++;
             saveFilter = this.filterMap.higherEntry(saveFilter.getKey());
@@ -437,6 +448,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
             storeMe.sendToTabName = this.sendToTabName.getTempValue();
             storeMe.removeMatches = this.removeMatches.getTempValue();
             storeMe.expressionString = this.expressionString.getTempValue();
+            storeMe.globalFilter = this.globalFilter.getTempValue();
         }
 
     }
@@ -472,6 +484,7 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.highlightFormat.enabled = this.highlightBool.getTempValue();
         this.audioNotificationSound.enabled = this.audioNotificationBool.getTempValue();
         this.sendToAllTabs.enabled = this.sendToTabBool.getTempValue();
+        this.globalFilter.enabled = true;
 
         for (GuiButton o : this.buttonList) {
             if (o instanceof ITCSetting<?> tmp) {

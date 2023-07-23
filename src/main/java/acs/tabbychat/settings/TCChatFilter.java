@@ -21,6 +21,7 @@ public class TCChatFilter {
     public boolean sendToTabBool = false;
     public boolean sendToAllTabs = false;
     public boolean removeMatches = false;
+    public boolean globalFilter = false;
 
     public ColorCodeEnum highlightColor = ColorCodeEnum.YELLOW;
     public FormatCodeEnum highlightFormat = FormatCodeEnum.BOLD;
@@ -135,6 +136,7 @@ public class TCChatFilter {
         this.audioNotificationSound = orig.audioNotificationSound;
         this.sendToTabName = orig.sendToTabName;
         this.expressionString = orig.expressionString;
+        this.globalFilter = orig.globalFilter;
 
         this.compilePattern();
     }
@@ -166,6 +168,7 @@ public class TCChatFilter {
         myProps.put("audioNotificationSound", this.audioNotificationSound.name());
         myProps.put("sendToTabName", this.sendToTabName);
         myProps.put("expressionString", this.expressionString);
+        myProps.put("globalFilter", this.globalFilter);
         return myProps;
     }
 
