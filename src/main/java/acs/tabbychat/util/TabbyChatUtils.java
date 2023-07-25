@@ -37,12 +37,15 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -210,10 +213,8 @@ public class TabbyChatUtils {
         // Create the file
         if (!theChannel.getLogFile().exists()) {
             try {
-                if (fileDir.mkdirs()) {
-                    //noinspection ResultOfMethodCallIgnored
-                    theChannel.getLogFile().createNewFile();
-                }
+                Files.createDirectories(fileDir.toPath());
+                Files.createFile(theChannel.getLogFile().toPath());
             }
             catch (IOException e) {
                 TabbyChat.printErr("Cannot create log file : '" + e.getLocalizedMessage() + "' : "
@@ -411,11 +412,12 @@ public class TabbyChatUtils {
     public static void saveProperties(Properties settingsTable, File settingsFile, Pair<String, String> parentDirLogMessage, String propertyPrefix) {
         Logger log = TabbyChatUtils.log;
         if (!settingsFile.getParentFile().exists()) {
-            if (settingsFile.getParentFile().mkdirs()) {
-                log.warn(parentDirLogMessage.getRight());
-            }
-            else {
+            try {
+                Files.createDirectories(settingsFile.getParentFile().toPath());
                 log.info(parentDirLogMessage.getLeft());
+            }
+            catch (IOException e) {
+                log.warn(parentDirLogMessage.getRight());
             }
         }
 
@@ -426,5 +428,32 @@ public class TabbyChatUtils {
             TabbyChat.printException("Error while writing settings to file '" + settingsFile
                                          + "'", e);
         }
+    }
+
+    public static Properties loadSettingsFromFile(File file) {
+        Properties settingsTable = new Properties();
+        if (file == null)
+            return settingsTable;
+        if (!file.exists()) {
+            try {
+                Files.createDirectories(file.getParentFile().toPath());
+                Files.createFile(file.toPath());
+            }
+            catch (IOException e) {
+                TabbyChat.printException("Error while creating file '" + file
+                                             + "'", e);
+            }
+
+            return settingsTable;
+        }
+
+        try (FileInputStream fInStream = new FileInputStream(file); BufferedInputStream bInStream = new BufferedInputStream(fInStream)) {
+            settingsTable.load(bInStream);
+        }
+        catch (Exception e) {
+            TabbyChat.printException("Error while reading settings from file '" + file
+                                         + "'", e);
+        }
+        return settingsTable;
     }
 }

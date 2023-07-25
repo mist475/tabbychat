@@ -41,6 +41,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -347,7 +348,7 @@ public class TabbyChat {
         }
 
         this.serverDataLock.tryAcquire();
-        this.updateChanDataPath(false);
+        this.updateChanDataPath();
         serverSettings.updateForServer();
         filterSettings.updateForServer();
         this.reloadServerData();
@@ -870,8 +871,13 @@ public class TabbyChat {
         if (chanDataFile == null)
             return;
         if (!chanDataFile.getParentFile().exists())
-            //noinspection ResultOfMethodCallIgnored
-            chanDataFile.getParentFile().mkdirs();
+            try {
+                Files.createDirectories(chanDataFile.getParentFile().toPath());
+            }
+            catch (IOException e) {
+                TabbyChat.printException("Error while writing channel data to file '" + chanDataFile.getName()
+                                             + "'", e);
+            }
 
         OutputStream output = null;
         try {
@@ -888,14 +894,11 @@ public class TabbyChat {
         }
     }
 
-    private void updateChanDataPath(boolean make) {
+    private void updateChanDataPath() {
         String pName = "";
         if (mc.thePlayer != null && mc.thePlayer.getCommandSenderName() != null)
             pName = mc.thePlayer.getCommandSenderName();
         File parentDir = TabbyChatUtils.getServerDir();
-        if (make && !parentDir.exists())
-            //noinspection ResultOfMethodCallIgnored
-            parentDir.mkdirs();
         chanDataFile = new File(parentDir, pName + "_chanData.ser");
     }
 

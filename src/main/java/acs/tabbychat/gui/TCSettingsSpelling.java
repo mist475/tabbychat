@@ -11,6 +11,7 @@ import net.minecraft.client.resources.I18n;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Properties;
 
 public class TCSettingsSpelling extends TCSettingsGUI {
@@ -63,8 +64,10 @@ public class TCSettingsSpelling extends TCSettingsGUI {
     public Properties loadSettingsFile() {
         super.loadSettingsFile();
         try {
-            dictionary.getParentFile().mkdirs();
-            dictionary.createNewFile();
+            if (! dictionary.exists()) {
+                Files.createDirectories(dictionary.getParentFile().toPath());
+                Files.createFile(dictionary.toPath());
+            }
             spellingList.loadEntries();
         }
         catch (IOException e) {

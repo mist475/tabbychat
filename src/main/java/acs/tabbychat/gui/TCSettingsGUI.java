@@ -10,14 +10,16 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import org.lwjgl.input.Keyboard;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import static acs.tabbychat.util.TabbyChatUtils.loadSettingsFromFile;
 
 abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
     protected static TabbyChat tc;
@@ -182,22 +184,12 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 
     @Override
     public Properties loadSettingsFile() {
-        Properties settingsTable = new Properties();
-        if (this.settingsFile == null)
-            return settingsTable;
-        if (!this.settingsFile.exists())
-            return settingsTable;
-
-        try (FileInputStream fInStream = new FileInputStream(this.settingsFile); BufferedInputStream bInStream = new BufferedInputStream(fInStream)) {
-            settingsTable.load(bInStream);
-        }
-        catch (Exception e) {
-            TabbyChat.printException("Error while reading settings from file '" + this.settingsFile
-                                         + "'", e);
-        }
-        for (GuiButton drawable : this.buttonList) {
-            if (drawable instanceof ITCSetting<?> settingDrawable) {
-                settingDrawable.loadSelfFromProps(settingsTable);
+        Properties settingsTable = loadSettingsFromFile(this.settingsFile);
+        if (!settingsTable.isEmpty()) {
+            for (GuiButton drawable : this.buttonList) {
+                if (drawable instanceof ITCSetting<?> settingDrawable) {
+                    settingDrawable.loadSelfFromProps(settingsTable);
+                }
             }
         }
         this.resetTempVars();
@@ -239,22 +231,31 @@ abstract class TCSettingsGUI extends GuiScreen implements ITCSettingsGUI {
 
     @Override
     public void saveSettingsFile(Properties settingsTable) {
-        if (this.settingsFile == null)
-            return;
-        if (!this.settingsFile.getParentFile().exists())
-            this.settingsFile.getParentFile().mkdirs();
+        savePropertiesIntoFile(settingsTable, this.settingsFile);
+    }
 
+    protected void savePropertiesIntoFile(Properties settingsTable, File settingsFile) {
+        if (settingsFile == null)
+            return;
+        if (!settingsFile.getParentFile().exists())
+            try {
+                Files.createDirectories(settingsFile.getParentFile().toPath());
+            }
+            catch (IOException e) {
+                TabbyChat.printException("Error while writing settings to file '" + settingsFile
+                                             + "'", e);
+            }
         for (GuiButton drawable : this.buttonList) {
             if (drawable instanceof ITCSetting<?> settingDrawable) {
                 settingDrawable.saveSelfToProps(settingsTable);
             }
         }
 
-        try (FileOutputStream fOutStream = new FileOutputStream(this.settingsFile); BufferedOutputStream bOutStream = new BufferedOutputStream(fOutStream)) {
+        try (FileOutputStream fOutStream = new FileOutputStream(settingsFile); BufferedOutputStream bOutStream = new BufferedOutputStream(fOutStream)) {
             settingsTable.store(bOutStream, this.propertyPrefix);
         }
         catch (Exception e) {
-            TabbyChat.printException("Error while writing settings to file '" + this.settingsFile
+            TabbyChat.printException("Error while writing settings to file '" + settingsFile
                                          + "'", e);
         }
     }
