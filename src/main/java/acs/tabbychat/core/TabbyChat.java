@@ -733,24 +733,13 @@ public class TabbyChat {
                             style.setColor(iFilter.getValue().highlightColor.toVanilla());
 
                         switch (iFilter.getValue().highlightFormat) {
-                            case BOLD:
-                                style.setBold(true);
-                                break;
-                            case ITALIC:
-                                style.setItalic(true);
-                                break;
-                            case STRIKED:
-                                style.setStrikethrough(true);
-                                break;
-                            case UNDERLINE:
-                                style.setUnderlined(true);
-                                break;
-                            case MAGIC:
-                                style.setObfuscated(true);
-                                break;
-                            case DEFAULT:
-                            default:
-                                break;
+                            case BOLD -> style.setBold(true);
+                            case ITALIC -> style.setItalic(true);
+                            case STRIKED -> style.setStrikethrough(true);
+                            case UNDERLINE -> style.setUnderlined(true);
+                            case MAGIC -> style.setObfuscated(true);
+                            case DEFAULT -> {
+                            }
                         }
                         chat = chat1.appendSibling(chat2).appendSibling(chat3);
                     }
