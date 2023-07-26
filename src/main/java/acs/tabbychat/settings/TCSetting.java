@@ -126,6 +126,7 @@ abstract class TCSetting<T> extends GuiButton implements ITCSetting<T> {
     @Override
     public void setValue(T updateVal) {
         this.value = updateVal;
+        this.tempValue = updateVal;
     }
 
     @Override

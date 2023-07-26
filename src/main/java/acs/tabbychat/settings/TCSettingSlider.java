@@ -15,16 +15,11 @@ public class TCSettingSlider extends TCSetting<Float> {
     private int sliderX;
     private boolean dragging = false;
 
-    private TCSettingSlider(Float theSetting, String theProperty, String theCategory, int theID) {
+    public TCSettingSlider(float theSetting, String theProperty, String theCategory, int theID,
+                           float minVal, float maxVal) {
         super(theSetting, theProperty, theCategory, theID);
-        setSliderValue();
         this.width(100);
         this.height(11);
-    }
-
-    public TCSettingSlider(Float theSetting, String theProperty, String theCategory, int theID,
-                           float minVal, float maxVal) {
-        this(theSetting, theProperty, theCategory, theID);
         this.minValue = minVal;
         this.maxValue = maxVal;
     }
@@ -32,10 +27,17 @@ public class TCSettingSlider extends TCSetting<Float> {
     @Override
     public void clear() {
         super.clear();
-        setSliderValue();
+        calculateSliderValue();
     }
 
-    public void setSliderValue() {
+    @Override
+    public void setValue(Float updateVal) {
+        this.value = updateVal;
+        this.tempValue = updateVal;
+        calculateSliderValue();
+    }
+
+    public void calculateSliderValue() {
         this.sliderValue = (this.tempValue - this.minValue)
             / (this.maxValue - this.minValue);
     }
@@ -114,7 +116,7 @@ public class TCSettingSlider extends TCSetting<Float> {
     @Override
     public void setTempValue(Float theVal) {
         super.setTempValue(theVal);
-        setSliderValue();
+        calculateSliderValue();
     }
 
     @Override
@@ -176,7 +178,7 @@ public class TCSettingSlider extends TCSetting<Float> {
     @Override
     public void reset() {
         super.reset();
-        setSliderValue();
+        calculateSliderValue();
     }
 
     @Override
@@ -197,6 +199,6 @@ public class TCSettingSlider extends TCSetting<Float> {
     public void setRange(float theMin, float theMax) {
         this.minValue = theMin;
         this.maxValue = theMax;
-        setSliderValue();
+        calculateSliderValue();
     }
 }

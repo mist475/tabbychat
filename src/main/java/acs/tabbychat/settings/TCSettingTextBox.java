@@ -112,4 +112,11 @@ public class TCSettingTextBox extends TCSetting<String> {
     public void setDefault(String newDefault) {
         this.theDefault = newDefault;
     }
+
+    @Override
+    public void setValue(String updateVal) {
+        this.value = updateVal;
+        this.tempValue = updateVal;
+        this.textBox.setText(updateVal);
+    }
 }
