@@ -16,9 +16,18 @@ import net.minecraft.client.resources.I18n;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static acs.tabbychat.util.TabbyChatUtils.loadSettingsFromFile;
 
 public class TCSettingsFilters extends TCSettingsGUI {
     private static final int INVERSE_MATCH_ID = 9301;
@@ -57,6 +66,8 @@ public class TCSettingsFilters extends TCSettingsGUI {
     protected int curFilterId = 0;
     protected TreeMap<Integer, TCChatFilter> tempFilterMap = new TreeMap<>();
 
+    private final File globalFiltersFile;
+
     public TCSettingsFilters(TabbyChat _tc) {
         super(_tc);
         this.propertyPrefix = "settings.filters";
@@ -86,10 +97,11 @@ public class TCSettingsFilters extends TCSettingsGUI {
                                           this.propertyPrefix, REMOVE_MATCHES_ID);
         expressionString = new TCSettingTextBox(".*", "expressionString",
                                                 this.propertyPrefix, EXPRESSION_ID);
-        globalFilter = new TCSettingBool(false, "globalFilter", this.propertyPrefix, GLOBAL_ID);
+        globalFilter = new TCSettingBool(true, "globalFilter", this.propertyPrefix, GLOBAL_ID);
 
         this.name = I18n.format("settings.filters.name");
         this.settingsFile = new File(TabbyChatUtils.getServerDir(), "filters.cfg");
+        this.globalFiltersFile = new File(ITCSettingsGUI.tabbyChatDir, "global-filters.cfg");
         this.bgcolor = 0x66289f28;
         this.filterName.setCharLimit(50);
         this.sendToTabName.setCharLimit(20);
@@ -156,10 +168,9 @@ public class TCSettingsFilters extends TCSettingsGUI {
         this.buttonList.add(this.globalFilter);
     }
 
-    private boolean displayCurrentFilter() {
+    private void displayCurrentFilter() {
         if (!this.tempFilterMap.containsKey(this.curFilterId)) {
             this.clearDisplay();
-            return false;
         }
         else {
             Properties displayMe = this.tempFilterMap.get(this.curFilterId).getProperties();
@@ -173,7 +184,6 @@ public class TCSettingsFilters extends TCSettingsGUI {
                     }
                 }
             }
-            return true;
         }
     }
 
@@ -317,47 +327,55 @@ public class TCSettingsFilters extends TCSettingsGUI {
     @Override
     public Properties loadSettingsFile() {
         this.filterMap.clear();
-        if (this.settingsFile == null)
-            return null;
 
         Properties settingsTable = super.loadSettingsFile();
+        settingsTable.putAll(loadSettingsFromFile(this.globalFiltersFile));
+        //Get anything before a .
+        Pattern pattern = Pattern.compile(".+(?=\\.)");
+        //Streams don't like int due to the possibility of concurrency
+        AtomicInteger count = new AtomicInteger(1);
+        settingsTable
+            .keySet()
+            .stream()
+            .map(object -> {
+                Matcher matcher = pattern.matcher(object.toString());
+                return matcher.find() ? matcher.group() : null;
+            })
+            .filter(Objects::nonNull)
+            .distinct()
+            .forEach(loadId -> {
+                String loadName = settingsTable.getProperty(loadId + ".filterName");
+                TCChatFilter loaded = new TCChatFilter(loadName);
 
-        int loadId = 1;
-        String loadName = settingsTable.getProperty(loadId + ".filterName");
-        while (loadName != null) {
-            TCChatFilter loaded = new TCChatFilter(loadName);
+                loaded.inverseMatch = Boolean.parseBoolean(settingsTable.getProperty(loadId
+                                                                                         + ".inverseMatch"));
+                loaded.caseSensitive = Boolean.parseBoolean(settingsTable.getProperty(loadId
+                                                                                          + ".caseSensitive"));
+                loaded.highlightBool = Boolean.parseBoolean(settingsTable.getProperty(loadId
+                                                                                          + ".highlightBool"));
+                loaded.highlightColor = ColorCodeEnum.cleanValueOf(settingsTable.getProperty(loadId
+                                                                                                 + ".highlightColor"));
+                loaded.highlightFormat = FormatCodeEnum.cleanValueOf(settingsTable.getProperty(loadId
+                                                                                                   + ".highlightFormat"));
+                loaded.audioNotificationBool = Boolean.parseBoolean(settingsTable.getProperty(loadId
+                                                                                                  + ".audioNotificationBool"));
+                loaded.audioNotificationSound = TabbyChatUtils.parseSound(settingsTable
+                                                                              .getProperty(loadId + ".audioNotificationSound"));
+                loaded.sendToTabBool = Boolean.parseBoolean(settingsTable.getProperty(loadId
+                                                                                          + ".sendToTabBool"));
+                loaded.sendToTabName = TabbyChatUtils.parseString(settingsTable.getProperty(loadId
+                                                                                                + ".sendToTabName"));
+                loaded.sendToAllTabs = Boolean.parseBoolean(settingsTable.getProperty(loadId
+                                                                                          + ".sendToAllTabs"));
+                loaded.removeMatches = Boolean.parseBoolean(settingsTable.getProperty(loadId
+                                                                                          + ".removeMatches"));
+                //parseBoolean returns false in case of null, which is great for backwards compatability
+                loaded.globalFilter = Boolean.parseBoolean(settingsTable.getProperty(loadId + ".globalFilter"));
 
-            loaded.inverseMatch = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                     + ".inverseMatch"));
-            loaded.caseSensitive = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                      + ".caseSensitive"));
-            loaded.highlightBool = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                      + ".highlightBool"));
-            loaded.highlightColor = ColorCodeEnum.cleanValueOf(settingsTable.getProperty(loadId
-                                                                                             + ".highlightColor"));
-            loaded.highlightFormat = FormatCodeEnum.cleanValueOf(settingsTable.getProperty(loadId
-                                                                                               + ".highlightFormat"));
-            loaded.audioNotificationBool = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                              + ".audioNotificationBool"));
-            loaded.audioNotificationSound = TabbyChatUtils.parseSound(settingsTable
-                                                                          .getProperty(loadId + ".audioNotificationSound"));
-            loaded.sendToTabBool = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                      + ".sendToTabBool"));
-            loaded.sendToTabName = TabbyChatUtils.parseString(settingsTable.getProperty(loadId
-                                                                                            + ".sendToTabName"));
-            loaded.sendToAllTabs = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                      + ".sendToAllTabs"));
-            loaded.removeMatches = Boolean.parseBoolean(settingsTable.getProperty(loadId
-                                                                                      + ".removeMatches"));
-            loaded.globalFilter = Boolean.parseBoolean(settingsTable.getProperty(loadId + ".globalFilter"));
-
-            loaded.compilePattern(TabbyChatUtils.parseString(settingsTable.getProperty(loadId
-                                                                                           + ".expressionString")));
-            this.filterMap.put(loadId, loaded);
-
-            loadId++;
-            loadName = settingsTable.getProperty(loadId + ".filterName");
-        }
+                loaded.compilePattern(TabbyChatUtils.parseString(settingsTable.getProperty(loadId
+                                                                                               + ".expressionString")));
+                filterMap.put(count.getAndIncrement(), loaded);
+            });
 
         this.resetTempVars();
         return null;
@@ -389,44 +407,53 @@ public class TCSettingsFilters extends TCSettingsGUI {
 
     @Override
     public void saveSettingsFile() {
+        Map<Boolean, List<TCChatFilter>> divideOnGlobal = this.filterMap
+            .values()
+            .stream()
+            .collect(Collectors
+                         .groupingBy(filter -> filter.globalFilter));
+
+        Properties globalFiltersTable = new Properties();
+        divideOnGlobal.getOrDefault(true, new ArrayList<>())
+            .forEach(tcChatFilter -> saveIntoProperties(tcChatFilter, globalFiltersTable));
+
         Properties settingsTable = new Properties();
-
-        int saveId = 1;
-        Entry<Integer, TCChatFilter> saveFilter = this.filterMap.firstEntry();
-        while (saveFilter != null) {
-            settingsTable.put(saveId + ".filterName", saveFilter.getValue().filterName);
-            settingsTable.put(saveId + ".inverseMatch",
-                              Boolean.toString(saveFilter.getValue().inverseMatch));
-            settingsTable.put(saveId + ".caseSensitive",
-                              Boolean.toString(saveFilter.getValue().caseSensitive));
-            settingsTable.put(saveId + ".highlightBool",
-                              Boolean.toString(saveFilter.getValue().highlightBool));
-            settingsTable.put(saveId + ".audioNotificationBool",
-                              Boolean.toString(saveFilter.getValue().audioNotificationBool));
-            settingsTable.put(saveId + ".sendToTabBool",
-                              Boolean.toString(saveFilter.getValue().sendToTabBool));
-            settingsTable.put(saveId + ".sendToAllTabs",
-                              Boolean.toString(saveFilter.getValue().sendToAllTabs));
-            settingsTable.put(saveId + ".removeMatches",
-                              Boolean.toString(saveFilter.getValue().removeMatches));
-            settingsTable.put(saveId + ".highlightColor",
-                              saveFilter.getValue().highlightColor.name());
-            settingsTable.put(saveId + ".highlightFormat",
-                              saveFilter.getValue().highlightFormat.name());
-            settingsTable.put(saveId + ".audioNotificationSound",
-                              saveFilter.getValue().audioNotificationSound.name());
-            settingsTable.put(saveId + ".sendToTabName", saveFilter.getValue().sendToTabName);
-            settingsTable.put(saveId + ".expressionString", saveFilter.getValue().expressionString);
-            settingsTable.put(saveId + ".globalFilter", Boolean.toString(saveFilter.getValue().globalFilter));
-
-            saveId++;
-            saveFilter = this.filterMap.higherEntry(saveFilter.getKey());
-        }
+        divideOnGlobal.getOrDefault(false, new ArrayList<>())
+            .forEach(tcChatFilter -> saveIntoProperties(tcChatFilter, settingsTable));
 
         List<GuiButton> tmpList = new ArrayList<>(this.buttonList);
         this.buttonList.clear();
+        savePropertiesIntoFile(globalFiltersTable, globalFiltersFile);
         super.saveSettingsFile(settingsTable);
         this.buttonList = tmpList;
+    }
+
+    private static void saveIntoProperties(TCChatFilter saveFilter, Properties properties) {
+        UUID saveId = UUID.randomUUID();
+        properties.put(saveId + ".filterName", saveFilter.filterName);
+        properties.put(saveId + ".inverseMatch",
+                       Boolean.toString(saveFilter.inverseMatch));
+        properties.put(saveId + ".caseSensitive",
+                       Boolean.toString(saveFilter.caseSensitive));
+        properties.put(saveId + ".highlightBool",
+                       Boolean.toString(saveFilter.highlightBool));
+        properties.put(saveId + ".audioNotificationBool",
+                       Boolean.toString(saveFilter.audioNotificationBool));
+        properties.put(saveId + ".sendToTabBool",
+                       Boolean.toString(saveFilter.sendToTabBool));
+        properties.put(saveId + ".sendToAllTabs",
+                       Boolean.toString(saveFilter.sendToAllTabs));
+        properties.put(saveId + ".removeMatches",
+                       Boolean.toString(saveFilter.removeMatches));
+        properties.put(saveId + ".highlightColor",
+                       saveFilter.highlightColor.name());
+        properties.put(saveId + ".highlightFormat",
+                       saveFilter.highlightFormat.name());
+        properties.put(saveId + ".audioNotificationSound",
+                       saveFilter.audioNotificationSound.name());
+        properties.put(saveId + ".sendToTabName", saveFilter.sendToTabName);
+        properties.put(saveId + ".expressionString", saveFilter.expressionString);
+        properties.put(saveId + ".globalFilter", Boolean.toString(saveFilter.globalFilter));
     }
 
     private void storeTempFilter() {
