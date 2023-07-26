@@ -21,7 +21,7 @@ public class TCChatFilter {
     public boolean sendToTabBool = false;
     public boolean sendToAllTabs = false;
     public boolean removeMatches = false;
-    public boolean globalFilter = false;
+    public boolean globalFilter = true;
 
     public ColorCodeEnum highlightColor = ColorCodeEnum.YELLOW;
     public FormatCodeEnum highlightFormat = FormatCodeEnum.BOLD;
