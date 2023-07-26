@@ -34,8 +34,6 @@ public class GuiNewChatTC extends GuiNewChat {
     private final Minecraft mc;
     public ScaledResolution sr;
     public int chatHeight = 0;
-    //Can be removed if I can figure out RFG generic mappings
-    public List<String> sentMessages;
     public List<TCChatLine> chatLines;
     public List<TCChatLine> backupLines;
     public boolean chatScrolled = false;
@@ -474,11 +472,6 @@ public class GuiNewChatTC extends GuiNewChat {
     public float getScaleSetting() {
         float theSetting = this.func_146244_h();
         return Math.round(theSetting * 100.0f) / 100.0f;
-    }
-
-    @Override
-    public List<String> getSentMessages() {
-        return this.sentMessages;
     }
 
     /**
