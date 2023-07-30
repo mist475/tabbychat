@@ -124,7 +124,7 @@ public class TabbyChatUtils {
         if (screen instanceof GuiSleepMP)
             mc.displayGuiScreen(new GuiSleepTC());
         else
-            mc.displayGuiScreen(new GuiChatTC(chat.field_146410_g));
+            mc.displayGuiScreen(new GuiChatTC(chat.defaultInputFieldText));
     }
 
     public static ServerData getServerData() {

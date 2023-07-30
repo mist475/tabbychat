@@ -58,7 +58,6 @@ public class GuiChatTC extends GuiChat {
     private final Logger log = TabbyChatUtils.log;
     private final List<String> foundPlayerNames = new ArrayList<>();
     public String historyBuffer = "";
-    public String defaultInputFieldText = "";
     public List<GuiTextField> inputList = new ArrayList<>(3);
     public ChatScrollBar scrollBar;
     public TabbyChat tc;
