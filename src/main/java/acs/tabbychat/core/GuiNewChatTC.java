@@ -172,7 +172,6 @@ public class GuiNewChatTC extends GuiNewChat {
         int visLineCounter = 0;
         if (this.mc.gameSettings.chatVisibility != EntityPlayer.EnumChatVisibility.HIDDEN) {
             int maxDisplayedLines;
-            boolean chatOpen = false;
             float chatOpacity = this.mc.gameSettings.chatOpacity * 0.9f + 0.1f;
 
             float chatScaling = this.func_146244_h();
@@ -186,7 +185,7 @@ public class GuiNewChatTC extends GuiNewChat {
             finally {
                 chatReadLock.unlock();
             }
-            chatOpen = this.getChatOpen();
+            boolean chatOpen = this.getChatOpen();
             if (numLinesTotal == 0 && !chatOpen) {
                 this.mc.fontRenderer.setUnicodeFlag(TabbyChat.defaultUnicode);
                 return;
