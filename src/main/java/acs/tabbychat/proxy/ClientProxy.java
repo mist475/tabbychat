@@ -13,8 +13,8 @@ import net.minecraft.client.Minecraft;
 public class ClientProxy extends CommonProxy {
     @Override
     public void load(FMLInitializationEvent event) {
-        TabbyChatUtils.startup();
         FMLCommonHandler.instance().bus().register(this);
+        TabbyChatUtils.startup();
         TabbyChat.modLoaded = true;
     }
 
@@ -31,8 +31,7 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
-    private boolean onTickInGui(Minecraft minecraft) {
+    private void onTickInGui(Minecraft minecraft) {
         TabbyChatUtils.chatGuiTick(minecraft);
-        return true;
     }
 }
