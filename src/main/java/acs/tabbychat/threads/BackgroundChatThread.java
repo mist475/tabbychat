@@ -41,7 +41,8 @@ public class BackgroundChatThread extends Thread {
                     start = 2;
                 }
                 // /fmsg is added by lotr to message groups of players
-                else if (toSplit[0].startsWith("/fmsg")) {
+                // /fmsg bind or unbind sets a default fellowship and should not be parsed as a multiline comment
+                else if (toSplit[0].startsWith("/fmsg") && !(toSplit.length > 2 && toSplit[1].contains("bind"))) {
                     //targeted name is contained with double quotes
                     String[] fShipNameArray = this.sendChat.split("\"");
                     if (fShipNameArray.length > 1) {
