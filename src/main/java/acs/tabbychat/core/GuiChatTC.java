@@ -43,7 +43,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import tv.twitch.chat.ChatUserInfo;
 
-import java.awt.*;
+import java.awt.Point;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;

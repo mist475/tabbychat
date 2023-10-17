@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
+import java.awt.Rectangle;
 
 public class ChatButton extends GuiButton {
 

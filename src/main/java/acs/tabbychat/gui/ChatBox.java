@@ -9,7 +9,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Mouse;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.LinkedHashMap;
 
 public class ChatBox {

@@ -18,7 +18,7 @@ import net.minecraft.util.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;

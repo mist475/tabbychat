@@ -6,7 +6,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Mouse;
 
-import java.awt.*;
+import java.awt.Point;
 
 public class ChatScrollBar {
     private static final Minecraft mc = Minecraft.getMinecraft();
