@@ -10,18 +10,21 @@ public class BackgroundChatThread extends Thread {
     String sendChat;
     String knownPrefix;
 
+    final Minecraft mc;
+
     public BackgroundChatThread(String _send) {
         this.sendChat = _send;
+        mc = Minecraft.getMinecraft();
     }
 
     public BackgroundChatThread(String _send, String _prefix) {
         this.sendChat = _send;
         this.knownPrefix = _prefix;
+        mc = Minecraft.getMinecraft();
     }
 
     @Override
     public synchronized void run() {
-        Minecraft mc = Minecraft.getMinecraft();
         mc.ingameGUI.getChatGUI().addToSentMessages(this.sendChat);
         String cmdPrefix = "";
         String[] toSplit;
@@ -35,20 +38,29 @@ public class BackgroundChatThread extends Thread {
         else {
             toSplit = this.sendChat.split(" ");
             start = 0;
+            // command
             if (toSplit.length > 0 && toSplit[0].startsWith("/")) {
                 if (toSplit[0].startsWith("/msg")) {
                     cmdPrefix = toSplit[0] + " " + toSplit[1] + " ";
                     start = 2;
                 }
+
                 // /fmsg is added by lotr to message groups of players
-                // /fmsg bind or unbind sets a default fellowship and should not be parsed as a multiline comment
-                else if (toSplit[0].startsWith("/fmsg") && !(toSplit.length > 2 && toSplit[1].contains("bind"))) {
-                    //targeted name is contained with double quotes
-                    String[] fShipNameArray = this.sendChat.split("\"");
-                    if (fShipNameArray.length > 1) {
-                        cmdPrefix = toSplit[0] + " \"" + fShipNameArray[1] + "\" ";
-                        //count number of spaces in fShipNameArray and set start accordingly
-                        start = 2 + StringUtils.countMatches(fShipNameArray[1], " ");
+                else if (toSplit[0].startsWith("/fmsg") && toSplit.length > 1) {
+                    // /fmsg bind or unbind sets a default fellowship and should not be parsed as a multiline comment
+                    if (!toSplit[1].endsWith("bind")) {
+                        String[] fShipNameArray = this.sendChat.split("\"");
+                        //targeted name is contained with double quotes
+                        if (fShipNameArray.length > 1) {
+                            cmdPrefix = toSplit[0] + " \"" + fShipNameArray[1] + "\" ";
+                            //count number of spaces in fShipNameArray and set start accordingly
+                            start = 2 + StringUtils.countMatches(fShipNameArray[1], " ");
+                        }
+                        // default
+                        else {
+                            cmdPrefix = "/fmsg ";
+                            start = 1;
+                        }
                     }
                 }
                 else if (!toSplit[0].trim().equals("/")) {
@@ -57,6 +69,13 @@ public class BackgroundChatThread extends Thread {
                 }
             }
         }
+
+
+        sendChat(start,toSplit,cmdPrefix);
+
+    }
+
+    private void sendChat(int start, String[] toSplit, String cmdPrefix) {
         int suffix = cmdPrefix.length();
         StringBuilder sendPart = new StringBuilder(119);
         for (int word = start; word < toSplit.length; word++) {
@@ -64,7 +83,7 @@ public class BackgroundChatThread extends Thread {
                 mc.thePlayer.sendChatMessage(cmdPrefix + sendPart.toString().trim());
                 try {
                     Thread.sleep(Integer.parseInt(TabbyChat.advancedSettings.multiChatDelay
-                                                          .getValue()));
+                                                      .getValue()));
                 }
                 catch (InterruptedException e) {
                     e.printStackTrace();
@@ -75,7 +94,8 @@ public class BackgroundChatThread extends Thread {
             }
             sendPart.append(toSplit[word]).append(" ");
         }
-        if (sendPart.length() > 0 || cmdPrefix.length() > 0) {
+
+        if (!(sendPart.length() == 0) || !(cmdPrefix.length() == 0)) {
             String message = cmdPrefix + sendPart.toString().trim();
             message = ChatAllowedCharacters.filerAllowedCharacters(message);
 
