@@ -7,6 +7,7 @@ import acs.tabbychat.core.GuiChatTC;
 import acs.tabbychat.core.GuiNewChatTC;
 import acs.tabbychat.core.GuiSleepTC;
 import acs.tabbychat.core.TabbyChat;
+import acs.tabbychat.core.TabbyChatVersion;
 import acs.tabbychat.gui.ITCSettingsGUI;
 import acs.tabbychat.gui.context.ChatContextMenu;
 import acs.tabbychat.gui.context.ContextCopy;
@@ -58,9 +59,9 @@ import java.util.Properties;
 import java.util.zip.GZIPOutputStream;
 
 public class TabbyChatUtils {
-    public final static String version = "GRADLETOKEN_VERSION";
-    public final static String name = "GRADLETOKEN_MODNAME";
-    public final static String modid = "GRADLETOKEN_MODID";
+    public final static String version = TabbyChatVersion.Version;
+    public final static String name = "TabbyChat";
+    public final static String modid = "tabbychat";
     public static Logger log = LogManager.getLogger(name);
     private static Calendar logDay = Calendar.getInstance();
     private static final File logDir = new File(new File(Minecraft.getMinecraft().mcDataDir, "logs"),
